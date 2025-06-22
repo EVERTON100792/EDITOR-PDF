@@ -23,6 +23,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
         .top-bar label {
             font-weight: bold;
@@ -56,7 +57,8 @@
             border: 1px dashed #007bff;
             background-color: rgba(231, 243, 255, 0.7);
             font-family: Helvetica, Arial, sans-serif;
-            font-size: 14px;
+            font-size: 13.3333px; /* Tenta simular o tamanho da fonte padrão */
+            line-height: 1.2;
             resize: both; /* Permite que o usuário redimensione a caixa */
             overflow: hidden;
             padding: 2px;
@@ -95,21 +97,25 @@
         let scale = 1.5;
 
         pdfUpload.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            // Limpa edições antigas
-            document.querySelectorAll('.editable-textbox').forEach(box => box.remove());
-
-            pdfBytes = new Uint8Array(await file.arrayBuffer());
-            pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
-            
-            const page = await pdfDoc.getPage(1);
-            const viewport = page.getViewport({ scale: scale });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            
-            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+            try {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                document.querySelectorAll('.editable-textbox').forEach(box => box.remove());
+                
+                pdfBytes = new Uint8Array(await file.arrayBuffer());
+                pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+                
+                const page = await pdfDoc.getPage(1);
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+            } catch (error) {
+                console.error("Erro ao carregar o PDF:", error);
+                alert("Ocorreu um erro ao carregar o PDF. Verifique o console (F12) para detalhes.");
+            }
         });
 
         pdfContainer.addEventListener('dblclick', (e) => {
@@ -118,26 +124,21 @@
                 return;
             }
 
-            // Posição do clique relativa ao container
             const containerRect = pdfContainer.getBoundingClientRect();
             const canvasRect = canvas.getBoundingClientRect();
             
-            // Calcula a posição do clique relativa ao canvas
             const x = e.clientX - canvasRect.left;
             const y = e.clientY - canvasRect.top;
 
             const textarea = document.createElement('textarea');
             textarea.className = 'editable-textbox';
             
-            // Define a posição da caixa de texto
             textarea.style.left = `${canvasRect.left - containerRect.left + x}px`;
             textarea.style.top = `${canvasRect.top - containerRect.top + y}px`;
             textarea.style.width = '150px';
-            textarea.style.height = '20px';
+            textarea.style.height = '22px';
 
-            // Armazena as coordenadas PDF na própria caixa de texto para uso posterior
             const page = pdfDoc.getPage(1);
-            const viewport = page.getViewport({ scale: 1 }); // viewport sem escala para cálculo
             textarea.dataset.pdfX = x / scale;
             textarea.dataset.pdfY = y / scale;
 
@@ -151,52 +152,63 @@
                 return;
             }
 
-            const pdfToModify = await PDFDocument.load(pdfBytes);
-            const page = pdfToModify.getPages()[0];
-            const font = await pdfToModify.embedFont(StandardFonts.Helvetica);
-            const { height: pageHeight } = page.getSize();
-            
-            const textboxes = document.querySelectorAll('.editable-textbox');
-            
-            for (const box of textboxes) {
-                const text = box.value;
-                const pdfX = parseFloat(box.dataset.pdfX);
-                const pdfY = parseFloat(box.dataset.pdfY); // Coordenada do topo da caixa
+            try {
+                const pdfToModify = await PDFDocument.load(pdfBytes);
+                const page = pdfToModify.getPages()[0];
+                const font = await pdfToModify.embedFont(StandardFonts.Helvetica);
+                const { height: pageHeight } = page.getSize();
                 
-                // Converte a posição Y da tela para a posição Y do PDF
-                const finalY = pageHeight - pdfY;
+                const textboxes = document.querySelectorAll('.editable-textbox');
+                
+                for (const box of textboxes) {
+                    const text = box.value;
+                    const pdfX = parseFloat(box.dataset.pdfX);
+                    const pdfY = parseFloat(box.dataset.pdfY);
+                    
+                    const fontSize = 10;
+                    const lineHeight = fontSize * 1.2;
+                    
+                    // Converte a posição Y da tela (topo para baixo) para a posição Y do PDF (base para cima)
+                    // E ajusta para a linha de base da primeira linha de texto.
+                    const initialY = pageHeight - pdfY - fontSize;
 
-                page.drawText(text, {
-                    x: pdfX,
-                    y: finalY - 10, // Ajuste fino para alinhar o texto com o clique
-                    size: 10,
-                    font,
-                    color: rgb(0, 0, 0)
-                });
-            }
-
-            const finalPdfBytes = await pdfToModify.save();
-            const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
-            const printUrl = URL.createObjectURL(blob);
-            const iframe = document.getElementById('print-frame');
-
-            iframe.onload = () => {
-                try {
-                    iframe.contentWindow.print();
-                } catch (e) {
-                    alert("Erro ao tentar abrir a janela de impressão.");
+                    // **INÍCIO DA LÓGICA CORRIGIDA E COMPLETA**
+                    const lines = text.split('\n');
+                    for(let i = 0; i < lines.length; i++) {
+                        const line = lines[i];
+                        const y = initialY - (i * lineHeight); // Subtrai a altura da linha para cada nova linha
+                        
+                        page.drawText(line, {
+                            x: pdfX,
+                            y: y,
+                            size: fontSize,
+                            font: font,
+                            color: rgb(0, 0, 0)
+                        });
+                    }
+                    // **FIM DA LÓGICA CORRIGIDA E COMPLETA**
                 }
-            };
-            iframe.src = printUrl;
+
+                const finalPdfBytes = await pdfToModify.save();
+                const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+                const printUrl = URL.createObjectURL(blob);
+                const iframe = document.getElementById('print-frame');
+
+                iframe.onload = () => {
+                    try {
+                        iframe.contentWindow.print();
+                    } catch (e) {
+                        console.error("Erro ao acionar a impressão:", e);
+                        alert("Erro ao tentar abrir a janela de impressão.");
+                    }
+                };
+                iframe.src = printUrl;
+
+            } catch(error) {
+                console.error("Erro fatal durante a criação do PDF:", error);
+                alert("Um erro ocorreu ao tentar gerar o PDF para impressão. Aperte F12 e verifique o Console para mais detalhes.");
+            }
         });
     </script>
 </body>
 </html>
-
-### Dicas Importantes de Uso
-
-* **Duplo-Clique para Adicionar:** Lembre-se, você precisa dar um **duplo-clique** (clicar duas vezes rápido) no local do PDF para que uma nova caixa de texto apareça.
-* **Redimensione as Caixas:** Você pode notar que as caixas de texto têm um pequeno ícone no canto inferior direito. Você pode clicar e arrastar ali para aumentar ou diminuir o tamanho da caixa, caso seu texto seja maior.
-* **Imprimir em PDF:** Quando a janela de impressão do seu navegador abrir, além de poder mandar para sua impressora física, você geralmente terá uma opção para **"Salvar como PDF"** ou **"Microsoft Print to PDF"**. Isso permite que você salve uma nova cópia do PDF já com os campos preenchidos, se não quiser imprimir em papel.
-
-Esta versão é a mais simples e direta de todas, focada 100% na sua necessidade de editar e imprimir rapidamente, mantendo o layout original intacto.
