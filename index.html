@@ -1,202 +1,150 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor e Impressor Direto de PDF</title>
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        .top-bar {
-            background-color: #fff;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .top-bar label {
-            font-weight: bold;
-        }
-        .top-bar button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-        }
-        .top-bar button:hover {
-            background-color: #218838;
-        }
-        .pdf-container {
-            flex-grow: 1;
-            position: relative; /* Essencial para o posicionamento das caixas de texto */
-            overflow: auto;
-            text-align: center; /* Centraliza o canvas */
-            padding: 20px;
-        }
-        #pdf-canvas {
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .editable-textbox {
-            position: absolute; /* Flutua sobre o canvas */
-            border: 1px dashed #007bff;
-            background-color: rgba(231, 243, 255, 0.7);
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            resize: both; /* Permite que o usuário redimensione a caixa */
-            overflow: hidden;
-            padding: 2px;
-            box-sizing: border-box;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Editor de PDF</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #444;
+    }
+
+    #pdf-viewer {
+      margin-top: 20px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin-bottom: 30px;
+    }
+
+    .editable-text {
+      position: absolute;
+      min-width: 100px;
+      min-height: 20px;
+      padding: 2px 5px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px dashed #666;
+      cursor: text;
+      font-size: 14px;
+    }
+
+    #controls {
+      margin-bottom: 15px;
+    }
+
+    button, input[type="file"] {
+      margin: 5px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Editor de PDF (Visual e Manual)</h1>
 
-    <div class="top-bar">
-        <label for="pdf-upload">1. Carregar PDF:</label>
-        <input type="file" id="pdf-upload" accept=".pdf">
-        <span style="flex-grow:1; text-align:center; color:#555;">2. Dê um duplo-clique no PDF para adicionar texto.</span>
-        <button id="print-button">3. Imprimir PDF Editado</button>
-    </div>
+  <div id="controls">
+    <input type="file" id="uploadPdf" accept="application/pdf" />
+    <button onclick="addTextField()">Adicionar Campo de Texto</button>
+    <button onclick="window.print()">Imprimir / Salvar em PDF</button>
+  </div>
 
-    <div class="pdf-container" id="pdf-container">
-        <canvas id="pdf-canvas"></canvas>
-    </div>
-    
-    <iframe id="print-frame" style="display:none;"></iframe>
+  <div id="pdf-viewer"></div>
 
-    <script>
-        const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
-        const { pdfjsLib } = window;
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`;
+  <!-- PDF.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    const uploadInput = document.getElementById("uploadPdf");
+    const viewer = document.getElementById("pdf-viewer");
 
-        const pdfUpload = document.getElementById('pdf-upload');
-        const printBtn = document.getElementById('print-button');
-        const pdfContainer = document.getElementById('pdf-container');
-        const canvas = document.getElementById('pdf-canvas');
-        const ctx = canvas.getContext('2d');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        let pdfBytes = null;
-        let pdfDoc = null;
-        let scale = 1.5;
+    uploadInput.addEventListener("change", async function () {
+      const file = this.files[0];
+      if (file && file.type === "application/pdf") {
+        const fileReader = new FileReader();
+        fileReader.onload = async function () {
+          const typedArray = new Uint8Array(this.result);
+          const pdf = await pdfjsLib.getDocument(typedArray).promise;
+          viewer.innerHTML = "";
 
-        pdfUpload.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 1.5 });
 
-            // Limpa edições antigas
-            document.querySelectorAll('.editable-textbox').forEach(box => box.remove());
-
-            pdfBytes = new Uint8Array(await file.arrayBuffer());
-            pdfDoc = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
-            
-            const page = await pdfDoc.getPage(1);
-            const viewport = page.getViewport({ scale: scale });
-            canvas.height = viewport.height;
+            const canvas = document.createElement("canvas");
             canvas.width = viewport.width;
-            
-            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-        });
+            canvas.height = viewport.height;
+            const context = canvas.getContext("2d");
 
-        pdfContainer.addEventListener('dblclick', (e) => {
-            if (!pdfDoc) {
-                alert("Por favor, carregue um PDF primeiro.");
-                return;
-            }
-
-            // Posição do clique relativa ao container
-            const containerRect = pdfContainer.getBoundingClientRect();
-            const canvasRect = canvas.getBoundingClientRect();
-            
-            // Calcula a posição do clique relativa ao canvas
-            const x = e.clientX - canvasRect.left;
-            const y = e.clientY - canvasRect.top;
-
-            const textarea = document.createElement('textarea');
-            textarea.className = 'editable-textbox';
-            
-            // Define a posição da caixa de texto
-            textarea.style.left = `${canvasRect.left - containerRect.left + x}px`;
-            textarea.style.top = `${canvasRect.top - containerRect.top + y}px`;
-            textarea.style.width = '150px';
-            textarea.style.height = '20px';
-
-            // Armazena as coordenadas PDF na própria caixa de texto para uso posterior
-            const page = pdfDoc.getPage(1);
-            const viewport = page.getViewport({ scale: 1 }); // viewport sem escala para cálculo
-            textarea.dataset.pdfX = x / scale;
-            textarea.dataset.pdfY = y / scale;
-
-            pdfContainer.appendChild(textarea);
-            textarea.focus();
-        });
-
-        printBtn.addEventListener('click', async () => {
-            if (!pdfBytes) {
-                alert("Nenhum PDF carregado para imprimir.");
-                return;
-            }
-
-            const pdfToModify = await PDFDocument.load(pdfBytes);
-            const page = pdfToModify.getPages()[0];
-            const font = await pdfToModify.embedFont(StandardFonts.Helvetica);
-            const { height: pageHeight } = page.getSize();
-            
-            const textboxes = document.querySelectorAll('.editable-textbox');
-            
-            for (const box of textboxes) {
-                const text = box.value;
-                const pdfX = parseFloat(box.dataset.pdfX);
-                const pdfY = parseFloat(box.dataset.pdfY); // Coordenada do topo da caixa
-                
-                // Converte a posição Y da tela para a posição Y do PDF
-                const finalY = pageHeight - pdfY;
-
-                page.drawText(text, {
-                    x: pdfX,
-                    y: finalY - 10, // Ajuste fino para alinhar o texto com o clique
-                    size: 10,
-                    font,
-                    color: rgb(0, 0, 0)
-                });
-            }
-
-            const finalPdfBytes = await pdfToModify.save();
-            const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
-            const printUrl = URL.createObjectURL(blob);
-            const iframe = document.getElementById('print-frame');
-
-            iframe.onload = () => {
-                try {
-                    iframe.contentWindow.print();
-                } catch (e) {
-                    alert("Erro ao tentar abrir a janela de impressão.");
-                }
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
             };
-            iframe.src = printUrl;
-        });
-    </script>
+
+            await page.render(renderContext).promise;
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "relative";
+            wrapper.style.width = canvas.width + "px";
+            wrapper.style.height = canvas.height + "px";
+            wrapper.appendChild(canvas);
+            viewer.appendChild(wrapper);
+          }
+        };
+        fileReader.readAsArrayBuffer(file);
+      }
+    });
+
+    function addTextField() {
+      const lastPage = viewer.lastElementChild;
+      if (!lastPage) return;
+
+      const input = document.createElement("div");
+      input.contentEditable = true;
+      input.className = "editable-text";
+      input.innerText = "Editar texto...";
+      input.style.top = "50px";
+      input.style.left = "50px";
+
+      // Tornar arrastável
+      input.onmousedown = function(e) {
+        const el = this;
+        let shiftX = e.clientX - el.getBoundingClientRect().left;
+        let shiftY = e.clientY - el.getBoundingClientRect().top;
+
+        function moveAt(pageX, pageY) {
+          el.style.left = pageX - shiftX + 'px';
+          el.style.top = pageY - shiftY + 'px';
+        }
+
+        function onMouseMove(e) {
+          moveAt(e.pageX, e.pageY);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+
+        el.onmouseup = function () {
+          document.removeEventListener('mousemove', onMouseMove);
+          el.onmouseup = null;
+        };
+      };
+
+      input.ondragstart = () => false;
+
+      lastPage.appendChild(input);
+    }
+  </script>
 </body>
 </html>
-
-### Dicas Importantes de Uso
-
-* **Duplo-Clique para Adicionar:** Lembre-se, você precisa dar um **duplo-clique** (clicar duas vezes rápido) no local do PDF para que uma nova caixa de texto apareça.
-* **Redimensione as Caixas:** Você pode notar que as caixas de texto têm um pequeno ícone no canto inferior direito. Você pode clicar e arrastar ali para aumentar ou diminuir o tamanho da caixa, caso seu texto seja maior.
-* **Imprimir em PDF:** Quando a janela de impressão do seu navegador abrir, além de poder mandar para sua impressora física, você geralmente terá uma opção para **"Salvar como PDF"** ou **"Microsoft Print to PDF"**. Isso permite que você salve uma nova cópia do PDF já com os campos preenchidos, se não quiser imprimir em papel.
-
-Esta versão é a mais simples e direta de todas, focada 100% na sua necessidade de editar e imprimir rapidamente, mantendo o layout original intacto.
