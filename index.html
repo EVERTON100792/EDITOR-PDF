@@ -1,27 +1,287 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fashion Store - Sistema de Vendas</title>
-    <meta name="description" content="Sistema completo de vendas de roupas" />
-    
-    <!-- Font Awesome para ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- jsPDF para geração de PDFs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preenchedor e Impressor de PDF Inteligente</title>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 { text-align: center; color: #1c1e21; }
+        .container { display: flex; gap: 20px; width: 98%; max-width: 1600px; margin: auto; }
+        .column { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column; }
+        .pdf-viewer-container { flex: 2; position: relative; overflow: auto; max-height: 85vh; border: 1px solid #ccc; }
+        canvas { display: block; }
+        .drawing-rect { position: absolute; background-color: rgba(255, 165, 0, 0.3); border: 1px dashed #ff8c00; }
+        .field-rect { position: absolute; background-color: rgba(0, 123, 255, 0.3); border: 1px solid rgba(0, 123, 255, 0.8); pointer-events: none; }
+        button { background-color: #007bff; color: white; border: none; padding: 12px 18px; border-radius: 5px; cursor: pointer; margin-top: 15px; width: 100%; font-size: 1.1em; }
+        button:hover { background-color: #0056b3; }
+        button.secondary { background-color: #6c757d; }
+        button.secondary:hover { background-color: #5a6268; }
+        button.magic { background-color: #9C27B0; }
+        button.magic:hover { background-color: #7B1FA2; }
+        button.action { background-color: #28a745; font-weight: bold; margin-top: auto; } /* Push to bottom */
+        button.action:hover { background-color: #218838; }
+        input[type="file"], textarea { margin-top: 10px; display: block; width: calc(100% - 12px); padding: 8px 5px; border-radius: 4px; border: 1px solid #ccc; }
+        textarea { resize: vertical; min-height: 60px; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        .form-fields-container { overflow-y: auto; flex-grow: 1; }
+        .instructions { background-color: #e7f3ff; border-left: 6px solid #2196F3; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Preenchedor e Impressor de PDF Inteligente</h1>
+    <div class="container">
+        
+        <div class="column" id="col-files">
+            <h2>1. Arquivos e Templates</h2>
+            <div class="instructions">Carregue um PDF para começar.</div>
+            <label for="pdf-upload">Carregar PDF para Trabalhar:</label>
+            <input type="file" id="pdf-upload" accept=".pdf">
+            <hr style="margin-top: 25px;">
+            <label for="template-upload">Carregar Template (.json):</label>
+            <input type="file" id="template-upload" accept=".json">
+            <button id="save-template" class="secondary">Salvar Template (.json)</button>
+            <hr style="margin-top: 25px;">
+             <h2>2. Detecção Automática</h2>
+            <div class="instructions">Digite os nomes dos campos (separados por vírgula) e clique no botão para encontrá-los no PDF.</div>
+            <label for="keywords-input">Palavras-Chave para Encontrar:</label>
+            <textarea id="keywords-input" placeholder="Ex: Cliente, CNPJ, Número da Nota, Peso..."></textarea>
+            <button id="find-fields-btn" class="magic">Encontrar Campos Automaticamente</button>
+        </div>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+        <div class="pdf-viewer-container" id="pdf-viewer">
+            <canvas id="pdf-canvas"></canvas>
+        </div>
+        
+        <div class="column" id="col-form">
+            <h2>3. Preencher Dados</h2>
+            <div class="instructions">Preencha os campos abaixo. Eles podem ser criados manualmente ou pela detecção automática.</div>
+            <div id="data-form" class="form-fields-container"></div>
+            <button id="print-button" class="action">Preencher e Imprimir</button>
+        </div>
+    </div>
+
+    <iframe id="print-frame" style="display: none;"></iframe>
+
+    <script>
+        // --- MESMAS BIBLIOTECAS E VARIÁVEIS GLOBAIS DE ANTES ---
+        const { pdfjsLib } = window;
+        const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`;
+
+        const pdfUpload = document.getElementById('pdf-upload');
+        const templateUpload = document.getElementById('template-upload');
+        const saveTemplateBtn = document.getElementById('save-template');
+        const printBtn = document.getElementById('print-button');
+        const findFieldsBtn = document.getElementById('find-fields-btn');
+        const keywordsInput = document.getElementById('keywords-input');
+        const canvas = document.getElementById('pdf-canvas');
+        const viewer = document.getElementById('pdf-viewer');
+        const formContainer = document.getElementById('data-form');
+        const ctx = canvas.getContext('2d');
+
+        let pdfDoc = null, template = {}, pdfBytes = null, scale = 1.5;
+        let isDrawing = false, startX, startY, drawingRectDiv = null;
+
+        // --- FUNÇÕES DE CARREGAMENTO E RENDERIZAÇÃO (sem alterações) ---
+        pdfUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            pdfBytes = new Uint8Array(await file.arrayBuffer());
+            template = {};
+            formContainer.innerHTML = '';
+            loadAndRenderPdf(pdfBytes);
+        });
+
+        templateUpload.addEventListener('change', (e) => {
+            if (!pdfDoc) { alert("Por favor, carregue um PDF primeiro!"); return; }
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                template = JSON.parse(event.target.result);
+                generateForm();
+                drawExistingRects();
+                alert('Template carregado!');
+            };
+            reader.readAsText(file);
+        });
+
+        async function loadAndRenderPdf(data) {
+            pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+            const page = await pdfDoc.getPage(1);
+            const viewport = page.getViewport({ scale });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            await page.render({ canvasContext: ctx, viewport }).promise;
+            drawExistingRects();
+        }
+
+        // --- LÓGICA DE DETECÇÃO AUTOMÁTICA (NOVO!) ---
+        findFieldsBtn.addEventListener('click', async () => {
+            if (!pdfDoc) { alert("Carregue um PDF antes de procurar os campos!"); return; }
+            const keywords = keywordsInput.value.split(',').map(k => k.trim().toLowerCase()).filter(k => k);
+            if (keywords.length === 0) { alert("Por favor, digite as palavras-chave que deseja encontrar."); return; }
+
+            const page = await pdfDoc.getPage(1);
+            const textContent = await page.getTextContent();
+            const viewport = page.getViewport({ scale: 1 }); // Usar escala 1 para coordenadas reais
+            let fieldsFound = 0;
+
+            keywords.forEach(keyword => {
+                let bestMatch = null;
+                // Procura a palavra-chave no conteúdo de texto extraído
+                textContent.items.forEach(item => {
+                    if (item.str.trim().toLowerCase().startsWith(keyword)) {
+                        bestMatch = item;
+                    }
+                });
+
+                if (bestMatch) {
+                    // Pega a posição da etiqueta (palavra-chave) encontrada
+                    const transform = bestMatch.transform;
+                    const labelX = transform[4];
+                    const labelY = transform[5];
+                    const labelWidth = bestMatch.width;
+                    
+                    // HEURÍSTICA: Define a caixa do valor à direita da etiqueta
+                    const valueBoxX = labelX + labelWidth + 5; // 5px de padding
+                    const valueBoxY = labelY - (bestMatch.height / 2); // Centraliza verticalmente
+                    const valueBoxWidth = 150; // Largura padrão para o campo
+                    const valueBoxHeight = bestMatch.height + 2; // Altura padrão
+
+                    const fieldName = keyword.replace(/\s+/g, '_'); // Converte "Numero da Nota" para "Numero_da_Nota"
+                    template[fieldName] = [
+                        valueBoxX, 
+                        valueBoxY,
+                        valueBoxX + valueBoxWidth,
+                        valueBoxY + valueBoxHeight
+                    ];
+                    fieldsFound++;
+                }
+            });
+
+            if (fieldsFound > 0) {
+                alert(`${fieldsFound} campo(s) encontrados e mapeados!`);
+                drawExistingRects();
+                generateForm();
+            } else {
+                alert("Nenhum campo correspondente às palavras-chave foi encontrado. Tente ajustar as palavras ou mapear manualmente.");
+            }
+        });
+
+        // --- FUNÇÕES DE DESENHO MANUAL E FORMULÁRIO (sem grandes alterações) ---
+        canvas.addEventListener('mousedown', (e) => {
+            if (!pdfDoc) return;
+            if (drawingRectDiv) drawingRectDiv.remove();
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            startX = e.clientX - rect.left;
+            startY = e.clientY - rect.top;
+            drawingRectDiv = document.createElement('div');
+            drawingRectDiv.className = 'drawing-rect';
+            viewer.appendChild(drawingRectDiv);
+            drawingRectDiv.style.left = startX + 'px';
+            drawingRectDiv.style.top = startY + 'px';
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            const width = currentX - startX, height = currentY - startY;
+            drawingRectDiv.style.width = Math.abs(width) + 'px';
+            drawingRectDiv.style.height = Math.abs(height) + 'px';
+            drawingRectDiv.style.left = (width > 0 ? startX : currentX) + 'px';
+            drawingRectDiv.style.top = (height > 0 ? startY : currentY) + 'px';
+        });
+        
+        canvas.addEventListener('mouseup', async (e) => {
+            if (!isDrawing) return;
+            isDrawing = false;
+            drawingRectDiv.remove();
+            const rect = canvas.getBoundingClientRect();
+            const x0 = Math.min(startX, e.clientX - rect.left), y0 = Math.min(startY, e.clientY - rect.top);
+            const x1 = Math.max(startX, e.clientX - rect.left), y1 = Math.max(startY, e.clientY - rect.top);
+            
+            const fieldName = prompt('Digite o nome do campo (ex: nome_cliente):');
+            if (fieldName) {
+                template[fieldName] = [(x0 / scale), (y0 / scale), (x1 / scale), (y1 / scale)];
+                drawExistingRects();
+                generateForm();
+            }
+        });
+
+        function drawExistingRects() {
+            document.querySelectorAll('.field-rect').forEach(el => el.remove());
+            Object.values(template).forEach(coords => {
+                const rectDiv = document.createElement('div');
+                rectDiv.className = 'field-rect';
+                rectDiv.style.left = (coords[0] * scale) + 'px';
+                rectDiv.style.top = (coords[1] * scale) + 'px';
+                rectDiv.style.width = (coords[2] - coords[0]) * scale + 'px';
+                rectDiv.style.height = (coords[3] - coords[1]) * scale + 'px';
+                viewer.appendChild(rectDiv);
+            });
+        }
+        
+        function generateForm() {
+            formContainer.innerHTML = '';
+            for (const fieldName in template) {
+                const label = document.createElement('label');
+                label.textContent = fieldName.replace(/_/g, ' ');
+                label.htmlFor = fieldName;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = fieldName;
+                input.name = fieldName;
+                formContainer.appendChild(label);
+                formContainer.appendChild(input);
+            }
+        }
+        
+        // --- FUNÇÕES DE SALVAR TEMPLATE E IMPRIMIR (sem alterações) ---
+        saveTemplateBtn.addEventListener('click', () => {
+            if (Object.keys(template).length === 0) { alert('Nenhum campo foi definido para salvar!'); return; }
+            const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'meu_template.json';
+            a.click(); URL.revokeObjectURL(url);
+        });
+
+        printBtn.addEventListener('click', async () => {
+            if (!pdfBytes) { alert('Por favor, carregue um PDF primeiro.'); return; }
+            const pdfToModify = await PDFDocument.load(pdfBytes);
+            const page = pdfToModify.getPages()[0];
+            const { height } = page.getSize();
+            const font = await pdfToModify.embedFont(StandardFonts.Helvetica);
+            for (const fieldName in template) {
+                const input = document.getElementById(fieldName);
+                if (input && input.value) {
+                    const coords = template[fieldName];
+                    const x = coords[0];
+                    const y = height - coords[3];
+                    page.drawText(input.value, { x: x + 2, y: y, size: 10, font: font, color: rgb(0, 0, 0) });
+                }
+            }
+            const finalPdfBytes = await pdfToModify.save();
+            const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+            const printUrl = URL.createObjectURL(blob);
+            const iframe = document.getElementById('print-frame');
+            iframe.src = printUrl;
+            iframe.onload = () => {
+                try { iframe.contentWindow.print(); } 
+                catch (e) { alert('Erro ao abrir a janela de impressão.'); }
+            };
+        });
+    </script>
+</body>
 </html>
