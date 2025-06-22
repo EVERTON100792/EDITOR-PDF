@@ -72,7 +72,6 @@
     <iframe id="print-frame" style="display: none;"></iframe>
 
     <script>
-        // --- MESMAS BIBLIOTECAS E VARIÁVEIS GLOBAIS DE ANTES ---
         const { pdfjsLib } = window;
         const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
         pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`;
@@ -91,14 +90,13 @@
         let pdfDoc = null, template = {}, pdfBytes = null, scale = 1.5;
         let isDrawing = false, startX, startY, drawingRectDiv = null;
 
-        // --- FUNÇÕES DE CARREGAMENTO E RENDERIZAÇÃO (sem alterações) ---
         pdfUpload.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
             pdfBytes = new Uint8Array(await file.arrayBuffer());
             template = {};
             formContainer.innerHTML = '';
-            loadAndRenderPdf(pdfBytes);
+            await loadAndRenderPdf(pdfBytes);
         });
 
         templateUpload.addEventListener('change', (e) => {
@@ -123,8 +121,8 @@
             await page.render({ canvasContext: ctx, viewport }).promise;
             drawExistingRects();
         }
-
-        // --- LÓGICA DE DETECÇÃO AUTOMÁTICA (NOVO!) ---
+        
+        // --- LÓGICA DE DETECÇÃO AUTOMÁTICA (CORRIGIDA) ---
         findFieldsBtn.addEventListener('click', async () => {
             if (!pdfDoc) { alert("Carregue um PDF antes de procurar os campos!"); return; }
             const keywords = keywordsInput.value.split(',').map(k => k.trim().toLowerCase()).filter(k => k);
@@ -132,38 +130,34 @@
 
             const page = await pdfDoc.getPage(1);
             const textContent = await page.getTextContent();
-            const viewport = page.getViewport({ scale: 1 }); // Usar escala 1 para coordenadas reais
             let fieldsFound = 0;
 
             keywords.forEach(keyword => {
+                // Remove acentos e caracteres especiais para uma busca mais robusta
+                const normalizedKeyword = keyword.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                
                 let bestMatch = null;
-                // Procura a palavra-chave no conteúdo de texto extraído
                 textContent.items.forEach(item => {
-                    if (item.str.trim().toLowerCase().startsWith(keyword)) {
+                    const normalizedItem = item.str.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    if (normalizedItem.startsWith(normalizedKeyword)) {
                         bestMatch = item;
                     }
                 });
 
                 if (bestMatch) {
-                    // Pega a posição da etiqueta (palavra-chave) encontrada
                     const transform = bestMatch.transform;
                     const labelX = transform[4];
-                    const labelY = transform[5];
+                    const labelY = transform[5]; // Coordenada Y já está no sistema do PDF (base para cima)
                     const labelWidth = bestMatch.width;
-                    
-                    // HEURÍSTICA: Define a caixa do valor à direita da etiqueta
-                    const valueBoxX = labelX + labelWidth + 5; // 5px de padding
-                    const valueBoxY = labelY - (bestMatch.height / 2); // Centraliza verticalmente
-                    const valueBoxWidth = 150; // Largura padrão para o campo
-                    const valueBoxHeight = bestMatch.height + 2; // Altura padrão
+                    const labelHeight = bestMatch.height;
 
-                    const fieldName = keyword.replace(/\s+/g, '_'); // Converte "Numero da Nota" para "Numero_da_Nota"
-                    template[fieldName] = [
-                        valueBoxX, 
-                        valueBoxY,
-                        valueBoxX + valueBoxWidth,
-                        valueBoxY + valueBoxHeight
-                    ];
+                    const valueBoxX = labelX + labelWidth + 5;
+                    const valueBoxY = labelY; // Alinha a base do campo com a base da etiqueta
+                    const valueBoxWidth = 150;
+                    const valueBoxHeight = labelHeight + 4;
+                    
+                    const fieldName = keyword.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+                    template[fieldName] = [valueBoxX, valueBoxY - valueBoxHeight, valueBoxX + valueBoxWidth, valueBoxY];
                     fieldsFound++;
                 }
             });
@@ -177,60 +171,71 @@
             }
         });
 
-        // --- FUNÇÕES DE DESENHO MANUAL E FORMULÁRIO (sem grandes alterações) ---
+        // --- LÓGICA DE DESENHO MANUAL (CORRIGIDA) ---
         canvas.addEventListener('mousedown', (e) => {
             if (!pdfDoc) return;
-            if (drawingRectDiv) drawingRectDiv.remove();
-            isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
+            isDrawing = true; const rect = canvas.getBoundingClientRect();
+            startX = e.clientX - rect.left; startY = e.clientY - rect.top;
             drawingRectDiv = document.createElement('div');
-            drawingRectDiv.className = 'drawing-rect';
-            viewer.appendChild(drawingRectDiv);
-            drawingRectDiv.style.left = startX + 'px';
-            drawingRectDiv.style.top = startY + 'px';
+            drawingRectDiv.className = 'drawing-rect'; viewer.appendChild(drawingRectDiv);
+            drawingRectDiv.style.left = startX + 'px'; drawingRectDiv.style.top = startY + 'px';
         });
 
         canvas.addEventListener('mousemove', (e) => {
             if (!isDrawing) return;
             const rect = canvas.getBoundingClientRect();
-            const currentX = e.clientX - rect.left;
-            const currentY = e.clientY - rect.top;
+            const currentX = e.clientX - rect.left; const currentY = e.clientY - rect.top;
             const width = currentX - startX, height = currentY - startY;
-            drawingRectDiv.style.width = Math.abs(width) + 'px';
-            drawingRectDiv.style.height = Math.abs(height) + 'px';
+            drawingRectDiv.style.width = Math.abs(width) + 'px'; drawingRectDiv.style.height = Math.abs(height) + 'px';
             drawingRectDiv.style.left = (width > 0 ? startX : currentX) + 'px';
             drawingRectDiv.style.top = (height > 0 ? startY : currentY) + 'px';
         });
         
         canvas.addEventListener('mouseup', async (e) => {
             if (!isDrawing) return;
-            isDrawing = false;
-            drawingRectDiv.remove();
+            isDrawing = false; drawingRectDiv.remove();
             const rect = canvas.getBoundingClientRect();
-            const x0 = Math.min(startX, e.clientX - rect.left), y0 = Math.min(startY, e.clientY - rect.top);
-            const x1 = Math.max(startX, e.clientX - rect.left), y1 = Math.max(startY, e.clientY - rect.top);
+            const canvasX0 = Math.min(startX, e.clientX - rect.left), canvasY0 = Math.min(startY, e.clientY - rect.top);
+            const canvasX1 = Math.max(startX, e.clientX - rect.left), canvasY1 = Math.max(startY, e.clientY - rect.top);
             
             const fieldName = prompt('Digite o nome do campo (ex: nome_cliente):');
             if (fieldName) {
-                template[fieldName] = [(x0 / scale), (y0 / scale), (x1 / scale), (y1 / scale)];
+                const page = await pdfDoc.getPage(1);
+                const viewport = page.getViewport({ scale: 1 }); // viewport sem escala para cálculo
+                // **CONVERSÃO CRÍTICA PARA O SISTEMA DE COORDENADAS DO PDF**
+                const pdfX0 = (canvasX0 / scale);
+                const pdfX1 = (canvasX1 / scale);
+                const pdfY0 = viewport.height - (canvasY1 / scale);
+                const pdfY1 = viewport.height - (canvasY0 / scale);
+                template[fieldName] = [pdfX0, pdfY0, pdfX1, pdfY1];
                 drawExistingRects();
                 generateForm();
             }
         });
 
-        function drawExistingRects() {
+        // --- FUNÇÕES DE VISUALIZAÇÃO E FORMULÁRIO (CORRIGIDAS) ---
+        async function drawExistingRects() {
+            if(!pdfDoc) return;
             document.querySelectorAll('.field-rect').forEach(el => el.remove());
-            Object.values(template).forEach(coords => {
+            const page = await pdfDoc.getPage(1);
+            const viewport = page.getViewport({ scale: 1 });
+
+            for(const fieldName in template){
+                const coords = template[fieldName];
+                // **CONVERSÃO CRÍTICA PARA O SISTEMA DE COORDENADAS DA TELA**
+                const canvasX0 = coords[0] * scale;
+                const canvasX1 = coords[2] * scale;
+                const canvasY0 = (viewport.height - coords[3]) * scale;
+                const canvasY1 = (viewport.height - coords[1]) * scale;
+
                 const rectDiv = document.createElement('div');
                 rectDiv.className = 'field-rect';
-                rectDiv.style.left = (coords[0] * scale) + 'px';
-                rectDiv.style.top = (coords[1] * scale) + 'px';
-                rectDiv.style.width = (coords[2] - coords[0]) * scale + 'px';
-                rectDiv.style.height = (coords[3] - coords[1]) * scale + 'px';
+                rectDiv.style.left = canvasX0 + 'px';
+                rectDiv.style.top = canvasY0 + 'px';
+                rectDiv.style.width = (canvasX1 - canvasX0) + 'px';
+                rectDiv.style.height = (canvasY1 - canvasY0) + 'px';
                 viewer.appendChild(rectDiv);
-            });
+            }
         }
         
         function generateForm() {
@@ -240,15 +245,12 @@
                 label.textContent = fieldName.replace(/_/g, ' ');
                 label.htmlFor = fieldName;
                 const input = document.createElement('input');
-                input.type = 'text';
-                input.id = fieldName;
-                input.name = fieldName;
-                formContainer.appendChild(label);
-                formContainer.appendChild(input);
+                input.type = 'text'; input.id = fieldName; input.name = fieldName;
+                formContainer.appendChild(label); formContainer.appendChild(input);
             }
         }
         
-        // --- FUNÇÕES DE SALVAR TEMPLATE E IMPRIMIR (sem alterações) ---
+        // --- FUNÇÕES DE SALVAR E IMPRIMIR (CORRIGIDAS) ---
         saveTemplateBtn.addEventListener('click', () => {
             if (Object.keys(template).length === 0) { alert('Nenhum campo foi definido para salvar!'); return; }
             const blob = new Blob([JSON.stringify(template, null, 2)], { type: 'application/json' });
@@ -259,28 +261,45 @@
 
         printBtn.addEventListener('click', async () => {
             if (!pdfBytes) { alert('Por favor, carregue um PDF primeiro.'); return; }
+            console.log("Iniciando processo de impressão...");
+
             const pdfToModify = await PDFDocument.load(pdfBytes);
             const page = pdfToModify.getPages()[0];
-            const { height } = page.getSize();
             const font = await pdfToModify.embedFont(StandardFonts.Helvetica);
+
             for (const fieldName in template) {
                 const input = document.getElementById(fieldName);
                 if (input && input.value) {
                     const coords = template[fieldName];
-                    const x = coords[0];
-                    const y = height - coords[3];
-                    page.drawText(input.value, { x: x + 2, y: y, size: 10, font: font, color: rgb(0, 0, 0) });
+                    // As coordenadas já estão no sistema do PDF, basta usá-las.
+                    page.drawText(input.value, {
+                        x: coords[0] + 2, // padding
+                        y: coords[1] + 2, // y é a base da caixa
+                        size: 10,
+                        font: font,
+                        color: rgb(0, 0, 0)
+                    });
                 }
             }
+
             const finalPdfBytes = await pdfToModify.save();
+            console.log("PDF modificado com sucesso. Preparando para imprimir...");
             const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
             const printUrl = URL.createObjectURL(blob);
             const iframe = document.getElementById('print-frame');
-            iframe.src = printUrl;
+            
+            // **LÓGICA DE IMPRESSÃO MAIS ROBUSTA**
+            // Primeiro define o que fazer no onload, DEPOIS define o src.
             iframe.onload = () => {
-                try { iframe.contentWindow.print(); } 
-                catch (e) { alert('Erro ao abrir a janela de impressão.'); }
+                console.log("iFrame carregado. Acionando a impressão...");
+                try {
+                    iframe.contentWindow.print();
+                } catch (e) {
+                    console.error("Erro ao imprimir:", e);
+                    alert('Erro ao abrir a janela de impressão. Verifique as permissões de pop-up do navegador.');
+                }
             };
+            iframe.src = printUrl;
         });
     </script>
 </body>
