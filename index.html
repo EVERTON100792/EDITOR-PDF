@@ -1,136 +1,232 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Editor de PDF para Tabela</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 20px;
-      text-align: center;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Editor PDF com Camadas Editáveis</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center;
+    background: #f0f0f0;
+  }
+  #pdf-container {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #ccc;
+  }
+  canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  .textbox {
+    position: absolute;
+    min-width: 60px;
+    min-height: 20px;
+    border: 1px dashed #007bff;
+    background: rgba(255,255,255,0.8);
+    padding: 2px 4px;
+    cursor: text;
+    overflow-wrap: break-word;
+    font-size: 14px;
+  }
+  .textbox:focus {
+    outline: 2px solid #0056b3;
+  }
+  #controls {
+    margin-bottom: 15px;
+  }
+  button, input[type="file"] {
+    font-size: 16px;
+    margin: 5px;
+    padding: 8px 15px;
+  }
+  /* Impressão só do container, sem controles */
+  @media print {
+    body * {
+      visibility: hidden;
     }
-
-    h1 {
-      color: #333;
+    #pdf-container, #pdf-container * {
+      visibility: visible;
     }
-
-    input[type="file"], button {
-      margin: 10px;
-      padding: 8px 16px;
-      font-size: 16px;
+    #pdf-container {
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      margin: 0;
+      border: none;
     }
-
-    #table-container {
-      margin-top: 20px;
-      overflow-x: auto;
+    .textbox {
+      border: none;
+      background: transparent;
+      box-shadow: none;
     }
-
-    table {
-      margin: auto;
-      border-collapse: collapse;
-      width: 90%;
-      background: white;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      min-width: 100px;
-      text-align: left;
-    }
-
-    td {
-      cursor: text;
-    }
-
-    /* ESCONDER INTERFACE NA IMPRESSÃO */
-    @media print {
-      h1,
-      input,
-      button {
-        display: none !important;
-      }
-
-      body {
-        background: white !important;
-        margin: 0;
-      }
-
-      #table-container {
-        overflow-x: visible !important;
-        width: 100% !important;
-      }
-
-      table {
-        width: 100% !important;
-        table-layout: fixed;
-        word-wrap: break-word;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1>Conversor e Editor de PDF para Tabela</h1>
-  <input type="file" id="pdfFile" accept="application/pdf">
-  <button onclick="printPage()">Imprimir / Salvar PDF</button>
 
-  <div id="table-container"></div>
+<h1>Editor PDF com Camadas Editáveis</h1>
 
-  <!-- PDF.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    const pdfInput = document.getElementById("pdfFile");
-    const container = document.getElementById("table-container");
+<div id="controls">
+  <input type="file" id="file-input" accept="application/pdf" />
+  <button id="print-btn">Imprimir / Salvar PDF</button>
+  <button id="add-text-btn">Adicionar Campo de Texto</button>
+</div>
 
-    pdfInput.addEventListener("change", async function () {
-      const file = this.files[0];
-      if (file && file.type === "application/pdf") {
-        const fileReader = new FileReader();
-        fileReader.onload = async function () {
-          const typedArray = new Uint8Array(this.result);
-          const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-          let fullText = "";
+<div id="pdf-container"></div>
 
-          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-            const page = await pdf.getPage(pageNum);
-            const content = await page.getTextContent();
-            const pageText = content.items.map(item => item.str).join(' ');
-            fullText += pageText + "\n";
-          }
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-          generateTableFromText(fullText);
-        };
-        fileReader.readAsArrayBuffer(file);
-      }
+<script>
+  const fileInput = document.getElementById("file-input");
+  const pdfContainer = document.getElementById("pdf-container");
+  const printBtn = document.getElementById("print-btn");
+  const addTextBtn = document.getElementById("add-text-btn");
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  let pdfDoc = null;
+  let scale = 1.5;
+  let canvas, ctx;
+  let textBoxes = [];
+  let currentPage = 1;
+
+  // Renderiza a página do PDF e adiciona caixas de texto com posições relativas
+  async function renderPage(pageNum) {
+    if (!pdfDoc) return;
+
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale });
+
+    // Remove canvas antigo e cria novo
+    pdfContainer.innerHTML = "";
+    canvas = document.createElement("canvas");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    pdfContainer.style.width = viewport.width + "px";
+    pdfContainer.style.height = viewport.height + "px";
+
+    ctx = canvas.getContext("2d");
+    pdfContainer.appendChild(canvas);
+
+    const renderContext = { canvasContext: ctx, viewport };
+    await page.render(renderContext).promise;
+
+    // Extrai o texto da página e posiciona caixas
+    const textContent = await page.getTextContent();
+
+    // Limpa caixas antigas
+    textBoxes.forEach(box => box.remove());
+    textBoxes = [];
+
+    textContent.items.forEach(item => {
+      const tx = pdfjsLib.Util.transform(
+        viewport.transform,
+        item.transform
+      );
+
+      // Posição na tela
+      const x = tx[4];
+      const y = tx[5] - item.height;
+
+      // Cria textbox sobre o texto
+      const box = document.createElement("div");
+      box.className = "textbox";
+      box.contentEditable = true;
+      box.textContent = item.str;
+
+      box.style.left = x + "px";
+      box.style.top = y + "px";
+      box.style.fontSize = (item.height * scale * 0.8) + "px";
+      box.style.fontFamily = "Arial, sans-serif";
+      box.style.width = Math.max(item.width * scale, 30) + "px";
+      box.style.height = item.height * scale + "px";
+
+      // Permitir arrastar
+      enableDrag(box);
+
+      pdfContainer.appendChild(box);
+      textBoxes.push(box);
+    });
+  }
+
+  // Habilita arrastar a div textbox
+  function enableDrag(el) {
+    let isDragging = false, offsetX, offsetY;
+
+    el.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - el.getBoundingClientRect().left;
+      offsetY = e.clientY - el.getBoundingClientRect().top;
+      el.style.cursor = "move";
+      e.preventDefault();
     });
 
-    function generateTableFromText(text) {
-      const lines = text.trim().split("\n");
-      const table = document.createElement("table");
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      if(el) el.style.cursor = "text";
+    });
 
-      lines.forEach(line => {
-        const row = document.createElement("tr");
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const containerRect = pdfContainer.getBoundingClientRect();
+        let x = e.clientX - containerRect.left - offsetX;
+        let y = e.clientY - containerRect.top - offsetY;
 
-        // Separar colunas por múltiplos espaços ou tabulação
-        const cols = line.split(/\s{2,}|\t+/);
-        cols.forEach(col => {
-          const cell = document.createElement("td");
-          cell.contentEditable = true;
-          cell.textContent = col.trim();
-          row.appendChild(cell);
-        });
+        // limites para nao sair da area do pdf
+        x = Math.max(0, Math.min(x, containerRect.width - el.offsetWidth));
+        y = Math.max(0, Math.min(y, containerRect.height - el.offsetHeight));
 
-        table.appendChild(row);
-      });
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+      }
+    });
+  }
 
-      container.innerHTML = "";
-      container.appendChild(table);
+  fileInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file || file.type !== "application/pdf") {
+      alert("Por favor, selecione um arquivo PDF válido.");
+      return;
     }
+    const fileReader = new FileReader();
+    fileReader.onload = async function() {
+      const typedArray = new Uint8Array(this.result);
+      pdfDoc = await pdfjsLib.getDocument({ data: typedArray }).promise;
+      currentPage = 1;
+      renderPage(currentPage);
+    };
+    fileReader.readAsArrayBuffer(file);
+  });
 
-    function printPage() {
-      window.print();
+  printBtn.addEventListener("click", () => {
+    window.print();
+  });
+
+  addTextBtn.addEventListener("click", () => {
+    if(!pdfDoc) {
+      alert("Carregue um PDF primeiro.");
+      return;
     }
-  </script>
+    // Adiciona caixa no centro do container
+    const box = document.createElement("div");
+    box.className = "textbox";
+    box.contentEditable = true;
+    box.textContent = "Texto editável";
+    box.style.left = (pdfContainer.clientWidth / 2 - 50) + "px";
+    box.style.top = (pdfContainer.clientHeight / 2 - 10) + "px";
+    box.style.width = "100px";
+    box.style.height = "20px";
+    enableDrag(box);
+    pdfContainer.appendChild(box);
+    textBoxes.push(box);
+    box.focus();
+  });
+</script>
+
 </body>
 </html>
