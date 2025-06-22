@@ -43,6 +43,24 @@
     td {
       cursor: text;
     }
+
+    /* ESCONDER INTERFACE NA IMPRESSÃO */
+    @media print {
+      h1,
+      input,
+      button {
+        display: none !important;
+      }
+
+      body {
+        background: white !important;
+        margin: 0;
+      }
+
+      table {
+        width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -87,7 +105,7 @@
       lines.forEach(line => {
         const row = document.createElement("tr");
 
-        // Separar colunas por espaços múltiplos ou tabulação
+        // Separar colunas por múltiplos espaços ou tabulação
         const cols = line.split(/\s{2,}|\t+/);
         cols.forEach(col => {
           const cell = document.createElement("td");
