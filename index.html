@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Editor de PDF</title>
+  <title>Editor de PDF Interativo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -53,17 +53,16 @@
   </style>
 </head>
 <body>
-  <h1>Editor de PDF (Visual e Manual)</h1>
+  <h1>Editor de PDF com Campos Editáveis</h1>
 
   <div id="controls">
     <input type="file" id="uploadPdf" accept="application/pdf" />
-    <button onclick="addTextField()">Adicionar Campo de Texto</button>
-    <button onclick="window.print()">Imprimir / Salvar em PDF</button>
+    <button onclick="window.print()">Imprimir / Salvar PDF</button>
   </div>
 
   <div id="pdf-viewer"></div>
 
-  <!-- PDF.js via CDN -->
+  <!-- PDF.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
     const uploadInput = document.getElementById("uploadPdf");
@@ -85,6 +84,11 @@
             const viewport = page.getViewport({ scale: 1.5 });
 
             const canvas = document.createElement("canvas");
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "relative";
+            wrapper.style.width = viewport.width + "px";
+            wrapper.style.height = viewport.height + "px";
+
             canvas.width = viewport.width;
             canvas.height = viewport.height;
             const context = canvas.getContext("2d");
@@ -95,28 +99,29 @@
             };
 
             await page.render(renderContext).promise;
-            const wrapper = document.createElement("div");
-            wrapper.style.position = "relative";
-            wrapper.style.width = canvas.width + "px";
-            wrapper.style.height = canvas.height + "px";
             wrapper.appendChild(canvas);
             viewer.appendChild(wrapper);
+
+            // Evento de duplo clique para adicionar campo
+            wrapper.addEventListener("dblclick", function (e) {
+              const rect = wrapper.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              addTextField(wrapper, x, y);
+            });
           }
         };
         fileReader.readAsArrayBuffer(file);
       }
     });
 
-    function addTextField() {
-      const lastPage = viewer.lastElementChild;
-      if (!lastPage) return;
-
+    function addTextField(container, x, y) {
       const input = document.createElement("div");
       input.contentEditable = true;
       input.className = "editable-text";
-      input.innerText = "Editar texto...";
-      input.style.top = "50px";
-      input.style.left = "50px";
+      input.innerText = "Texto...";
+      input.style.left = x + "px";
+      input.style.top = y + "px";
 
       // Tornar arrastável
       input.onmousedown = function(e) {
@@ -143,7 +148,7 @@
 
       input.ondragstart = () => false;
 
-      lastPage.appendChild(input);
+      container.appendChild(input);
     }
   </script>
 </body>
