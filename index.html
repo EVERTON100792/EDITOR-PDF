@@ -987,7 +987,7 @@
             
             // Listeners
             dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
             dom.modal.querySelector('.download-btn').addEventListener('click', function() {
                 generatePdf(parseInt(this.dataset.activityId));
             });
@@ -1324,9 +1324,12 @@
         }
 
         function openSelectActivitiesModal() {
-            let tempSelected = appState.selectedActivitiesForMaker
+            // Get IDs of catalog activities already in the plan
+            const existingCatalogIds = appState.selectedActivitiesForMaker
                 .filter(a => a.type === 'catalog')
-                .map(a => a.id); // Start with currently selected catalog activities
+                .map(a => a.id);
+            // Use this as the starting point for temporary selection
+            let tempSelected = [...existingCatalogIds];
 
             const selectModalHTML = `
                 <div class="modal-content" id="select-activities-modal">
@@ -1377,9 +1380,12 @@
             });
 
             dom.modal.querySelector('#confirm-selection-btn').onclick = () => {
-                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
+                // Keep existing custom activities
                 const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
-                // Combine existing custom activities with the new selection from the catalog
+                // Create objects for the newly selected catalog activities
+                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
+                
+                // Combine them
                 appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
                 renderAulaMaker();
                 closeModal();
@@ -1404,59 +1410,60 @@
                 const margin = 40;
                 const lineHeight = 18;
                 const maxWidth = doc.internal.pageSize.width - (margin * 2);
-
-                doc.setFont('Poppins', 'bold');
+                
+                // jsPDF doesn't support Google Fonts directly, so we use a standard font
+                doc.setFont('Helvetica', 'bold');
                 doc.setFontSize(22);
                 doc.setTextColor(40, 40, 40);
                 doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
                 yOffset += 40;
                 
-                doc.setFont('Poppins', 'bold');
+                doc.setFont('Helvetica', 'bold');
                 doc.setFontSize(12);
                 doc.text(`Título:`, margin, yOffset);
-                doc.setFont('Poppins', 'normal');
+                doc.setFont('Helvetica', 'normal');
                 doc.text(`${appState.makerPlanTitle || 'Sem Título'}`, margin + 50, yOffset);
                 yOffset += lineHeight * 1.5;
 
-                doc.setFont('Poppins', 'bold');
+                doc.setFont('Helvetica', 'bold');
                 doc.text(`Ano/Turma:`, margin, yOffset);
-                doc.setFont('Poppins', 'normal');
+                doc.setFont('Helvetica', 'normal');
                 doc.text(`${appState.makerPlanGrade || 'Não Informado'}`, margin + 75, yOffset);
                 
                 if (appState.makerPlanTheme) {
                     yOffset += lineHeight;
-                    doc.setFont('Poppins', 'bold');
+                    doc.setFont('Helvetica', 'bold');
                     doc.text(`Tema:`, margin, yOffset);
-                    doc.setFont('Poppins', 'normal');
+                    doc.setFont('Helvetica', 'normal');
                     doc.text(`${appState.makerPlanTheme}`, margin + 45, yOffset);
                 }
                 yOffset += lineHeight * 2;
                 
                 if (appState.makerPlanNotes) {
-                    doc.setFont('Poppins', 'bold');
+                    doc.setFont('Helvetica', 'bold');
                     doc.setFontSize(14);
                     doc.text("Observações Gerais / Materiais:", margin, yOffset);
                     yOffset += lineHeight * 1.5;
                     
-                    doc.setFont('Poppins', 'normal');
+                    doc.setFont('Helvetica', 'normal');
                     doc.setFontSize(11);
                     const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
                     doc.text(notesLines, margin, yOffset);
                     yOffset += notesLines.length * (lineHeight - 4) + 20;
                 }
                 
-                doc.setLineWidth(1.5);
-                doc.setDrawColor(var(--primary-color));
+                doc.setLineWidth(1);
+                doc.setDrawColor(177, 156, 217); // Using var(--primary-color) value
                 doc.line(margin, yOffset, maxWidth + margin, yOffset);
                 yOffset += 30;
 
-                doc.setFont('Poppins', 'bold');
+                doc.setFont('Helvetica', 'bold');
                 doc.setFontSize(16);
                 doc.text("Sequência de Atividades", margin, yOffset);
                 yOffset += 25;
 
                 if (appState.selectedActivitiesForMaker.length === 0) {
-                    doc.setFont('Poppins', 'italic');
+                    doc.setFont('Helvetica', 'italic');
                     doc.setFontSize(11);
                     doc.setTextColor("#6b7280");
                     doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
@@ -1471,15 +1478,15 @@
                                 yOffset = 60;
                             }
 
-                            doc.setFont('Poppins', 'bold');
+                            doc.setFont('Helvetica', 'bold');
                             doc.setFontSize(14);
-                            doc.setTextColor("#6c5b7b");
+                            doc.setTextColor(108, 91, 123); // Using var(--secondary-color) value
                             doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
                             yOffset += lineHeight * 1.2;
 
-                            doc.setFont('Poppins', 'normal');
+                            doc.setFont('Helvetica', 'normal');
                             doc.setFontSize(11);
-                            doc.setTextColor("#333d49");
+                            doc.setTextColor(51, 61, 73); // Using var(--text-color) value
 
                             if (isCustom) {
                                 const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
@@ -1490,12 +1497,16 @@
                                 doc.text(descLines, margin, yOffset);
                                 yOffset += descLines.length * (lineHeight - 4) + 10;
                                 
-                                doc.setFont('Poppins', 'bold');
+                                doc.setFont('Helvetica', 'bold');
                                 doc.text('Objetivos:', margin, yOffset);
                                 yOffset += lineHeight;
-                                doc.setFont('Poppins', 'normal');
+                                doc.setFont('Helvetica', 'normal');
                                 activityData.objetivos.forEach(obj => {
-                                    const objLines = doc.splitTextToSize(`- ${obj}`, maxWidth - 10);
+                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
+                                    if(yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
+                                        doc.addPage();
+                                        yOffset = 60;
+                                    }
                                     doc.text(objLines, margin + 10, yOffset);
                                     yOffset += objLines.length * (lineHeight - 4);
                                 });
