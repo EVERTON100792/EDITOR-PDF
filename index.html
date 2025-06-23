@@ -389,6 +389,7 @@
             font-weight: 500;
             color: var(--text-color);
             flex-grow: 1;
+            padding-right: 1rem;
         }
 
         .activity-controls {
@@ -396,6 +397,7 @@
             align-items: center;
             gap: 0.5rem;
             margin-left: 1rem;
+            flex-shrink: 0;
         }
 
         .reorder-btn,
@@ -541,7 +543,7 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Responsive adjustments for Aula Maker */
+        /* Responsive adjustments */
         @media (max-width: 992px) {
             .app-header { padding: 0 1rem; }
             .menu-toggle { display: block; }
@@ -558,30 +560,42 @@
             .login-box { padding: 2rem; margin-bottom: 3rem;}
             .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
             #login-screen { padding: 2rem 1rem; }
-
-            #aula-maker-section {
-                padding: 1.5rem;
-            }
-
-            #aula-maker-section h2 {
-                font-size: 1.5rem;
-            }
+            
+            #aula-maker-section { padding: 1.5rem; }
+            #aula-maker-section h2 { font-size: 1.5rem; }
 
             .main-action-buttons {
-                flex-direction: column-reverse; /* Botão principal fica por último e mais acessível */
+                flex-direction: column-reverse;
                 align-items: stretch;
             }
             .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
                 width: 100%;
                 margin-right: 0;
             }
-            .clear-plan-btn {
-                margin-bottom: 1rem;
-            }
-
+            .clear-plan-btn { margin-bottom: 1rem; }
 
             #select-activities-modal .modal-body {
-                grid-template-columns: 1fr; /* Single column on small screens */
+                grid-template-columns: 1fr;
+            }
+            
+            /* MELHORIA DE RESPONSIVIDADE 1: Botões de ação do gerador */
+            #add-to-plan-actions .add-activity-btn {
+                width: 100%;
+            }
+
+            /* MELHORIA DE RESPONSIVIDADE 2: Lista de atividades selecionadas */
+            .selected-activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+                padding-bottom: 0.5rem;
+            }
+            .selected-activity-item .activity-controls {
+                width: 100%;
+                justify-content: flex-end;
+                margin-left: 0;
+                padding: 0.25rem;
+                border-top: 1px solid var(--border-color);
             }
         }
     </style>
@@ -1107,6 +1121,8 @@
             dom.navAulaMakerBtn.addEventListener('click', () => {
                 appState.currentView = 'aulaMaker';
                 render();
+                /* CORREÇÃO 1: Garante que a sidebar feche em dispositivos móveis ao clicar no botão */
+                document.body.classList.remove('sidebar-open');
             });
 
             // Catalog Listeners
@@ -1170,28 +1186,26 @@
                 renderPagination(filtered.length);
             }
 
-            renderFilters(); // Render filters for catalog regardless of view
+            renderFilters();
         }
 
         function renderFilters() {
             const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
-            dom.filters.innerHTML = ''; // Clear previous filters
+            dom.filters.innerHTML = '';
             
-            // Function to create a filter button
             const createFilterButton = (filterValue, text, iconId, isFavorite = false) => {
                 const li = document.createElement('li');
                 const btn = document.createElement('button');
                 btn.className = 'filter-btn';
                 if (isFavorite) btn.classList.add('favorite-btn');
                 
-                // Active state is only for catalog view
                 if (appState.currentView === 'catalog' && appState.activeFilter === filterValue) {
                     btn.classList.add('active');
                 }
 
                 btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
                 btn.onclick = () => { 
-                    appState.currentView = 'catalog'; // Switch to catalog view
+                    appState.currentView = 'catalog';
                     appState.activeFilter = filterValue; 
                     appState.currentPage = 1; 
                     render(); 
@@ -1201,7 +1215,6 @@
                 return li;
             };
 
-            // Create and append all filter buttons
             categories.forEach(cat => {
                 const icon = cat === 'Todos' ? '#icon-all' : '#icon-category';
                 dom.filters.appendChild(createFilterButton(cat, cat, icon));
@@ -1280,7 +1293,6 @@
             }
             localStorage.setItem('profVaneFavoritesV1', JSON.stringify(appState.favorites));
             
-            // Re-render only if in favorites filter or update the specific icon
             if (appState.activeFilter === 'Favoritos' && appState.currentView === 'catalog') {
                 appState.currentPage = 1;
                 render();
@@ -1329,7 +1341,7 @@
 
             titleInput.value = '';
             descInput.value = '';
-            dom.customActivityForm.classList.add('hidden'); // Hide form after adding
+            dom.customActivityForm.classList.add('hidden');
         }
 
         function reorderActivity(index, direction) {
@@ -1378,7 +1390,7 @@
                     }
                 });
             }
-            // Restore input values
+            
             dom.makerTitleInput.value = appState.makerPlanTitle;
             dom.makerGradeInput.value = appState.makerPlanGrade;
             dom.makerThemeInput.value = appState.makerPlanTheme;
@@ -1386,7 +1398,6 @@
         }
 
         function removeActivityFromMaker(id) {
-            // ID can be number (catalog) or string (custom), so compare as strings
             appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activity => String(activity.id) !== String(id));
             renderAulaMaker();
         }
@@ -1449,7 +1460,6 @@
                 const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
                 const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
                 
-                // Combine and maintain order of custom activities
                 appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
                 renderAulaMaker();
                 closeModal();
