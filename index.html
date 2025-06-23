@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Materiais Pedagógicos Prof. Vane</title>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
         /* Importa a fonte do Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
         
-        /* ================================================= */
-        /* == INÍCIO DAS ALTERAÇÕES - NOVA PALETA DE CORES == */
-        /* ================================================= */
+        /* =================================================================== */
+        /* == INÍCIO DAS ALTERAÇÕES - NOVA PALETA DE CORES ROSA/LILÁS == */
+        /* =================================================================== */
         :root {
-            --primary-color: #2a9d8f;      /* Verde-azulado pedagógico */
-            --secondary-color: #264653;   /* Tom mais escuro para texto e ênfase */
-            --accent-color: #e76f51;        /* Laranja/Coral vibrante */
-            --background-color: #fdfaf6;    /* Fundo levemente amarelado, mais quente */
+            --primary-color: #b19cd9;      /* Lilás suave principal */
+            --secondary-color: #6c5b7b;   /* Roxo escuro para texto e detalhes */
+            --accent-color: #ffb6c1;        /* Rosa claro para destaque */
+            --background-color: #fdfcff;    /* Fundo branco com um toque de lavanda */
             --card-background: #ffffff;
             --text-color: #333d49;
             --text-color-light: #6b7280;
@@ -25,9 +27,9 @@
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.08);
             --sidebar-width: 280px;
         }
-        /* =============================================== */
-        /* == FIM DAS ALTERAÇÕES - NOVA PALETA DE CORES == */
-        /* =============================================== */
+        /* ================================================================= */
+        /* == FIM DAS ALTERAÇÕES - NOVA PALETA DE CORES ROSA/LILÁS == */
+        /* ================================================================= */
 
         /* ESTILOS GERAIS */
         *, *::before, *::after { box-sizing: border-box; }
@@ -50,7 +52,7 @@
         .login-box p { margin-bottom: 2.5rem; color: var(--text-color-light); }
         #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
         #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
-        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.2); background-color: white; }
+        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
         #login-form button { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
         #login-form button:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
@@ -63,9 +65,9 @@
         .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
         .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
         
-        /* ====================================================== */
-        /* == INÍCIO DAS ALTERAÇÕES - NOVA LOGO E SEUS ESTILOS == */
-        /* ====================================================== */
+        /* ======================================================== */
+        /* == INÍCIO DAS ALTERAÇÕES - NOVA LOGO DE LÁPIS E SEUS ESTILOS == */
+        /* ======================================================== */
         .app-header h1 {
             margin: 0;
             font-size: 1.5rem;
@@ -73,41 +75,42 @@
             color: var(--secondary-color);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
         .logo-icon {
             position: relative;
-            width: 26px;
-            height: 32px;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 30px;
+            height: 30px;
+            transform: rotate(-45deg);
+            transition: transform 0.3s ease;
+        }
+        .app-header:hover .logo-icon {
+            transform: rotate(-45deg) scale(1.1);
         }
         .logo-icon::before, .logo-icon::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
+            box-sizing: border-box;
+        }
+        .logo-icon::before { /* Corpo do Lápis */
             width: 100%;
-            height: 100%;
-            border-radius: 4px;
-            box-shadow: var(--shadow);
+            height: 70%;
+            background: var(--primary-color);
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
         }
-        .logo-icon::before {
-            background-color: var(--primary-color);
-            transform: rotate(-10deg);
-            z-index: 1;
+        .logo-icon::after { /* Ponta do Lápis */
+            top: 70%;
+            width: 100%;
+            height: 30%;
+            background: #f3d7b6; /* Cor de madeira */
+            border-bottom-right-radius: 50% 100%;
+            border-top-right-radius: 5px;
         }
-        .logo-icon::after {
-            background: var(--accent-color);
-            transform: rotate(5deg);
-            z-index: 2;
-        }
-        .app-header:hover .logo-icon {
-            transform: scale(1.1) rotate(-5deg);
-        }
-        /* ==================================================== */
-        /* == FIM DAS ALTERAÇÕES - NOVA LOGO E SEUS ESTILOS === */
-        /* ==================================================== */
+        /* ====================================================== */
+        /* == FIM DAS ALTERAÇÕES - NOVA LOGO DE LÁPIS E SEUS ESTILOS === */
+        /* ====================================================== */
         
         #app-body { display: flex; }
         .sidebar { flex-shrink: 0; width: var(--sidebar-width); background-color: var(--card-background); border-right: 1px solid var(--border-color); padding: 2rem; height: calc(100vh - 70px); position: sticky; top: 70px; overflow-y: auto; }
@@ -119,47 +122,40 @@
         #filters-container { list-style: none; padding: 0; margin: 0; }
         .filter-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; background: none; border: none; text-align: left; padding: 0.9rem 1rem; border-radius: 10px; font-size: 1rem; font-family: 'Poppins'; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-color-light); }
         .filter-btn svg { width: 20px; height: 20px; stroke: var(--text-color-light); transition: all 0.2s; flex-shrink: 0; }
-        .filter-btn.active { background-color: rgba(42, 157, 143, 0.1); color: var(--primary-color); font-weight: 600; }
+        .filter-btn.active { background-color: rgba(177, 156, 217, 0.15); color: var(--primary-color); font-weight: 600; }
         .filter-btn.active svg { stroke: var(--primary-color); }
-        .filter-btn.favorite-btn.active { background-color: rgba(231, 111, 81, 0.1); color: var(--accent-color); }
+        .filter-btn.favorite-btn.active { background-color: rgba(255, 182, 193, 0.15); color: var(--accent-color); }
         .filter-btn.favorite-btn.active svg { stroke: var(--accent-color); }
         .filter-btn:hover:not(.active) { background-color: var(--background-color); }
 
         .content-wrapper { flex-grow: 1; padding: 2.5rem; }
         .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
         .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-
-        /* ======================================================== */
-        /* == INÍCIO DAS ALTERAÇÕES - EFEITOS E ANIMAÇÕES DO CARD == */
-        /* ======================================================== */
         .activity-card { 
             background-color: var(--card-background); 
             border: 1px solid var(--border-color);
-            border-top: 4px solid transparent; /* Reserva espaço para o efeito */
+            border-top: 4px solid transparent;
             border-radius: 20px; 
             box-shadow: var(--shadow); 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.4s ease; /* Transição Aprimorada */
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.4s ease;
             animation: fadeIn 0.5s ease-out forwards; 
         }
         .activity-card:hover { 
             transform: translateY(-8px); 
             box-shadow: var(--shadow-lg);
-            border-top-color: var(--accent-color); /* Mostra a borda colorida no hover */
+            border-top-color: var(--accent-color);
         }
         .activity-card:hover .open-modal-btn {
-            background-color: var(--primary-color); /* Efeito no botão quando o card todo está em hover */
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
             color: white;
         }
-        /* ====================================================== */
-        /* == FIM DAS ALTERAÇÕES - EFEITOS E ANIMAÇÕES DO CARD == */
-        /* ====================================================== */
 
         .card-header { display: flex; justify-content: space-between; align-items: center; margin: 1rem 1.5rem 0; }
-        .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; transition: filter 0.3s ease; }
-        .activity-card:hover .card-category { filter: brightness(1.1); } /* Efeito de brilho na tag */
+        .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
         .favorite-icon { background: none; border: none; padding: 0.5rem; cursor: pointer; transition: transform 0.2s ease; }
         .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; transition: all 0.2s ease; }
         .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
@@ -167,7 +163,7 @@
 
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; }
         .card-footer span { font-weight: 600; }
-        .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+        .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .open-modal-btn:hover { background-color: var(--primary-color); color: white; }
         
         #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; }
@@ -181,17 +177,17 @@
         .modal-container.show .modal-content { transform: scale(1); }
         .modal-header { padding: 1.5rem 2.5rem; background-color: var(--background-color); border-bottom: 1px solid var(--border-color); position: relative; }
         .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; }
-        .modal-body { padding: 1.5rem 2.5rem 2.5rem; }
+        .modal-body { padding: 1.5rem 2.5rem 2.5rem; max-height: 70vh; overflow-y: auto; }
         .modal-body #modal-description { margin-top: 0; color: var(--text-color-light); }
         .modal-content .details { border-top: 1px solid var(--border-color); margin-top: 1.5rem; padding-top: 1.5rem; margin-bottom: 2rem; }
         .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
         .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
-        .download-btn { display: inline-block; background: #10b981; color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; }
+        .download-btn { display: inline-block; background: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
+        .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
         .download-btn:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
 
         footer { text-align: center; padding: 2.5rem; color: var(--text-color-light); }
         
-        /* ESTILOS RESPONSIVOS PARA SIDEBAR */
         @media (max-width: 992px) {
             .menu-toggle { display: block; }
             .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
@@ -229,7 +225,7 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
                 <svg><use xlink:href="#icon-menu"></use></svg>
             </button>
-            <h1><span class="logo-icon"></span>Materiais Pedagógicos</h1>
+            <h1><span class="logo-icon"></span>Cantinho da Prof. Vane</h1>
             <div class="user-area">
                 <span id="welcome-message"></span>
                 <button id="logout-button" class="logout-button">Sair</button>
@@ -283,6 +279,48 @@
     // #####################################################################
     // ## FIM DA BASE DE DADOS ##
     // #####################################################################
+
+    /* ======================================================== */
+    /* == INÍCIO DA ALTERAÇÃO - FUNÇÃO PARA GERAR PDF == */
+    /* ======================================================== */
+    function generatePdf(activityId) {
+        const activity = todasAsAtividades.find(a => a.id === activityId);
+        if (!activity) return;
+
+        // Inicia a biblioteca jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Título do PDF
+        doc.setFontSize(18);
+        doc.setTextColor("#6c5b7b"); // Cor secundária
+        doc.text(activity.titulo, 14, 22);
+
+        // Descrição
+        doc.setFontSize(11);
+        doc.setTextColor("#333d49"); // Cor de texto
+        // A função 'splitTextToSize' quebra o texto longo em várias linhas
+        const descriptionLines = doc.splitTextToSize(activity.desc, 180);
+        doc.text(descriptionLines, 14, 32);
+        
+        // Linha Separadora
+        doc.setDrawColor("#b19cd9"); // Cor primária
+        doc.line(14, 45, 196, 45);
+
+        // Detalhes da Atividade (convertendo o HTML para texto simples)
+        const detailsEl = document.createElement('div');
+        detailsEl.innerHTML = activity.detalhes;
+        const detailsText = detailsEl.innerText;
+
+        const detailsLines = doc.splitTextToSize(detailsText, 180);
+        doc.text(detailsLines, 14, 55);
+
+        // Salva o arquivo
+        doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
+    }
+    /* ====================================================== */
+    /* == FIM DA ALTERAÇÃO - FUNÇÃO PARA GERAR PDF == */
+    /* ====================================================== */
 
     document.addEventListener('DOMContentLoaded', function() {
         const appState = {
@@ -428,6 +466,9 @@
 
         function openModal(id) {
             const activity = todasAsAtividades.find(a => a.id === id);
+            /* ======================================================== */
+            /* == ALTERAÇÃO: BOTÃO DE PDF AGORA CHAMA A FUNÇÃO JS == */
+            /* ======================================================== */
             dom.modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
@@ -437,7 +478,7 @@
                     <div class="modal-body">
                         <p>${activity.desc}</p>
                         <div class="details">${activity.detalhes}</div>
-                        <button class="download-btn" disabled>🖨️ Baixar PDF (Exemplo)</button>
+                        <button class="download-btn" onclick="generatePdf(${activity.id})">🖨️ Baixar PDF</button>
                     </div>
                 </div>`;
             dom.modal.classList.add('show');
