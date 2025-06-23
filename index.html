@@ -321,7 +321,8 @@
             color: var(--text-color);
         }
 
-        #aula-maker-section input[type="text"] {
+        #aula-maker-section input[type="text"],
+        #aula-maker-section textarea {
             width: 100%;
             padding: 0.8rem 1.2rem;
             border: 1px solid var(--border-color);
@@ -332,13 +333,14 @@
             background-color: #f8fafc;
         }
 
-        #aula-maker-section input[type="text"]:focus {
+        #aula-maker-section input[type="text"]:focus,
+        #aula-maker-section textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3);
             background-color: white;
         }
-
+        
         #aula-maker-section h3 {
             font-size: 1.2rem;
             color: var(--secondary-color);
@@ -352,6 +354,9 @@
             font-style: italic;
             margin-bottom: 1.5rem;
             text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
         }
 
         #selected-activities-list {
@@ -384,25 +389,62 @@
             flex-grow: 1;
         }
 
+        .activity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .reorder-btn,
         .remove-activity-btn {
             background: none;
             border: none;
-            color: #ef4444;
-            font-size: 1.5rem;
             cursor: pointer;
-            margin-left: 1rem;
             padding: 0 0.5rem;
-            transition: transform 0.2s;
+            transition: transform 0.2s, color 0.2s;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .reorder-btn {
+            color: var(--text-color-light);
+        }
+        .reorder-btn:hover {
+            color: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        .remove-activity-btn {
+            color: #ef4444;
         }
 
         .remove-activity-btn:hover {
             transform: scale(1.2);
         }
+        
+        .clear-plan-btn {
+            background: #eef2f7;
+            color: var(--text-color-light);
+            border: 1px solid var(--border-color);
+        }
+        .clear-plan-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        
+        .main-action-buttons {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
         .add-activity-btn,
         .generate-plan-btn {
-            display: block;
-            width: fit-content;
             padding: 0.8rem 1.8rem;
             border: none;
             border-radius: 10px;
@@ -411,9 +453,6 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.3s;
             box-shadow: var(--shadow);
-            margin-top: 1.5rem;
-            margin-right: 1rem;
-            display: inline-block; /* To allow them to sit side-by-side */
         }
 
         .add-activity-btn {
@@ -430,7 +469,6 @@
         .generate-plan-btn {
             background: linear-gradient(to right, var(--primary-color), var(--accent-color));
             color: white;
-            float: right; /* To position it to the right */
         }
 
         .generate-plan-btn:hover {
@@ -520,16 +558,13 @@
                 font-size: 1.5rem;
             }
 
-            .add-activity-btn,
-            .generate-plan-btn {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 1rem;
-                float: none; /* Remove float for small screens */
+            .main-action-buttons {
+                flex-direction: column;
             }
-
-            .generate-plan-btn {
-                margin-top: 0; /* Adjust spacing */
+            .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
+                 width: 100%;
+                 margin-right: 0;
+                 margin-bottom: 1rem;
             }
 
             #select-activities-modal .modal-body {
@@ -606,7 +641,7 @@
 
                     <section id="aula-maker-section" class="hidden">
                         <h2>✨ Gerador de Plano de Aula</h2>
-                        <p class="description">Construa seu planejamento selecionando atividades e adicionando detalhes personalizados.</p>
+                        <p class="description">Construa seu planejamento selecionando atividades, adicionando detalhes personalizados e organizando a sequência da sua aula.</p>
 
                         <div class="form-group">
                             <label for="maker-title">Título do Plano de Aula:</label>
@@ -622,16 +657,36 @@
                             <label for="maker-theme">Tema da Aula (Opcional):</label>
                             <input type="text" id="maker-theme" placeholder="Ex: Sustentabilidade e Meio Ambiente">
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="maker-notes">Observações Gerais / Materiais Necessários:</label>
+                            <textarea id="maker-notes" rows="4" placeholder="Ex: Levar tesoura sem ponta, cola bastão e revistas antigas para recorte."></textarea>
+                        </div>
 
                         <h3>Atividades Selecionadas</h3>
-                        <p id="no-activities-selected" class="text-color-light">Nenhuma atividade adicionada. Selecione no catálogo.</p>
-                        <ul id="selected-activities-list">
-                            </ul>
+                        <p id="no-activities-selected" class="text-color-light">Nenhuma atividade adicionada. Selecione no catálogo ou adicione uma personalizada abaixo.</p>
+                        <ul id="selected-activities-list"></ul>
 
-                        <button id="add-activity-btn" class="add-activity-btn">Adicionar Atividades do Catálogo</button>
-                        <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button>
+                        <div id="custom-activity-adder" style="background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 2rem;">
+                            <h4 style="margin-top: 0; color: var(--secondary-color);">Adicionar Atividade Personalizada</h4>
+                            <div class="form-group">
+                                <label for="custom-activity-title">Título da Atividade:</label>
+                                <input type="text" id="custom-activity-title" placeholder="Ex: Roda de conversa inicial">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="custom-activity-desc">Descrição / Roteiro (Opcional):</label>
+                                <textarea id="custom-activity-desc" rows="3"></textarea>
+                            </div>
+                            <button id="add-custom-activity-btn" class="add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem; margin-right: 1rem;">Adicionar ao Plano</button>
+                            <button id="clear-plan-btn" class="add-activity-btn clear-plan-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Limpar Plano</button>
+                        </div>
+                        
+                        <div class="main-action-buttons">
+                            <button id="add-activity-btn" class="add-activity-btn">Adicionar Atividade do Catálogo</button>
+                            <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button>
+                        </div>
                     </section>
-                    </main>
+                </main>
                 <footer><p>Criado com ❤️ por Prof. Vane</p></footer>
             </div>
         </div>
@@ -821,11 +876,12 @@
         const appState = {
             searchQuery: '', activeFilter: 'Todos', currentPage: 1, itemsPerPage: 6,
             favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || [],
-            // NEW: Aula Maker State
-            selectedActivitiesForMaker: [], // Array of activity IDs for the lesson plan
+            // NEW: Aula Maker State using objects for flexibility
+            selectedActivitiesForMaker: [], // Array of objects: {type: 'catalog', id: 1} or {type: 'custom', ...}
             makerPlanTitle: '',
             makerPlanGrade: '',
-            makerPlanTheme: ''
+            makerPlanTheme: '',
+            makerPlanNotes: ''
         };
         const dom = {
             loginScreen: document.getElementById('login-screen'), mainContent: document.getElementById('main-content'),
@@ -841,10 +897,13 @@
             makerTitleInput: document.getElementById('maker-title'),
             makerGradeInput: document.getElementById('maker-grade'),
             makerThemeInput: document.getElementById('maker-theme'),
+            makerNotesInput: document.getElementById('maker-notes'),
             addActivityBtn: document.getElementById('add-activity-btn'),
             generatePlanBtn: document.getElementById('generate-plan-btn'),
             selectedActivitiesList: document.getElementById('selected-activities-list'),
-            noActivitiesSelectedMsg: document.getElementById('no-activities-selected')
+            noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
+            addCustomActivityBtn: document.getElementById('add-custom-activity-btn'),
+            clearPlanBtn: document.getElementById('clear-plan-btn')
         };
 
         function generatePdf(activityId) {
@@ -886,7 +945,7 @@
 
         function closeModal() {
             dom.modal.classList.remove('show'); 
-            dom.modal.innerHTML = ''; // Clear modal content after closing
+            setTimeout(() => { dom.modal.innerHTML = ''; }, 300); // Clear modal content after closing transition
         }
         
         function openModal(id) {
@@ -984,12 +1043,15 @@
             dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
             dom.searchInput.addEventListener('input', () => { appState.searchQuery = dom.searchInput.value.toLowerCase(); appState.currentPage = 1; render(); });
 
-            // NEW: Aula Maker Event Listeners
+            // Aula Maker Event Listeners
             dom.addActivityBtn.addEventListener('click', openSelectActivitiesModal);
             dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdf);
             dom.makerTitleInput.addEventListener('input', (e) => { appState.makerPlanTitle = e.target.value; });
             dom.makerGradeInput.addEventListener('input', (e) => { appState.makerPlanGrade = e.target.value; });
             dom.makerThemeInput.addEventListener('input', (e) => { appState.makerPlanTheme = e.target.value; });
+            dom.makerNotesInput.addEventListener('input', (e) => { appState.makerPlanNotes = e.target.value; });
+            dom.addCustomActivityBtn.addEventListener('click', addCustomActivityToMaker);
+            dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
         }
         
         function setupMobileMenu() {
@@ -1007,22 +1069,22 @@
             let filtered = [...todasAsAtividades];
             if (appState.activeFilter === 'Favoritos') {
                 filtered = filtered.filter(a => appState.favorites.includes(a.id));
-                dom.grid.classList.remove('hidden'); // Show grid for favorites
+                dom.grid.classList.remove('hidden');
                 dom.pagination.classList.remove('hidden');
                 dom.resultsInfo.classList.remove('hidden');
             } else if (appState.activeFilter === 'Aula Maker') {
-                dom.aulaMakerSection.classList.remove('hidden'); // Show Aula Maker section
-                renderAulaMaker(); // Render the Aula Maker specific content
+                dom.aulaMakerSection.classList.remove('hidden');
+                renderAulaMaker();
             } else { // 'Todos' or other categories
                 if (appState.activeFilter !== 'Todos') {
                     filtered = filtered.filter(a => a.categoria === appState.activeFilter);
                 }
-                dom.grid.classList.remove('hidden'); // Show grid for categories
+                dom.grid.classList.remove('hidden');
                 dom.pagination.classList.remove('hidden');
                 dom.resultsInfo.classList.remove('hidden');
             }
             
-            if (appState.searchQuery && appState.activeFilter !== 'Aula Maker') { // Only search if not in Aula Maker
+            if (appState.searchQuery && appState.activeFilter !== 'Aula Maker') {
                 const query = appState.searchQuery;
                 filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
             }
@@ -1032,11 +1094,10 @@
                 renderGrid(filtered);
                 renderPagination(filtered.length);
             } else {
-                dom.resultsInfo.textContent = ''; // Clear results info for Aula Maker
+                dom.resultsInfo.textContent = '';
             }
 
             renderFilters();
-            // Set search input value back if needed, or clear it when switching to Aula Maker
             if (appState.activeFilter === 'Aula Maker') {
                 dom.searchInput.value = '';
                 appState.searchQuery = '';
@@ -1049,11 +1110,10 @@
             categories.forEach(cat => dom.filters.appendChild(createFilterBtn(cat, cat)));
             dom.filters.appendChild(createFilterBtn('Favoritos', 'Favoritos', true));
 
-            // NEW: Add Aula Maker button
             const aulaMakerLi = document.createElement('li');
             const aulaMakerBtn = document.createElement('button');
             aulaMakerBtn.className = 'filter-btn';
-            aulaMakerBtn.id = 'aula-maker-btn'; // Assign ID for direct selection
+            aulaMakerBtn.id = 'aula-maker-btn';
             if (appState.activeFilter === 'Aula Maker') aulaMakerBtn.classList.add('active');
             aulaMakerBtn.innerHTML = `<svg><use xlink:href="#icon-magic-wand"></use></svg> <span>Aula Maker</span>`;
             aulaMakerBtn.onclick = () => {
@@ -1161,47 +1221,112 @@
             } else {
                 const icon = document.querySelector(`.favorite-icon[data-id='${id}']`);
                 if(icon) {
-                    icon.classList.toggle('favorited', index === -1);
+                     icon.classList.toggle('favorited', index === -1);
                 }
             }
         }
 
-        // NEW: Aula Maker Functions
+        // --- NEW AND UPDATED AULA MAKER FUNCTIONS ---
+
+        function clearLessonPlan() {
+            if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
+                appState.makerPlanTitle = '';
+                appState.makerPlanGrade = '';
+                appState.makerPlanTheme = '';
+                appState.makerPlanNotes = '';
+                appState.selectedActivitiesForMaker = [];
+                renderAulaMaker(); // This will also update the input fields
+            }
+        }
+
+        function addCustomActivityToMaker() {
+            const titleInput = document.getElementById('custom-activity-title');
+            const descInput = document.getElementById('custom-activity-desc');
+            const title = titleInput.value.trim();
+
+            if (!title) {
+                alert('Por favor, insira um título para a atividade personalizada.');
+                titleInput.focus();
+                return;
+            }
+
+            const newActivity = {
+                type: 'custom',
+                id: `custom_${Date.now()}`,
+                titulo: title,
+                desc: descInput.value.trim(),
+                categoria: 'Personalizada'
+            };
+
+            appState.selectedActivitiesForMaker.push(newActivity);
+            renderAulaMaker();
+
+            titleInput.value = '';
+            descInput.value = '';
+        }
+
+        function reorderActivity(index, direction) {
+            const list = appState.selectedActivitiesForMaker;
+            if (direction === 'up' && index > 0) {
+                [list[index], list[index - 1]] = [list[index - 1], list[index]]; // Swap
+            } else if (direction === 'down' && index < list.length - 1) {
+                [list[index], list[index + 1]] = [list[index + 1], list[index]]; // Swap
+            }
+            renderAulaMaker();
+        }
+
         function renderAulaMaker() {
             dom.selectedActivitiesList.innerHTML = '';
             if (appState.selectedActivitiesForMaker.length === 0) {
                 dom.noActivitiesSelectedMsg.classList.remove('hidden');
             } else {
                 dom.noActivitiesSelectedMsg.classList.add('hidden');
-                appState.selectedActivitiesForMaker.forEach(activityId => {
-                    const activity = todasAsAtividades.find(a => a.id === activityId);
-                    if (activity) {
+                appState.selectedActivitiesForMaker.forEach((activity, index) => {
+                    const activityData = activity.type === 'custom' 
+                        ? activity 
+                        : todasAsAtividades.find(a => a.id === activity.id);
+
+                    if (activityData) {
                         const listItem = document.createElement('li');
                         listItem.className = 'selected-activity-item';
                         listItem.innerHTML = `
-                            <span>${activity.titulo} (${activity.categoria})</span>
-                            <button class="remove-activity-btn" data-id="${activity.id}" aria-label="Remover atividade">×</button>
+                            <span>${activityData.titulo} <em style="color: var(--text-color-light)">(${activityData.categoria})</em></span>
+                            <div class="activity-controls">
+                                <button class="reorder-btn" data-index="${index}" data-direction="up" title="Mover para cima">↑</button>
+                                <button class="reorder-btn" data-index="${index}" data-direction="down" title="Mover para baixo">↓</button>
+                                <button class="remove-activity-btn" data-id="${activityData.id}" aria-label="Remover atividade">×</button>
+                            </div>
                         `;
                         dom.selectedActivitiesList.appendChild(listItem);
                     }
                 });
+                
                 dom.selectedActivitiesList.querySelectorAll('.remove-activity-btn').forEach(btn => {
-                    btn.onclick = (e) => removeActivityFromMaker(parseInt(e.target.dataset.id));
+                    btn.onclick = (e) => removeActivityFromMaker(e.currentTarget.dataset.id);
+                });
+                dom.selectedActivitiesList.querySelectorAll('.reorder-btn').forEach(btn => {
+                    btn.onclick = (e) => {
+                        const target = e.currentTarget;
+                        reorderActivity(parseInt(target.dataset.index), target.dataset.direction);
+                    }
                 });
             }
             // Restore input values
             dom.makerTitleInput.value = appState.makerPlanTitle;
             dom.makerGradeInput.value = appState.makerPlanGrade;
             dom.makerThemeInput.value = appState.makerPlanTheme;
+            dom.makerNotesInput.value = appState.makerPlanNotes;
         }
 
         function removeActivityFromMaker(id) {
-            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activityId => activityId !== id);
+            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activity => String(activity.id) !== String(id));
             renderAulaMaker();
         }
 
         function openSelectActivitiesModal() {
-            let tempSelected = [...appState.selectedActivitiesForMaker]; // Work with a temporary array
+            let tempSelected = appState.selectedActivitiesForMaker
+                .filter(a => a.type === 'catalog')
+                .map(a => a.id); // Start with currently selected catalog activities
 
             const selectModalHTML = `
                 <div class="modal-content" id="select-activities-modal">
@@ -1235,13 +1360,14 @@
             dom.modal.classList.add('show');
 
             dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
 
             dom.modal.querySelectorAll('.activity-card').forEach(card => {
                 card.onclick = function() {
                     const id = parseInt(this.dataset.id);
-                    if (tempSelected.includes(id)) {
-                        tempSelected = tempSelected.filter(activityId => activityId !== id);
+                    const index = tempSelected.indexOf(id);
+                    if (index > -1) {
+                        tempSelected.splice(index, 1);
                         this.classList.remove('selected');
                     } else {
                         tempSelected.push(id);
@@ -1251,13 +1377,20 @@
             });
 
             dom.modal.querySelector('#confirm-selection-btn').onclick = () => {
-                appState.selectedActivitiesForMaker = tempSelected;
+                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
+                const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
+                // Combine existing custom activities with the new selection from the catalog
+                appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
                 renderAulaMaker();
                 closeModal();
             };
         }
 
         function generateLessonPlanPdf() {
+            if (appState.selectedActivitiesForMaker.length === 0 && !appState.makerPlanTitle) {
+                alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");
+                return;
+            }
             if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
                 console.error("A biblioteca jsPDF não foi carregada corretamente.");
                 alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
@@ -1266,102 +1399,113 @@
 
             try {
                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                let yOffset = 20;
-                const margin = 14;
-                const lineHeight = 7;
-                const maxWidth = 180;
+                const doc = new jsPDF({unit: 'pt', format: 'a4'});
+                let yOffset = 60;
+                const margin = 40;
+                const lineHeight = 18;
+                const maxWidth = doc.internal.pageSize.width - (margin * 2);
 
+                doc.setFont('Poppins', 'bold');
                 doc.setFontSize(22);
-                doc.setTextColor("#6c5b7b");
-                doc.text("Plano de Aula Personalizado", margin, yOffset);
-                yOffset += 12;
+                doc.setTextColor(40, 40, 40);
+                doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
+                yOffset += 40;
+                
+                doc.setFont('Poppins', 'bold');
+                doc.setFontSize(12);
+                doc.text(`Título:`, margin, yOffset);
+                doc.setFont('Poppins', 'normal');
+                doc.text(`${appState.makerPlanTitle || 'Sem Título'}`, margin + 50, yOffset);
+                yOffset += lineHeight * 1.5;
 
-                doc.setFontSize(14);
-                doc.setTextColor("#333d49");
-                doc.text(`Título: ${appState.makerPlanTitle || 'Sem Título'}`, margin, yOffset);
-                yOffset += lineHeight;
-                doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não Informado'}`, margin, yOffset);
-                yOffset += lineHeight;
+                doc.setFont('Poppins', 'bold');
+                doc.text(`Ano/Turma:`, margin, yOffset);
+                doc.setFont('Poppins', 'normal');
+                doc.text(`${appState.makerPlanGrade || 'Não Informado'}`, margin + 75, yOffset);
+                
                 if (appState.makerPlanTheme) {
-                    doc.text(`Tema: ${appState.makerPlanTheme}`, margin, yOffset);
                     yOffset += lineHeight;
+                    doc.setFont('Poppins', 'bold');
+                    doc.text(`Tema:`, margin, yOffset);
+                    doc.setFont('Poppins', 'normal');
+                    doc.text(`${appState.makerPlanTheme}`, margin + 45, yOffset);
                 }
-                yOffset += 10; // Extra space
+                yOffset += lineHeight * 2;
+                
+                if (appState.makerPlanNotes) {
+                    doc.setFont('Poppins', 'bold');
+                    doc.setFontSize(14);
+                    doc.text("Observações Gerais / Materiais:", margin, yOffset);
+                    yOffset += lineHeight * 1.5;
+                    
+                    doc.setFont('Poppins', 'normal');
+                    doc.setFontSize(11);
+                    const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
+                    doc.text(notesLines, margin, yOffset);
+                    yOffset += notesLines.length * (lineHeight - 4) + 20;
+                }
+                
+                doc.setLineWidth(1.5);
+                doc.setDrawColor(var(--primary-color));
+                doc.line(margin, yOffset, maxWidth + margin, yOffset);
+                yOffset += 30;
 
-                doc.setFontSize(18);
-                doc.setTextColor("#b19cd9");
-                doc.text("Atividades Incluídas:", margin, yOffset);
-                yOffset += 10;
+                doc.setFont('Poppins', 'bold');
+                doc.setFontSize(16);
+                doc.text("Sequência de Atividades", margin, yOffset);
+                yOffset += 25;
 
                 if (appState.selectedActivitiesForMaker.length === 0) {
-                    doc.setFontSize(12);
+                    doc.setFont('Poppins', 'italic');
+                    doc.setFontSize(11);
                     doc.setTextColor("#6b7280");
                     doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
-                    yOffset += lineHeight;
                 } else {
-                    appState.selectedActivitiesForMaker.forEach((activityId, index) => {
-                        const activity = todasAsAtividades.find(a => a.id === activityId);
-                        if (activity) {
-                            if (yOffset + 50 > doc.internal.pageSize.height - margin) { // Check for page break
+                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
+                        const isCustom = activity.type === 'custom';
+                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
+                        
+                        if (activityData) {
+                            if (yOffset > doc.internal.pageSize.height - 150) { // Check for page break
                                 doc.addPage();
-                                yOffset = margin;
+                                yOffset = 60;
                             }
 
+                            doc.setFont('Poppins', 'bold');
                             doc.setFontSize(14);
+                            doc.setTextColor("#6c5b7b");
+                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
+                            yOffset += lineHeight * 1.2;
+
+                            doc.setFont('Poppins', 'normal');
+                            doc.setFontSize(11);
                             doc.setTextColor("#333d49");
-                            doc.text(`${index + 1}. ${activity.titulo} (${activity.categoria})`, margin, yOffset);
-                            yOffset += lineHeight;
 
-                            doc.setFontSize(10);
-                            doc.setTextColor("#6b7280");
-                            const descLines = doc.splitTextToSize(`Descrição: ${activity.desc}`, maxWidth);
-                            doc.text(descLines, margin, yOffset);
-                            yOffset += descLines.length * lineHeight;
-
-                            const durationLine = `Duração: ${activity.duracao || 'Não especificado'}`;
-                            doc.text(durationLine, margin, yOffset);
-                            yOffset += lineHeight;
-
-                            const bnccLines = doc.splitTextToSize(`BNCC: ${activity.bncc.join(', ')}`, maxWidth);
-                            doc.text(bnccLines, margin, yOffset);
-                            yOffset += bnccLines.length * lineHeight;
-
-                            doc.setFontSize(12);
-                            doc.setTextColor("#6c5b7b");
-                            doc.text("Objetivos:", margin, yOffset);
-                            yOffset += lineHeight;
-                            doc.setFontSize(10);
-                            activity.objetivos.forEach(obj => {
-                                const objLines = doc.splitTextToSize(`- ${obj}`, maxWidth);
-                                doc.text(objLines, margin + 5, yOffset);
-                                yOffset += objLines.length * lineHeight;
-                            });
-                            yOffset += 5;
-
-                            doc.setFontSize(12);
-                            doc.setTextColor("#6c5b7b");
-                            doc.text("Roteiro Sugerido:", margin, yOffset);
-                            yOffset += lineHeight;
-                            doc.setFontSize(10);
-                            Object.keys(activity.roteiro).forEach((key, roteiroIndex) => {
-                                const stepTitle = key.charAt(0).toUpperCase() + key.slice(1);
-                                const stepContent = activity.roteiro[key];
-                                const stepLines = doc.splitTextToSize(`${roteiroIndex + 1}. ${stepTitle}: ${stepContent}`, maxWidth);
-                                doc.text(stepLines, margin + 5, yOffset);
-                                yOffset += stepLines.length * lineHeight;
-                            });
-                            if (activity.dica_vane) {
-                                const dicaLines = doc.splitTextToSize(`Dica da Vane: ${activity.dica_vane}`, maxWidth);
-                                doc.text(dicaLines, margin + 5, yOffset);
-                                yOffset += dicaLines.length * lineHeight;
+                            if (isCustom) {
+                                const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4);
+                            } else {
+                                const descLines = doc.splitTextToSize(activityData.desc, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4) + 10;
+                                
+                                doc.setFont('Poppins', 'bold');
+                                doc.text('Objetivos:', margin, yOffset);
+                                yOffset += lineHeight;
+                                doc.setFont('Poppins', 'normal');
+                                activityData.objetivos.forEach(obj => {
+                                    const objLines = doc.splitTextToSize(`- ${obj}`, maxWidth - 10);
+                                    doc.text(objLines, margin + 10, yOffset);
+                                    yOffset += objLines.length * (lineHeight - 4);
+                                });
                             }
-                            yOffset += 10; // Space between activities
+                            yOffset += 25; // Space between activities
                         }
                     });
                 }
 
-                const fileName = (appState.makerPlanTitle || "Plano de Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
+                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
                 doc.save(fileName);
 
             } catch (error) {
