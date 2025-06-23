@@ -1,232 +1,237 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Editor PDF com Camadas Editáveis</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    text-align: center;
-    background: #f0f0f0;
-  }
-  #pdf-container {
-    position: relative;
-    display: inline-block;
-    border: 1px solid #ccc;
-  }
-  canvas {
-    display: block;
-    max-width: 100%;
-    height: auto;
-  }
-  .textbox {
-    position: absolute;
-    min-width: 60px;
-    min-height: 20px;
-    border: 1px dashed #007bff;
-    background: rgba(255,255,255,0.8);
-    padding: 2px 4px;
-    cursor: text;
-    overflow-wrap: break-word;
-    font-size: 14px;
-  }
-  .textbox:focus {
-    outline: 2px solid #0056b3;
-  }
-  #controls {
-    margin-bottom: 15px;
-  }
-  button, input[type="file"] {
-    font-size: 16px;
-    margin: 5px;
-    padding: 8px 15px;
-  }
-  /* Impressão só do container, sem controles */
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-    #pdf-container, #pdf-container * {
-      visibility: visible;
-    }
-    #pdf-container {
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%;
-      margin: 0;
-      border: none;
-    }
-    .textbox {
-      border: none;
-      background: transparent;
-      box-shadow: none;
-    }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor PDF para HTML Editável</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-color: #343a40;
+            --bg-color: #fff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        header, footer {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            text-align: center;
+            padding: 1rem;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        input[type="file"] {
+            display: none; /* Escondemos o input padrão */
+        }
+
+        .custom-file-upload, #print-button {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-file-upload:hover, #print-button:hover {
+            background-color: #0056b3;
+        }
+
+        #editor-container {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #html-output {
+            min-height: 700px;
+            padding: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.7;
+            outline: none; /* Remove a borda ao focar */
+            white-space: pre-wrap; /* Preserva quebras de linha e espaços */
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ESTILOS DE IMPRESSÃO */
+        @media print {
+            /* Oculta tudo que não for a área de impressão */
+            body > *:not(#editor-container) {
+                display: none;
+            }
+
+            /* Garante que a área de impressão ocupe todo o espaço */
+            #editor-container, #html-output {
+                width: 100%;
+                height: auto;
+                margin: 0;
+                padding: 0;
+                border: none;
+                box-shadow: none;
+                min-height: 0;
+                color: #000 !important; /* Garante que o texto seja preto na impressão */
+            }
+
+            /* Restaura as margens padrão do navegador para impressão */
+            @page {
+                margin: 1in;
+            }
+        }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </head>
 <body>
+    <header>
+        <h1>Conversor de PDF para HTML Editável</h1>
+        <p>Carregue um arquivo PDF, edite o conteúdo e imprima.</p>
+    </header>
 
-<h1>Editor PDF com Camadas Editáveis</h1>
+    <main>
+        <div class="controls">
+            <label for="pdf-file-input" class="custom-file-upload">
+                <i class="fas fa-file-pdf"></i> Escolher PDF
+            </label>
+            <input type="file" id="pdf-file-input" accept="application/pdf">
+            <button id="print-button">
+                <i class="fas fa-print"></i> Imprimir Conteúdo Editado
+            </button>
+        </div>
 
-<div id="controls">
-  <input type="file" id="file-input" accept="application/pdf" />
-  <button id="print-btn">Imprimir / Salvar PDF</button>
-  <button id="add-text-btn">Adicionar Campo de Texto</button>
-</div>
+        <div id="loader" class="loader" style="display: none;"></div>
+        
+        <div id="editor-container">
+            <div id="html-output" contenteditable="true" aria-label="Área de conteúdo editável">
+                <p>O conteúdo do seu PDF aparecerá aqui após o carregamento.</p>
+            </div>
+        </div>
+    </main>
 
-<div id="pdf-container"></div>
+    <footer>
+        <p>Projeto completo em um único arquivo HTML</p>
+    </footer>
 
-<!-- PDF.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('pdf-file-input');
+            const printButton = document.getElementById('print-button');
+            const htmlOutput = document.getElementById('html-output');
+            const loader = document.getElementById('loader');
 
-<script>
-  const fileInput = document.getElementById("file-input");
-  const pdfContainer = document.getElementById("pdf-container");
-  const printBtn = document.getElementById("print-btn");
-  const addTextBtn = document.getElementById("add-text-btn");
+            // Define o workerSrc para o PDF.js. Essencial para o funcionamento da biblioteca.
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            // Evento disparado quando um arquivo é selecionado
+            fileInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (!file || file.type !== 'application/pdf') {
+                    htmlOutput.innerHTML = '<p style="color: red;">Por favor, selecione um arquivo PDF válido.</p>';
+                    return;
+                }
 
-  let pdfDoc = null;
-  let scale = 1.5;
-  let canvas, ctx;
-  let textBoxes = [];
-  let currentPage = 1;
+                // Mostra o loader e limpa o conteúdo anterior
+                loader.style.display = 'block';
+                htmlOutput.innerHTML = '';
 
-  // Renderiza a página do PDF e adiciona caixas de texto com posições relativas
-  async function renderPage(pageNum) {
-    if (!pdfDoc) return;
+                try {
+                    const fileReader = new FileReader();
+                    
+                    fileReader.onload = async function() {
+                        const typedarray = new Uint8Array(this.result);
+                        const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                        let fullHtmlContent = '';
 
-    const page = await pdfDoc.getPage(pageNum);
-    const viewport = page.getViewport({ scale });
+                        // Itera por todas as páginas do PDF
+                        for (let i = 1; i <= pdf.numPages; i++) {
+                            const page = await pdf.getPage(i);
+                            const textContent = await page.getTextContent();
+                            
+                            // Constrói o HTML a partir do texto extraído.
+                            // Esta versão usa 'divs' para cada linha para melhor preservação do layout de texto.
+                            textContent.items.forEach(item => {
+                                // A propriedade 'transform' pode ser usada para posicionar o texto,
+                                // mas para um editor simples, apenas extrair o texto é mais robusto.
+                                // Adicionamos cada pedaço de texto em um parágrafo para permitir a edição.
+                                fullHtmlContent += `<p>${item.str.trim()}</p>`;
+                            });
 
-    // Remove canvas antigo e cria novo
-    pdfContainer.innerHTML = "";
-    canvas = document.createElement("canvas");
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    pdfContainer.style.width = viewport.width + "px";
-    pdfContainer.style.height = viewport.height + "px";
+                            // Adiciona um separador visual entre as páginas no editor
+                            if (i < pdf.numPages) {
+                                fullHtmlContent += '<hr style="border: 1px dashed #ccc; margin: 20px 0;">';
+                            }
+                        }
+                        
+                        htmlOutput.innerHTML = fullHtmlContent || '<p>Não foi possível extrair texto deste PDF ou o PDF está em branco.</p>';
+                    };
 
-    ctx = canvas.getContext("2d");
-    pdfContainer.appendChild(canvas);
+                    fileReader.readAsArrayBuffer(file);
 
-    const renderContext = { canvasContext: ctx, viewport };
-    await page.render(renderContext).promise;
+                } catch (error) {
+                    console.error('Erro ao processar o PDF:', error);
+                    htmlOutput.innerHTML = `<p style="color: red;">Ocorreu um erro ao processar o PDF. Detalhes: ${error.message}</p>`;
+                } finally {
+                    // Esconde o loader ao finalizar
+                    loader.style.display = 'none';
+                }
+            });
 
-    // Extrai o texto da página e posiciona caixas
-    const textContent = await page.getTextContent();
-
-    // Limpa caixas antigas
-    textBoxes.forEach(box => box.remove());
-    textBoxes = [];
-
-    textContent.items.forEach(item => {
-      const tx = pdfjsLib.Util.transform(
-        viewport.transform,
-        item.transform
-      );
-
-      // Posição na tela
-      const x = tx[4];
-      const y = tx[5] - item.height;
-
-      // Cria textbox sobre o texto
-      const box = document.createElement("div");
-      box.className = "textbox";
-      box.contentEditable = true;
-      box.textContent = item.str;
-
-      box.style.left = x + "px";
-      box.style.top = y + "px";
-      box.style.fontSize = (item.height * scale * 0.8) + "px";
-      box.style.fontFamily = "Arial, sans-serif";
-      box.style.width = Math.max(item.width * scale, 30) + "px";
-      box.style.height = item.height * scale + "px";
-
-      // Permitir arrastar
-      enableDrag(box);
-
-      pdfContainer.appendChild(box);
-      textBoxes.push(box);
-    });
-  }
-
-  // Habilita arrastar a div textbox
-  function enableDrag(el) {
-    let isDragging = false, offsetX, offsetY;
-
-    el.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      offsetX = e.clientX - el.getBoundingClientRect().left;
-      offsetY = e.clientY - el.getBoundingClientRect().top;
-      el.style.cursor = "move";
-      e.preventDefault();
-    });
-
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-      if(el) el.style.cursor = "text";
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        const containerRect = pdfContainer.getBoundingClientRect();
-        let x = e.clientX - containerRect.left - offsetX;
-        let y = e.clientY - containerRect.top - offsetY;
-
-        // limites para nao sair da area do pdf
-        x = Math.max(0, Math.min(x, containerRect.width - el.offsetWidth));
-        y = Math.max(0, Math.min(y, containerRect.height - el.offsetHeight));
-
-        el.style.left = x + "px";
-        el.style.top = y + "px";
-      }
-    });
-  }
-
-  fileInput.addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file || file.type !== "application/pdf") {
-      alert("Por favor, selecione um arquivo PDF válido.");
-      return;
-    }
-    const fileReader = new FileReader();
-    fileReader.onload = async function() {
-      const typedArray = new Uint8Array(this.result);
-      pdfDoc = await pdfjsLib.getDocument({ data: typedArray }).promise;
-      currentPage = 1;
-      renderPage(currentPage);
-    };
-    fileReader.readAsArrayBuffer(file);
-  });
-
-  printBtn.addEventListener("click", () => {
-    window.print();
-  });
-
-  addTextBtn.addEventListener("click", () => {
-    if(!pdfDoc) {
-      alert("Carregue um PDF primeiro.");
-      return;
-    }
-    // Adiciona caixa no centro do container
-    const box = document.createElement("div");
-    box.className = "textbox";
-    box.contentEditable = true;
-    box.textContent = "Texto editável";
-    box.style.left = (pdfContainer.clientWidth / 2 - 50) + "px";
-    box.style.top = (pdfContainer.clientHeight / 2 - 10) + "px";
-    box.style.width = "100px";
-    box.style.height = "20px";
-    enableDrag(box);
-    pdfContainer.appendChild(box);
-    textBoxes.push(box);
-    box.focus();
-  });
-</script>
-
+            // Evento do botão de impressão
+            printButton.addEventListener('click', () => {
+                const initialText = 'O conteúdo do seu PDF aparecerá aqui após o carregamento.';
+                // Verifica se há conteúdo para imprimir
+                if (htmlOutput.innerText.trim() === '' || htmlOutput.innerText.trim() === initialText) {
+                    alert('Não há conteúdo para imprimir. Por favor, carregue um PDF primeiro.');
+                    return;
+                }
+                window.print();
+            });
+        });
+    </script>
 </body>
 </html>
