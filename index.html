@@ -27,7 +27,7 @@
 
         /* ESTILOS GERAIS E ANIMAÇÕES */
         *, *::before, *::after { box-sizing: border-box; }
-        html { scroll-behavior: smooth; } /* Para a rolagem suave do link 'veja uma prévia' */
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--background-color);
@@ -44,23 +44,21 @@
         @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes contentFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ======================================================== */
-        /* == INÍCIO DAS MODIFICAÇÕES - TELA DE LOGIN INTERATIVA == */
-        /* ======================================================== */
+        /* TELA DE LOGIN INTERATIVA */
         #login-screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
-            min-height: 100vh; /* Garante que ocupe a tela toda, permitindo rolagem */
+            min-height: 100vh;
             height: auto;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             padding: 3rem 1rem;
         }
         .login-container {
             width: 100%;
-            max-width: 950px; /* Largura máxima para o conteúdo da tela de login */
+            max-width: 950px;
             margin: auto;
         }
         .login-box {
@@ -71,7 +69,7 @@
             text-align: center;
             width: 100%;
             max-width: 450px;
-            margin: 0 auto 4rem auto; /* Centraliza e adiciona margem inferior */
+            margin: 0 auto 4rem auto;
             animation: fadeIn 0.7s ease-out forwards;
             border-top: 5px solid var(--accent-color);
         }
@@ -119,9 +117,14 @@
         }
         .preview-card-content {
             padding: 1.5rem;
-            filter: blur(5px); /* EFEITO DE DESFOQUE */
-            user-select: none; /* Impede a seleção do texto desfocado */
-            background-color: #fff; /* Fundo branco para o desfoque funcionar bem */
+            filter: blur(2px); /* <<< VALOR DO DESFOQUE AJUSTADO AQUI */
+            user-select: none;
+            background-color: #fff;
+            transition: filter 0.3s ease; /* Adiciona uma transição suave */
+        }
+        /* EFEITO BÔNUS IMPLEMENTADO */
+        .preview-card:hover .preview-card-content {
+            filter: blur(1px); /* Desfoque diminui no hover */
         }
         .preview-card-category {
             display: inline-block;
@@ -148,7 +151,7 @@
             width: 100%;
             height: 100%;
             background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(1px); /* Suaviza a camada sobre o desfoque */
+            backdrop-filter: blur(1px);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -172,13 +175,9 @@
             font-size: 1rem;
             padding: 0 1rem;
         }
-        /* ====================================================== */
-        /* == FIM DAS MODIFICAÇÕES - TELA DE LOGIN INTERATIVA == */
-        /* ====================================================== */
 
-        /* ESTILOS ANTIGOS DO LOGIN (ALGUNS AINDA USADOS PELO CONTEÚDO DENTRO DO BOX) */
         .login-box h1 { font-size: 2.25rem; margin-top: 0; }
-        .login-box p { margin-bottom: 2rem; color: var(--text-color-light); }
+        .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); } /* Seletor mais específico */
         #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
         #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
         #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
@@ -186,7 +185,7 @@
         #login-form button:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
         
-        /* ESTRUTURA PRINCIPAL (PÓS-LOGIN) - SEM ALTERAÇÕES */
+        /* ESTRUTURA PRINCIPAL (PÓS-LOGIN) */
         .app-header { background: var(--card-background); padding: 0 1rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; gap: 1rem; }
         .user-area { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
         .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
@@ -345,7 +344,7 @@
     </div>
 
     <script>
-    // Base de dados e lógica principal
+    // Base de dados
     const usuariosAutorizados = [
         { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
         { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
@@ -383,7 +382,6 @@
         doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
     }
 
-    // NOVA FUNÇÃO PARA MONTAR A PRÉVIA NA TELA DE LOGIN
     function setupLoginScreenPreview() {
         const previewContainer = document.getElementById('preview-grid-container');
         if (!previewContainer) return;
@@ -592,7 +590,6 @@
 
         // --- INICIALIZAÇÃO ---
         (function main() {
-            // CHAMA A FUNÇÃO DA PRÉVIA PRIMEIRO
             setupLoginScreenPreview();
 
             const savedUser = localStorage.getItem('usuarioLogado');
