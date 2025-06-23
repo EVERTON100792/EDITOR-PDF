@@ -286,7 +286,7 @@
         .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
         /* AULA MAKER SECTION */
-        #aula-maker-section, .weekly-plan-view {
+        #aula-maker-section {
             background-color: var(--card-background);
             border-radius: 20px;
             box-shadow: var(--shadow);
@@ -294,7 +294,7 @@
             animation: fadeIn 0.7s ease-out forwards;
         }
 
-        #aula-maker-section h2, .weekly-plan-view h2 {
+        #aula-maker-section h2 {
             color: var(--secondary-color);
             font-size: 1.8rem;
             margin-top: 0;
@@ -304,7 +304,7 @@
             gap: 10px;
         }
 
-        #aula-maker-section .description, .weekly-plan-view .description {
+        #aula-maker-section .description {
             color: var(--text-color-light);
             margin-bottom: 2rem;
             font-size: 1rem;
@@ -438,7 +438,9 @@
             border-top: 1px solid var(--border-color);
         }
 
-        .action-button {
+        .add-activity-btn,
+        .generate-plan-btn,
+        .clear-plan-btn {
             padding: 0.8rem 1.8rem;
             border: none;
             border-radius: 10px;
@@ -541,79 +543,6 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* NOVIDADE: Estilos para o Gerador de Planos Semanais */
-        #weekly-plans-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .weekly-plan-card {
-            background-color: var(--card-background);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-left: 5px solid var(--primary-color);
-        }
-        .weekly-plan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-        .weekly-plan-card h3 {
-            margin: 0 0 0.5rem 0;
-            color: var(--secondary-color);
-        }
-        .weekly-plan-card p {
-            margin: 0;
-            color: var(--text-color-light);
-            font-size: 0.9rem;
-        }
-        .weekly-plan-card .grade-tag {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.2rem 0.8rem;
-            font-size: 0.8rem;
-            border-radius: 99px;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-        #weekly-plan-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        .day-column {
-            background-color: #fcfcfd;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem;
-        }
-        .day-column h4 {
-            margin: 0 0 1rem 0;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--primary-color);
-            text-align: center;
-            color: var(--secondary-color);
-        }
-        .day-column ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .day-column li {
-            font-size: 0.9rem;
-            padding: 0.5rem;
-            background-color: white;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            border-left: 3px solid var(--accent-color);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-        }
-
         /* Responsive adjustments */
         @media (max-width: 992px) {
             .app-header { padding: 0 1rem; }
@@ -623,10 +552,6 @@
             body.sidebar-open .sidebar { transform: translateX(0); }
             body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
             .content-wrapper { padding: 1.5rem; }
-            /* NOVIDADE: Responsividade do plano semanal */
-            #weekly-plan-preview-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
         }
         @media (max-width: 768px) {
             .user-area #welcome-message { display: none; }
@@ -636,14 +561,14 @@
             .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
             #login-screen { padding: 2rem 1rem; }
             
-            #aula-maker-section, .weekly-plan-view { padding: 1.5rem; }
-            #aula-maker-section h2, .weekly-plan-view h2 { font-size: 1.5rem; }
+            #aula-maker-section { padding: 1.5rem; }
+            #aula-maker-section h2 { font-size: 1.5rem; }
 
             .main-action-buttons {
                 flex-direction: column-reverse;
                 align-items: stretch;
             }
-            .action-button, .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
+            .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
                 width: 100%;
                 margin-right: 0;
             }
@@ -653,10 +578,12 @@
                 grid-template-columns: 1fr;
             }
             
-            #add-to-plan-actions .action-button {
+            /* MELHORIA DE RESPONSIVIDADE 1: Botões de ação do gerador */
+            #add-to-plan-actions .add-activity-btn {
                 width: 100%;
             }
 
+            /* MELHORIA DE RESPONSIVIDADE 2: Lista de atividades selecionadas */
             .selected-activity-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -687,9 +614,6 @@
             <path d="M4 17l-1 1 3 3 1-1-3-3z"></path>
             <path d="M10.5 10.5l-2.5-2.5"></path>
             <path d="M13.5 13.5l-2.5-2.5"></path>
-        </symbol>
-        <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
         </symbol>
     </svg>
 
@@ -731,17 +655,10 @@
             <aside class="sidebar" id="sidebar">
                 <h2>Navegação</h2>
                 
-                <div style="margin-bottom: 0.5rem;">
-                    <button id="nav-weekly-plans-btn" class="filter-btn">
-                        <svg><use xlink:href="#icon-calendar"></use></svg>
-                        <span>Planos Semanais Prontos</span>
-                    </button>
-                </div>
-
                 <div style="margin-bottom: 1.5rem;">
                     <button id="nav-aula-maker-btn" class="filter-btn">
                         <svg><use xlink:href="#icon-magic-wand"></use></svg>
-                        <span>Meu Plano de Aula</span>
+                        <span>Gerador de Plano de Aula</span>
                     </button>
                 </div>
             
@@ -758,18 +675,15 @@
             </aside>
             <div class="content-wrapper">
                 <main>
-                    <div id="weekly-plans-view" class="weekly-plan-view hidden">
-                        </div>
-
-                    <div id="catalog-view" class="hidden">
+                    <div id="catalog-view">
                         <div id="results-info"></div>
                         <section class="activities-grid" id="activities-grid-container"></section>
                         <div id="pagination-container"></div>
                     </div>
 
                     <section id="aula-maker-section" class="hidden">
-                        <h2><svg width="28" height="28" style="stroke: var(--secondary-color)"><use xlink:href="#icon-magic-wand"></use></svg> Meu Plano de Aula (Criador)</h2>
-                        <p class="description">Construa seu planejamento personalizado adicionando atividades do catálogo ou criando as suas próprias.</p>
+                        <h2><svg width="28" height="28" style="stroke: var(--secondary-color)"><use xlink:href="#icon-magic-wand"></use></svg> Gerador de Plano de Aula</h2>
+                        <p class="description">Construa seu planejamento adicionando atividades do nosso catálogo ou criando as suas próprias. Organize a sequência e gere um PDF completo!</p>
 
                         <div class="form-group">
                             <label for="maker-title">Título do Plano de Aula:</label>
@@ -798,10 +712,10 @@
                         <div id="add-to-plan-actions" style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; background-color: #fdfcff;">
                             <h4 style="margin-top: 0; color: var(--secondary-color);">Adicionar Etapa ao Plano</h4>
                             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                                <button id="add-catalog-activity-btn" class="action-button add-activity-btn">
+                                <button id="add-catalog-activity-btn" class="add-activity-btn">
                                     <span style="font-size: 1.2rem; margin-right: 8px;">+</span> Adicionar do Catálogo
                                 </button>
-                                <button id="add-custom-activity-inline-btn" class="action-button" style="background-color: var(--secondary-color);">
+                                <button id="add-custom-activity-inline-btn" class="add-activity-btn" style="background-color: var(--secondary-color);">
                                     <span style="font-size: 1.2rem; margin-right: 8px;">✎</span> Criar Atividade Personalizada
                                 </button>
                             </div>
@@ -815,13 +729,13 @@
                                     <label for="custom-activity-desc">Descrição / Roteiro (Opcional):</label>
                                     <textarea id="custom-activity-desc" rows="3" placeholder="Detalhes sobre como a atividade será conduzida."></textarea>
                                 </div>
-                                <button id="confirm-add-custom-btn" class="action-button add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Adicionar ao Plano</button>
+                                <button id="confirm-add-custom-btn" class="add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Adicionar ao Plano</button>
                             </div>
                         </div>
                         
                         <div class="main-action-buttons">
-                            <button id="clear-plan-btn" class="action-button clear-plan-btn">Limpar Plano</button>
-                            <button id="generate-plan-btn" class="action-button generate-plan-btn">Gerar PDF do Meu Plano</button>
+                            <button id="clear-plan-btn" class="clear-plan-btn">Limpar Plano</button>
+                            <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button>
                         </div>
                     </section>
                 </main>
@@ -839,49 +753,180 @@
     ];
     
     const todasAsAtividades = [
-        { id: 1, categoria: "Interpessoal", cor: "#3b82f6", titulo: "Duas Verdades, Uma Mentira", desc: "Atividade de quebra-gelo para promover interação.", duracao: "10 min", bncc: ["EI03EO04", "EI03EF01"], objetivos: ["Demonstrar empatia.", "Expressar ideias.", "Desenvolver a escuta."], roteiro: { acolhida: "Organize a turma em um círculo.", desenvolvimento: "Cada um compartilha três frases (uma é mentira).", expansao: "A criança conta mais sobre uma das verdades.", encerramento: "Reforce como é legal conhecer os amigos." }, dica_vane: "Para os tímidos, comece em duplas." },
-        { id: 2, categoria: "Português", cor: "#ef4444", titulo: "Criador de Histórias", desc: "Estimula a criatividade e estruturação de narrativas.", duracao: "20 min", bncc: ["EF15LP05", "EF02LP26"], objetivos: ["Produzir contos e narrativas.", "Desenvolver a criatividade.", "Ampliar o vocabulário."], roteiro: { acolhida: "Roda de conversa sobre histórias.", desenvolvimento: "Entregar folha com 3 elementos para criar a história.", expansao: "Voluntários leem suas criações.", encerramento: "Expor as folhas no mural." }, dica_vane: "Pode ser feito com desenhos para pré-alfabéticos." },
-        { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Aquece o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01", "EF01MA08"], objetivos: ["Utilizar números naturais.", "Resolver problemas de adição/subtração.", "Desenvolver raciocínio lógico."], roteiro: { acolhida: "Apresentar o problema no quadro.", desenvolvimento: "Incentivar uso de material concreto para resolver.", expansao: "Alunos explicam suas estratégias na lousa.", encerramento: "Apresentar a solução e parabenizar." }, dica_vane: "Deixe os alunos criarem problemas uma vez por semana." },
-        { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve argumentação e pensamento crítico.", duracao: "25 min", bncc: ["EF08CI01", "EF69LP13"], objetivos: ["Argumentar com base em evidências.", "Exercitar a escuta ativa.", "Diferenciar fatos de opiniões."], roteiro: { acolhida: "Introduzir o tema e as regras do debate.", desenvolvimento: "Dividir em grupos 'a favor' e 'contra' com textos de apoio.", expansao: "Mediar o debate entre os grupos.", encerramento: "Finalizar com uma conclusão geral, sem 'vencedor'." }, dica_vane: "Use temas simples para turmas mais novas (ex: cão vs. gato)." },
-        { id: 5, free: true, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Ajuda a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08", "EF01LP02"], objetivos: ["Relacionar som e escrita.", "Comparar palavras e sílabas.", "Desenvolver consciência fonológica."], roteiro: { acolhida: "Cantar música do alfabeto, bater palmas para sílabas.", desenvolvimento: "Recortar e colar sílabas para formar palavras correspondentes às figuras.", expansao: "Pedir para lerem as palavras e colorirem.", encerramento: "Expor os trabalhos dos 'detetives'." }, dica_vane: "Plastificar o material o torna durável para reuso." },
-        { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e expressão 3D.", duracao: "25 min", bncc: ["EF15AR04", "EF15AR05"], objetivos: ["Experimentar modelagem.", "Desenvolver imaginação.", "Aprimorar coordenação motora fina."], roteiro: { acolhida: "Mostrar imagens de animais fantásticos para inspirar.", desenvolvimento: "Desafio: 'Vamos criar nosso próprio animal fantástico?'.", expansao: "Exposição das 'Criaturas Mágicas' com apresentação.", encerramento: "Fotografar as obras e organizar o material." }, dica_vane: "Ofereça materiais extras como palitos, botões e lã." },
-        { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia e visão vertical.", duracao: "30 min", bncc: ["EF01GE09", "EF01GE08"], objetivos: ["Criar mapas mentais.", "Desenvolver noções de localização.", "Compreender a função de um mapa."], roteiro: { acolhida: "Brincar de 'O mestre mandou' com comandos de localização.", desenvolvimento: "Desenhar o mapa da sala em uma cartolina grande com ajuda da turma.", expansao: "Criar legenda e cada um se desenhar em seu lugar.", encerramento: "Expor o mapa e brincar de 'caça ao tesouro'." }, dica_vane: "Faça uma caminhada exploratória pela sala antes de desenhar." },
-        { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Desenvolve a noção de temporalidade e cronologia.", duracao: "20 min", bncc: ["EF01HI01", "EF01HI04"], objetivos: ["Identificar aspectos do crescimento.", "Identificar sucessão de acontecimentos.", "Valorizar a própria história."], roteiro: { acolhida: "Conversa sobre como eles cresceram, com fotos para ilustrar.", desenvolvimento: "Listar de 4 a 5 momentos importantes da vida.", expansao: "Desenhar a linha do tempo em uma folha com os eventos.", encerramento: "Compartilhar as linhas do tempo e montar um mural." }, dica_vane: "Envie um bilhete para casa pedindo ajuda dos pais para relembrar os momentos." }
-    ];
-
-    /* NOVIDADE: Estrutura de dados para os Planos Semanais Prontos */
-    const planosSemanaisProntos = [
-        {
-            id: 'semana-animais-fazenda',
-            titulo: 'Semana dos Animais da Fazenda',
-            ano: 'Infantil (3-4 anos)',
-            descricao: 'Uma semana de atividades lúdicas para conhecer os sons, formas e características dos animais da fazenda, integrando diversas áreas do conhecimento.',
-            plano: {
-                segunda: [2, 6], // Criador de Histórias (adaptado), Escultura com Massinha
-                terca: [5],      // Detetive de Sílabas
-                quarta: [3],     // O Problema do Dia (com contagem de pintinhos)
-                quinta: [7],     // Mapa da Sala de Aula (transformada no "Mapa da Fazendinha")
-                sexta: [1]       // Duas Verdades, Uma Mentira (sobre animais)
-            }
+        { 
+            id: 1, 
+            categoria: "Interpessoal", 
+            cor: "#3b82f6", 
+            titulo: "Duas Verdades, Uma Mentira", 
+            desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", 
+            duracao: "10 min", 
+            bncc: ["EI03EO04", "EI03EF01"],
+            objetivos: [
+                "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.",
+                "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.",
+                "Desenvolver a escuta atenta e o respeito pela vez de falar do colega."
+            ],
+            roteiro: {
+                acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.",
+                desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.",
+                expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
+                encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
+            },
+            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
         },
-        {
-            id: 'semana-sistema-solar',
-            titulo: 'Exploradores do Sistema Solar',
-            ano: 'Fundamental I (1º e 2º Ano)',
-            descricao: 'Uma viagem intergaláctica para explorar planetas, estrelas e galáxias. As atividades promovem a curiosidade científica e o trabalho em equipe.',
-            plano: {
-                segunda: [7, 6], // Mapa da Sala de Aula (como mapa estelar), Escultura com Massinha (de alienígenas/planetas)
-                terca: [8],      // Linha do Tempo Pessoal (adaptado para "Linha do Tempo de uma Estrela")
-                quarta: [4],     // Mini-Debate Científico (ex: "Existe vida em outros planetas?")
-                quinta: [2, 3],  // Criador de Histórias (sobre viagem espacial), O Problema do Dia (com contagem de estrelas)
-                sexta: [1]       // Duas Verdades, Uma Mentira (sobre fatos do sistema solar)
-            }
+        { 
+            id: 2, 
+            categoria: "Português", 
+            cor: "#ef4444", 
+            titulo: "Criador de Histórias", 
+            desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", 
+            duracao: "20 min", 
+            bncc: ["EF15LP05", "EF02LP26"],
+            objetivos: [
+                "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.",
+                "Desenvolver a criatividade e a imaginação.",
+                "Ampliar o vocabulário e a organização do pensamento lógico."
+            ],
+            roteiro: {
+                acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.",
+                desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.",
+                expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
+                encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
+            },
+            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
+        },
+        { 
+            id: 3, 
+            categoria: "Matemática", 
+            cor: "#f59e0b", 
+            titulo: "O Problema do Dia", 
+            desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", 
+            duracao: "10 min", 
+            bncc: ["EF01MA01", "EF01MA08"],
+            objetivos: [
+                "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.",
+                "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.",
+                "Desenvolver o raciocínio lógico e estratégias de resolução de problemas."
+            ],
+            roteiro: {
+                acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.",
+                desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.",
+                expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
+                encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
+            },
+            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
+        },
+        { 
+            id: 4, 
+            categoria: "Ciências", 
+            cor: "#10b981", 
+            titulo: "Mini-Debate Científico", 
+            desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", 
+            duracao: "25 min", 
+            bncc: ["EF08CI01", "EF69LP13"],
+            objetivos: [
+                "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.",
+                "Exercitar a escuta ativa e o respeito a opiniões divergentes.",
+                "Diferenciar fatos de opiniões em um texto ou discussão."
+            ],
+            roteiro: {
+                acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).",
+                desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.",
+                expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
+                encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
+            },
+            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
+        },
+        { 
+            id: 5, 
+            free: true, 
+            categoria: "Alfabetização", 
+            cor: "#8b5cf6", 
+            titulo: "Detetive de Sílabas", 
+            desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", 
+            duracao: "15 min", 
+            bncc: ["EF01LP08", "EF01LP02"],
+            objetivos: [
+                "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.",
+                "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.",
+                "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas."
+            ],
+            roteiro: {
+                acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).",
+                desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.",
+                expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
+                encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
+            },
+            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
+        },
+        { 
+            id: 6, 
+            categoria: "Artes", 
+            cor: "#db2777", 
+            titulo: "Escultura com Massinha", 
+            desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", 
+            duracao: "25 min", 
+            bncc: ["EF15AR04", "EF15AR05"],
+            objetivos: [
+                "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.",
+                "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.",
+                "Aprimorar a coordenação motora fina e a percepção tátil."
+            ],
+            roteiro: {
+                acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.",
+                desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.",
+                expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
+                encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
+            },
+            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
+        },
+        { 
+            id: 7, 
+            categoria: "Geografia", 
+            cor: "#475569", 
+            titulo: "Mapa da Sala de Aula", 
+            desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", 
+            duracao: "30 min", 
+            bncc: ["EF01GE09", "EF01GE08"],
+            objetivos: [
+                "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.",
+                "Desenvolver noções de lateralidade, localização e representação espacial.",
+                "Compreender a função de um mapa como forma de representação de um lugar."
+            ],
+            roteiro: {
+                acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.",
+                desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).",
+                expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
+                encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
+            },
+            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
+        },
+        { 
+            id: 8, 
+            categoria: "História", 
+            cor: "#d97706", 
+            titulo: "Linha do Tempo Pessoal", 
+            desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", 
+            duracao: "20 min", 
+            bncc: ["EF01HI01", "EF01HI04"],
+            objetivos: [
+                "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.",
+                "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.",
+                "Valorizar sua própria história e a de seus familiares."
+            ],
+            roteiro: {
+                acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.",
+                desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.",
+                expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
+                encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
+            },
+            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
         }
     ];
     
     document.addEventListener('DOMContentLoaded', function() {
         const appState = {
-            currentView: 'weeklyPlans', // 'weeklyPlans', 'aulaMaker' ou 'catalog'
+            currentView: 'aulaMaker', // 'aulaMaker' ou 'catalog'
             searchQuery: '', 
             activeFilter: 'Todos', 
             currentPage: 1, 
@@ -907,7 +952,6 @@
             sidebarOverlay: document.getElementById('sidebar-overlay'),
             
             // Views
-            weeklyPlansView: document.getElementById('weekly-plans-view'),
             catalogView: document.getElementById('catalog-view'),
             aulaMakerSection: document.getElementById('aula-maker-section'),
 
@@ -919,7 +963,6 @@
             resultsInfo: document.getElementById('results-info'),
             
             // Navigation Buttons
-            navWeeklyPlansBtn: document.getElementById('nav-weekly-plans-btn'),
             navAulaMakerBtn: document.getElementById('nav-aula-maker-btn'),
 
             // Aula Maker elements
@@ -932,11 +975,135 @@
             noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
             clearPlanBtn: document.getElementById('clear-plan-btn'),
             
+            // New Aula Maker action buttons
             addCatalogActivityBtn: document.getElementById('add-catalog-activity-btn'),
             addCustomActivityInlineBtn: document.getElementById('add-custom-activity-inline-btn'),
             customActivityForm: document.getElementById('custom-activity-form'),
             confirmAddCustomBtn: document.getElementById('confirm-add-custom-btn')
         };
+
+        function generatePdf(activityId) {
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                console.error("A biblioteca jsPDF não foi carregada corretamente.");
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const activity = todasAsAtividades.find(a => a.id === activityId);
+                if (!activity) return;
+                
+                const doc = new jsPDF();
+                doc.setFontSize(18);
+                doc.setTextColor("#6c5b7b");
+                doc.text(activity.titulo, 14, 22);
+                doc.setFontSize(11);
+                doc.setTextColor("#333d49");
+
+                let detailsText = `Descrição: ${activity.desc}\n\n`;
+                if(activity.roteiro) {
+                    detailsText += `Roteiro Sugerido:\n`;
+                    detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
+                    detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
+                    detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
+                    detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
+                }
+
+                const detailsLines = doc.splitTextToSize(detailsText, 180);
+                doc.text(detailsLines, 14, 32);
+                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
+            }
+        }
+
+        function closeModal() {
+            dom.modal.classList.remove('show'); 
+            setTimeout(() => { dom.modal.innerHTML = ''; }, 300);
+        }
+        
+        function openModal(id) {
+            const activity = todasAsAtividades.find(a => a.id === id);
+            if (!activity) return;
+
+            const modalHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${activity.titulo}</h2>
+                    <button class="close-button" aria-label="Fechar modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>${activity.desc}</p>
+                    
+                    <h3>Objetivos de Aprendizagem</h3>
+                    <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+
+                    <h3>Códigos da BNCC</h3>
+                    <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
+
+                    <h3>Roteiro da Aula</h3>
+                    <ol class="roteiro-passos">
+                        <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
+                        <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
+                        <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
+                        <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
+                    </ol>
+                    
+                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
+                </div>
+                <div class="modal-footer">
+                    <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
+                </div>
+            </div>`;
+            
+            dom.modal.innerHTML = modalHTML;
+            dom.modal.classList.add('show');
+            
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
+            dom.modal.querySelector('.download-btn').addEventListener('click', function() {
+                generatePdf(parseInt(this.dataset.activityId));
+            });
+        }
+        
+        function setupLoginScreenPreview() {
+            const previewContainer = document.getElementById('preview-grid-container');
+            if (!previewContainer) return;
+
+            const freeActivity = todasAsAtividades.find(a => a.free);
+            const otherActivities = todasAsAtividades.filter(a => !a.free);
+            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
+            
+            let previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)].filter(Boolean);
+            previewActivities.sort(() => 0.5 - Math.random());
+
+            let previewHTML = '';
+            previewActivities.forEach(activity => {
+                if (activity.free) {
+                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
+                } else {
+                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
+                }
+                previewHTML += `
+                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
+                    <div class="preview-card-content">
+                        <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
+                        <h3>${activity.titulo}</h3>
+                        <p>${activity.desc}</p>
+                    </div>
+                    ${!activity.free ? `<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>` : ''}
+                </div>`;
+            });
+            previewContainer.innerHTML = previewHTML;
+
+            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
+                card.addEventListener('click', function() {
+                    openModal(parseInt(this.dataset.id));
+                });
+            });
+        }
 
         function initializePanel(username) {
             dom.loginScreen.classList.add('hidden');
@@ -951,22 +1118,18 @@
             dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
             
             // Navigation
-            dom.navWeeklyPlansBtn.addEventListener('click', () => {
-                appState.currentView = 'weeklyPlans';
-                render();
-                document.body.classList.remove('sidebar-open');
-            });
             dom.navAulaMakerBtn.addEventListener('click', () => {
                 appState.currentView = 'aulaMaker';
                 render();
+                /* CORREÇÃO 1: Garante que a sidebar feche em dispositivos móveis ao clicar no botão */
                 document.body.classList.remove('sidebar-open');
             });
 
             // Catalog Listeners
             dom.searchInput.addEventListener('input', () => { 
+                appState.searchQuery = dom.searchInput.value.toLowerCase(); 
+                appState.currentPage = 1; 
                 if (appState.currentView === 'catalog') {
-                    appState.searchQuery = dom.searchInput.value.toLowerCase(); 
-                    appState.currentPage = 1; 
                     render();
                 }
             });
@@ -977,6 +1140,7 @@
                 dom.customActivityForm.classList.toggle('hidden');
             });
             dom.confirmAddCustomBtn.addEventListener('click', addCustomActivityToMaker);
+
             dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdf);
             dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
             
@@ -992,54 +1156,37 @@
         }
 
         function render() {
-            // Hide all views first
-            dom.weeklyPlansView.classList.add('hidden');
-            dom.catalogView.classList.add('hidden');
-            dom.aulaMakerSection.classList.add('hidden');
-            
-            // Deactivate all main nav buttons
-            dom.navWeeklyPlansBtn.classList.remove('active');
-            dom.navAulaMakerBtn.classList.remove('active');
-            document.getElementById('catalog-section').style.opacity = '0.6';
-
-
             // View Switching Logic
-            switch(appState.currentView) {
-                case 'weeklyPlans':
-                    dom.weeklyPlansView.classList.remove('hidden');
-                    dom.navWeeklyPlansBtn.classList.add('active');
-                    renderWeeklyPlansGallery();
-                    break;
-                case 'aulaMaker':
-                    dom.aulaMakerSection.classList.remove('hidden');
-                    dom.navAulaMakerBtn.classList.add('active');
-                    renderAulaMaker();
-                    break;
-                case 'catalog':
-                    dom.catalogView.classList.remove('hidden');
-                    document.getElementById('catalog-section').style.opacity = '1';
-                    renderCatalog();
-                    break;
+            if (appState.currentView === 'aulaMaker') {
+                dom.catalogView.classList.add('hidden');
+                dom.aulaMakerSection.classList.remove('hidden');
+                document.getElementById('catalog-section').style.opacity = '0.6';
+                dom.navAulaMakerBtn.classList.add('active');
+                renderAulaMaker();
+            } else { // 'catalog' view
+                dom.aulaMakerSection.classList.add('hidden');
+                dom.catalogView.classList.remove('hidden');
+                document.getElementById('catalog-section').style.opacity = '1';
+                dom.navAulaMakerBtn.classList.remove('active');
+                
+                let filtered = [...todasAsAtividades];
+                if (appState.activeFilter === 'Favoritos') {
+                    filtered = filtered.filter(a => appState.favorites.includes(a.id));
+                } else if (appState.activeFilter !== 'Todos') {
+                    filtered = filtered.filter(a => a.categoria === appState.activeFilter);
+                }
+                
+                if (appState.searchQuery) {
+                    const query = appState.searchQuery;
+                    filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
+                }
+
+                dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
+                renderGrid(filtered);
+                renderPagination(filtered.length);
             }
+
             renderFilters();
-        }
-
-        function renderCatalog() {
-            let filtered = [...todasAsAtividades];
-            if (appState.activeFilter === 'Favoritos') {
-                filtered = filtered.filter(a => appState.favorites.includes(a.id));
-            } else if (appState.activeFilter !== 'Todos') {
-                filtered = filtered.filter(a => a.categoria === appState.activeFilter);
-            }
-            
-            if (appState.searchQuery) {
-                const query = appState.searchQuery;
-                filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
-            }
-
-            dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
-            renderGrid(filtered);
-            renderPagination(filtered.length);
         }
 
         function renderFilters() {
@@ -1075,143 +1222,6 @@
             dom.filters.appendChild(createFilterButton('Favoritos', 'Favoritos', '#icon-heart', true));
         }
 
-        /* NOVIDADE: Funções para o Gerador de Planos Semanais */
-        function renderWeeklyPlansGallery() {
-            dom.weeklyPlansView.innerHTML = `
-                <h2><svg width="28" height="28" style="stroke: var(--secondary-color)"><use xlink:href="#icon-calendar"></use></svg> Planos de Aula Semanais Prontos</h2>
-                <p class="description">Inspire-se com planejamentos completos. Escolha um tema, visualize as atividades para a semana e imprima seu plano com um clique.</p>
-                <div id="weekly-plans-gallery">
-                    ${planosSemanaisProntos.map(plan => `
-                        <div class="weekly-plan-card" data-id="${plan.id}">
-                            <h3>${plan.titulo}</h3>
-                            <p>${plan.descricao}</p>
-                            <span class="grade-tag">${plan.ano}</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            dom.weeklyPlansView.querySelectorAll('.weekly-plan-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    renderWeeklyPlanDetail(card.dataset.id);
-                });
-            });
-        }
-        
-        function renderWeeklyPlanDetail(planId) {
-            const plan = planosSemanaisProntos.find(p => p.id === planId);
-            if (!plan) return;
-
-            const days = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
-            const dayNames = { segunda: 'Segunda-feira', terca: 'Terça-feira', quarta: 'Quarta-feira', quinta: 'Quinta-feira', sexta: 'Sexta-feira' };
-
-            dom.weeklyPlansView.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-                    <div>
-                        <h2>${plan.titulo}</h2>
-                        <p class="description">Plano de aula sugerido para: <strong>${plan.ano}</strong></p>
-                    </div>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                         <button id="back-to-gallery-btn" class="action-button clear-plan-btn" style="margin-right: 0;">← Voltar</button>
-                         <button id="print-weekly-plan-btn" class="action-button generate-plan-btn" data-id="${plan.id}">Imprimir Plano</button>
-                    </div>
-                </div>
-                <div id="weekly-plan-preview-grid">
-                    ${days.map(day => `
-                        <div class="day-column">
-                            <h4>${dayNames[day]}</h4>
-                            <ul>
-                                ${plan.plano[day] && plan.plano[day].length > 0
-                                    ? plan.plano[day].map(activityId => {
-                                        const activity = todasAsAtividades.find(a => a.id === activityId);
-                                        return activity ? `<li>${activity.titulo} <em style="font-size: 0.8em; color: ${activity.cor};">(${activity.categoria})</em></li>` : '';
-                                      }).join('')
-                                    : '<li>-</li>'
-                                }
-                            </ul>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            dom.weeklyPlansView.querySelector('#back-to-gallery-btn').addEventListener('click', renderWeeklyPlansGallery);
-            dom.weeklyPlansView.querySelector('#print-weekly-plan-btn').addEventListener('click', (e) => generateWeeklyPlanPdf(e.currentTarget.dataset.id));
-        }
-
-        function generateWeeklyPlanPdf(planId) {
-            const plan = planosSemanaisProntos.find(p => p.id === planId);
-            if (!plan) return;
-
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
-            
-            const pageW = doc.internal.pageSize.getWidth();
-            const margin = 30;
-            let y = 40;
-
-            doc.setFont('Helvetica', 'bold');
-            doc.setFontSize(20);
-            doc.text(plan.titulo, pageW / 2, y, { align: 'center' });
-            y += 20;
-
-            doc.setFont('Helvetica', 'normal');
-            doc.setFontSize(12);
-            doc.text(`Ano Sugerido: ${plan.ano}`, pageW / 2, y, { align: 'center' });
-            y += 30;
-
-            const days = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
-            const dayNames = { segunda: 'Segunda', terca: 'Terça', quarta: 'Quarta', quinta: 'Quinta', sexta: 'Sexta' };
-            const colWidth = (pageW - (margin * 2)) / 5;
-            const colStartX = [margin, margin + colWidth, margin + colWidth*2, margin + colWidth*3, margin + colWidth*4];
-            const textMargin = 5;
-
-            // Draw headers and boxes
-            doc.setFont('Helvetica', 'bold');
-            doc.setFontSize(12);
-            doc.setFillColor(240, 240, 240);
-            colStartX.forEach((x, i) => {
-                doc.rect(x, y, colWidth, 30, 'F');
-                doc.text(dayNames[days[i]], x + colWidth / 2, y + 18, { align: 'center' });
-            });
-            
-            const initialY = y + 30;
-            let currentY = initialY;
-            let maxY = 0;
-
-            doc.setFont('Helvetica', 'normal');
-            doc.setFontSize(9);
-            days.forEach((day, i) => {
-                currentY = initialY + 15;
-                if (plan.plano[day] && plan.plano[day].length > 0) {
-                    plan.plano[day].forEach(activityId => {
-                        const activity = todasAsAtividades.find(a => a.id === activityId);
-                        if (activity) {
-                            const text = `${activity.titulo} (${activity.categoria})`;
-                            const lines = doc.splitTextToSize(text, colWidth - (textMargin * 2));
-                            if (currentY + (lines.length * 10) > doc.internal.pageSize.getHeight() - margin) {
-                                // This simple version doesn't handle page breaks well, but it's a start.
-                                // For a real app, you'd need more complex logic to carry over columns.
-                            }
-                            doc.text(lines, colStartX[i] + textMargin, currentY);
-                            currentY += (lines.length * 10) + 10;
-                        }
-                    });
-                }
-                if (currentY > maxY) maxY = currentY;
-            });
-            
-            // Draw column lines
-            doc.setDrawColor(200, 200, 200);
-            colStartX.forEach(x => {
-                doc.line(x, y, x, maxY > initialY ? maxY - 5 : initialY);
-            });
-            doc.line(pageW - margin, y, pageW - margin, maxY > initialY ? maxY - 5 : initialY); // Last line
-            doc.line(margin, maxY > initialY ? maxY - 5 : initialY, pageW - margin, maxY > initialY ? maxY - 5 : initialY); // Bottom line
-
-
-            doc.save(`Plano-Semanal-${plan.titulo.replace(/\s+/g, '-')}.pdf`);
-        }
-
-
-        // Funções do Catálogo
         function renderGrid(activities) {
             dom.grid.innerHTML = '';
             const start = (appState.currentPage - 1) * appState.itemsPerPage;
@@ -1295,6 +1305,7 @@
         }
 
         // --- AULA MAKER FUNCTIONS ---
+
         function clearLessonPlan() {
             if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
                 appState.makerPlanTitle = '';
@@ -1455,7 +1466,137 @@
             };
         }
 
-        function generateLessonPlanPdf() { /* ... esta função permanece a mesma ... */ }
+        function generateLessonPlanPdf() {
+            if (appState.selectedActivitiesForMaker.length === 0 && !appState.makerPlanTitle) {
+                alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");
+                return;
+            }
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                console.error("A biblioteca jsPDF não foi carregada corretamente.");
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({unit: 'pt', format: 'a4'});
+                let yOffset = 60;
+                const margin = 40;
+                const lineHeight = 18;
+                const maxWidth = doc.internal.pageSize.width - (margin * 2);
+                
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(22);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
+                yOffset += 40;
+                
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(12);
+                doc.text(`Título:`, margin, yOffset);
+                doc.setFont('Helvetica', 'normal');
+                doc.text(doc.splitTextToSize(appState.makerPlanTitle || 'Sem Título', maxWidth - 50), margin + 50, yOffset);
+                yOffset += lineHeight * 1.5;
+
+                doc.setFont('Helvetica', 'bold');
+                doc.text(`Ano/Turma:`, margin, yOffset);
+                doc.setFont('Helvetica', 'normal');
+                doc.text(doc.splitTextToSize(appState.makerPlanGrade || 'Não Informado', maxWidth - 75), margin + 75, yOffset);
+                
+                if (appState.makerPlanTheme) {
+                    yOffset += lineHeight;
+                    doc.setFont('Helvetica', 'bold');
+                    doc.text(`Tema:`, margin, yOffset);
+                    doc.setFont('Helvetica', 'normal');
+                    doc.text(doc.splitTextToSize(appState.makerPlanTheme, maxWidth - 45), margin + 45, yOffset);
+                }
+                yOffset += lineHeight * 2;
+                
+                if (appState.makerPlanNotes) {
+                    doc.setFont('Helvetica', 'bold');
+                    doc.setFontSize(14);
+                    doc.text("Observações Gerais / Materiais:", margin, yOffset);
+                    yOffset += lineHeight * 1.5;
+                    
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setFontSize(11);
+                    const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
+                    doc.text(notesLines, margin, yOffset);
+                    yOffset += notesLines.length * (lineHeight - 4) + 20;
+                }
+                
+                doc.setLineWidth(1);
+                doc.setDrawColor(177, 156, 217);
+                doc.line(margin, yOffset, maxWidth + margin, yOffset);
+                yOffset += 30;
+
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(16);
+                doc.text("Sequência de Atividades", margin, yOffset);
+                yOffset += 25;
+
+                if (appState.selectedActivitiesForMaker.length === 0) {
+                    doc.setFont('Helvetica', 'italic');
+                    doc.setFontSize(11);
+                    doc.setTextColor("#6b7280");
+                    doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
+                } else {
+                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
+                        const isCustom = activity.type === 'custom';
+                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
+                        
+                        if (activityData) {
+                            if (yOffset > doc.internal.pageSize.height - 150) {
+                                doc.addPage();
+                                yOffset = 60;
+                            }
+
+                            doc.setFont('Helvetica', 'bold');
+                            doc.setFontSize(14);
+                            doc.setTextColor(108, 91, 123);
+                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
+                            yOffset += lineHeight * 1.2;
+
+                            doc.setFont('Helvetica', 'normal');
+                            doc.setFontSize(11);
+                            doc.setTextColor(51, 61, 73);
+
+                            if (isCustom) {
+                                const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4);
+                            } else {
+                                const descLines = doc.splitTextToSize(activityData.desc, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4) + 10;
+                                
+                                doc.setFont('Helvetica', 'bold');
+                                doc.text('Objetivos:', margin, yOffset);
+                                yOffset += lineHeight;
+                                doc.setFont('Helvetica', 'normal');
+                                activityData.objetivos.forEach(obj => {
+                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
+                                    if(yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
+                                        doc.addPage();
+                                        yOffset = 60;
+                                    }
+                                    doc.text(objLines, margin + 10, yOffset);
+                                    yOffset += objLines.length * (lineHeight - 4);
+                                });
+                            }
+                            yOffset += 25;
+                        }
+                    });
+                }
+
+                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
+                doc.save(fileName);
+
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF do plano de aula:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.");
+            }
+        }
 
         // --- INICIALIZAÇÃO ---
         (function main() {
