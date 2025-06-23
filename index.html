@@ -11,72 +11,89 @@
         
         /* PALETA DE CORES E VARIÁVEIS DE DESIGN */
         :root {
-            --primary-color: #3a7bd5; --secondary-color: #3a6073; --accent-color: #f5a623;
-            --background-color: #f7f8fc; --card-background: #ffffff; --text-color: #333d49;
-            --text-color-light: #6b7280; --error-color: #ef4444; --success-color: #10b981;
+            --primary-color: #3a7bd5;
+            --secondary-color: #3a6073;
+            --accent-color: #f5a623;
+            --background-color: #f7f8fc;
+            --card-background: #ffffff;
+            --text-color: #333d49;
+            --text-color-light: #6b7280;
+            --border-color: #e2e8f0;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.08);
+            --sidebar-width: 280px;
         }
 
-        /* ESTILOS GERAIS E ANIMAÇÕES */
+        /* ESTILOS GERAIS */
         *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.7; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
         .hidden { display: none !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* TELA DE LOGIN */
         #login-screen { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); padding: 1rem; }
         .login-box { background: var(--card-background); padding: 3rem; border-radius: 24px; box-shadow: var(--shadow-lg); text-align: center; width: 100%; max-width: 450px; animation: fadeIn 0.7s ease-out forwards; border-top: 5px solid var(--accent-color); }
-        .login-box h1 { color: var(--text-color); margin-bottom: 0.75rem; font-size: 2.25rem; font-weight: 700; }
+        .login-box h1 { font-size: 2.25rem; margin-top: 0; }
         .login-box p { margin-bottom: 2.5rem; color: var(--text-color-light); }
         #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
-        #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
+        #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
         #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2); background-color: white; }
         #login-form button { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
         #login-form button:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        #login-error { color: var(--error-color); background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
+        #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
         
-        /* PAINEL PRINCIPAL */
-        #main-content header { background: var(--card-background); padding: 1rem 2.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
-        #main-content header h1 { margin: 0; font-size: 1.75rem; font-weight: 700; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* ESTRUTURA PRINCIPAL COM SIDEBAR */
+        .app-header { background: var(--card-background); padding: 0 2rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .app-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .user-area { display: flex; align-items: center; gap: 1.5rem; }
-        #logout-button { background: #e2e8f0; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
-        #logout-button:hover { background: var(--accent-color); color: white; }
+        .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
+        .logout-button:hover { background: var(--accent-color); color: white; }
+        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
+        .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
         
-        #main-content main { padding: 2.5rem; max-width: 1400px; margin: 0 auto; }
-        
-        .controls-panel { background-color: var(--card-background); padding: 1.5rem 2rem; border-radius: 20px; margin-bottom: 2.5rem; box-shadow: var(--shadow); }
-        .controls-top-row { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-        .search-container { flex-grow: 1; position: relative; }
-        #search-input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 1rem; font-family: 'Poppins', sans-serif; }
+        #app-body { display: flex; }
+        .sidebar { flex-shrink: 0; width: var(--sidebar-width); background-color: var(--card-background); border-right: 1px solid var(--border-color); padding: 2rem; height: calc(100vh - 70px); position: sticky; top: 70px; overflow-y: auto; }
+        .sidebar h2 { font-size: 1.25rem; margin: 0 0 1.5rem 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+        .search-container { position: relative; margin-bottom: 1.5rem; }
+        #search-input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1rem; }
         .search-container .icon-search { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: #9ca3af; }
-        #filters-container { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid #e2e8f0; padding-top: 1.25rem; }
-        .filter-btn { background-color: #eef2f7; border: 1px solid transparent; padding: 0.5rem 1.25rem; border-radius: 999px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
-        .filter-btn.active { background-color: var(--primary-color); color: white; font-weight: 600; box-shadow: 0 2px 8px rgba(58, 123, 213, 0.3); }
-        .filter-btn.favorite-btn.active { background-color: var(--accent-color); box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3); }
-        .filter-btn .icon-heart { width: 16px; height: 16px; }
+        
+        #filters-container { list-style: none; padding: 0; margin: 0; }
+        .filter-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; background: none; border: none; text-align: left; padding: 0.9rem 1rem; border-radius: 10px; font-size: 1rem; font-family: 'Poppins'; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-color-light); }
+        .filter-btn svg { width: 20px; height: 20px; stroke: var(--text-color-light); transition: all 0.2s; flex-shrink: 0; }
+        .filter-btn.active { background-color: rgba(58, 123, 213, 0.1); color: var(--primary-color); font-weight: 600; }
+        .filter-btn.active svg { stroke: var(--primary-color); }
+        .filter-btn.favorite-btn.active { background-color: rgba(245, 166, 35, 0.1); color: var(--accent-color); }
+        .filter-btn.favorite-btn.active svg { stroke: var(--accent-color); }
+        .filter-btn:hover:not(.active) { background-color: #f7f8fc; }
 
-        .results-info { text-align: center; margin: 2rem 0; color: var(--text-color-light); font-weight: 500; }
-
-        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
-        .activity-card { background-color: var(--card-background); border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; animation: fadeIn 0.5s ease-out forwards; }
+        .content-wrapper { flex-grow: 1; padding: 2.5rem; }
+        .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
+        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .activity-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; animation: fadeIn 0.5s ease-out forwards; }
         .activity-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin: 1rem 1.5rem 0; }
         .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
         .favorite-icon { background: none; border: none; padding: 0.5rem; cursor: pointer; transition: transform 0.2s ease; }
-        .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; }
+        .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; transition: all 0.2s ease; }
         .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
         .favorite-icon:hover { transform: scale(1.15); }
 
-        .activity-card h3 { margin: 1rem 1.5rem; color: var(--text-color); font-size: 1.3rem; }
-        .activity-card p { padding: 0 1.5rem; flex-grow: 1; font-size: 0.95rem; color: var(--text-color-light); margin-bottom: 1.5rem; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; font-size: 0.9rem; background-color: #f8fafc; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #f8fafc; }
         .card-footer span { font-weight: 600; }
         .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
         .open-modal-btn:hover { background-color: var(--primary-color); color: white; }
         
         #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; }
-        .pagination-btn { background-color: #fff; border: 1px solid #e2e8f0; min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
         .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         
@@ -84,27 +101,42 @@
         .modal-container.show { display: flex; opacity: 1; }
         .modal-content { background-color: white; padding: 0; border-radius: 16px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 650px; position: relative; transform: scale(0.95); transition: transform 0.3s ease; overflow: hidden; }
         .modal-container.show .modal-content { transform: scale(1); }
-        .modal-header { padding: 1.5rem 2.5rem; background-color: var(--background-color); border-bottom: 1px solid #e2e8f0; position: relative; }
+        .modal-header { padding: 1.5rem 2.5rem; background-color: var(--background-color); border-bottom: 1px solid var(--border-color); position: relative; }
         .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; }
         .modal-body { padding: 1.5rem 2.5rem 2.5rem; }
         .modal-body #modal-description { margin-top: 0; color: var(--text-color-light); }
-        .modal-content .details { border-top: 1px solid #e2e8f0; margin-top: 1.5rem; padding-top: 1.5rem; margin-bottom: 2rem; }
-        .close-button { position: absolute; top: 50%; right: 2.5rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
+        .modal-content .details { border-top: 1px solid var(--border-color); margin-top: 1.5rem; padding-top: 1.5rem; margin-bottom: 2rem; }
+        .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
         .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
-        .download-btn { display: inline-block; background: var(--success-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; }
+        .download-btn { display: inline-block; background: #10b981; color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; }
         .download-btn:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
+
+        footer { text-align: center; padding: 2.5rem; color: var(--text-color-light); }
+        
+        /* ESTILOS RESPONSIVOS PARA SIDEBAR */
+        @media (max-width: 992px) {
+            .menu-toggle { display: block; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+            #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+            body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
+            .content-wrapper { padding: 1.5rem; }
+        }
     </style>
 </head>
 <body>
-    <svg width="0" height="0" style="display: none;">
+    <svg width="0" height="0" style="position:absolute;visibility:hidden">
         <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></symbol>
         <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+        <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
+        <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
     </svg>
 
     <div id="login-screen">
         <div class="login-box">
             <h1>Materiais Pedagógicos</h1>
-            <p>Acesso exclusivo para assinantes. Por favor, insira suas credenciais.</p>
+            <p>Acesso exclusivo para assinantes.</p>
             <form id="login-form">
                 <input type="text" id="username-input" placeholder="Usuário" required>
                 <input type="password" id="password-input" placeholder="Senha" required>
@@ -115,28 +147,38 @@
     </div>
 
     <div id="main-content" class="hidden">
-        <header>
+        <header class="app-header">
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+                <svg><use xlink:href="#icon-menu"></use></svg>
+            </button>
             <h1>Materiais Pedagógicos 🚀</h1>
             <div class="user-area">
                 <span id="welcome-message"></span>
-                <button id="logout-button">Sair</button>
+                <button id="logout-button" class="logout-button">Sair</button>
             </div>
         </header>
-        <main>
-            <div class="controls-panel">
-                <div class="controls-top-row">
-                    <div class="search-container">
-                        <svg class="icon-search"><use xlink:href="#icon-search"></use></svg>
-                        <input type="text" id="search-input" placeholder="Pesquisar por palavra-chave...">
-                    </div>
+        
+        <div id="app-body">
+            <div id="sidebar-overlay"></div>
+            <aside class="sidebar" id="sidebar">
+                <h2>Navegação</h2>
+                <div class="search-container">
+                    <svg class="icon-search"><use xlink:href="#icon-search"></use></svg>
+                    <input type="text" id="search-input" placeholder="Pesquisar...">
                 </div>
-                <div id="filters-container"></div>
+                <ul id="filters-container"></ul>
+            </aside>
+
+            <div class="content-wrapper">
+                <main>
+                    <div id="results-info"></div>
+                    <section class="activities-grid" id="activities-grid-container"></section>
+                    <div id="pagination-container"></div>
+                </main>
+                <footer><p>Criado com ❤️ por Prof. Vane</p></footer>
             </div>
-            <div id="results-info"></div>
-            <section class="activities-grid" id="activities-grid-container"></section>
-            <div id="pagination-container"></div>
-        </main>
-        <footer><p>Criado com ❤️ por Prof. Vane</p></footer>
+        </div>
+        
         <div class="modal-container" id="modal-container"></div>
     </div>
 
@@ -158,7 +200,7 @@
         { id: 5, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08"], detalhes: "<h4>Materiais:</h4><p>Folha impressa, tesoura e cola.</p><h4>Passo a Passo:</h4><ol><li>A folha contém figuras (ex: BOLA) e as sílabas embaralhadas ('LA', 'BO').</li><li>A criança recorta e cola as sílabas na ordem correta.</li></ol>" },
         { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04"], detalhes: "<h4>Tema:</h4><p>Meu Animal Fantástico</p><h4>Passo a Passo:</h4><ol><li>Distribua massinha de modelar.</li><li>Peça para cada aluno criar um animal que não existe no mundo real.</li><li>Faça uma exposição das esculturas.</li></ol>" },
         { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09"], detalhes: "<h4>Materiais:</h4><p>Cartolina e lápis de cor.</p><h4>Passo a Passo:</h4><ol><li>Discuta com a turma como seria ver a sala de aula de cima.</li><li>No papel, desenhe o contorno da sala e peça para as crianças desenharem os móveis.</li></ol>" },
-        { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01"], detalhes: "<h4>Materiais:</h4><p>Folha, régua, fotos ou desenhos.</p><h4>Passo a Passo:</h4><ol><li>Peça para a criança listar 5 eventos importantes de sua vida (nascimento, primeiro passo, etc.).</li><li>Ajude-a a desenhar uma linha e a marcar os eventos em ordem.</li></ol>" }
+        { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01"], detalhes: "<h4>Materiais:</h4><p>Folha, régua, fotos ou desenhos.</p><h4>Passo a Passo:</h4><ol><li>Peça para a criança listar 5 eventos importantes de sua vida (nascimento, etc.).</li><li>Ajude-a a desenhar uma linha e a marcar os eventos em ordem.</li></ol>" }
     ];
     // #####################################################################
     // ## FIM DA BASE DE DADOS ##
@@ -175,7 +217,8 @@
             filters: document.getElementById('filters-container'), grid: document.getElementById('activities-grid-container'),
             pagination: document.getElementById('pagination-container'), resultsInfo: document.getElementById('results-info'),
             logoutButton: document.getElementById('logout-button'), welcomeMsg: document.getElementById('welcome-message'),
-            modal: document.getElementById('modal-container')
+            modal: document.getElementById('modal-container'), menuToggle: document.getElementById('menu-toggle'),
+            sidebar: document.getElementById('sidebar'), sidebarOverlay: document.getElementById('sidebar-overlay')
         };
 
         function initializePanel(username) {
@@ -183,12 +226,18 @@
             dom.mainContent.classList.remove('hidden');
             dom.welcomeMsg.textContent = `Olá, ${username.split('.')[0].charAt(0).toUpperCase() + username.split('.')[0].slice(1)}!`;
             setupEventListeners();
+            setupMobileMenu();
             render();
         }
 
         function setupEventListeners() {
             dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
             dom.searchInput.addEventListener('input', () => { appState.searchQuery = dom.searchInput.value.toLowerCase(); appState.currentPage = 1; render(); });
+        }
+        
+        function setupMobileMenu() {
+            dom.menuToggle.addEventListener('click', () => document.body.classList.add('sidebar-open'));
+            dom.sidebarOverlay.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
         }
 
         function render() {
@@ -199,7 +248,8 @@
                 filtered = filtered.filter(a => a.categoria === appState.activeFilter);
             }
             if (appState.searchQuery) {
-                filtered = filtered.filter(a => a.titulo.toLowerCase().includes(appState.searchQuery) || a.desc.toLowerCase().includes(appState.searchQuery));
+                const query = appState.searchQuery;
+                filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
             }
             dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
             renderFilters();
@@ -211,17 +261,25 @@
             const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
             dom.filters.innerHTML = '';
             categories.forEach(cat => dom.filters.appendChild(createFilterBtn(cat, cat)));
-            dom.filters.appendChild(createFilterBtn('Favoritos', '❤️ Favoritos', true));
+            dom.filters.appendChild(createFilterBtn('Favoritos', 'Favoritos', true));
         }
 
         function createFilterBtn(filterValue, text, isFavoriteBtn = false) {
+            const li = document.createElement('li');
             const btn = document.createElement('button');
             btn.className = 'filter-btn';
             if (isFavoriteBtn) btn.classList.add('favorite-btn');
             if (appState.activeFilter === filterValue) btn.classList.add('active');
-            btn.innerHTML = text;
-            btn.onclick = () => { appState.activeFilter = filterValue; appState.currentPage = 1; render(); };
-            return btn;
+            const iconId = isFavoriteBtn ? '#icon-heart' : (filterValue === 'Todos' ? '#icon-all' : '#icon-category');
+            btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
+            btn.onclick = () => { 
+                appState.activeFilter = filterValue; 
+                appState.currentPage = 1; 
+                render(); 
+                document.body.classList.remove('sidebar-open');
+            };
+            li.appendChild(btn);
+            return li;
         }
 
         function renderGrid(activities) {
@@ -230,7 +288,7 @@
             const paginated = activities.slice(start, start + appState.itemsPerPage);
 
             if (paginated.length === 0) {
-                dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">Nenhuma atividade encontrada.</p>`;
+                dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada com os filtros atuais.</p>`;
                 return;
             }
             paginated.forEach(act => dom.grid.appendChild(createActivityCard(act)));
@@ -279,7 +337,15 @@
             const index = appState.favorites.indexOf(id);
             index > -1 ? appState.favorites.splice(index, 1) : appState.favorites.push(id);
             localStorage.setItem('profVaneFavoritesV1', JSON.stringify(appState.favorites));
-            render();
+            if (appState.activeFilter === 'Favoritos') {
+                 appState.currentPage = 1;
+                 render();
+            } else {
+                const icon = document.querySelector(`.favorite-icon[data-id='${id}']`);
+                if(icon) {
+                    icon.classList.toggle('favorited');
+                }
+            }
         }
 
         function openModal(id) {
@@ -304,22 +370,24 @@
         function closeModal() { dom.modal.classList.remove('show'); }
 
         // --- INICIALIZAÇÃO ---
-        const savedUser = localStorage.getItem('usuarioLogado');
-        if (savedUser) {
-            initializePanel(savedUser);
-        }
-        dom.loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const user = e.target.elements['username-input'].value.trim();
-            const pass = e.target.elements['password-input'].value.trim();
-            const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
-            if (found) {
-                localStorage.setItem('usuarioLogado', found.usuario);
-                initializePanel(found.usuario);
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
+        (function main() {
+            const savedUser = localStorage.getItem('usuarioLogado');
+            if (savedUser) {
+                initializePanel(savedUser);
             }
-        });
+            dom.loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = e.target.elements['username-input'].value.trim();
+                const pass = e.target.elements['password-input'].value.trim();
+                const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
+                if (found) {
+                    localStorage.setItem('usuarioLogado', found.usuario);
+                    initializePanel(found.usuario);
+                } else {
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            });
+        })();
     });
     </script>
 </body>
