@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor PDF para HTML Editável</title>
+    <title>Impressão Fiel de PDF</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #f8f9fa;
-            --border-color: #dee2e6;
-            --text-color: #343a40;
+            --primary-color: #4CAF50; /* Verde para diferenciar */
+            --secondary-color: #f0f0f0;
+            --border-color: #ccc;
+            --text-color: #333;
             --bg-color: #fff;
         }
 
@@ -48,7 +48,7 @@
         }
 
         input[type="file"] {
-            display: none; /* Escondemos o input padrão */
+            display: none;
         }
 
         .custom-file-upload, #print-button {
@@ -64,33 +64,38 @@
         }
 
         .custom-file-upload:hover, #print-button:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
 
-        #editor-container {
+        #pdf-render-area {
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
-            border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1rem;
         }
 
-        #html-output {
-            min-height: 700px;
-            padding: 1.5rem;
-            font-size: 1rem;
-            line-height: 1.7;
-            outline: none; /* Remove a borda ao focar */
-            white-space: pre-wrap; /* Preserva quebras de linha e espaços */
+        #pdf-render-area canvas {
+            display: block;
+            margin: 0 auto 1rem auto; /* Centraliza a página e adiciona espaço abaixo */
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .loader {
-            border: 5px solid #f3f3f3; /* Light grey */
-            border-top: 5px solid #3498db; /* Blue */
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
             border-radius: 50%;
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
             margin: 20px auto;
+        }
+        
+        #placeholder-text{
+            text-align: center;
+            color: #777;
+            padding: 50px;
         }
 
         @keyframes spin {
@@ -98,28 +103,29 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ESTILOS DE IMPRESSÃO */
+        /* ESTILOS DE IMPRESSÃO - A MÁGICA ACONTECE AQUI */
         @media print {
-            /* Oculta tudo que não for a área de impressão */
-            body > *:not(#editor-container) {
+            /* Oculta tudo que não é a área de renderização do PDF */
+            body > *:not(#pdf-render-area) {
                 display: none;
             }
 
-            /* Garante que a área de impressão ocupe todo o espaço */
-            #editor-container, #html-output {
-                width: 100%;
-                height: auto;
-                margin: 0;
+            /* Remove estilos do contêiner para que as páginas do PDF fluam naturalmente */
+            #pdf-render-area {
                 padding: 0;
+                margin: 0;
                 border: none;
                 box-shadow: none;
-                min-height: 0;
-                color: #000 !important; /* Garante que o texto seja preto na impressão */
             }
-
-            /* Restaura as margens padrão do navegador para impressão */
-            @page {
-                margin: 1in;
+            
+            /* Cada canvas (página do PDF) deve quebrar a página antes de si mesma, exceto a primeira */
+            canvas {
+                page-break-before: always;
+                box-shadow: none !important;
+            }
+            
+            canvas:first-child {
+                page-break-before: auto;
             }
         }
     </style>
@@ -129,8 +135,8 @@
 </head>
 <body>
     <header>
-        <h1>Conversor de PDF para HTML Editável</h1>
-        <p>Carregue um arquivo PDF, edite o conteúdo e imprima.</p>
+        <h1>Impressão Fiel de PDF</h1>
+        <p>Carregue um PDF para visualizá-lo com fidelidade e imprimi-lo exatamente igual.</p>
     </header>
 
     <main>
@@ -140,93 +146,73 @@
             </label>
             <input type="file" id="pdf-file-input" accept="application/pdf">
             <button id="print-button">
-                <i class="fas fa-print"></i> Imprimir Conteúdo Editado
+                <i class="fas fa-print"></i> Imprimir Cópia Fiel
             </button>
         </div>
 
         <div id="loader" class="loader" style="display: none;"></div>
         
-        <div id="editor-container">
-            <div id="html-output" contenteditable="true" aria-label="Área de conteúdo editável">
-                <p>O conteúdo do seu PDF aparecerá aqui após o carregamento.</p>
+        <div id="pdf-render-area">
+            <p id="placeholder-text">A visualização do seu PDF aparecerá aqui.</p>
             </div>
-        </div>
     </main>
 
     <footer>
-        <p>Projeto completo em um único arquivo HTML</p>
+        <p>Projeto focado em fidelidade visual para impressão.</p>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const fileInput = document.getElementById('pdf-file-input');
             const printButton = document.getElementById('print-button');
-            const htmlOutput = document.getElementById('html-output');
+            const pdfRenderArea = document.getElementById('pdf-render-area');
             const loader = document.getElementById('loader');
+            const placeholderText = document.getElementById('placeholder-text');
 
-            // Define o workerSrc para o PDF.js. Essencial para o funcionamento da biblioteca.
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
-            // Evento disparado quando um arquivo é selecionado
             fileInput.addEventListener('change', async (event) => {
                 const file = event.target.files[0];
-                if (!file || file.type !== 'application/pdf') {
-                    htmlOutput.innerHTML = '<p style="color: red;">Por favor, selecione um arquivo PDF válido.</p>';
-                    return;
-                }
+                if (!file || file.type !== 'application/pdf') return;
 
-                // Mostra o loader e limpa o conteúdo anterior
                 loader.style.display = 'block';
-                htmlOutput.innerHTML = '';
+                pdfRenderArea.innerHTML = ''; // Limpa a área de renderização
 
                 try {
                     const fileReader = new FileReader();
-                    
                     fileReader.onload = async function() {
                         const typedarray = new Uint8Array(this.result);
                         const pdf = await pdfjsLib.getDocument(typedarray).promise;
-                        let fullHtmlContent = '';
 
-                        // Itera por todas as páginas do PDF
                         for (let i = 1; i <= pdf.numPages; i++) {
                             const page = await pdf.getPage(i);
-                            const textContent = await page.getTextContent();
-                            
-                            // Constrói o HTML a partir do texto extraído.
-                            // Esta versão usa 'divs' para cada linha para melhor preservação do layout de texto.
-                            textContent.items.forEach(item => {
-                                // A propriedade 'transform' pode ser usada para posicionar o texto,
-                                // mas para um editor simples, apenas extrair o texto é mais robusto.
-                                // Adicionamos cada pedaço de texto em um parágrafo para permitir a edição.
-                                fullHtmlContent += `<p>${item.str.trim()}</p>`;
-                            });
+                            const viewport = page.getViewport({ scale: 1.5 }); // A escala controla a qualidade/resolução
 
-                            // Adiciona um separador visual entre as páginas no editor
-                            if (i < pdf.numPages) {
-                                fullHtmlContent += '<hr style="border: 1px dashed #ccc; margin: 20px 0;">';
-                            }
+                            // Cria um elemento canvas para cada página
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+
+                            // Adiciona o canvas à página
+                            pdfRenderArea.appendChild(canvas);
+
+                            // Renderiza a página do PDF no canvas
+                            await page.render({ canvasContext: context, viewport: viewport }).promise;
                         }
-                        
-                        htmlOutput.innerHTML = fullHtmlContent || '<p>Não foi possível extrair texto deste PDF ou o PDF está em branco.</p>';
                     };
-
                     fileReader.readAsArrayBuffer(file);
-
                 } catch (error) {
-                    console.error('Erro ao processar o PDF:', error);
-                    htmlOutput.innerHTML = `<p style="color: red;">Ocorreu um erro ao processar o PDF. Detalhes: ${error.message}</p>`;
+                    console.error('Erro ao renderizar o PDF:', error);
+                    pdfRenderArea.innerHTML = `<p style="color: red;">Ocorreu um erro ao renderizar o PDF.</p>`;
                 } finally {
-                    // Esconde o loader ao finalizar
                     loader.style.display = 'none';
                 }
             });
 
-            // Evento do botão de impressão
             printButton.addEventListener('click', () => {
-                const initialText = 'O conteúdo do seu PDF aparecerá aqui após o carregamento.';
-                // Verifica se há conteúdo para imprimir
-                if (htmlOutput.innerText.trim() === '' || htmlOutput.innerText.trim() === initialText) {
-                    alert('Não há conteúdo para imprimir. Por favor, carregue um PDF primeiro.');
+                if (pdfRenderArea.getElementsByTagName('canvas').length === 0) {
+                    alert('Não há PDF carregado para imprimir.');
                     return;
                 }
                 window.print();
