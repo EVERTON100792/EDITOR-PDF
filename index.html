@@ -254,15 +254,14 @@
         .favorite-icon:hover { transform: scale(1.15); }
         .card-content { padding: 0 1.5rem; flex-grow: 1; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; }
-        .card-footer-info { display: flex; align-items: center; gap: 0.75rem; color: var(--text-color-light); }
-        .card-footer-info .icon { width: 20px; height: 20px; fill: currentColor; }
+        .card-footer span { font-weight: 600; color: var(--text-color-light); }
         .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; }
         #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; }
         .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
         .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         
-        /* --- ESTILOS DO NOVO MODAL --- */
+        /* --- ESTILOS DO MODAL SIMPLIFICADO --- */
         .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 20, 30, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
         .modal-container.show { display: flex; opacity: 1; }
         .modal-content { background-color: white; padding: 0; border-radius: 20px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 750px; position: relative; overflow: hidden; transform: translateY(-30px); opacity: 0; display: flex; flex-direction: column; max-height: 90vh; }
@@ -271,27 +270,17 @@
         .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; line-height: 1.3; }
         .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
         .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 0; }
-        .modal-tabs { display: flex; border-bottom: 1px solid var(--border-color); background-color: var(--background-color); padding: 0 2.5rem; }
-        .modal-tab-btn { background: none; border: none; padding: 1rem 0.5rem; margin-right: 1.5rem; font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text-color-light); cursor: pointer; position: relative; border-bottom: 3px solid transparent; }
-        .modal-tab-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .modal-tab-content { padding: 2rem 2.5rem; display: none; animation: contentFadeIn 0.4s ease-out; }
-        .modal-tab-content.active { display: block; }
-        .modal-tab-content h3 { font-size: 1.1rem; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .modal-tab-content h3:first-child { margin-top: 0; }
-        .modal-tab-content p, .modal-tab-content li { color: var(--text-color); line-height: 1.8; }
-        .modal-tab-content ul { list-style-position: inside; padding-left: 0; }
+        .modal-body { flex-grow: 1; overflow-y: auto; padding: 2rem 2.5rem; animation: contentFadeIn 0.4s ease-out;}
+        .modal-body h3 { font-size: 1.1rem; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .modal-body h3:first-child { margin-top: 0; }
+        .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
+        .modal-body ul { list-style-position: inside; padding-left: 0; }
         .dica-da-vane { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
         .dica-da-vane p { margin: 0; font-weight: 500; }
         .dica-da-vane strong { color: var(--accent-color); font-weight: 700; }
         .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
         .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
         .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-        .video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; margin-top: 1rem; box-shadow: var(--shadow); }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .resource-btn { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--secondary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1rem; transition: all 0.3s; border: none; cursor: pointer; }
-        .resource-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
-        .resource-btn .icon { width: 22px; height: 22px; }
         .modal-footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--border-color); background-color: #fcfcfd; flex-shrink: 0; text-align: right; }
         .download-btn { display: inline-block; background: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
         .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
@@ -311,8 +300,7 @@
             .app-header h1 { font-size: 1.2rem; gap: 12px; }
             .logo-icon { width: 25px; height: 25px; }
             .login-box { padding: 2rem; margin-bottom: 3rem;}
-            .modal-header, .modal-footer, .modal-tabs { padding-left: 1.5rem; padding-right: 1.5rem; }
-            .modal-tab-content { padding: 1.5rem; }
+            .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
             #login-screen { padding: 2rem 1rem; }
         }
     </style>
@@ -324,8 +312,6 @@
         <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
         <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
         <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
-        <symbol id="icon-video" viewBox="0 0 24 24"><path fill="currentColor" d="M10,16.5V7.5L16,12M20,4.4C19.4,4.2 18.7,4 18,4A6,6 0 0,0 12,10A6,6 0 0,0 6,4C4.9,4 4,4.4 3.2,5H3A2,2 0 0,0 1,7V17A2,2 0 0,0 3,19H21A2,2 0 0,0 23,17V7A2,2 0 0,0 21,5H20.8C20.3,4.7 19.7,4.5 19.2,4.4M18,6A4,4 0 0,1 22,10A4,4 0 0,1 18,14A4,4 0 0,1 14,10A4,4 0 0,1 18,6M6,6A4,4 0 0,1 10,10A4,4 0 0,1 6,14A4,4 0 0,1 2,10A4,4 0 0,1 6,6Z"/></symbol>
-        <symbol id="icon-template" viewBox="0 0 24 24"><path fill="currentColor" d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2M18 20H6V4H13V9H18V20M12.9 14.5L15.1 16.7L12.9 18.9L11.5 17.5L12.5 16.5L10.3 14.3L11.7 12.9L13.9 15.1L12.9 14.5Z"/></symbol>
     </svg>
 
     <div id="login-screen">
@@ -431,10 +417,7 @@
                 expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
                 encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
             },
-            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!",
-            recursos_multimidia: {
-                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder/edit?usp=sharing"
-            }
+            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
         },
         { 
             id: 3, 
@@ -455,10 +438,7 @@
                 expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
                 encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
             },
-            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!",
-            recursos_multimidia: {
-                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder_problema/edit?usp=sharing"
-            }
+            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
         },
         { 
             id: 4, 
@@ -479,10 +459,7 @@
                 expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
                 encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
             },
-            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate.",
-            recursos_multimidia: {
-                video: "https://www.youtube.com/embed/videoseries?list=PL_placeholder_debate"
-            }
+            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
         },
         { 
             id: 5, 
@@ -504,10 +481,7 @@
                 expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
                 encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
             },
-            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes.",
-            recursos_multimidia: {
-                video: "https://www.youtube.com/embed/placeholder_silabas"
-            }
+            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
         },
         { 
             id: 6, 
@@ -528,10 +502,7 @@
                 expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
                 encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
             },
-            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo.",
-             recursos_multimidia: {
-                video: "https://www.youtube.com/embed/placeholder_escultura"
-            }
+            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
         },
         { 
             id: 7, 
@@ -552,10 +523,7 @@
                 expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
                 encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
             },
-            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente.",
-            recursos_multimidia: {
-                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder_mapa/edit?usp=sharing"
-            }
+            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
         },
         { 
             id: 8, 
@@ -576,10 +544,7 @@
                 expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
                 encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
             },
-            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade.",
-            recursos_multimidia: {
-                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder_timeline/edit?usp=sharing"
-            }
+            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
         }
     ];
     
@@ -617,13 +582,12 @@
                 doc.setFontSize(11);
                 doc.setTextColor("#333d49");
 
-                // Gera um texto simples baseado no roteiro para o PDF
                 let detailsText = `Descrição: ${activity.desc}\n\n`;
                 if(activity.roteiro) {
                    detailsText += `Roteiro Sugerido:\n`;
-                   detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n`;
-                   detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n`;
-                   detailsText += `3. Expansão: ${activity.roteiro.expansao}\n`;
+                   detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
+                   detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
+                   detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
                    detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
                 }
 
@@ -639,13 +603,10 @@
         function closeModal() {
             dom.modal.classList.remove('show'); 
         }
-
+        
         function openModal(id) {
             const activity = todasAsAtividades.find(a => a.id === id);
             if (!activity) return;
-
-            const hasVideo = activity.recursos_multimidia && activity.recursos_multimidia.video;
-            const hasTemplate = activity.recursos_multimidia && activity.recursos_multimidia.template_editavel;
 
             const modalHTML = `
             <div class="modal-content">
@@ -654,49 +615,23 @@
                     <button class="close-button" aria-label="Fechar modal">×</button>
                 </div>
                 <div class="modal-body">
-                    <div class="modal-tabs">
-                        <button class="modal-tab-btn active" data-tab="plano">Plano de Aula</button>
-                        ${hasVideo || hasTemplate ? '<button class="modal-tab-btn" data-tab="recursos">Recursos Extras</button>' : ''}
-                    </div>
+                    <p>${activity.desc}</p>
                     
-                    <div id="plano" class="modal-tab-content active">
-                        <p>${activity.desc}</p>
-                        
-                        <h3>Objetivos de Aprendizagem</h3>
-                        <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+                    <h3>Objetivos de Aprendizagem</h3>
+                    <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
 
-                        <h3>Códigos da BNCC</h3>
-                        <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
+                    <h3>Códigos da BNCC</h3>
+                    <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
 
-                        <h3>Roteiro da Aula</h3>
-                        <ol class="roteiro-passos">
-                            <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
-                            <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
-                            <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
-                            <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
-                        </ol>
-                        
-                        ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
-                    </div>
+                    <h3>Roteiro da Aula</h3>
+                    <ol class="roteiro-passos">
+                        <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
+                        <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
+                        <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
+                        <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
+                    </ol>
                     
-                    ${hasVideo || hasTemplate ? `
-                    <div id="recursos" class="modal-tab-content">
-                        ${hasVideo ? `
-                            <h3>Vídeo de Apoio</h3>
-                            <p>Use este vídeo para introduzir o tema ou como uma atividade complementar.</p>
-                            <div class="video-container">
-                                <iframe src="${activity.recursos_multimidia.video.replace("watch?v=", "embed/")}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>` 
-                        : ''}
-                        ${hasTemplate ? `
-                            <h3 style="${hasVideo ? 'margin-top: 2rem;' : ''}">Template Editável</h3>
-                            <p>Clique no botão abaixo para abrir uma versão editável deste recurso. Você pode personalizar, imprimir ou salvar no seu Google Drive.</p>
-                            <a href="${activity.recursos_multimidia.template_editavel}" target="_blank" class="resource-btn">
-                                <svg class="icon"><use xlink:href="#icon-template"></use></svg>
-                                <span>Abrir Template</span>
-                            </a>` 
-                        : ''}
-                    </div>` : ''}
+                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
                 </div>
                 <div class="modal-footer">
                     <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
@@ -706,23 +641,11 @@
             dom.modal.innerHTML = modalHTML;
             dom.modal.classList.add('show');
             
-            // Listeners Padrão
+            // Listeners
             dom.modal.querySelector('.close-button').onclick = closeModal;
             dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); }, { once: true });
             dom.modal.querySelector('.download-btn').addEventListener('click', function() {
                 generatePdf(parseInt(this.dataset.activityId));
-            });
-
-            // Listener das Abas
-            const tabButtons = dom.modal.querySelectorAll('.modal-tab-btn');
-            const tabContents = dom.modal.querySelectorAll('.modal-tab-content');
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    dom.modal.querySelector(`#${button.dataset.tab}`).classList.add('active');
-                });
             });
         }
         
@@ -845,22 +768,6 @@
             const isFavorited = appState.favorites.includes(activity.id);
             const card = document.createElement('article');
             card.className = 'activity-card';
-
-            const hasVideo = activity.recursos_multimidia && activity.recursos_multimidia.video;
-            const hasTemplate = activity.recursos_multimidia && activity.recursos_multimidia.template_editavel;
-
-            let footerInfoHTML = `
-                <div class="card-footer-info" title="${activity.duracao}">
-                    <span>🕓 ${activity.duracao}</span>
-                </div>`;
-            
-            if (hasVideo || hasTemplate) {
-                 footerInfoHTML = `
-                <div class="card-footer-info">
-                    ${hasVideo ? '<svg class="icon" title="Contém vídeo"><use xlink:href="#icon-video"></use></svg>' : ''}
-                    ${hasTemplate ? '<svg class="icon" title="Contém template editável"><use xlink:href="#icon-template"></use></svg>' : ''}
-                </div>`;
-            }
             
             card.innerHTML = `
                 <div class="card-header">
@@ -874,7 +781,7 @@
                     <p>${activity.desc}</p>
                 </div>
                 <div class="card-footer">
-                    ${footerInfoHTML}
+                    <span>🕓 ${activity.duracao}</span>
                     <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
                 </div>`;
             return card;
