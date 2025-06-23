@@ -1,1557 +1,1552 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materiais Pedagógicos Prof. Vane</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiais Pedagógicos Prof. Vane</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <style>
-        /* Importa a fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-        
-        :root {
-            --primary-color: #b19cd9;
-            --secondary-color: #6c5b7b;
-            --accent-color: #ffb6c1;
-            --background-color: #fdfcff;
-            --card-background: #ffffff;
-            --text-color: #333d49;
-            --text-color-light: #6b7280;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.08);
-            --sidebar-width: 280px;
-        }
+    <style>
+        /* Importa a fonte do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #b19cd9;
+            --secondary-color: #6c5b7b;
+            --accent-color: #ffb6c1;
+            --background-color: #fdfcff;
+            --card-background: #ffffff;
+            --text-color: #333d49;
+            --text-color-light: #6b7280;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.08);
+            --sidebar-width: 280px;
+        }
 
-        /* ESTILOS GERAIS E ANIMAÇÕES */
-        *, *::before, *::after { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .hidden { display: none !important; }
+        /* ESTILOS GERAIS E ANIMAÇÕES */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .hidden { display: none !important; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popEffect { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes contentFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popEffect { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes contentFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* TELA DE LOGIN INTERATIVA */
-        #login-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 100vh;
-            height: auto;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 3rem 1rem;
-        }
-        .login-container {
-            width: 100%;
-            max-width: 950px;
-            margin: auto;
-        }
-        .login-box {
-            background: var(--card-background);
-            padding: 2.5rem 3rem;
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto 4rem auto;
-            animation: fadeIn 0.7s ease-out forwards;
-            border-top: 5px solid var(--accent-color);
-        }
-        .login-footer {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--text-color-light);
-        }
-        .login-footer a {
-            color: var(--primary-color);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .login-footer a:hover {
-            text-decoration: underline;
-            filter: brightness(1.1);
-        }
-        .preview-section {
-            animation: fadeIn 1s ease-out 0.3s forwards;
-            opacity: 0;
-        }
-        .preview-section h2 {
-            text-align: center;
-            color: white;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        }
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .preview-card {
-            position: relative;
-            background: var(--card-background);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-            border: 2px solid transparent;
-        }
-        .preview-card:hover {
-            transform: translateY(-5px);
-        }
-        .preview-card-content {
-            padding: 1.5rem;
-            background-color: #fff;
-            transition: filter 0.3s ease;
-        }
-        
-        .preview-card:not(.free) .preview-card-content {
-            filter: blur(2px);
-            user-select: none;
-        }
-        .preview-card:not(.free):hover .preview-card-content {
-            filter: blur(1px);
-        }
-        .free-badge {
-            position: absolute;
-            top: 15px;
-            right: -30px;
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 30px;
-            transform: rotate(45deg);
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 2;
-        }
-        .preview-card.free {
-            border: 2px solid var(--accent-color);
-            cursor: pointer;
-        }
-        .preview-card.free:hover {
-             box-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
-        }
-        .preview-card:not(.free) .preview-card-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(1px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--secondary-color);
-            font-weight: 700;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .preview-card:not(.free):hover .preview-card-overlay {
-            opacity: 1;
-        }
-        .preview-card-overlay span {
-            font-size: 3rem;
-            line-height: 1;
-        }
-        .preview-card-overlay p {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            padding: 0 1rem;
-        }
+        /* TELA DE LOGIN INTERATIVA */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+            height: auto;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem 1rem;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 950px;
+            margin: auto;
+        }
+        .login-box {
+            background: var(--card-background);
+            padding: 2.5rem 3rem;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto 4rem auto;
+            animation: fadeIn 0.7s ease-out forwards;
+            border-top: 5px solid var(--accent-color);
+        }
+        .login-footer {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-color-light);
+        }
+        .login-footer a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .login-footer a:hover {
+            text-decoration: underline;
+            filter: brightness(1.1);
+        }
+        .preview-section {
+            animation: fadeIn 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+        .preview-section h2 {
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .preview-card {
+            position: relative;
+            background: var(--card-background);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .preview-card:hover {
+            transform: translateY(-5px);
+        }
+        .preview-card-content {
+            padding: 1.5rem;
+            background-color: #fff;
+            transition: filter 0.3s ease;
+        }
+        
+        .preview-card:not(.free) .preview-card-content {
+            filter: blur(2px);
+            user-select: none;
+        }
+        .preview-card:not(.free):hover .preview-card-content {
+            filter: blur(1px);
+        }
+        .free-badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        .preview-card.free {
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+        }
+        .preview-card.free:hover {
+             box-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
+        }
+        .preview-card:not(.free) .preview-card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(1px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--secondary-color);
+            font-weight: 700;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .preview-card:not(.free):hover .preview-card-overlay {
+            opacity: 1;
+        }
+        .preview-card-overlay span {
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .preview-card-overlay p {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
 
-        .preview-card-category {
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-            border-radius: 999px;
-            margin-bottom: 1rem;
-        }
-        .preview-card h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.2rem;
-        }
-        .preview-card p {
-            font-size: 0.9rem;
-            color: var(--text-color-light);
-            margin: 0;
-        }
+        .preview-card-category {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+        .preview-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+        .preview-card p {
+            font-size: 0.9rem;
+            color: var(--text-color-light);
+            margin: 0;
+        }
 
-        .login-box h1 { font-size: 2.25rem; margin-top: 0; }
-        .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); }
-        #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
-        #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
-        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
-        #login-form button { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
-        #login-form button:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
-        
-        /* ESTRUTURA PRINCIPAL (PÓS-LOGIN) */
-        .app-header { background: var(--card-background); padding: 0 1rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; gap: 1rem; }
-        .user-area { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-        .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
-        .logout-button:hover { background: var(--accent-color); color: white; }
-        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
-        .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
-        .app-header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); display: flex; align-items: center; justify-content: center; gap: 15px; flex-grow: 1; min-width: 0; }
-        .logo-icon { position: relative; width: 30px; height: 30px; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; }
-        .app-header:hover .logo-icon { transform: rotate(-45deg) scale(1.1); }
-        .logo-icon::before, .logo-icon::after { content: ''; position: absolute; box-sizing: border-box; }
-        .logo-icon::before { width: 100%; height: 70%; background: var(--primary-color); border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
-        .logo-icon::after { top: 70%; width: 100%; height: 30%; background: #f3d7b6; border-bottom-right-radius: 50% 100%; border-top-right-radius: 5px; }
-        #app-body { display: flex; }
-        .sidebar { flex-shrink: 0; width: var(--sidebar-width); background-color: var(--card-background); border-right: 1px solid var(--border-color); padding: 2rem; height: calc(100vh - 70px); position: sticky; top: 70px; overflow-y: auto; }
-        .sidebar h2 { font-size: 1.25rem; margin: 0 0 1.5rem 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-        .search-container { position: relative; margin-bottom: 1.5rem; }
-        #search-input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1rem; }
-        .search-container .icon-search { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: #9ca3af; }
-        #filters-container { list-style: none; padding: 0; margin: 0; }
-        .filter-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; background: none; border: none; text-align: left; padding: 0.9rem 1rem; border-radius: 10px; font-size: 1rem; font-family: 'Poppins'; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-color-light); }
-        .filter-btn svg { width: 20px; height: 20px; stroke: var(--text-color-light); transition: all 0.2s; flex-shrink: 0; }
-        .filter-btn.active { background-color: rgba(177, 156, 217, 0.15); color: var(--primary-color); font-weight: 600; }
-        .filter-btn.active svg { stroke: var(--primary-color); }
-        .filter-btn.favorite-btn.active { background-color: rgba(255, 182, 193, 0.15); color: var(--accent-color); }
-        .filter-btn.favorite-btn.active svg { stroke: var(--accent-color); }
-        .filter-btn:hover:not(.active) { background-color: var(--background-color); }
-        .content-wrapper { flex-grow: 1; padding: 2.5rem; }
-        .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
-        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .activity-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.4s ease, box-shadow 0.4s ease; animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
-        .activity-card:hover { transform: translateY(-10px) rotate(1deg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 0 15px rgba(255, 182, 193, 0.5); }
-        .open-modal-btn { position: relative; overflow: hidden; transition: all 0.4s ease; }
-        .open-modal-btn::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); opacity: 0; transition: right 0.4s ease, opacity 0.4s ease; }
-        .activity-card:hover .open-modal-btn { background-color: var(--primary-color); border-color: var(--primary-color); color: white; padding-right: 2.5rem; }
-        .activity-card:hover .open-modal-btn::after { right: 1rem; opacity: 1; }
-        .favorite-icon.favorited { animation: popEffect 0.4s ease; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem 0; }
-        .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .favorite-icon { background: none; border: none; padding: 0.5rem; cursor: pointer; transition: transform 0.2s ease; }
-        .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; transition: all 0.2s ease; }
-        .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
-        .favorite-icon:hover { transform: scale(1.15); }
-        .card-content { padding: 0 1.5rem; flex-grow: 1; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; }
-        .card-footer span { font-weight: 600; color: var(--text-color-light); }
-        .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; }
-        #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; }
-        .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-        .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-        
-        /* --- ESTILOS DO MODAL SIMPLIFICADO --- */
-        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 20, 30, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
-        .modal-container.show { display: flex; opacity: 1; }
-        .modal-content { background-color: white; padding: 0; border-radius: 20px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 750px; position: relative; overflow: hidden; transform: translateY(-30px); opacity: 0; display: flex; flex-direction: column; max-height: 90vh; }
-        .modal-container.show .modal-content { animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        .modal-header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); position: relative; flex-shrink: 0; }
-        .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; line-height: 1.3; }
-        .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
-        .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 2rem 2.5rem; animation: contentFadeIn 0.4s ease-out;}
-        .modal-body h3 { font-size: 1.1rem; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .modal-body h3:first-child { margin-top: 0; }
-        .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
-        .modal-body ul { list-style-position: inside; padding-left: 0; }
-        .dica-da-vane { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-        .dica-da-vane p { margin: 0; font-weight: 500; }
-        .dica-da-vane strong { color: var(--accent-color); font-weight: 700; }
-        .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
-        .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
-        .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-        .modal-footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--border-color); background-color: #fcfcfd; flex-shrink: 0; text-align: right; }
-        .download-btn { display: inline-block; background: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
-        .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .login-box h1 { font-size: 2.25rem; margin-top: 0; }
+        .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); }
+        #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
+        #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
+        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
+        #login-form button { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
+        #login-form button:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
+        
+        /* ESTRUTURA PRINCIPAL (PÓS-LOGIN) */
+        .app-header { background: var(--card-background); padding: 0 1rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; gap: 1rem; }
+        .user-area { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+        .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
+        .logout-button:hover { background: var(--accent-color); color: white; }
+        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
+        .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
+        .app-header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); display: flex; align-items: center; justify-content: center; gap: 15px; flex-grow: 1; min-width: 0; }
+        .logo-icon { position: relative; width: 30px; height: 30px; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; }
+        .app-header:hover .logo-icon { transform: rotate(-45deg) scale(1.1); }
+        .logo-icon::before, .logo-icon::after { content: ''; position: absolute; box-sizing: border-box; }
+        .logo-icon::before { width: 100%; height: 70%; background: var(--primary-color); border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
+        .logo-icon::after { top: 70%; width: 100%; height: 30%; background: #f3d7b6; border-bottom-right-radius: 50% 100%; border-top-right-radius: 5px; }
+        #app-body { display: flex; }
+        .sidebar { flex-shrink: 0; width: var(--sidebar-width); background-color: var(--card-background); border-right: 1px solid var(--border-color); padding: 2rem; height: calc(100vh - 70px); position: sticky; top: 70px; overflow-y: auto; }
+        .sidebar h2 { font-size: 1.25rem; margin: 0 0 1.5rem 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+        .search-container { position: relative; margin-bottom: 1.5rem; }
+        #search-input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1rem; }
+        .search-container .icon-search { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: #9ca3af; }
+        #filters-container { list-style: none; padding: 0; margin: 0; }
+        .filter-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; background: none; border: none; text-align: left; padding: 0.9rem 1rem; border-radius: 10px; font-size: 1rem; font-family: 'Poppins'; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-color-light); }
+        .filter-btn svg { width: 20px; height: 20px; stroke: var(--text-color-light); transition: all 0.2s; flex-shrink: 0; }
+        .filter-btn.active { background-color: rgba(177, 156, 217, 0.15); color: var(--primary-color); font-weight: 600; }
+        .filter-btn.active svg { stroke: var(--primary-color); }
+        .filter-btn.favorite-btn.active { background-color: rgba(255, 182, 193, 0.15); color: var(--accent-color); }
+        .filter-btn.favorite-btn.active svg { stroke: var(--accent-color); }
+        .filter-btn:hover:not(.active) { background-color: var(--background-color); }
+        .content-wrapper { flex-grow: 1; padding: 2.5rem; }
+        .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
+        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .activity-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.4s ease, box-shadow 0.4s ease; animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+        .activity-card:hover { transform: translateY(-10px) rotate(1deg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 0 15px rgba(255, 182, 193, 0.5); }
+        .open-modal-btn { position: relative; overflow: hidden; transition: all 0.4s ease; }
+        .open-modal-btn::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); opacity: 0; transition: right 0.4s ease, opacity 0.4s ease; }
+        .activity-card:hover .open-modal-btn { background-color: var(--primary-color); border-color: var(--primary-color); color: white; padding-right: 2.5rem; }
+        .activity-card:hover .open-modal-btn::after { right: 1rem; opacity: 1; }
+        .favorite-icon.favorited { animation: popEffect 0.4s ease; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem 0; }
+        .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .favorite-icon { background: none; border: none; padding: 0.5rem; cursor: pointer; transition: transform 0.2s ease; }
+        .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; transition: all 0.2s ease; }
+        .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
+        .favorite-icon:hover { transform: scale(1.15); }
+        .card-content { padding: 0 1.5rem; flex-grow: 1; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; }
+        .card-footer span { font-weight: 600; color: var(--text-color-light); }
+        .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; }
+        #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; }
+        .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+        .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        
+        /* --- ESTILOS DO MODAL SIMPLIFICADO --- */
+        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 20, 30, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
+        .modal-container.show { display: flex; opacity: 1; }
+        .modal-content { background-color: white; padding: 0; border-radius: 20px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 750px; position: relative; overflow: hidden; transform: translateY(-30px); opacity: 0; display: flex; flex-direction: column; max-height: 90vh; }
+        .modal-container.show .modal-content { animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .modal-header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); position: relative; flex-shrink: 0; }
+        .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; line-height: 1.3; }
+        .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
+        .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
+        .modal-body { flex-grow: 1; overflow-y: auto; padding: 2rem 2.5rem; animation: contentFadeIn 0.4s ease-out;}
+        .modal-body h3 { font-size: 1.1rem; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .modal-body h3:first-child { margin-top: 0; }
+        .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
+        .modal-body ul { list-style-position: inside; padding-left: 0; }
+        .dica-da-vane { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .dica-da-vane p { margin: 0; font-weight: 500; }
+        .dica-da-vane strong { color: var(--accent-color); font-weight: 700; }
+        .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
+        .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
+        .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+        .modal-footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--border-color); background-color: #fcfcfd; flex-shrink: 0; text-align: right; }
+        .download-btn { display: inline-block; background: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
+        .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        /* AULA MAKER SECTION */
-        #aula-maker-section {
-            background-color: var(--card-background);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            padding: 2.5rem;
-            animation: fadeIn 0.7s ease-out forwards;
-        }
+        /* AULA MAKER SECTION */
+        #aula-maker-section {
+            background-color: var(--card-background);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            animation: fadeIn 0.7s ease-out forwards;
+        }
 
-        #aula-maker-section h2 {
-            color: var(--secondary-color);
-            font-size: 1.8rem;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        #aula-maker-section h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        #aula-maker-section .description {
-            color: var(--text-color-light);
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
+        #aula-maker-section .description {
+            color: var(--text-color-light);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
 
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
 
-        #aula-maker-section input[type="text"],
-        #aula-maker-section textarea {
-            width: 100%;
-            padding: 0.8rem 1.2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background-color: #f8fafc;
-        }
+        #aula-maker-section input[type="text"],
+        #aula-maker-section textarea {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #f8fafc;
+        }
 
-        #aula-maker-section input[type="text"]:focus,
-        #aula-maker-section textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3);
-            background-color: white;
-        }
-        
-        #aula-maker-section h3 {
-            font-size: 1.2rem;
-            color: var(--secondary-color);
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
+        #aula-maker-section input[type="text"]:focus,
+        #aula-maker-section textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3);
+            background-color: white;
+        }
+        
+        #aula-maker-section h3 {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-        #no-activities-selected {
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 12px;
-        }
+        #no-activities-selected {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
 
-        #selected-activities-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 2rem;
-        }
+        #selected-activities-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
 
-        .selected-activity-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fcfcfd;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 0.75rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+        .selected-activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fcfcfd;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
 
-        .selected-activity-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-        }
+        .selected-activity-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
 
-        .selected-activity-item span {
-            font-weight: 500;
-            color: var(--text-color);
-            flex-grow: 1;
-        }
+        .selected-activity-item span {
+            font-weight: 500;
+            color: var(--text-color);
+            flex-grow: 1;
+        }
 
-        .activity-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-left: 1rem;
-        }
+        .activity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
 
-        .reorder-btn,
-        .remove-activity-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0 0.5rem;
-            transition: transform 0.2s, color 0.2s;
-            font-size: 1.5rem;
-            line-height: 1;
-        }
+        .reorder-btn,
+        .remove-activity-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 0.5rem;
+            transition: transform 0.2s, color 0.2s;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
 
-        .reorder-btn {
-            color: var(--text-color-light);
-        }
-        .reorder-btn:hover {
-            color: var(--primary-color);
-            transform: scale(1.2);
-        }
+        .reorder-btn {
+            color: var(--text-color-light);
+        }
+        .reorder-btn:hover {
+            color: var(--primary-color);
+            transform: scale(1.2);
+        }
 
-        .remove-activity-btn {
-            color: #ef4444;
-        }
+        .remove-activity-btn {
+            color: #ef4444;
+        }
 
-        .remove-activity-btn:hover {
-            transform: scale(1.2);
-        }
-        
-        .clear-plan-btn {
-            background: #eef2f7;
-            color: var(--text-color-light);
-            border: 1px solid var(--border-color);
-        }
-        .clear-plan-btn:hover {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-        
-        .main-action-buttons {
-            border-top: 1px solid var(--border-color);
-            margin-top: 3rem;
-            padding-top: 2rem;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+        .remove-activity-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .clear-plan-btn {
+            background: #eef2f7;
+            color: var(--text-color-light);
+            border: 1px solid var(--border-color);
+        }
+        .clear-plan-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        
+        .main-action-buttons {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
-        .add-activity-btn,
-        .generate-plan-btn {
-            padding: 0.8rem 1.8rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: var(--shadow);
-        }
+        .add-activity-btn,
+        .generate-plan-btn {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
 
-        .add-activity-btn {
-            background: var(--secondary-color);
-            color: white;
-        }
+        .add-activity-btn {
+            background: var(--secondary-color);
+            color: white;
+        }
 
-        .add-activity-btn:hover {
-            background: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
+        .add-activity-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
 
-        .generate-plan-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-            color: white;
-        }
+        .generate-plan-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+        }
 
-        .generate-plan-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            filter: brightness(1.1);
-        }
+        .generate-plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            filter: brightness(1.1);
+        }
 
-        /* Modal for selecting activities */
-        #select-activities-modal .modal-content {
-            max-width: 900px;
-            width: 95%;
-        }
+        /* Modal for selecting activities */
+        #select-activities-modal .modal-content {
+            max-width: 900px;
+            width: 95%;
+        }
 
-        #select-activities-modal .modal-body {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem 2.5rem;
-        }
+        #select-activities-modal .modal-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem 2.5rem;
+        }
 
-        #select-activities-modal .activity-card {
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
+        #select-activities-modal .activity-card {
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
 
-        #select-activities-modal .activity-card.selected {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(177, 156, 217, 0.8);
-            transform: translateY(-5px);
-        }
+        #select-activities-modal .activity-card.selected {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(177, 156, 217, 0.8);
+            transform: translateY(-5px);
+        }
 
-        #select-activities-modal .activity-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
+        #select-activities-modal .activity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
 
-        #select-activities-modal .card-footer {
-            display: none; /* Hide footer in selection modal */
-        }
+        #select-activities-modal .card-footer {
+            display: none; /* Hide footer in selection modal */
+        }
 
-        #select-activities-modal .modal-footer {
-            text-align: center;
-        }
+        #select-activities-modal .modal-footer {
+            text-align: center;
+        }
 
-        #confirm-selection-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: var(--shadow);
-        }
+        #confirm-selection-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+        }
 
-        #confirm-selection-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
+        #confirm-selection-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
 
-        /* Responsive adjustments for Aula Maker */
-        @media (max-width: 992px) {
-            .app-header { padding: 0 1rem; }
-            .menu-toggle { display: block; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-            #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
-            body.sidebar-open .sidebar { transform: translateX(0); }
-            body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
-            .content-wrapper { padding: 1.5rem; }
-        }
-        @media (max-width: 768px) {
-            .user-area #welcome-message { display: none; }
-            .app-header h1 { font-size: 1.2rem; gap: 12px; }
-            .logo-icon { width: 25px; height: 25px; }
-            .login-box { padding: 2rem; margin-bottom: 3rem;}
-            .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
-            #login-screen { padding: 2rem 1rem; }
+        /* Responsive adjustments for Aula Maker */
+        @media (max-width: 992px) {
+            .app-header { padding: 0 1rem; }
+            .menu-toggle { display: block; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+            #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
+            body.sidebar-open .sidebar { transform: translateX(0); }
+            body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
+            .content-wrapper { padding: 1.5rem; }
+        }
+        @media (max-width: 768px) {
+            .user-area #welcome-message { display: none; }
+            .app-header h1 { font-size: 1.2rem; gap: 12px; }
+            .logo-icon { width: 25px; height: 25px; }
+            .login-box { padding: 2rem; margin-bottom: 3rem;}
+            .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+            #login-screen { padding: 2rem 1rem; }
 
-            #aula-maker-section {
-                padding: 1.5rem;
-            }
+            #aula-maker-section {
+                padding: 1.5rem;
+            }
 
-            #aula-maker-section h2 {
-                font-size: 1.5rem;
-            }
-            
-            .main-action-buttons {
-                justify-content: center;
-            }
+            #aula-maker-section h2 {
+                font-size: 1.5rem;
+            }
 
-            #select-activities-modal .modal-body {
-                grid-template-columns: 1fr; /* Single column on small screens */
-            }
-        }
-    </style>
+            .main-action-buttons {
+                flex-direction: column;
+            }
+            .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
+                 width: 100%;
+                 margin-right: 0;
+                 margin-bottom: 1rem;
+            }
+
+            #select-activities-modal .modal-body {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+        }
+    </style>
 </head>
 <body>
-    <svg width="0" height="0" style="position:absolute;visibility:hidden">
-        <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></symbol>
-        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
-        <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
-        <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
-        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
-        <symbol id="icon-magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <path d="M19 21l-7-7 1.5-1.5 7 7-1.5 1.5z"></path>
-            <path d="M11 7l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
-            <path d="M15 3l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
-            <path d="M4 17l-1 1 3 3 1-1-3-3z"></path>
-            <path d="M10.5 10.5l-2.5-2.5"></path>
-            <path d="M13.5 13.5l-2.5-2.5"></path>
-        </symbol>
-    </svg>
+    <svg width="0" height="0" style="position:absolute;visibility:hidden">
+        <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+        <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
+        <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
+        <symbol id="icon-magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <path d="M19 21l-7-7 1.5-1.5 7 7-1.5 1.5z"></path>
+            <path d="M11 7l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
+            <path d="M15 3l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
+            <path d="M4 17l-1 1 3 3 1-1-3-3z"></path>
+            <path d="M10.5 10.5l-2.5-2.5"></path>
+            <path d="M13.5 13.5l-2.5-2.5"></path>
+        </symbol>
+    </svg>
 
-    <div id="login-screen">
-        <div class="login-container">
-            <div class="login-box">
-                <h1>Materiais Pedagógicos</h1>
-                <p>Acesso exclusivo para assinantes.</p>
-                <form id="login-form">
-                    <input type="text" id="username-input" placeholder="Usuário" required>
-                    <input type="password" id="password-input" placeholder="Senha" required>
-                    <button type="submit">Entrar →</button>
-                    <p id="login-error" class="hidden">Usuário ou senha inválidos.</p>
-                </form>
-                <div class="login-footer">
-                    <p>Primeira vez aqui? <a href="#preview-section">Veja uma prévia abaixo!</a></p>
-                </div>
-            </div>
-            <div class="preview-section" id="preview-section">
-                <h2>Um pouco do que você encontrará aqui dentro...</h2>
-                <div class="preview-grid" id="preview-grid-container"></div>
-            </div>
-        </div>
-    </div>
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Materiais Pedagógicos</h1>
+                <p>Acesso exclusivo para assinantes.</p>
+                <form id="login-form">
+                    <input type="text" id="username-input" placeholder="Usuário" required>
+                    <input type="password" id="password-input" placeholder="Senha" required>
+                    <button type="submit">Entrar →</button>
+                    <p id="login-error" class="hidden">Usuário ou senha inválidos.</p>
+                </form>
+                <div class="login-footer">
+                    <p>Primeira vez aqui? <a href="#preview-section">Veja uma prévia abaixo!</a></p>
+                </div>
+            </div>
+            <div class="preview-section" id="preview-section">
+                <h2>Um pouco do que você encontrará aqui dentro...</h2>
+                <div class="preview-grid" id="preview-grid-container"></div>
+            </div>
+        </div>
+    </div>
 
-    <div id="main-content" class="hidden">
-        <header class="app-header">
-            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-                <svg><use xlink:href="#icon-menu"></use></svg>
-            </button>
-            <h1><span class="logo-icon"></span><span>Cantinho da Prof. Vane</span></h1>
-            <div class="user-area">
-                <span id="welcome-message"></span>
-                <button id="logout-button" class="logout-button">Sair</button>
-            </div>
-        </header>
-        <div id="app-body">
-            <div id="sidebar-overlay"></div>
-            <aside class="sidebar" id="sidebar">
-                <h2>Navegação</h2>
-                <div class="search-container">
-                    <svg class="icon-search"><use xlink:href="#icon-search"></use></svg>
-                    <input type="text" id="search-input" placeholder="Pesquisar...">
-                </div>
-                <ul id="filters-container"></ul>
-            </aside>
-            <div class="content-wrapper">
-                <main>
-                    <div id="results-info"></div>
-                    <section class="activities-grid" id="activities-grid-container"></section>
-                    <div id="pagination-container"></div>
+    <div id="main-content" class="hidden">
+        <header class="app-header">
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+                <svg><use xlink:href="#icon-menu"></use></svg>
+            </button>
+            <h1><span class="logo-icon"></span><span>Cantinho da Prof. Vane</span></h1>
+            <div class="user-area">
+                <span id="welcome-message"></span>
+                <button id="logout-button" class="logout-button">Sair</button>
+            </div>
+        </header>
+        <div id="app-body">
+            <div id="sidebar-overlay"></div>
+            <aside class="sidebar" id="sidebar">
+                <h2>Navegação</h2>
+                <div class="search-container">
+                    <svg class="icon-search"><use xlink:href="#icon-search"></use></svg>
+                    <input type="text" id="search-input" placeholder="Pesquisar...">
+                </div>
+                <ul id="filters-container"></ul>
+            </aside>
+            <div class="content-wrapper">
+                <main>
+                    <div id="results-info"></div>
+                    <section class="activities-grid" id="activities-grid-container"></section>
+                    <div id="pagination-container"></div>
 
-                                        <section id="aula-maker-section" class="hidden">
-                        <h2>✨ Gerador de Plano de Aula</h2>
-                        <p class="description">Construa seu planejamento selecionando atividades, adicionando detalhes personalizados e organizando a sequência da sua aula.</p>
-    
-                                                <div class="form-group">
-                            <label for="maker-title">Título do Plano de Aula:</label>
-                            <input type="text" id="maker-title" placeholder="Ex: Plano Semanal - 1º Ano B">
-                        </div>
-                        <div class="form-group">
-                            <label for="maker-grade">Ano/Turma:</label>
-                            <input type="text" id="maker-grade" placeholder="Ex: 3º Ano Fundamental">
-                        </div>
-                        <div class="form-group">
-                            <label for="maker-theme">Tema da Aula (Opcional):</label>
-                            <input type="text" id="maker-theme" placeholder="Ex: Sustentabilidade e Meio Ambiente">
-                        </div>
-                        <div class="form-group">
-                            <label for="maker-notes">Observações Gerais / Materiais Necessários:</label>
-                            <textarea id="maker-notes" rows="4" placeholder="Ex: Levar tesoura sem ponta, cola bastão e revistas antigas para recorte."></textarea>
-                        </div>
-    
-                                                <h3>Sequência da Aula</h3>
-                        <p id="no-activities-selected" class="text-color-light">Nenhuma atividade adicionada. Use as ferramentas abaixo para construir seu plano.</p>
-                        <ul id="selected-activities-list"></ul>
-    
-                                                <div id="plan-builder-box" style="margin-top: 3rem; background: #fdfcff; border: 1px solid var(--border-color); padding: 2rem; border-radius: 16px; box-shadow: var(--shadow);">
-                            <h3 style="margin-top:0; font-size: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">Ferramentas de Construção</h3>
-                            <div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start;">
-    
-                                                                <div style="flex: 1; min-width: 260px; text-align: center; background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
-                                    <h4 style="margin-top:0; color: var(--secondary-color);">Adicionar do Catálogo</h4>
-                                    <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--text-color-light);">Busque na biblioteca de atividades e adicione ao plano com um clique.</p>
-                                    <button id="add-activity-btn" class="add-activity-btn">Procurar no Catálogo</button>
-                                </div>
-    
-                                                                <div style="flex: 2; min-width: 300px; background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
-                                    <h4 style="margin-top:0; color: var(--secondary-color);">Criar Atividade Personalizada</h4>
-                                    <div class="form-group">
-                                        <label for="custom-activity-title">Título da Atividade:</label>
-                                        <input type="text" id="custom-activity-title" placeholder="Ex: Roda de conversa inicial">
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 1rem;">
-                                        <label for="custom-activity-desc">Descrição / Roteiro (Opcional):</label>
-                                        <textarea id="custom-activity-desc" rows="3" placeholder="Ex: Sentar em círculo, perguntar como foi o final de semana."></textarea>
-                                    </div>
-                                    <button id="add-custom-activity-btn" class="add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Adicionar ao Plano</button>
-                                </div>
-                            </div>
-                        </div>
-    
-                                                <div class="main-action-buttons">
-                            <button id="clear-plan-btn" class="add-activity-btn clear-plan-btn">Limpar Plano</button>
-                            <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button>
-                        </div>
-                    </section>
-                </main>
-                <footer><p>Criado com ❤️ por Prof. Vane</p></footer>
-            </div>
-        </div>
-    </div>
+                    <section id="aula-maker-section" class="hidden">
+                        <h2>✨ Gerador de Plano de Aula</h2>
+                        <p class="description">Construa seu planejamento selecionando atividades, adicionando detalhes personalizados e organizando a sequência da sua aula.</p>
 
-    <div class="modal-container" id="modal-container"></div>
+                        <div class="form-group">
+                            <label for="maker-title">Título do Plano de Aula:</label>
+                            <input type="text" id="maker-title" placeholder="Ex: Plano Semanal - 1º Ano B">
+                        </div>
 
-    <script>
-    const usuariosAutorizados = [
-        { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
-        { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
-    ];
-    
-    const todasAsAtividades = [
-        { 
-            id: 1, 
-            categoria: "Interpessoal", 
-            cor: "#3b82f6", 
-            titulo: "Duas Verdades, Uma Mentira", 
-            desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", 
-            duracao: "10 min", 
-            bncc: ["EI03EO04", "EI03EF01"],
-            objetivos: [
-                "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.",
-                "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.",
-                "Desenvolver a escuta atenta e o respeito pela vez de falar do colega."
-            ],
-            roteiro: {
-                acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.",
-                desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.",
-                expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
-                encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
-            },
-            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
-        },
-        { 
-            id: 2, 
-            categoria: "Português", 
-            cor: "#ef4444", 
-            titulo: "Criador de Histórias", 
-            desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", 
-            duracao: "20 min", 
-            bncc: ["EF15LP05", "EF02LP26"],
-            objetivos: [
-                "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.",
-                "Desenvolver a criatividade e a imaginação.",
-                "Ampliar o vocabulário e a organização do pensamento lógico."
-            ],
-            roteiro: {
-                acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.",
-                desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.",
-                expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
-                encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
-            },
-            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
-        },
-        { 
-            id: 3, 
-            categoria: "Matemática", 
-            cor: "#f59e0b", 
-            titulo: "O Problema do Dia", 
-            desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", 
-            duracao: "10 min", 
-            bncc: ["EF01MA01", "EF01MA08"],
-            objetivos: [
-                "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.",
-                "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.",
-                "Desenvolver o raciocínio lógico e estratégias de resolução de problemas."
-            ],
-            roteiro: {
-                acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.",
-                desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.",
-                expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
-                encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
-            },
-            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
-        },
-        { 
-            id: 4, 
-            categoria: "Ciências", 
-            cor: "#10b981", 
-            titulo: "Mini-Debate Científico", 
-            desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", 
-            duracao: "25 min", 
-            bncc: ["EF08CI01", "EF69LP13"],
-            objetivos: [
-                "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.",
-                "Exercitar a escuta ativa e o respeito a opiniões divergentes.",
-                "Diferenciar fatos de opiniões em um texto ou discussão."
-            ],
-            roteiro: {
-                acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).",
-                desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.",
-                expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
-                encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
-            },
-            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
-        },
-        { 
-            id: 5, 
-            free: true, 
-            categoria: "Alfabetização", 
-            cor: "#8b5cf6", 
-            titulo: "Detetive de Sílabas", 
-            desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", 
-            duracao: "15 min", 
-            bncc: ["EF01LP08", "EF01LP02"],
-            objetivos: [
-                "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.",
-                "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.",
-                "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas."
-            ],
-            roteiro: {
-                acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).",
-                desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.",
-                expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
-                encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
-            },
-            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
-        },
-        { 
-            id: 6, 
-            categoria: "Artes", 
-            cor: "#db2777", 
-            titulo: "Escultura com Massinha", 
-            desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", 
-            duracao: "25 min", 
-            bncc: ["EF15AR04", "EF15AR05"],
-            objetivos: [
-                "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.",
-                "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.",
-                "Aprimorar a coordenação motora fina e a percepção tátil."
-            ],
-            roteiro: {
-                acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.",
-                desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.",
-                expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
-                encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
-            },
-            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
-        },
-        { 
-            id: 7, 
-            categoria: "Geografia", 
-            cor: "#475569", 
-            titulo: "Mapa da Sala de Aula", 
-            desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", 
-            duracao: "30 min", 
-            bncc: ["EF01GE09", "EF01GE08"],
-            objetivos: [
-                "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.",
-                "Desenvolver noções de lateralidade, localização e representação espacial.",
-                "Compreender a função de um mapa como forma de representação de um lugar."
-            ],
-            roteiro: {
-                acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.",
-                desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).",
-                expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
-                encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
-            },
-            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
-        },
-        { 
-            id: 8, 
-            categoria: "História", 
-            cor: "#d97706", 
-            titulo: "Linha do Tempo Pessoal", 
-            desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", 
-            duracao: "20 min", 
-            bncc: ["EF01HI01", "EF01HI04"],
-            objetivos: [
-                "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.",
-                "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.",
-                "Valorizar sua própria história e a de seus familiares."
-            ],
-            roteiro: {
-                acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.",
-                desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.",
-                expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
-                encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
-            },
-            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
-        }
-    ];
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const appState = {
-            searchQuery: '', activeFilter: 'Todos', currentPage: 1, itemsPerPage: 6,
-            favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || [],
-            // NEW: Aula Maker State using objects for flexibility
-            selectedActivitiesForMaker: [], // Array of objects: {type: 'catalog', id: 1} or {type: 'custom', ...}
-            makerPlanTitle: '',
-            makerPlanGrade: '',
-            makerPlanTheme: '',
-            makerPlanNotes: ''
-        };
-        const dom = {
-            loginScreen: document.getElementById('login-screen'), mainContent: document.getElementById('main-content'),
-            loginForm: document.getElementById('login-form'), searchInput: document.getElementById('search-input'),
-            filters: document.getElementById('filters-container'), grid: document.getElementById('activities-grid-container'),
-            pagination: document.getElementById('pagination-container'), resultsInfo: document.getElementById('results-info'),
-            logoutButton: document.getElementById('logout-button'), welcomeMsg: document.getElementById('welcome-message'),
-            modal: document.getElementById('modal-container'), menuToggle: document.getElementById('menu-toggle'),
-            sidebar: document.getElementById('sidebar'), sidebarOverlay: document.getElementById('sidebar-overlay'),
-            // NEW: Aula Maker DOM elements
-            aulaMakerBtn: document.getElementById('aula-maker-btn'),
-            aulaMakerSection: document.getElementById('aula-maker-section'),
-            makerTitleInput: document.getElementById('maker-title'),
-            makerGradeInput: document.getElementById('maker-grade'),
-            makerThemeInput: document.getElementById('maker-theme'),
-            makerNotesInput: document.getElementById('maker-notes'),
-            addActivityBtn: document.getElementById('add-activity-btn'),
-            generatePlanBtn: document.getElementById('generate-plan-btn'),
-            selectedActivitiesList: document.getElementById('selected-activities-list'),
-            noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
-            addCustomActivityBtn: document.getElementById('add-custom-activity-btn'),
-            clearPlanBtn: document.getElementById('clear-plan-btn')
-        };
+                        <div class="form-group">
+                            <label for="maker-grade">Ano/Turma:</label>
+                            <input type="text" id="maker-grade" placeholder="Ex: 3º Ano Fundamental">
+                        </div>
 
-        function generatePdf(activityId) {
-            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
-                console.error("A biblioteca jsPDF não foi carregada corretamente.");
-                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
-                return;
-            }
+                        <div class="form-group">
+                            <label for="maker-theme">Tema da Aula (Opcional):</label>
+                            <input type="text" id="maker-theme" placeholder="Ex: Sustentabilidade e Meio Ambiente">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maker-notes">Observações Gerais / Materiais Necessários:</label>
+                            <textarea id="maker-notes" rows="4" placeholder="Ex: Levar tesoura sem ponta, cola bastão e revistas antigas para recorte."></textarea>
+                        </div>
 
-            try {
-                const { jsPDF } = window.jspdf;
-                const activity = todasAsAtividades.find(a => a.id === activityId);
-                if (!activity) return;
-                
-                const doc = new jsPDF();
-                doc.setFontSize(18);
-                doc.setTextColor("#6c5b7b");
-                doc.text(activity.titulo, 14, 22);
-                doc.setFontSize(11);
-                doc.setTextColor("#333d49");
+                        <h3>Atividades Selecionadas</h3>
+                        <p id="no-activities-selected" class="text-color-light">Nenhuma atividade adicionada. Selecione no catálogo ou adicione uma personalizada abaixo.</p>
+                        <ul id="selected-activities-list"></ul>
 
-                let detailsText = `Descrição: ${activity.desc}\n\n`;
-                if(activity.roteiro) {
-                   detailsText += `Roteiro Sugerido:\n`;
-                   detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
-                   detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
-                   detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
-                   detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
-                }
+                        <div id="custom-activity-adder" style="background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 2rem;">
+                            <h4 style="margin-top: 0; color: var(--secondary-color);">Adicionar Atividade Personalizada</h4>
+                            <div class="form-group">
+                                <label for="custom-activity-title">Título da Atividade:</label>
+                                <input type="text" id="custom-activity-title" placeholder="Ex: Roda de conversa inicial">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1rem;">
+                                <label for="custom-activity-desc">Descrição / Roteiro (Opcional):</label>
+                                <textarea id="custom-activity-desc" rows="3"></textarea>
+                            </div>
+                            <button id="add-custom-activity-btn" class="add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem; margin-right: 1rem;">Adicionar ao Plano</button>
+                            <button id="clear-plan-btn" class="add-activity-btn clear-plan-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Limpar Plano</button>
+                        </div>
+                        
+                        <div class="main-action-buttons">
+                            <button id="add-activity-btn" class="add-activity-btn">Adicionar Atividade do Catálogo</button>
+                            <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button>
+                        </div>
+                    </section>
+                </main>
+                <footer><p>Criado com ❤️ por Prof. Vane</p></footer>
+            </div>
+        </div>
+    </div>
 
-                const detailsLines = doc.splitTextToSize(detailsText, 180);
-                doc.text(detailsLines, 14, 32);
-                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
-            } catch (error) {
-                console.error("Ocorreu um erro ao gerar o PDF:", error);
-                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
-            }
-        }
+    <div class="modal-container" id="modal-container"></div>
 
-        function closeModal() {
-            dom.modal.classList.remove('show'); 
-            setTimeout(() => { dom.modal.innerHTML = ''; }, 300); // Clear modal content after closing transition
-        }
-        
-        function openModal(id) {
-            const activity = todasAsAtividades.find(a => a.id === id);
-            if (!activity) return;
+    <script>
+    const usuariosAutorizados = [
+        { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
+        { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
+    ];
+    
+    const todasAsAtividades = [
+        { 
+            id: 1, 
+            categoria: "Interpessoal", 
+            cor: "#3b82f6", 
+            titulo: "Duas Verdades, Uma Mentira", 
+            desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", 
+            duracao: "10 min", 
+            bncc: ["EI03EO04", "EI03EF01"],
+            objetivos: [
+                "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.",
+                "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.",
+                "Desenvolver a escuta atenta e o respeito pela vez de falar do colega."
+            ],
+            roteiro: {
+                acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.",
+                desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.",
+                expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
+                encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
+            },
+            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
+        },
+        { 
+            id: 2, 
+            categoria: "Português", 
+            cor: "#ef4444", 
+            titulo: "Criador de Histórias", 
+            desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", 
+            duracao: "20 min", 
+            bncc: ["EF15LP05", "EF02LP26"],
+            objetivos: [
+                "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.",
+                "Desenvolver a criatividade e a imaginação.",
+                "Ampliar o vocabulário e a organização do pensamento lógico."
+            ],
+            roteiro: {
+                acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.",
+                desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.",
+                expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
+                encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
+            },
+            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
+        },
+        { 
+            id: 3, 
+            categoria: "Matemática", 
+            cor: "#f59e0b", 
+            titulo: "O Problema do Dia", 
+            desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", 
+            duracao: "10 min", 
+            bncc: ["EF01MA01", "EF01MA08"],
+            objetivos: [
+                "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.",
+                "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.",
+                "Desenvolver o raciocínio lógico e estratégias de resolução de problemas."
+            ],
+            roteiro: {
+                acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.",
+                desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.",
+                expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
+                encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
+            },
+            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
+        },
+        { 
+            id: 4, 
+            categoria: "Ciências", 
+            cor: "#10b981", 
+            titulo: "Mini-Debate Científico", 
+            desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", 
+            duracao: "25 min", 
+            bncc: ["EF08CI01", "EF69LP13"],
+            objetivos: [
+                "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.",
+                "Exercitar a escuta ativa e o respeito a opiniões divergentes.",
+                "Diferenciar fatos de opiniões em um texto ou discussão."
+            ],
+            roteiro: {
+                acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).",
+                desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.",
+                expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
+                encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
+            },
+            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
+        },
+        { 
+            id: 5, 
+            free: true, 
+            categoria: "Alfabetização", 
+            cor: "#8b5cf6", 
+            titulo: "Detetive de Sílabas", 
+            desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", 
+            duracao: "15 min", 
+            bncc: ["EF01LP08", "EF01LP02"],
+            objetivos: [
+                "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.",
+                "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.",
+                "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas."
+            ],
+            roteiro: {
+                acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).",
+                desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.",
+                expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
+                encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
+            },
+            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
+        },
+        { 
+            id: 6, 
+            categoria: "Artes", 
+            cor: "#db2777", 
+            titulo: "Escultura com Massinha", 
+            desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", 
+            duracao: "25 min", 
+            bncc: ["EF15AR04", "EF15AR05"],
+            objetivos: [
+                "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.",
+                "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.",
+                "Aprimorar a coordenação motora fina e a percepção tátil."
+            ],
+            roteiro: {
+                acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.",
+                desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.",
+                expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
+                encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
+            },
+            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
+        },
+        { 
+            id: 7, 
+            categoria: "Geografia", 
+            cor: "#475569", 
+            titulo: "Mapa da Sala de Aula", 
+            desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", 
+            duracao: "30 min", 
+            bncc: ["EF01GE09", "EF01GE08"],
+            objetivos: [
+                "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.",
+                "Desenvolver noções de lateralidade, localização e representação espacial.",
+                "Compreender a função de um mapa como forma de representação de um lugar."
+            ],
+            roteiro: {
+                acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.",
+                desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).",
+                expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
+                encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
+            },
+            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
+        },
+        { 
+            id: 8, 
+            categoria: "História", 
+            cor: "#d97706", 
+            titulo: "Linha do Tempo Pessoal", 
+            desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", 
+            duracao: "20 min", 
+            bncc: ["EF01HI01", "EF01HI04"],
+            objetivos: [
+                "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.",
+                "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.",
+                "Valorizar sua própria história e a de seus familiares."
+            ],
+            roteiro: {
+                acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.",
+                desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.",
+                expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
+                encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
+            },
+            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
+        }
+    ];
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const appState = {
+            searchQuery: '', activeFilter: 'Todos', currentPage: 1, itemsPerPage: 6,
+            favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || [],
+            // NEW: Aula Maker State using objects for flexibility
+            selectedActivitiesForMaker: [], // Array of objects: {type: 'catalog', id: 1} or {type: 'custom', ...}
+            makerPlanTitle: '',
+            makerPlanGrade: '',
+            makerPlanTheme: '',
+            makerPlanNotes: ''
+        };
+        const dom = {
+            loginScreen: document.getElementById('login-screen'), mainContent: document.getElementById('main-content'),
+            loginForm: document.getElementById('login-form'), searchInput: document.getElementById('search-input'),
+            filters: document.getElementById('filters-container'), grid: document.getElementById('activities-grid-container'),
+            pagination: document.getElementById('pagination-container'), resultsInfo: document.getElementById('results-info'),
+            logoutButton: document.getElementById('logout-button'), welcomeMsg: document.getElementById('welcome-message'),
+            modal: document.getElementById('modal-container'), menuToggle: document.getElementById('menu-toggle'),
+            sidebar: document.getElementById('sidebar'), sidebarOverlay: document.getElementById('sidebar-overlay'),
+            // NEW: Aula Maker DOM elements
+            aulaMakerBtn: document.getElementById('aula-maker-btn'),
+            aulaMakerSection: document.getElementById('aula-maker-section'),
+            makerTitleInput: document.getElementById('maker-title'),
+            makerGradeInput: document.getElementById('maker-grade'),
+            makerThemeInput: document.getElementById('maker-theme'),
+            makerNotesInput: document.getElementById('maker-notes'),
+            addActivityBtn: document.getElementById('add-activity-btn'),
+            generatePlanBtn: document.getElementById('generate-plan-btn'),
+            selectedActivitiesList: document.getElementById('selected-activities-list'),
+            noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
+            addCustomActivityBtn: document.getElementById('add-custom-activity-btn'),
+            clearPlanBtn: document.getElementById('clear-plan-btn')
+        };
 
-            const modalHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>${activity.titulo}</h2>
-                    <button class="close-button" aria-label="Fechar modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <p>${activity.desc}</p>
-                    
-                    <h3>Objetivos de Aprendizagem</h3>
-                    <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+        function generatePdf(activityId) {
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                console.error("A biblioteca jsPDF não foi carregada corretamente.");
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
 
-                    <h3>Códigos da BNCC</h3>
-                    <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
+            try {
+                const { jsPDF } = window.jspdf;
+                const activity = todasAsAtividades.find(a => a.id === activityId);
+                if (!activity) return;
+                
+                const doc = new jsPDF();
+                doc.setFontSize(18);
+                doc.setTextColor("#6c5b7b");
+                doc.text(activity.titulo, 14, 22);
+                doc.setFontSize(11);
+                doc.setTextColor("#333d49");
 
-                    <h3>Roteiro da Aula</h3>
-                    <ol class="roteiro-passos">
-                        <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
-                        <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
-                        <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
-                        <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
-                    </ol>
-                    
-                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
-                </div>
-                <div class="modal-footer">
-                    <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
-                </div>
-            </div>`;
-            
-            dom.modal.innerHTML = modalHTML;
-            dom.modal.classList.add('show');
-            
-            // Listeners
-            dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
-            dom.modal.querySelector('.download-btn').addEventListener('click', function() {
-                generatePdf(parseInt(this.dataset.activityId));
-            });
-        }
-        
-        function setupLoginScreenPreview() {
-            const previewContainer = document.getElementById('preview-grid-container');
-            if (!previewContainer) return;
+                let detailsText = `Descrição: ${activity.desc}\n\n`;
+                if(activity.roteiro) {
+                   detailsText += `Roteiro Sugerido:\n`;
+                   detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
+                   detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
+                   detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
+                   detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
+                }
 
-            const freeActivity = todasAsAtividades.find(a => a.free);
-            const otherActivities = todasAsAtividades.filter(a => !a.free);
-            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
-            
-            let previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)].filter(Boolean);
-            previewActivities.sort(() => 0.5 - Math.random());
+                const detailsLines = doc.splitTextToSize(detailsText, 180);
+                doc.text(detailsLines, 14, 32);
+                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
+            }
+        }
 
-            let previewHTML = '';
-            previewActivities.forEach(activity => {
-                if (activity.free) {
-                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
-                } else {
-                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
-                }
-                previewHTML += `
-                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
-                    <div class="preview-card-content">
-                        <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                        <h3>${activity.titulo}</h3>
-                        <p>${activity.desc}</p>
-                    </div>
-                    ${!activity.free ? `<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>` : ''}
-                </div>`;
-            });
-            previewContainer.innerHTML = previewHTML;
+        function closeModal() {
+            dom.modal.classList.remove('show'); 
+            setTimeout(() => { dom.modal.innerHTML = ''; }, 300); // Clear modal content after closing transition
+        }
+        
+        function openModal(id) {
+            const activity = todasAsAtividades.find(a => a.id === id);
+            if (!activity) return;
 
-            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
-                card.addEventListener('click', function() {
-                    openModal(parseInt(this.dataset.id));
-                });
-            });
-        }
+            const modalHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${activity.titulo}</h2>
+                    <button class="close-button" aria-label="Fechar modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>${activity.desc}</p>
+                    
+                    <h3>Objetivos de Aprendizagem</h3>
+                    <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
 
-        function initializePanel(username) {
-            dom.loginScreen.classList.add('hidden');
-            dom.mainContent.classList.remove('hidden');
-            dom.welcomeMsg.textContent = `Olá, ${username.split('.')[0].charAt(0).toUpperCase() + username.split('.')[0].slice(1)}!`;
-            setupEventListeners();
-            setupMobileMenu();
-            render();
-        }
+                    <h3>Códigos da BNCC</h3>
+                    <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
 
-        function setupEventListeners() {
-            dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
-            dom.searchInput.addEventListener('input', () => { appState.searchQuery = dom.searchInput.value.toLowerCase(); appState.currentPage = 1; render(); });
+                    <h3>Roteiro da Aula</h3>
+                    <ol class="roteiro-passos">
+                        <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
+                        <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
+                        <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
+                        <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
+                    </ol>
+                    
+                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
+                </div>
+                <div class="modal-footer">
+                    <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
+                </div>
+            </div>`;
+            
+            dom.modal.innerHTML = modalHTML;
+            dom.modal.classList.add('show');
+            
+            // Listeners
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
+            dom.modal.querySelector('.download-btn').addEventListener('click', function() {
+                generatePdf(parseInt(this.dataset.activityId));
+            });
+        }
+        
+        function setupLoginScreenPreview() {
+            const previewContainer = document.getElementById('preview-grid-container');
+            if (!previewContainer) return;
 
-            // Aula Maker Event Listeners
-            dom.addActivityBtn.addEventListener('click', openSelectActivitiesModal);
-            dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdf);
-            dom.makerTitleInput.addEventListener('input', (e) => { appState.makerPlanTitle = e.target.value; });
-            dom.makerGradeInput.addEventListener('input', (e) => { appState.makerPlanGrade = e.target.value; });
-            dom.makerThemeInput.addEventListener('input', (e) => { appState.makerPlanTheme = e.target.value; });
-            dom.makerNotesInput.addEventListener('input', (e) => { appState.makerPlanNotes = e.target.value; });
-            dom.addCustomActivityBtn.addEventListener('click', addCustomActivityToMaker);
-            dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
-        }
-        
-        function setupMobileMenu() {
-            dom.menuToggle.addEventListener('click', () => document.body.classList.add('sidebar-open'));
-            dom.sidebarOverlay.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
-        }
+            const freeActivity = todasAsAtividades.find(a => a.free);
+            const otherActivities = todasAsAtividades.filter(a => !a.free);
+            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
+            
+            let previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)].filter(Boolean);
+            previewActivities.sort(() => 0.5 - Math.random());
 
-        function render() {
-            // Hide all main content sections by default
-            dom.grid.classList.add('hidden');
-            dom.pagination.classList.add('hidden');
-            dom.resultsInfo.classList.add('hidden');
-            dom.aulaMakerSection.classList.add('hidden'); // Ensure Aula Maker is hidden by default
+            let previewHTML = '';
+            previewActivities.forEach(activity => {
+                if (activity.free) {
+                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
+                } else {
+                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
+                }
+                previewHTML += `
+                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
+                    <div class="preview-card-content">
+                        <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
+                        <h3>${activity.titulo}</h3>
+                        <p>${activity.desc}</p>
+                    </div>
+                    ${!activity.free ? `<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>` : ''}
+                </div>`;
+            });
+            previewContainer.innerHTML = previewHTML;
 
-            let filtered = [...todasAsAtividades];
-            if (appState.activeFilter === 'Favoritos') {
-                filtered = filtered.filter(a => appState.favorites.includes(a.id));
-                dom.grid.classList.remove('hidden');
-                dom.pagination.classList.remove('hidden');
-                dom.resultsInfo.classList.remove('hidden');
-            } else if (appState.activeFilter === 'Aula Maker') {
-                dom.aulaMakerSection.classList.remove('hidden');
-                renderAulaMaker();
-            } else { // 'Todos' or other categories
-                if (appState.activeFilter !== 'Todos') {
-                    filtered = filtered.filter(a => a.categoria === appState.activeFilter);
-                }
-                dom.grid.classList.remove('hidden');
-                dom.pagination.classList.remove('hidden');
-                dom.resultsInfo.classList.remove('hidden');
-            }
-            
-            if (appState.searchQuery && appState.activeFilter !== 'Aula Maker') {
-                const query = appState.searchQuery;
-                filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
-            }
+            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
+                card.addEventListener('click', function() {
+                    openModal(parseInt(this.dataset.id));
+                });
+            });
+        }
 
-            if (appState.activeFilter !== 'Aula Maker') {
-                dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
-                renderGrid(filtered);
-                renderPagination(filtered.length);
-            } else {
-                dom.resultsInfo.textContent = '';
-            }
+        function initializePanel(username) {
+            dom.loginScreen.classList.add('hidden');
+            dom.mainContent.classList.remove('hidden');
+            dom.welcomeMsg.textContent = `Olá, ${username.split('.')[0].charAt(0).toUpperCase() + username.split('.')[0].slice(1)}!`;
+            setupEventListeners();
+            setupMobileMenu();
+            render();
+        }
 
-            renderFilters();
-            if (appState.activeFilter === 'Aula Maker') {
-                dom.searchInput.value = '';
-                appState.searchQuery = '';
-            }
-        }
+        function setupEventListeners() {
+            dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
+            dom.searchInput.addEventListener('input', () => { appState.searchQuery = dom.searchInput.value.toLowerCase(); appState.currentPage = 1; render(); });
 
-        function renderFilters() {
-            const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
-            dom.filters.innerHTML = '';
-            categories.forEach(cat => dom.filters.appendChild(createFilterBtn(cat, cat)));
-            dom.filters.appendChild(createFilterBtn('Favoritos', 'Favoritos', true));
+            // Aula Maker Event Listeners
+            dom.addActivityBtn.addEventListener('click', openSelectActivitiesModal);
+            dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdf);
+            dom.makerTitleInput.addEventListener('input', (e) => { appState.makerPlanTitle = e.target.value; });
+            dom.makerGradeInput.addEventListener('input', (e) => { appState.makerPlanGrade = e.target.value; });
+            dom.makerThemeInput.addEventListener('input', (e) => { appState.makerPlanTheme = e.target.value; });
+            dom.makerNotesInput.addEventListener('input', (e) => { appState.makerPlanNotes = e.target.value; });
+            dom.addCustomActivityBtn.addEventListener('click', addCustomActivityToMaker);
+            dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
+        }
+        
+        function setupMobileMenu() {
+            dom.menuToggle.addEventListener('click', () => document.body.classList.add('sidebar-open'));
+            dom.sidebarOverlay.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
+        }
 
-            const aulaMakerLi = document.createElement('li');
-            const aulaMakerBtn = document.createElement('button');
-            aulaMakerBtn.className = 'filter-btn';
-            aulaMakerBtn.id = 'aula-maker-btn';
-            if (appState.activeFilter === 'Aula Maker') aulaMakerBtn.classList.add('active');
-            aulaMakerBtn.innerHTML = `<svg><use xlink:href="#icon-magic-wand"></use></svg> <span>Aula Maker</span>`;
-            aulaMakerBtn.onclick = () => {
-                appState.activeFilter = 'Aula Maker';
-                appState.currentPage = 1;
-                render();
-                document.body.classList.remove('sidebar-open');
-            };
-            aulaMakerLi.appendChild(aulaMakerBtn);
-            dom.filters.appendChild(aulaMakerLi);
-        }
+        function render() {
+            // Hide all main content sections by default
+            dom.grid.classList.add('hidden');
+            dom.pagination.classList.add('hidden');
+            dom.resultsInfo.classList.add('hidden');
+            dom.aulaMakerSection.classList.add('hidden'); // Ensure Aula Maker is hidden by default
 
-        function createFilterBtn(filterValue, text, isFavoriteBtn = false) {
-            const li = document.createElement('li');
-            const btn = document.createElement('button');
-            btn.className = 'filter-btn';
-            if (isFavoriteBtn) btn.classList.add('favorite-btn');
-            if (appState.activeFilter === filterValue) btn.classList.add('active');
-            const iconId = isFavoriteBtn ? '#icon-heart' : (filterValue === 'Todos' ? '#icon-all' : '#icon-category');
-            btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
-            btn.onclick = () => { 
-                appState.activeFilter = filterValue; 
-                appState.currentPage = 1; 
-                render(); 
-                document.body.classList.remove('sidebar-open');
-            };
-            li.appendChild(btn);
-            return li;
-        }
+            let filtered = [...todasAsAtividades];
+            if (appState.activeFilter === 'Favoritos') {
+                filtered = filtered.filter(a => appState.favorites.includes(a.id));
+                dom.grid.classList.remove('hidden');
+                dom.pagination.classList.remove('hidden');
+                dom.resultsInfo.classList.remove('hidden');
+            } else if (appState.activeFilter === 'Aula Maker') {
+                dom.aulaMakerSection.classList.remove('hidden');
+                renderAulaMaker();
+            } else { // 'Todos' or other categories
+                if (appState.activeFilter !== 'Todos') {
+                    filtered = filtered.filter(a => a.categoria === appState.activeFilter);
+                }
+                dom.grid.classList.remove('hidden');
+                dom.pagination.classList.remove('hidden');
+                dom.resultsInfo.classList.remove('hidden');
+            }
+            
+            if (appState.searchQuery && appState.activeFilter !== 'Aula Maker') {
+                const query = appState.searchQuery;
+                filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
+            }
 
-        function renderGrid(activities) {
-            dom.grid.innerHTML = '';
-            const start = (appState.currentPage - 1) * appState.itemsPerPage;
-            const paginated = activities.slice(start, start + appState.itemsPerPage);
+            if (appState.activeFilter !== 'Aula Maker') {
+                dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
+                renderGrid(filtered);
+                renderPagination(filtered.length);
+            } else {
+                dom.resultsInfo.textContent = '';
+            }
 
-            if (paginated.length === 0) {
-                dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada.</p>`;
-                return;
-            }
-            paginated.forEach((act, index) => {
-                const cardElement = createActivityCard(act);
-                cardElement.style.animationDelay = `${index * 50}ms`;
-                dom.grid.appendChild(cardElement);
-            });
-            addCardListeners();
-        }
+            renderFilters();
+            if (appState.activeFilter === 'Aula Maker') {
+                dom.searchInput.value = '';
+                appState.searchQuery = '';
+            }
+        }
 
-        function createActivityCard(activity) {
-            const isFavorited = appState.favorites.includes(activity.id);
-            const card = document.createElement('article');
-            card.className = 'activity-card';
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-category" style="background-color: ${activity.cor};">${activity.categoria}</div>
-                    <button class="favorite-icon ${isFavorited ? 'favorited' : ''}" data-id="${activity.id}" aria-label="Favoritar">
-                        <svg><use xlink:href="#icon-heart"></use></svg>
-                    </button>
-                </div>
-                <div class="card-content">
-                    <h3>${activity.titulo}</h3>
-                    <p>${activity.desc}</p>
-                </div>
-                <div class="card-footer">
-                    <span>🕓 ${activity.duracao}</span>
-                    <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
-                </div>`;
-            return card;
-        }
-        
-        function renderPagination(totalItems) {
-            dom.pagination.innerHTML = '';
-            const totalPages = Math.ceil(totalItems / appState.itemsPerPage);
-            if (totalPages <= 1) return;
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.className = `pagination-btn ${i === appState.currentPage ? 'active' : ''}`;
-                btn.textContent = i;
-                btn.onclick = () => { appState.currentPage = i; render(); window.scrollTo(0,0); };
-                dom.pagination.appendChild(btn);
-            }
-        }
-        
-        function addCardListeners() {
-            dom.grid.querySelectorAll('.open-modal-btn').forEach(b => b.onclick = () => openModal(parseInt(b.dataset.id)));
-            dom.grid.querySelectorAll('.favorite-icon').forEach(b => b.onclick = (e) => {
-                e.currentTarget.classList.remove('favorited');
-                void e.currentTarget.offsetWidth;
-                toggleFavorite(parseInt(b.dataset.id));
-            });
-        }
-        
-        function toggleFavorite(id) {
-            const index = appState.favorites.indexOf(id);
-            if (index > -1) {
-                appState.favorites.splice(index, 1);
-            } else {
-                appState.favorites.push(id);
-            }
-            localStorage.setItem('profVaneFavoritesV1', JSON.stringify(appState.favorites));
-            
-            if (appState.activeFilter === 'Favoritos') {
-                   appState.currentPage = 1;
-                   render();
-            } else {
-                const icon = document.querySelector(`.favorite-icon[data-id='${id}']`);
-                if(icon) {
-                     icon.classList.toggle('favorited', index === -1);
-                }
-            }
-        }
+        function renderFilters() {
+            const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
+            dom.filters.innerHTML = '';
+            categories.forEach(cat => dom.filters.appendChild(createFilterBtn(cat, cat)));
+            dom.filters.appendChild(createFilterBtn('Favoritos', 'Favoritos', true));
 
-        // --- NEW AND UPDATED AULA MAKER FUNCTIONS ---
+            const aulaMakerLi = document.createElement('li');
+            const aulaMakerBtn = document.createElement('button');
+            aulaMakerBtn.className = 'filter-btn';
+            aulaMakerBtn.id = 'aula-maker-btn';
+            if (appState.activeFilter === 'Aula Maker') aulaMakerBtn.classList.add('active');
+            aulaMakerBtn.innerHTML = `<svg><use xlink:href="#icon-magic-wand"></use></svg> <span>Aula Maker</span>`;
+            aulaMakerBtn.onclick = () => {
+                appState.activeFilter = 'Aula Maker';
+                appState.currentPage = 1;
+                render();
+                document.body.classList.remove('sidebar-open');
+            };
+            aulaMakerLi.appendChild(aulaMakerBtn);
+            dom.filters.appendChild(aulaMakerLi);
+        }
 
-        function clearLessonPlan() {
-            if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
-                appState.makerPlanTitle = '';
-                appState.makerPlanGrade = '';
-                appState.makerPlanTheme = '';
-                appState.makerPlanNotes = '';
-                appState.selectedActivitiesForMaker = [];
-                renderAulaMaker(); // This will also update the input fields
-            }
-        }
+        function createFilterBtn(filterValue, text, isFavoriteBtn = false) {
+            const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            if (isFavoriteBtn) btn.classList.add('favorite-btn');
+            if (appState.activeFilter === filterValue) btn.classList.add('active');
+            const iconId = isFavoriteBtn ? '#icon-heart' : (filterValue === 'Todos' ? '#icon-all' : '#icon-category');
+            btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
+            btn.onclick = () => { 
+                appState.activeFilter = filterValue; 
+                appState.currentPage = 1; 
+                render(); 
+                document.body.classList.remove('sidebar-open');
+            };
+            li.appendChild(btn);
+            return li;
+        }
 
-        function addCustomActivityToMaker() {
-            const titleInput = document.getElementById('custom-activity-title');
-            const descInput = document.getElementById('custom-activity-desc');
-            const title = titleInput.value.trim();
+        function renderGrid(activities) {
+            dom.grid.innerHTML = '';
+            const start = (appState.currentPage - 1) * appState.itemsPerPage;
+            const paginated = activities.slice(start, start + appState.itemsPerPage);
 
-            if (!title) {
-                alert('Por favor, insira um título para a atividade personalizada.');
-                titleInput.focus();
-                return;
-            }
+            if (paginated.length === 0) {
+                dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada.</p>`;
+                return;
+            }
+            paginated.forEach((act, index) => {
+                const cardElement = createActivityCard(act);
+                cardElement.style.animationDelay = `${index * 50}ms`;
+                dom.grid.appendChild(cardElement);
+            });
+            addCardListeners();
+        }
 
-            const newActivity = {
-                type: 'custom',
-                id: `custom_${Date.now()}`,
-                titulo: title,
-                desc: descInput.value.trim(),
-                categoria: 'Personalizada'
-            };
+        function createActivityCard(activity) {
+            const isFavorited = appState.favorites.includes(activity.id);
+            const card = document.createElement('article');
+            card.className = 'activity-card';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-category" style="background-color: ${activity.cor};">${activity.categoria}</div>
+                    <button class="favorite-icon ${isFavorited ? 'favorited' : ''}" data-id="${activity.id}" aria-label="Favoritar">
+                        <svg><use xlink:href="#icon-heart"></use></svg>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <h3>${activity.titulo}</h3>
+                    <p>${activity.desc}</p>
+                </div>
+                <div class="card-footer">
+                    <span>🕓 ${activity.duracao}</span>
+                    <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
+                </div>`;
+            return card;
+        }
+        
+        function renderPagination(totalItems) {
+            dom.pagination.innerHTML = '';
+            const totalPages = Math.ceil(totalItems / appState.itemsPerPage);
+            if (totalPages <= 1) return;
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `pagination-btn ${i === appState.currentPage ? 'active' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => { appState.currentPage = i; render(); window.scrollTo(0,0); };
+                dom.pagination.appendChild(btn);
+            }
+        }
+        
+        function addCardListeners() {
+            dom.grid.querySelectorAll('.open-modal-btn').forEach(b => b.onclick = () => openModal(parseInt(b.dataset.id)));
+            dom.grid.querySelectorAll('.favorite-icon').forEach(b => b.onclick = (e) => {
+                e.currentTarget.classList.remove('favorited');
+                void e.currentTarget.offsetWidth;
+                toggleFavorite(parseInt(b.dataset.id));
+            });
+        }
+        
+        function toggleFavorite(id) {
+            const index = appState.favorites.indexOf(id);
+            if (index > -1) {
+                appState.favorites.splice(index, 1);
+            } else {
+                appState.favorites.push(id);
+            }
+            localStorage.setItem('profVaneFavoritesV1', JSON.stringify(appState.favorites));
+            
+            if (appState.activeFilter === 'Favoritos') {
+                   appState.currentPage = 1;
+                   render();
+            } else {
+                const icon = document.querySelector(`.favorite-icon[data-id='${id}']`);
+                if(icon) {
+                     icon.classList.toggle('favorited', index === -1);
+                }
+            }
+        }
 
-            appState.selectedActivitiesForMaker.push(newActivity);
-            renderAulaMaker();
+        // --- NEW AND UPDATED AULA MAKER FUNCTIONS ---
 
-            titleInput.value = '';
-            descInput.value = '';
-        }
+        function clearLessonPlan() {
+            if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
+                appState.makerPlanTitle = '';
+                appState.makerPlanGrade = '';
+                appState.makerPlanTheme = '';
+                appState.makerPlanNotes = '';
+                appState.selectedActivitiesForMaker = [];
+                renderAulaMaker(); // This will also update the input fields
+            }
+        }
 
-        function reorderActivity(index, direction) {
-            const list = appState.selectedActivitiesForMaker;
-            if (direction === 'up' && index > 0) {
-                [list[index], list[index - 1]] = [list[index - 1], list[index]]; // Swap
-            } else if (direction === 'down' && index < list.length - 1) {
-                [list[index], list[index + 1]] = [list[index + 1], list[index]]; // Swap
-            }
-            renderAulaMaker();
-        }
+        function addCustomActivityToMaker() {
+            const titleInput = document.getElementById('custom-activity-title');
+            const descInput = document.getElementById('custom-activity-desc');
+            const title = titleInput.value.trim();
 
-        function renderAulaMaker() {
-            dom.selectedActivitiesList.innerHTML = '';
-            if (appState.selectedActivitiesForMaker.length === 0) {
-                dom.noActivitiesSelectedMsg.classList.remove('hidden');
-            } else {
-                dom.noActivitiesSelectedMsg.classList.add('hidden');
-                appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                    const activityData = activity.type === 'custom' 
-                        ? activity 
-                        : todasAsAtividades.find(a => a.id === activity.id);
+            if (!title) {
+                alert('Por favor, insira um título para a atividade personalizada.');
+                titleInput.focus();
+                return;
+            }
 
-                    if (activityData) {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'selected-activity-item';
-                        listItem.innerHTML = `
-                            <span>${activityData.titulo} <em style="color: var(--text-color-light)">(${activityData.categoria})</em></span>
-                            <div class="activity-controls">
-                                <button class="reorder-btn" data-index="${index}" data-direction="up" title="Mover para cima">↑</button>
-                                <button class="reorder-btn" data-index="${index}" data-direction="down" title="Mover para baixo">↓</button>
-                                <button class="remove-activity-btn" data-id="${activityData.id}" aria-label="Remover atividade">×</button>
-                            </div>
-                        `;
-                        dom.selectedActivitiesList.appendChild(listItem);
-                    }
-                });
-                
-                dom.selectedActivitiesList.querySelectorAll('.remove-activity-btn').forEach(btn => {
-                    btn.onclick = (e) => removeActivityFromMaker(e.currentTarget.dataset.id);
-                });
-                dom.selectedActivitiesList.querySelectorAll('.reorder-btn').forEach(btn => {
-                    btn.onclick = (e) => {
-                        const target = e.currentTarget;
-                        reorderActivity(parseInt(target.dataset.index), target.dataset.direction);
-                    }
-                });
-            }
-            // Restore input values
-            dom.makerTitleInput.value = appState.makerPlanTitle;
-            dom.makerGradeInput.value = appState.makerPlanGrade;
-            dom.makerThemeInput.value = appState.makerPlanTheme;
-            dom.makerNotesInput.value = appState.makerPlanNotes;
-        }
+            const newActivity = {
+                type: 'custom',
+                id: `custom_${Date.now()}`,
+                titulo: title,
+                desc: descInput.value.trim(),
+                categoria: 'Personalizada'
+            };
 
-        function removeActivityFromMaker(id) {
-            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activity => String(activity.id) !== String(id));
-            renderAulaMaker();
-        }
+            appState.selectedActivitiesForMaker.push(newActivity);
+            renderAulaMaker();
 
-        function openSelectActivitiesModal() {
-            // Get IDs of catalog activities already in the plan
-            const existingCatalogIds = appState.selectedActivitiesForMaker
-                .filter(a => a.type === 'catalog')
-                .map(a => a.id);
-            // Use this as the starting point for temporary selection
-            let tempSelected = [...existingCatalogIds];
+            titleInput.value = '';
+            descInput.value = '';
+        }
 
-            const selectModalHTML = `
-                <div class="modal-content" id="select-activities-modal">
-                    <div class="modal-header">
-                        <h2>Selecionar Atividades para o Plano</h2>
-                        <button class="close-button" aria-label="Fechar modal">×</button>
-                    </div>
-                    <div class="modal-body activities-grid">
-                        ${todasAsAtividades.map(act => {
-                            const isSelected = tempSelected.includes(act.id) ? 'selected' : '';
-                            return `
-                                <article class="activity-card ${isSelected}" data-id="${act.id}">
-                                    <div class="card-header">
-                                        <div class="card-category" style="background-color: ${act.cor};">${act.categoria}</div>
-                                    </div>
-                                    <div class="card-content">
-                                        <h3>${act.titulo}</h3>
-                                        <p>${act.desc}</p>
-                                    </div>
-                                </article>
-                            `;
-                        }).join('')}
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-selection-btn">Confirmar Seleção</button>
-                    </div>
-                </div>
-            `;
+        function reorderActivity(index, direction) {
+            const list = appState.selectedActivitiesForMaker;
+            if (direction === 'up' && index > 0) {
+                [list[index], list[index - 1]] = [list[index - 1], list[index]]; // Swap
+            } else if (direction === 'down' && index < list.length - 1) {
+                [list[index], list[index + 1]] = [list[index + 1], list[index]]; // Swap
+            }
+            renderAulaMaker();
+        }
 
-            dom.modal.innerHTML = selectModalHTML;
-            dom.modal.classList.add('show');
+        function renderAulaMaker() {
+            dom.selectedActivitiesList.innerHTML = '';
+            if (appState.selectedActivitiesForMaker.length === 0) {
+                dom.noActivitiesSelectedMsg.classList.remove('hidden');
+            } else {
+                dom.noActivitiesSelectedMsg.classList.add('hidden');
+                appState.selectedActivitiesForMaker.forEach((activity, index) => {
+                    const activityData = activity.type === 'custom' 
+                        ? activity 
+                        : todasAsAtividades.find(a => a.id === activity.id);
 
-            dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
+                    if (activityData) {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'selected-activity-item';
+                        listItem.innerHTML = `
+                            <span>${activityData.titulo} <em style="color: var(--text-color-light)">(${activityData.categoria})</em></span>
+                            <div class="activity-controls">
+                                <button class="reorder-btn" data-index="${index}" data-direction="up" title="Mover para cima">↑</button>
+                                <button class="reorder-btn" data-index="${index}" data-direction="down" title="Mover para baixo">↓</button>
+                                <button class="remove-activity-btn" data-id="${activityData.id}" aria-label="Remover atividade">×</button>
+                            </div>
+                        `;
+                        dom.selectedActivitiesList.appendChild(listItem);
+                    }
+                });
+                
+                dom.selectedActivitiesList.querySelectorAll('.remove-activity-btn').forEach(btn => {
+                    btn.onclick = (e) => removeActivityFromMaker(e.currentTarget.dataset.id);
+                });
+                dom.selectedActivitiesList.querySelectorAll('.reorder-btn').forEach(btn => {
+                    btn.onclick = (e) => {
+                        const target = e.currentTarget;
+                        reorderActivity(parseInt(target.dataset.index), target.dataset.direction);
+                    }
+                });
+            }
+            // Restore input values
+            dom.makerTitleInput.value = appState.makerPlanTitle;
+            dom.makerGradeInput.value = appState.makerPlanGrade;
+            dom.makerThemeInput.value = appState.makerPlanTheme;
+            dom.makerNotesInput.value = appState.makerPlanNotes;
+        }
 
-            dom.modal.querySelectorAll('.activity-card').forEach(card => {
-                card.onclick = function() {
-                    const id = parseInt(this.dataset.id);
-                    const index = tempSelected.indexOf(id);
-                    if (index > -1) {
-                        tempSelected.splice(index, 1);
-                        this.classList.remove('selected');
-                    } else {
-                        tempSelected.push(id);
-                        this.classList.add('selected');
-                    }
-                };
-            });
+        function removeActivityFromMaker(id) {
+            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activity => String(activity.id) !== String(id));
+            renderAulaMaker();
+        }
 
-            dom.modal.querySelector('#confirm-selection-btn').onclick = () => {
-                // Keep existing custom activities
-                const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
-                // Create objects for the newly selected catalog activities
-                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
-                
-                // Combine them
-                appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
-                renderAulaMaker();
-                closeModal();
-            };
-        }
+        function openSelectActivitiesModal() {
+            // Get IDs of catalog activities already in the plan
+            const existingCatalogIds = appState.selectedActivitiesForMaker
+                .filter(a => a.type === 'catalog')
+                .map(a => a.id);
+            // Use this as the starting point for temporary selection
+            let tempSelected = [...existingCatalogIds];
 
-        function generateLessonPlanPdf() {
-            if (appState.selectedActivitiesForMaker.length === 0 && !appState.makerPlanTitle) {
-                alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");
-                return;
-            }
-            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
-                console.error("A biblioteca jsPDF não foi carregada corretamente.");
-                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
-                return;
-            }
+            const selectModalHTML = `
+                <div class="modal-content" id="select-activities-modal">
+                    <div class="modal-header">
+                        <h2>Selecionar Atividades para o Plano</h2>
+                        <button class="close-button" aria-label="Fechar modal">×</button>
+                    </div>
+                    <div class="modal-body activities-grid">
+                        ${todasAsAtividades.map(act => {
+                            const isSelected = tempSelected.includes(act.id) ? 'selected' : '';
+                            return `
+                                <article class="activity-card ${isSelected}" data-id="${act.id}">
+                                    <div class="card-header">
+                                        <div class="card-category" style="background-color: ${act.cor};">${act.categoria}</div>
+                                    </div>
+                                    <div class="card-content">
+                                        <h3>${act.titulo}</h3>
+                                        <p>${act.desc}</p>
+                                    </div>
+                                </article>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-selection-btn">Confirmar Seleção</button>
+                    </div>
+                </div>
+            `;
 
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({unit: 'pt', format: 'a4'});
-                let yOffset = 60;
-                const margin = 40;
-                const lineHeight = 18;
-                const maxWidth = doc.internal.pageSize.width - (margin * 2);
-                
-                // jsPDF doesn't support Google Fonts directly, so we use a standard font
-                doc.setFont('Helvetica', 'bold');
-                doc.setFontSize(22);
-                doc.setTextColor(40, 40, 40);
-                doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
-                yOffset += 40;
-                
-                doc.setFont('Helvetica', 'bold');
-                doc.setFontSize(12);
-                doc.text(`Título:`, margin, yOffset);
-                doc.setFont('Helvetica', 'normal');
-                doc.text(`${appState.makerPlanTitle || 'Sem Título'}`, margin + 50, yOffset);
-                yOffset += lineHeight * 1.5;
+            dom.modal.innerHTML = selectModalHTML;
+            dom.modal.classList.add('show');
 
-                doc.setFont('Helvetica', 'bold');
-                doc.text(`Ano/Turma:`, margin, yOffset);
-                doc.setFont('Helvetica', 'normal');
-                doc.text(`${appState.makerPlanGrade || 'Não Informado'}`, margin + 75, yOffset);
-                
-                if (appState.makerPlanTheme) {
-                    yOffset += lineHeight;
-                    doc.setFont('Helvetica', 'bold');
-                    doc.text(`Tema:`, margin, yOffset);
-                    doc.setFont('Helvetica', 'normal');
-                    doc.text(`${appState.makerPlanTheme}`, margin + 45, yOffset);
-                }
-                yOffset += lineHeight * 2;
-                
-                if (appState.makerPlanNotes) {
-                    doc.setFont('Helvetica', 'bold');
-                    doc.setFontSize(14);
-                    doc.text("Observações Gerais / Materiais:", margin, yOffset);
-                    yOffset += lineHeight * 1.5;
-                    
-                    doc.setFont('Helvetica', 'normal');
-                    doc.setFontSize(11);
-                    const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
-                    doc.text(notesLines, margin, yOffset);
-                    yOffset += notesLines.length * (lineHeight - 4) + 20;
-                }
-                
-                doc.setLineWidth(1);
-                doc.setDrawColor(177, 156, 217); // Using var(--primary-color) value
-                doc.line(margin, yOffset, maxWidth + margin, yOffset);
-                yOffset += 30;
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
 
-                doc.setFont('Helvetica', 'bold');
-                doc.setFontSize(16);
-                doc.text("Sequência de Atividades", margin, yOffset);
-                yOffset += 25;
+            dom.modal.querySelectorAll('.activity-card').forEach(card => {
+                card.onclick = function() {
+                    const id = parseInt(this.dataset.id);
+                    const index = tempSelected.indexOf(id);
+                    if (index > -1) {
+                        tempSelected.splice(index, 1);
+                        this.classList.remove('selected');
+                    } else {
+                        tempSelected.push(id);
+                        this.classList.add('selected');
+                    }
+                };
+            });
 
-                if (appState.selectedActivitiesForMaker.length === 0) {
-            _BOS_          doc.setFont('Helvetica', 'italic');
-                    doc.setFontSize(11);
-                    doc.setTextColor("#6b7280");
-                    doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
-                } else {
-                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                        const isCustom = activity.type === 'custom';
-                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
-                        
-                        if (activityData) {
-                            if (yOffset > doc.internal.pageSize.height - 150) { // Check for page break
-                                doc.addPage();
-                                yOffset = 60;
-                            }
+            dom.modal.querySelector('#confirm-selection-btn').onclick = () => {
+                // Keep existing custom activities
+                const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
+                // Create objects for the newly selected catalog activities
+                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
+                
+                // Combine them
+                appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
+                renderAulaMaker();
+                closeModal();
+            };
+        }
 
-                            doc.setFont('Helvetica', 'bold');
-                            doc.setFontSize(14);
-                            doc.setTextColor(108, 91, 123); // Using var(--secondary-color) value
-                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
-                            yOffset += lineHeight * 1.2;
+        function generateLessonPlanPdf() {
+            if (appState.selectedActivitiesForMaker.length === 0 && !appState.makerPlanTitle) {
+                alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");
+                return;
+            }
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                console.error("A biblioteca jsPDF não foi carregada corretamente.");
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
 
-                            doc.setFont('Helvetica', 'normal');
-                            doc.setFontSize(11);
-                            doc.setTextColor(51, 61, 73); // Using var(--text-color) value
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({unit: 'pt', format: 'a4'});
+                let yOffset = 60;
+                const margin = 40;
+                const lineHeight = 18;
+                const maxWidth = doc.internal.pageSize.width - (margin * 2);
+                
+                // jsPDF doesn't support Google Fonts directly, so we use a standard font
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(22);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
+                yOffset += 40;
+                
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(12);
+                doc.text(`Título:`, margin, yOffset);
+                doc.setFont('Helvetica', 'normal');
+                doc.text(`${appState.makerPlanTitle || 'Sem Título'}`, margin + 50, yOffset);
+                yOffset += lineHeight * 1.5;
 
-                            if (isCustom) {
-                                const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
-                                doc.text(descLines, margin, yOffset);
-                                yOffset += descLines.length * (lineHeight - 4);
-                            } else {
-                                const descLines = doc.splitTextToSize(activityData.desc, maxWidth);
-                                doc.text(descLines, margin, yOffset);
-                                yOffset += descLines.length * (lineHeight - 4) + 10;
-                                
-                                doc.setFont('Helvetica', 'bold');
-                                doc.text('Objetivos:', margin, yOffset);
-                                yOffset += lineHeight;
-                                doc.setFont('Helvetica', 'normal');
-                                activityData.objetivos.forEach(obj => {
-                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
-                                    if(yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
-                                        doc.addPage();
-                                        yOffset = 60;
-                                    }
-                                    doc.text(objLines, margin + 10, yOffset);
-                                    yOffset += objLines.length * (lineHeight - 4);
-                                });
-                            }
-                            yOffset += 25; // Space between activities
-                        }
-                    });
-                }
+                doc.setFont('Helvetica', 'bold');
+                doc.text(`Ano/Turma:`, margin, yOffset);
+                doc.setFont('Helvetica', 'normal');
+                doc.text(`${appState.makerPlanGrade || 'Não Informado'}`, margin + 75, yOffset);
+                
+                if (appState.makerPlanTheme) {
+                    yOffset += lineHeight;
+                    doc.setFont('Helvetica', 'bold');
+                    doc.text(`Tema:`, margin, yOffset);
+                    doc.setFont('Helvetica', 'normal');
+                    doc.text(`${appState.makerPlanTheme}`, margin + 45, yOffset);
+                }
+                yOffset += lineHeight * 2;
+                
+                if (appState.makerPlanNotes) {
+                    doc.setFont('Helvetica', 'bold');
+                    doc.setFontSize(14);
+                    doc.text("Observações Gerais / Materiais:", margin, yOffset);
+                    yOffset += lineHeight * 1.5;
+                    
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setFontSize(11);
+                    const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
+                    doc.text(notesLines, margin, yOffset);
+                    yOffset += notesLines.length * (lineHeight - 4) + 20;
+                }
+                
+                doc.setLineWidth(1);
+                doc.setDrawColor(177, 156, 217); // Using var(--primary-color) value
+                doc.line(margin, yOffset, maxWidth + margin, yOffset);
+                yOffset += 30;
 
-                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
-                doc.save(fileName);
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(16);
+                doc.text("Sequência de Atividades", margin, yOffset);
+                yOffset += 25;
 
-            } catch (error) {
-                console.error("Ocorreu um erro ao gerar o PDF do plano de aula:", error);
-                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.");
-            }
-        }
+                if (appState.selectedActivitiesForMaker.length === 0) {
+                    doc.setFont('Helvetica', 'italic');
+                    doc.setFontSize(11);
+                    doc.setTextColor("#6b7280");
+                    doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
+                } else {
+                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
+                        const isCustom = activity.type === 'custom';
+                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
+                        
+                        if (activityData) {
+                            if (yOffset > doc.internal.pageSize.height - 150) { // Check for page break
+                                doc.addPage();
+                                yOffset = 60;
+                            }
 
-        // --- INICIALIZAÇÃO ---
-        (function main() {
-            setupLoginScreenPreview();
+                            doc.setFont('Helvetica', 'bold');
+                            doc.setFontSize(14);
+                            doc.setTextColor(108, 91, 123); // Using var(--secondary-color) value
+                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
+                            yOffset += lineHeight * 1.2;
 
-            const savedUser = localStorage.getItem('usuarioLogado');
-            if (savedUser) {
-                initializePanel(savedUser);
-            }
-            dom.loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const user = e.target.elements['username-input'].value.trim();
-                const pass = e.target.elements['password-input'].value.trim();
-                const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
-                if (found) {
-                    localStorage.setItem('usuarioLogado', found.usuario);
-                    initializePanel(found.usuario);
-                } else {
-                    document.getElementById('login-error').classList.remove('hidden');
-                }
-            });
-        })();
-    });
-    </script>
+                            doc.setFont('Helvetica', 'normal');
+                            doc.setFontSize(11);
+                            doc.setTextColor(51, 61, 73); // Using var(--text-color) value
+
+                            if (isCustom) {
+                                const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4);
+                            } else {
+                                const descLines = doc.splitTextToSize(activityData.desc, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4) + 10;
+                                
+                                doc.setFont('Helvetica', 'bold');
+                                doc.text('Objetivos:', margin, yOffset);
+                                yOffset += lineHeight;
+                                doc.setFont('Helvetica', 'normal');
+                                activityData.objetivos.forEach(obj => {
+                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
+                                    if(yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
+                                        doc.addPage();
+                                        yOffset = 60;
+                                    }
+                                    doc.text(objLines, margin + 10, yOffset);
+                                    yOffset += objLines.length * (lineHeight - 4);
+                                });
+                            }
+                            yOffset += 25; // Space between activities
+                        }
+                    });
+                }
+
+                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
+                doc.save(fileName);
+
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF do plano de aula:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.");
+            }
+        }
+
+        // --- INICIALIZAÇÃO ---
+        (function main() {
+            setupLoginScreenPreview();
+
+            const savedUser = localStorage.getItem('usuarioLogado');
+            if (savedUser) {
+                initializePanel(savedUser);
+            }
+            dom.loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = e.target.elements['username-input'].value.trim();
+                const pass = e.target.elements['password-input'].value.trim();
+                const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
+                if (found) {
+                    localStorage.setItem('usuarioLogado', found.usuario);
+                    initializePanel(found.usuario);
+                } else {
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            });
+        })();
+    });
+    </script>
 </body>
 </html>
