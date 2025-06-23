@@ -14,79 +14,24 @@
             --background-color: #fdfaf6;
             --card-background: #ffffff;
             --text-color: #2c3e50;
-            --error-color: #e74c3c; /* NOVA COR PARA ERROS */
+            --error-color: #e74c3c;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             --success-color: #28a745; 
         }
-
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: var(--background-color); 
-            color: var(--text-color); 
-            margin: 0; 
-            line-height: 1.6; 
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.6; }
         .hidden { display: none !important; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #login-screen {
-            display: flex; align-items: center; justify-content: center;
-            width: 100vw; height: 100vh;
-            background: linear-gradient(135deg, var(--primary-color), #007a76);
-            padding: 1rem; box-sizing: border-box;
-        }
-        .login-box {
-            background: white; padding: 2.5rem 3rem; border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25); text-align: center;
-            width: 100%; max-width: 420px;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #login-screen { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; background: linear-gradient(135deg, var(--primary-color), #007a76); padding: 1rem; box-sizing: border-box; }
+        .login-box { background: white; padding: 2.5rem 3rem; border-radius: 20px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25); text-align: center; width: 100%; max-width: 420px; }
         .login-box > * { animation: fadeIn 0.6s ease-out both; }
-        .login-box h1 { animation-delay: 0.1s; }
-        .login-box p { animation-delay: 0.2s; }
-        .login-box #login-form { animation-delay: 0.3s; }
-        .login-box .icon { width: 80px; height: 80px; margin: 0 auto 1rem; color: var(--primary-color); }
-        .login-box h1 { color: var(--text-color); margin-bottom: 0.5rem; font-size: 1.8rem; }
-        .login-box p { margin-bottom: 2rem; color: #777; }
-
-        /* --- MUDANÇA NO FORMULÁRIO --- */
-        #login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        #login-form input {
-            width: 100%; padding: 1rem; border: 2px solid #ddd; border-radius: 10px;
-            font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        #login-form input:focus {
-            outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.2);
-        }
-        #login-form button {
-            width: 100%; padding: 1rem; border: none; border-radius: 10px;
-            background-color: var(--primary-color); color: white; font-size: 1.1rem;
-            font-weight: 700; cursor: pointer; margin-top: 1rem;
-            transition: background-color 0.3s, transform 0.2s;
-        }
+        .login-box h1 { animation-delay: 0.1s; color: var(--text-color); margin-bottom: 0.5rem; font-size: 1.8rem; }
+        .login-box p { animation-delay: 0.2s; margin-bottom: 2rem; color: #777; }
+        #login-form { animation-delay: 0.3s; display: flex; flex-direction: column; gap: 1rem; }
+        #login-form input { width: 100%; padding: 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s; }
+        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.2); }
+        #login-form button { width: 100%; padding: 1rem; border: none; border-radius: 10px; background-color: var(--primary-color); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: background-color 0.3s, transform 0.2s; }
         #login-form button:hover { background-color: #008f80; transform: translateY(-2px); }
-
-        /* --- NOVO ESTILO PARA MENSAGEM DE ERRO --- */
-        #login-error {
-            color: var(--error-color);
-            background-color: rgba(231, 76, 60, 0.1);
-            border: 1px solid rgba(231, 76, 60, 0.2);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 1rem;
-            font-weight: 600;
-        }
-        
-        /* O resto do CSS permanece igual... */
+        #login-error { color: var(--error-color); background-color: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.2); padding: 10px; border-radius: 8px; margin-top: 1rem; font-weight: 600; }
         #main-content header { background: var(--card-background); color: var(--text-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         #main-content header h1 { margin: 0; font-size: 1.5rem; color: var(--primary-color); }
         .user-area { display: flex; align-items: center; gap: 1.5rem; }
@@ -116,7 +61,6 @@
         .close-button:hover { color: #333; }
         .download-btn { display: block; background-color: var(--success-color); color: white; text-align: center; padding: 0.8rem 1rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; }
         .download-btn:hover { background-color: #218838; transform: scale(1.02); }
-
     </style>
 </head>
 <body>
@@ -128,14 +72,11 @@
             <form id="login-form">
                 <input type="text" id="username-input" placeholder="Usuário" required>
                 <input type="password" id="password-input" placeholder="Senha" required>
-                
                 <button type="submit">Entrar &rarr;</button>
-
                 <p id="login-error" class="hidden">Usuário ou senha inválidos. Tente novamente.</p>
             </form>
         </div>
     </div>
-
 
     <div id="main-content" class="hidden">
         <header>
@@ -149,7 +90,7 @@
         <main>
             <h2>Atividades em Destaque</h2>
             <section class="activities-grid">
-                <article class="activity-card">
+                 <article class="activity-card">
                     <div class="card-category" style="background-color: #17a2b8;">Interpessoal</div>
                     <h3>Duas Verdades, Uma Mentira</h3>
                     <p>Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.</p>
@@ -185,65 +126,70 @@
         <footer><p>&copy; 2025 ProAtividade. Todos os direitos reservados.</p></footer>
 
         <div id="modal-container" class="modal-container">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 id="modal-title"></h2>
+                <p id="modal-description"></p>
+                <div id="modal-details" class="details"></div>
+                <a href="#" id="modal-download-btn" class="download-btn" download>
+                    🖨️ Baixar PDF da Atividade
+                </a>
             </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
-            // =======================================================
-            // === MUDANÇA 1: NOSSO "BANCO DE DADOS" DE USUÁRIOS ===
-            // =======================================================
-            // Aqui você pode adicionar quantos usuários e senhas quiser.
-            // Para cada pessoa que pagar, você cria uma nova linha aqui.
-            const usuariosAutorizados = [
-                { usuario: 'ana.souza',  senha: 'sol123' },
-                { usuario: 'bruno.lima', senha: 'lua456' },
-                { usuario: 'carla.dias', senha: 'estrela789' },
-                { usuario: 'prof.teste', senha: '123' } // Usuário de exemplo para você testar
-            ];
-            // =======================================================
+            // --- DADOS OFUSCADOS ---
+            // SUBSTITUA ESTA STRING PELA STRING GIGANTE QUE VOCÊ GEROU
+            const dadosCodificados = 'WwogICAgeyAidXN1YXJpbyI6ICJhbmEuc291emEiLCAic2VuaGFIYXNoIjogIk16SXhiR3pVYkdoc1VycFZRVGl2bGRZZE1qQXlOUT09IiB9LAogICAgeyAidXN1YXJpbyI6ICJicnVuby5saW1hIiwgInNlbmhhSGFzaCI6ICJOalIwWVZTY1BKb0F0aXZpZGFkZTIwMjU9PSIgfSwKICAgIHsgInVzdWFyaW8iOiAiY2FybGEuZGlhcyIsICJzZW5oYUhhc2giOiAiT1RnM1lYZGxjbnJaZVJ5b0F0aXZpZGFkZTIwMjU9PSIgfSwKICAgIHsgInVzdWFyaW8iOiAicHJvZi50ZXN0ZSIsICJzZW5oYUhhc2giOiAiTWpJeVByb0F0aXZpZGFkZTIwMjU9PSIgfQpd';
+            
+            const usuariosAutorizados = JSON.parse(atob(dadosCodificados));
 
-            // --- Seleção dos Elementos ---
+            // --- FUNÇÃO PARA CRIAR HASH ---
+            const SAL_SECRETO = 'ProAtividade2025'; 
+            function criarHashSimples(senha) {
+                const senhaInvertida = senha.split('').reverse().join('');
+                const comSal = senhaInvertida + SAL_SECRETO;
+                return btoa(comSal);
+            }
+
+            // --- LÓGICA DE LOGIN ---
             const loginScreen = document.getElementById('login-screen');
             const mainContent = document.getElementById('main-content');
             const loginForm = document.getElementById('login-form');
-            const usernameInput = document.getElementById('username-input'); // Novo
-            const passwordInput = document.getElementById('password-input'); // Novo
-            const loginError = document.getElementById('login-error');       // Novo
+            const usernameInput = document.getElementById('username-input');
+            const passwordInput = document.getElementById('password-input');
+            const loginError = document.getElementById('login-error');
             const welcomeMessage = document.getElementById('welcome-message');
             const logoutButton = document.getElementById('logout-button');
-            
-            // --- Lógica de Login e "Lembrar-me" ATUALIZADA ---
             
             const savedUser = localStorage.getItem('usuarioLogado');
             if (savedUser) {
                 showMainContent(savedUser);
             }
 
-            // --- MUDANÇA 2: LÓGICA DE VERIFICAÇÃO DO LOGIN ---
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault(); 
-                const user = usernameInput.value.trim();
-                const pass = passwordInput.value.trim();
+                const userTyped = usernameInput.value.trim();
+                const passTyped = passwordInput.value.trim();
+                const usuarioEncontrado = usuariosAutorizados.find(cred => cred.usuario === userTyped);
 
-                // Procura na nossa lista se existe uma combinação de usuário e senha
-                const usuarioValido = usuariosAutorizados.find(
-                    credencial => credencial.usuario === user && credencial.senha === pass
-                );
-
-                if (usuarioValido) {
-                    // Se encontrou, salva no navegador e mostra o conteúdo
-                    localStorage.setItem('usuarioLogado', usuarioValido.usuario); 
-                    showMainContent(usuarioValido.usuario);
+                if (usuarioEncontrado) {
+                    const hashDaSenhaDigitada = criarHashSimples(passTyped);
+                    if (hashDaSenhaDigitada === usuarioEncontrado.senhaHash) {
+                        localStorage.setItem('usuarioLogado', usuarioEncontrado.usuario); 
+                        showMainContent(usuarioEncontrado.usuario);
+                    } else {
+                        loginError.classList.remove('hidden');
+                    }
                 } else {
-                    // Se não encontrou, mostra a mensagem de erro
                     loginError.classList.remove('hidden');
                 }
             });
 
             function showMainContent(name) {
-                // Personaliza a mensagem de boas-vindas com a primeira letra maiúscula
                 const displayName = name.charAt(0).toUpperCase() + name.slice(1);
                 welcomeMessage.textContent = `Olá, ${displayName}!`; 
                 loginScreen.classList.add('hidden'); 
@@ -255,9 +201,39 @@
                 location.reload(); 
             });
 
+            // --- LÓGICA DO MODAL (CORRIGIDA) ---
+            const modalContainer = document.getElementById('modal-container');
+            const closeButton = document.querySelector('.close-button');
+            const openModalButtons = document.querySelectorAll('.open-modal-btn');
+            const downloadBtn = document.getElementById('modal-download-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            const modalDetails = document.getElementById('modal-details');
 
-            // --- Lógica do Modal de Atividades (código anterior, sem alterações) ---
-            // ... (o código do modal permanece o mesmo)
+            openModalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    modalTitle.textContent = this.dataset.title;
+                    modalDescription.textContent = this.dataset.description;
+                    modalDetails.innerHTML = this.dataset.details;
+                    downloadBtn.href = this.dataset.pdfUrl;
+                    modalContainer.classList.add('show');
+                });
+            });
+
+            function closeModal() {
+                modalContainer.classList.remove('show');
+            }
+            closeButton.addEventListener('click', closeModal);
+            modalContainer.addEventListener('click', function(event) {
+                if (event.target === modalContainer) {
+                    closeModal();
+                }
+            });
+            window.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modalContainer.classList.contains('show')) {
+                    closeModal();
+                }
+            });
         });
     </script>
 
