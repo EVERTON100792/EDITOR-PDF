@@ -9,7 +9,7 @@
         /* Importa a fonte do Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
         
-        /* NOVA PALETA DE CORES E VARIÁVEIS DE DESIGN */
+        /* PALETA DE CORES E VARIÁVEIS DE DESIGN */
         :root {
             --primary-color: #3a7bd5;
             --secondary-color: #3a6073;
@@ -40,7 +40,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* TELA DE LOGIN REDESENHADA */
+        /* TELA DE LOGIN */
         #login-screen { 
             display: flex; 
             align-items: center; 
@@ -122,7 +122,7 @@
             font-weight: 600; 
         }
         
-        /* PAINEL PRINCIPAL REDESENHADO */
+        /* PAINEL PRINCIPAL */
         #main-content header { 
             background: var(--card-background); 
             padding: 1rem 2.5rem; 
@@ -247,7 +247,7 @@
             color: white;
         }
 
-        /* MODAL REDESENHADO */
+        /* MODAL */
         .modal-container { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background-color: rgba(10, 20, 30, 0.7); 
@@ -311,7 +311,7 @@
         .download-btn:hover { background-color: #059669; transform: scale(1.02); }
         .download-btn:disabled { background-color: #9ca3af; cursor: not-allowed; opacity: 0.7; }
 
-        /* RODAPÉ ATUALIZADO */
+        /* RODAPÉ */
         #main-content footer { 
             text-align: center; 
             padding: 2.5rem; 
@@ -326,7 +326,7 @@
     <div id="login-screen">
         <div class="login-box">
             <h1>Materiais Pedagógicos</h1>
-            <p>Faça o login para acessar a plataforma de atividades.</p>
+            <p>Acesso exclusivo para assinantes. Por favor, insira suas credenciais.</p>
             <form id="login-form">
                 <input type="text" id="username-input" placeholder="Usuário" required>
                 <input type="password" id="password-input" placeholder="Senha" required>
@@ -405,16 +405,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
-            // --- AVISO DE SEGURANÇA ---
-            // O método a seguir, de armazenar usuários e senhas diretamente no código,
-            // é EXTREMAMENTE INSEGURO e serve apenas para fins de demonstração.
-            
+            // #######################################################
+            // ## GERENCIE SUAS ASSINANTES AQUI ##
+            // ## Você pode adicionar, remover ou alterar usuários e senhas.
+            // #######################################################
             const usuariosAutorizados = [
-                { usuario: "ana.souza",  senha: "ana123" },
-                { usuario: "bruno.lima", senha: "bruno456" },
-                { usuario: "carla.dias", senha: "carla789" },
                 { usuario: "prof.teste", senha: "222" },
-                { usuario: "vane", senha: "123" } // Adicionado um usuário para a professora
+                { usuario: "vane", senha: "123" },
+                { usuario: "joana.silva", senha: "aluna2025" }, // Exemplo de assinante 1
+                { usuario: "marcia.lopes", senha: "proativa" }  // Exemplo de assinante 2
             ];
             
             // --- LÓGICA DE LOGIN ---
@@ -427,6 +426,7 @@
             const welcomeMessage = document.getElementById('welcome-message');
             const logoutButton = document.getElementById('logout-button');
             
+            // Verifica se o usuário já está salvo na sessão local para manter logado
             const savedUser = localStorage.getItem('usuarioLogado');
             if (savedUser) {
                 showMainContent(savedUser);
@@ -434,6 +434,8 @@
 
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault(); 
+                loginError.classList.add('hidden'); // Esconde erro antigo
+                
                 const userTyped = usernameInput.value.trim();
                 const passTyped = passwordInput.value.trim();
                 const usuarioEncontrado = usuariosAutorizados.find(cred => cred.usuario === userTyped);
