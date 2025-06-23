@@ -61,6 +61,7 @@
         .close-button:hover { color: #333; }
         .download-btn { display: block; background-color: var(--success-color); color: white; text-align: center; padding: 0.8rem 1rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; }
         .download-btn:hover { background-color: #218838; transform: scale(1.02); }
+        .download-btn:disabled { background-color: #999; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -118,7 +119,7 @@
                     <div class="card-category" style="background-color: #9b59b6;">Alfabetização</div>
                     <h3>Detetive de Sílabas</h3>
                     <p>Uma atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.</p>
-                    <div class="card-footer"><span>🕓 15-20 min</span><button class="open-modal-btn" data-title="Detetive de Sílabas 🕵️" data-description="Uma atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábica, associando imagens a palavras." data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade 'Detetive de Sílabas' impressa para cada aluno, tesoura sem ponta e cola.</p><h4>Passo a Passo:</h4><ol><li>Entregue uma folha para cada aluno.</li><li>Explique que eles são detetives e a missão é descobrir a palavra secreta de cada figura.</li><li>Peça para que observem a primeira figura (ex: BOLA), e falem o nome em voz alta.</li><li>Instrua-os a recortar as sílabas embaralhadas ('LA', 'BO') e a colá-las nos quadradinhos na ordem correta para formar 'BOLA'.</li><li>Continue o processo para as demais figuras da folha.</li></ol>" data-pdf-url="#">Ver Detalhes</button></div>
+                    <div class="card-footer"><span>🕓 15-20 min</span><button class="open-modal-btn" data-title="Detetive de Sílabas 🕵️" data-description="Uma atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica, associando imagens a palavras." data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade 'Detetive de Sílabas' impressa para cada aluno, tesoura sem ponta e cola.</p><h4>Passo a Passo:</h4><ol><li>Entregue uma folha para cada aluno.</li><li>Explique que eles são detetives e a missão é descobrir a palavra secreta de cada figura.</li><li>Peça para que observem a primeira figura (ex: BOLA), e falem o nome em voz alta.</li><li>Instrua-os a recortar as sílabas embaralhadas ('LA', 'BO') e a colá-las nos quadradinhos na ordem correta para formar 'BOLA'.</li><li>Continue o processo para as demais figuras da folha.</li></ol>" data-pdf-url="#">Ver Detalhes</button></div>
                 </article>
             </section>
         </main>
@@ -131,8 +132,8 @@
                 <h2 id="modal-title"></h2>
                 <p id="modal-description"></p>
                 <div id="modal-details" class="details"></div>
-                <a href="#" id="modal-download-btn" class="download-btn" download>
-                    🖨️ Baixar PDF da Atividade
+                <a href="#" id="modal-download-btn" class="download-btn" disabled>
+                    🖨️ Baixar PDF (Exemplo)
                 </a>
             </div>
         </div>
@@ -141,20 +142,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
-            // --- DADOS OFUSCADOS ---
-            // SUBSTITUA ESTA STRING PELA STRING GIGANTE QUE VOCÊ GEROU
-            const dadosCodificados = 'WwogICAgeyAidXN1YXJpbyI6ICJhbmEuc291emEiLCAic2VuaGFIYXNoIjogIk16SXhiR3pVYkdoc1VycFZRVGl2bGRZZE1qQXlOUT09IiB9LAogICAgeyAidXN1YXJpbyI6ICJicnVuby5saW1hIiwgInNlbmhhSGFzaCI6ICJOalIwWVZTY1BKb0F0aXZpZGFkZTIwMjU9PSIgfSwKICAgIHsgInVzdWFyaW8iOiAiY2FybGEuZGlhcyIsICJzZW5oYUhhc2giOiAiT1RnM1lYZGxjbnJaZVJ5b0F0aXZpZGFkZTIwMjU9PSIgfSwKICAgIHsgInVzdWFyaW8iOiAicHJvZi50ZXN0ZSIsICJzZW5oYUhhc2giOiAiTWpJeVByb0F0aXZpZGFkZTIwMjU9PSIgfQpd';
+            // --- AVISO DE SEGURANÇA ---
+            // O método a seguir, de armazenar usuários e senhas diretamente no código,
+            // é EXTREMAMENTE INSEGURO e serve apenas para fins de demonstração.
+            // Em uma aplicação real, a autenticação deve ser feita em um servidor seguro (backend).
             
-            const usuariosAutorizados = JSON.parse(atob(dadosCodificados));
-
-            // --- FUNÇÃO PARA CRIAR HASH ---
-            const SAL_SECRETO = 'ProAtividade2025'; 
-            function criarHashSimples(senha) {
-                const senhaInvertida = senha.split('').reverse().join('');
-                const comSal = senhaInvertida + SAL_SECRETO;
-                return btoa(comSal);
-            }
-
+            const usuariosAutorizados = [
+                { usuario: "ana.souza",  senha: "ana123" },
+                { usuario: "bruno.lima", senha: "bruno456" },
+                { usuario: "carla.dias", senha: "carla789" },
+                { usuario: "prof.teste", senha: "222" }
+            ];
+            
             // --- LÓGICA DE LOGIN ---
             const loginScreen = document.getElementById('login-screen');
             const mainContent = document.getElementById('main-content');
@@ -165,6 +164,7 @@
             const welcomeMessage = document.getElementById('welcome-message');
             const logoutButton = document.getElementById('logout-button');
             
+            // Verifica se o usuário já está salvo na sessão local
             const savedUser = localStorage.getItem('usuarioLogado');
             if (savedUser) {
                 showMainContent(savedUser);
@@ -174,11 +174,13 @@
                 event.preventDefault(); 
                 const userTyped = usernameInput.value.trim();
                 const passTyped = passwordInput.value.trim();
+                
+                // Procura o usuário no nosso array de dados
                 const usuarioEncontrado = usuariosAutorizados.find(cred => cred.usuario === userTyped);
 
                 if (usuarioEncontrado) {
-                    const hashDaSenhaDigitada = criarHashSimples(passTyped);
-                    if (hashDaSenhaDigitada === usuarioEncontrado.senhaHash) {
+                    // Compara a senha digitada (texto puro) com a senha armazenada (texto puro)
+                    if (passTyped === usuarioEncontrado.senha) {
                         localStorage.setItem('usuarioLogado', usuarioEncontrado.usuario); 
                         showMainContent(usuarioEncontrado.usuario);
                     } else {
@@ -190,7 +192,7 @@
             });
 
             function showMainContent(name) {
-                const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+                const displayName = name.split('.')[0].charAt(0).toUpperCase() + name.split('.')[0].slice(1);
                 welcomeMessage.textContent = `Olá, ${displayName}!`; 
                 loginScreen.classList.add('hidden'); 
                 mainContent.classList.remove('hidden'); 
@@ -201,7 +203,7 @@
                 location.reload(); 
             });
 
-            // --- LÓGICA DO MODAL (CORRIGIDA) ---
+            // --- LÓGICA DO MODAL ---
             const modalContainer = document.getElementById('modal-container');
             const closeButton = document.querySelector('.close-button');
             const openModalButtons = document.querySelectorAll('.open-modal-btn');
@@ -215,7 +217,8 @@
                     modalTitle.textContent = this.dataset.title;
                     modalDescription.textContent = this.dataset.description;
                     modalDetails.innerHTML = this.dataset.details;
-                    downloadBtn.href = this.dataset.pdfUrl;
+                    // Como os links de PDF não são reais, o botão permanece desabilitado.
+                    // downloadBtn.href = this.dataset.pdfUrl; 
                     modalContainer.classList.add('show');
                 });
             });
