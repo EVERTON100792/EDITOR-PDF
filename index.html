@@ -421,10 +421,17 @@
             sidebar: document.getElementById('sidebar'), sidebarOverlay: document.getElementById('sidebar-overlay')
         };
 
-        // As funções precisam ser definidas antes de serem chamadas
+        function closeModal() {
+            dom.modal.classList.remove('show'); 
+        }
+
         function openModal(id) {
             const activity = todasAsAtividades.find(a => a.id === id);
             if (!activity) return;
+
+            // ===============================================
+            // INÍCIO DA CORREÇÃO: Removendo o 'onclick' do HTML
+            // ===============================================
             dom.modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
@@ -434,16 +441,24 @@
                     <div class="modal-body">
                         <p>${activity.desc}</p>
                         <div class="details">${activity.detalhes}</div>
-                        <button class="download-btn" onclick="generatePdf(${activity.id})">📄 Baixar aqui o material</button>
+                        <button class="download-btn" data-activity-id="${activity.id}">📄 Baixar aqui o material</button>
                     </div>
                 </div>`;
+            
             dom.modal.classList.add('show');
+            
+            // Adicionando listeners de forma segura
             dom.modal.querySelector('.close-button').onclick = closeModal;
             dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
-        }
 
-        function closeModal() {
-            dom.modal.classList.remove('show'); 
+            // Adicionando o listener para o botão de download
+            dom.modal.querySelector('.download-btn').addEventListener('click', function() {
+                const activityIdToDownload = parseInt(this.dataset.activityId);
+                generatePdf(activityIdToDownload);
+            });
+            // ===============================================
+            // FIM DA CORREÇÃO
+            // ===============================================
         }
         
         function setupLoginScreenPreview() {
@@ -466,46 +481,33 @@
             let previewHTML = '';
             previewActivities.forEach(activity => {
                 if (activity.free) {
-                    previewHTML += `
-                        <div class="preview-card free" data-id="${activity.id}">
-                            <div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>
-                            <div class="preview-card-content">
-                                <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                                <h3>${activity.titulo}</h3>
-                                <p>${activity.desc}</p>
-                            </div>
-                        </div>
-                    `;
+                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`; // Removido onclick
                 } else {
-                    previewHTML += `
-                        <div class="preview-card" onclick="document.getElementById('username-input').focus()">
-                            <div class="preview-card-content">
-                                <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                                <h3>${activity.titulo}</h3>
-                                <p>${activity.desc}</p>
-                            </div>
-                            <div class="preview-card-overlay">
-                                <span>🔒</span>
-                                <p>Conteúdo Exclusivo para Assinantes</p>
-                            </div>
-                        </div>
-                    `;
+                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
                 }
+
+                previewHTML += `
+                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
+                    <div class="preview-card-content">
+                        <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
+                        <h3>${activity.titulo}</h3>
+                        <p>${activity.desc}</p>
+                    </div>
+                    ${!activity.free ? `
+                        <div class="preview-card-overlay">
+                            <span>🔒</span>
+                            <p>Conteúdo Exclusivo para Assinantes</p>
+                        </div>` : ''}
+                </div>`;
             });
             previewContainer.innerHTML = previewHTML;
 
-            // ===============================================
-            // INÍCIO DA CORREÇÃO: Adicionando o listener de clique
-            // ===============================================
             previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
                 card.addEventListener('click', function() {
                     const activityId = parseInt(this.dataset.id);
                     openModal(activityId);
                 });
             });
-            // ===============================================
-            // FIM DA CORREÇÃO
-            // ===============================================
         }
 
         function initializePanel(username) {
