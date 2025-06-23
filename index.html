@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materiais Pedagógicos Prof. Vane</title>
+    <title>Plano Mestre | Planejamento de Aulas Inteligente</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         /* Importa a fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
         
         :root {
             --primary-color: #b19cd9;
@@ -43,165 +43,249 @@
         @keyframes popEffect { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
         @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes contentFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* TELA DE LOGIN INTERATIVA */
+        
+        /* --- ESTILOS DA NOVA LANDING PAGE --- */
         #login-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: block; /* Alterado de flex para block */
             width: 100%;
-            min-height: 100vh;
             height: auto;
+            min-height: auto;
+            padding: 0; /* Removido padding */
+            background: var(--background-color); /* Fundo branco padrão */
+        }
+        .landing-hero {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 3rem 1rem;
+            color: white;
+            padding: 5rem 1.5rem 8rem 1.5rem; /* Mais padding inferior para o efeito de sobreposição */
+            text-align: center;
         }
-        .login-container {
-            width: 100%;
-            max-width: 950px;
-            margin: auto;
+        .landing-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
-        .login-box {
+        .landing-hero p {
+            font-size: 1.25rem;
+            max-width: 650px;
+            margin: 0 auto 2rem auto;
+            opacity: 0.9;
+        }
+        
+        .access-box-container {
+            margin-top: -6rem; /* Puxa o box para cima */
+            position: relative;
+            z-index: 10;
+        }
+        .access-box {
             background: var(--card-background);
-            padding: 2.5rem 3rem;
+            padding: 2.5rem;
             border-radius: 24px;
             box-shadow: var(--shadow-lg);
             text-align: center;
-            width: 100%;
+            width: 90%;
             max-width: 450px;
-            margin: 0 auto 4rem auto;
-            animation: fadeIn 0.7s ease-out forwards;
+            margin: 0 auto;
             border-top: 5px solid var(--accent-color);
         }
-        .login-footer {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--text-color-light);
-        }
-        .login-footer a {
-            color: var(--primary-color);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .login-footer a:hover {
-            text-decoration: underline;
-            filter: brightness(1.1);
-        }
-        .preview-section {
-            animation: fadeIn 1s ease-out 0.3s forwards;
-            opacity: 0;
-        }
-        .preview-section h2 {
-            text-align: center;
-            color: white;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        }
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .preview-card {
-            position: relative;
-            background: var(--card-background);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-            border: 2px solid transparent;
-        }
-        .preview-card:hover {
-            transform: translateY(-5px);
-        }
-        .preview-card-content {
-            padding: 1.5rem;
-            background-color: #fff;
-            transition: filter 0.3s ease;
-        }
-        
-        .preview-card:not(.free) .preview-card-content {
-            filter: blur(2px);
-            user-select: none;
-        }
-        .preview-card:not(.free):hover .preview-card-content {
-            filter: blur(1px);
-        }
-        .free-badge {
-            position: absolute;
-            top: 15px;
-            right: -30px;
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 30px;
-            transform: rotate(45deg);
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 2;
-        }
-        .preview-card.free {
-            border: 2px solid var(--accent-color);
-            cursor: pointer;
-        }
-        .preview-card.free:hover {
-             box-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
-        }
-        .preview-card:not(.free) .preview-card-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(1px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--secondary-color);
-            font-weight: 700;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .preview-card:not(.free):hover .preview-card-overlay {
-            opacity: 1;
-        }
-        .preview-card-overlay span {
-            font-size: 3rem;
-            line-height: 1;
-        }
-        .preview-card-overlay p {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            padding: 0 1rem;
+        .access-box h2 {
+             font-size: 1.75rem;
+             margin-top: 0; 
+             color: var(--secondary-color);
         }
 
-        .preview-card-category {
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-            border-radius: 999px;
+        .landing-section {
+            padding: 5rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--secondary-color);
             margin-bottom: 1rem;
         }
-        .preview-card h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.2rem;
-        }
-        .preview-card p {
-            font-size: 0.9rem;
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
             color: var(--text-color-light);
-            margin: 0;
+            max-width: 700px;
+            margin: 0 auto 3.5rem auto;
         }
 
-        .login-box h1 { font-size: 2.25rem; margin-top: 0; }
-        .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); }
+        /* Seção de Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        .feature-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        .feature-card .icon {
+            display: inline-block;
+            padding: 1rem;
+            background-color: rgba(177, 156, 217, 0.1);
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+        }
+        .feature-card .icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--primary-color);
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        /* Seção de Depoimentos */
+        #testimonials {
+             background-color: #f9f8fc;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .testimonial-card {
+            background: var(--card-background);
+            border-left: 5px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .testimonial-card p.quote {
+            font-style: italic;
+            color: var(--text-color);
+            margin: 0 0 1.5rem 0;
+            position: relative;
+        }
+        .testimonial-card p.quote::before {
+            content: '“';
+            font-family: Georgia, serif;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: -1.5rem;
+            left: -1.5rem;
+        }
+        .testimonial-card .author {
+            font-weight: 700;
+        }
+        .testimonial-card .role {
+            font-size: 0.9rem;
+            color: var(--text-color-light);
+        }
+
+        /* Seção de Preços */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .pricing-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        .pricing-card.pro {
+            border: 2px solid var(--primary-color);
+            transform: scale(1.05);
+            position: relative;
+        }
+        .pro-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-top: 0;
+        }
+        .pricing-card .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0.5rem 0;
+        }
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color-light);
+        }
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 2rem 0;
+        }
+        .pricing-card li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+        .pricing-card li svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+            stroke-width: 3;
+        }
+        .pricing-card li .check { stroke: #10b981; }
+        .pricing-card li .cross { stroke: #ef4444; }
+
+        /* Final CTA */
+        #final-cta {
+            background: var(--secondary-color);
+            color: white;
+            text-align: center;
+        }
+        #final-cta h2 {
+            color: white;
+        }
+        #final-cta p {
+            color: white;
+            opacity: 0.8;
+        }
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 999px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
         #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
         #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
         #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
@@ -275,9 +359,9 @@
         .modal-body h3:first-child { margin-top: 0; }
         .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
         .modal-body ul { list-style-position: inside; padding-left: 0; }
-        .dica-da-vane { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-        .dica-da-vane p { margin: 0; font-weight: 500; }
-        .dica-da-vane strong { color: var(--accent-color); font-weight: 700; }
+        .dica-pedagogica { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .dica-pedagogica p { margin: 0; font-weight: 500; }
+        .dica-pedagogica strong { color: var(--accent-color); font-weight: 700; }
         .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
         .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
         .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
@@ -286,262 +370,42 @@
         .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
         /* AULA MAKER SECTION */
-        #aula-maker-section {
-            background-color: var(--card-background);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            padding: 2.5rem;
-            animation: fadeIn 0.7s ease-out forwards;
-        }
-
-        #aula-maker-section h2 {
-            color: var(--secondary-color);
-            font-size: 1.8rem;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #aula-maker-section .description {
-            color: var(--text-color-light);
-            margin-bottom: 2rem;
-            font-size: 1rem;
-            max-width: 80ch;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        #aula-maker-section input[type="text"],
-        #aula-maker-section textarea {
-            width: 100%;
-            padding: 0.8rem 1.2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background-color: #f8fafc;
-        }
-
-        #aula-maker-section input[type="text"]:focus,
-        #aula-maker-section textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3);
-            background-color: white;
-        }
-        
-        #aula-maker-section h3 {
-            font-size: 1.2rem;
-            color: var(--secondary-color);
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        #no-activities-selected {
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            padding: 2rem 1rem;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px dashed var(--border-color);
-        }
-
-        #selected-activities-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 2rem;
-        }
-
-        .selected-activity-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fcfcfd;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 0.75rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .selected-activity-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .selected-activity-item span {
-            font-weight: 500;
-            color: var(--text-color);
-            flex-grow: 1;
-            padding-right: 1rem;
-        }
-
-        .activity-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-left: 1rem;
-            flex-shrink: 0;
-        }
-
-        .reorder-btn,
-        .remove-activity-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0 0.5rem;
-            transition: transform 0.2s, color 0.2s;
-            font-size: 1.5rem;
-            line-height: 1;
-        }
-
-        .reorder-btn {
-            color: var(--text-color-light);
-        }
-        .reorder-btn:hover {
-            color: var(--primary-color);
-            transform: scale(1.2);
-        }
-
-        .remove-activity-btn {
-            color: #ef4444;
-        }
-
-        .remove-activity-btn:hover {
-            transform: scale(1.2);
-        }
-        
-        .main-action-buttons {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: flex-end; /* Alinhado à direita para destaque */
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .add-activity-btn,
-        .generate-plan-btn,
-        .clear-plan-btn {
-            padding: 0.8rem 1.8rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: var(--shadow);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .add-activity-btn {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .add-activity-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            filter: brightness(1.1);
-        }
-
-        .clear-plan-btn {
-            background: #eef2f7;
-            color: var(--text-color-light);
-            border: 1px solid var(--border-color);
-            margin-right: auto; /* Joga este botão para a esquerda */
-        }
-        .clear-plan-btn:hover {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-        
-        .generate-plan-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-            color: white;
-        }
-
-        .generate-plan-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            filter: brightness(1.1);
-        }
-
-        /* Modal for selecting activities */
-        #select-activities-modal .modal-content {
-            max-width: 900px;
-            width: 95%;
-        }
-
-        #select-activities-modal .modal-body {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem 2.5rem;
-        }
-
-        #select-activities-modal .activity-card {
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        #select-activities-modal .activity-card.selected {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(177, 156, 217, 0.8);
-            transform: translateY(-5px);
-        }
-
-        #select-activities-modal .activity-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        #select-activities-modal .card-footer {
-            display: none; /* Hide footer in selection modal */
-        }
-
-        #select-activities-modal .modal-footer {
-            text-align: center;
-        }
-
-        #confirm-selection-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: var(--shadow);
-        }
-
-        #confirm-selection-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
+        #aula-maker-section { background-color: var(--card-background); border-radius: 20px; box-shadow: var(--shadow); padding: 2.5rem; animation: fadeIn 0.7s ease-out forwards; }
+        #aula-maker-section h2, #planos-semanais-view h2 { color: var(--secondary-color); font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        #aula-maker-section .description, #planos-semanais-view .description { color: var(--text-color-light); margin-bottom: 2rem; font-size: 1rem; max-width: 80ch; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color); }
+        #aula-maker-section input[type="text"], #aula-maker-section textarea { width: 100%; padding: 0.8rem 1.2rem; border: 1px solid var(--border-color); border-radius: 10px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
+        #aula-maker-section input[type="text"]:focus, #aula-maker-section textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
+        #aula-maker-section h3 { font-size: 1.2rem; color: var(--secondary-color); margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        #no-activities-selected { font-style: italic; margin-bottom: 1.5rem; text-align: center; padding: 2rem 1rem; background: #f8fafc; border-radius: 12px; border: 1px dashed var(--border-color); }
+        #selected-activities-list { list-style: none; padding: 0; margin-bottom: 2rem; }
+        .selected-activity-item { display: flex; justify-content: space-between; align-items: center; background-color: #fcfcfd; border: 1px solid var(--border-color); border-radius: 12px; padding: 0.8rem 1.2rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .selected-activity-item:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); }
+        .selected-activity-item span { font-weight: 500; color: var(--text-color); flex-grow: 1; padding-right: 1rem; }
+        .activity-controls { display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem; flex-shrink: 0; }
+        .reorder-btn, .remove-activity-btn { background: none; border: none; cursor: pointer; padding: 0 0.5rem; transition: transform 0.2s, color 0.2s; font-size: 1.5rem; line-height: 1; }
+        .reorder-btn { color: var(--text-color-light); }
+        .reorder-btn:hover { color: var(--primary-color); transform: scale(1.2); }
+        .remove-activity-btn { color: #ef4444; }
+        .remove-activity-btn:hover { transform: scale(1.2); }
+        .main-action-buttons { margin-top: 2rem; display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+        .add-activity-btn, .generate-plan-btn, .clear-plan-btn { padding: 0.8rem 1.8rem; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); display: inline-flex; align-items: center; justify-content: center; }
+        .add-activity-btn { background: var(--primary-color); color: white; }
+        .add-activity-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.1); }
+        .clear-plan-btn { background: #eef2f7; color: var(--text-color-light); border: 1px solid var(--border-color); margin-right: auto; }
+        .clear-plan-btn:hover { background: #ef4444; color: white; border-color: #ef4444; }
+        .generate-plan-btn { background: linear-gradient(to right, var(--primary-color), var(--accent-color)); color: white; }
+        .generate-plan-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.1); }
+        #select-activities-modal .modal-content { max-width: 900px; width: 95%; }
+        #select-activities-modal .modal-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; padding: 1.5rem 2.5rem; }
+        #select-activities-modal .activity-card { cursor: pointer; border: 2px solid transparent; }
+        #select-activities-modal .activity-card.selected { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(177, 156, 217, 0.8); transform: translateY(-5px); }
+        #select-activities-modal .activity-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        #select-activities-modal .card-footer { display: none; }
+        #select-activities-modal .modal-footer { text-align: center; }
+        #confirm-selection-btn { background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; padding: 0.8rem 2rem; border: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
+        #confirm-selection-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 
         /* Responsive adjustments */
         @media (max-width: 992px) {
@@ -552,51 +416,25 @@
             body.sidebar-open .sidebar { transform: translateX(0); }
             body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
             .content-wrapper { padding: 1.5rem; }
+            .pricing-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
+            .landing-hero h1 { font-size: 2.25rem; }
+            .landing-hero p { font-size: 1.1rem; }
             .user-area #welcome-message { display: none; }
             .app-header h1 { font-size: 1.2rem; gap: 12px; }
             .logo-icon { width: 25px; height: 25px; }
-            .login-box { padding: 2rem; margin-bottom: 3rem;}
+            .access-box { padding: 2rem; }
             .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
-            #login-screen { padding: 2rem 1rem; }
-            
-            #aula-maker-section { padding: 1.5rem; }
-            #aula-maker-section h2 { font-size: 1.5rem; }
-
-            .main-action-buttons {
-                flex-direction: column-reverse;
-                align-items: stretch;
-            }
-            .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
-                width: 100%;
-                margin-right: 0;
-            }
+            #aula-maker-section, #planos-semanais-view { padding: 1.5rem; }
+            #aula-maker-section h2, #planos-semanais-view h2 { font-size: 1.5rem; }
+            .main-action-buttons { flex-direction: column-reverse; align-items: stretch; }
+            .add-activity-btn, .generate-plan-btn, .clear-plan-btn { width: 100%; margin-right: 0; }
             .clear-plan-btn { margin-bottom: 1rem; }
-
-            #select-activities-modal .modal-body {
-                grid-template-columns: 1fr;
-            }
-            
-            /* MELHORIA DE RESPONSIVIDADE 1: Botões de ação do gerador */
-            #add-to-plan-actions .add-activity-btn {
-                width: 100%;
-            }
-
-            /* MELHORIA DE RESPONSIVIDADE 2: Lista de atividades selecionadas */
-            .selected-activity-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-                padding-bottom: 0.5rem;
-            }
-            .selected-activity-item .activity-controls {
-                width: 100%;
-                justify-content: flex-end;
-                margin-left: 0;
-                padding: 0.25rem;
-                border-top: 1px solid var(--border-color);
-            }
+            #select-activities-modal .modal-body { grid-template-columns: 1fr; }
+            #add-to-plan-actions .add-activity-btn { width: 100%; }
+            .selected-activity-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding-bottom: 0.5rem; }
+            .selected-activity-item .activity-controls { width: 100%; justify-content: flex-end; margin-left: 0; padding: 0.25rem; border-top: 1px solid var(--border-color); }
         }
     </style>
 </head>
@@ -607,36 +445,120 @@
         <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
         <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
         <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
-        <symbol id="icon-magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <path d="M19 21l-7-7 1.5-1.5 7 7-1.5 1.5z"></path>
-            <path d="M11 7l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
-            <path d="M15 3l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
-            <path d="M4 17l-1 1 3 3 1-1-3-3z"></path>
-            <path d="M10.5 10.5l-2.5-2.5"></path>
-            <path d="M13.5 13.5l-2.5-2.5"></path>
-        </symbol>
+        <symbol id="icon-magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21l-7-7 1.5-1.5 7 7-1.5 1.5z"></path><path d="M11 7l-2 2-1.5-1.5 2-2 1.5 1.5z"></path><path d="M15 3l-2 2-1.5-1.5 2-2 1.5 1.5z"></path><path d="M4 17l-1 1 3 3 1-1-3-3z"></path><path d="M10.5 10.5l-2.5-2.5"></path><path d="M13.5 13.5l-2.5-2.5"></path></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
+        <symbol id="icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol>
     </svg>
 
     <div id="login-screen">
-        <div class="login-container">
-            <div class="login-box">
-                <h1>Materiais Pedagógicos</h1>
-                <p>Acesso exclusivo para assinantes.</p>
+        <header class="landing-hero">
+            <h1>Recupere seu tempo. Reinvente seu jeito de planejar.</h1>
+            <p>O Plano Mestre é a plataforma que automatiza a parte chata do planejamento para que você possa focar no que realmente importa: ensinar.</p>
+            <a href="#pricing" class="cta-button">Ver Planos e Preços</a>
+        </header>
+
+        <div class="access-box-container" id="access-box">
+            <div class="access-box">
+                <h2>Acesse sua conta</h2>
                 <form id="login-form">
-                    <input type="text" id="username-input" placeholder="Usuário" required>
-                    <input type="password" id="password-input" placeholder="Senha" required>
+                    <input type="text" id="username-input" placeholder="Seu usuário" required>
+                    <input type="password" id="password-input" placeholder="Sua senha" required>
                     <button type="submit">Entrar →</button>
                     <p id="login-error" class="hidden">Usuário ou senha inválidos.</p>
                 </form>
-                <div class="login-footer">
-                    <p>Primeira vez aqui? <a href="#preview-section">Veja uma prévia abaixo!</a></p>
-                </div>
-            </div>
-            <div class="preview-section" id="preview-section">
-                <h2>Um pouco do que você encontrará aqui dentro...</h2>
-                <div class="preview-grid" id="preview-grid-container"></div>
             </div>
         </div>
+
+        <section id="features" class="landing-section">
+            <h2 class="section-title">Tudo que você precisa em um só lugar</h2>
+            <p class="section-subtitle">Nossos recursos foram pensados para otimizar cada etapa do seu planejamento pedagógico.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon"><svg><use xlink:href="#icon-magic-wand"></use></svg></div>
+                    <h3>Gerador Inteligente</h3>
+                    <p>Crie planos de aula completos em minutos, combinando atividades prontas ou personalizando as suas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon"><svg><use xlink:href="#icon-all"></use></svg></div>
+                    <h3>Modelos Prontos</h3>
+                    <p>Use planos semanais, validados por especialistas e alinhados à BNCC, como ponto de partida.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon"><svg><use xlink:href="#icon-category"></use></svg></div>
+                    <h3>Banco de Atividades</h3>
+                    <p>Filtre e encontre a atividade perfeita para sua turma em nosso crescente acervo de recursos pedagógicos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+                    <h3>Exporte para PDF</h3>
+                    <p>Gere um documento PDF profissional do seu plano de aula com um único clique, pronto para imprimir ou compartilhar.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="landing-section">
+            <h2 class="section-title">Amado por professores de todo o Brasil</h2>
+            <p class="section-subtitle">Veja o que educadores como você estão dizendo sobre o Plano Mestre.</p>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="quote">"O Plano Mestre devolveu minhas noites de domingo. O que eu levava 3 horas para fazer, agora faço em 30 minutos. É revolucionário!"</p>
+                    <p class="author">Juliana S.</p>
+                    <p class="role">Professora, 2º Ano Fundamental</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="quote">"Finalmente uma ferramenta que entende a realidade da educação infantil. Os modelos são criativos e super fáceis de adaptar. Meus pequenos amam as atividades."</p>
+                    <p class="author">Marcos P.</p>
+                    <p class="role">Educador, Ed. Infantil</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="quote">"Ter o banco de atividades alinhado à BNCC é uma mão na roda. A busca é rápida e me dá a segurança de que estou no caminho certo."</p>
+                    <p class="author">Carla M.</p>
+                    <p class="role">Coordenadora Pedagógica</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="landing-section">
+            <h2 class="section-title">Escolha o plano perfeito para você</h2>
+            <p class="section-subtitle">Comece de graça e evolua quando estiver pronto. Sem compromisso, sem cartão de crédito.</p>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Gratuito</h3>
+                    <p>Para experimentar as funcionalidades essenciais.</p>
+                    <div class="price">R$0 <span>/ para sempre</span></div>
+                    <ul>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Gerador de Plano de Aula</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Criação de até 3 planos</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a 1 modelo semanal</li>
+                        <li><svg class="cross"><use xlink:href="#icon-cross"></use></svg>Acesso completo ao Banco de Atividades</li>
+                        <li><svg class="cross"><use xlink:href="#icon-cross"></use></svg>Acesso a todos os Modelos</li>
+                        <li><svg class="cross"><use xlink:href="#icon-cross"></use></svg>Exportação de PDF sem marca d'água</li>
+                    </ul>
+                    <a href="#access-box" class="cta-button" style="background: var(--secondary-color);">Comece Agora</a>
+                </div>
+                <div class="pricing-card pro">
+                    <div class="pro-badge">Mais Popular</div>
+                    <h3>Pro</h3>
+                    <p>Para professores que querem produtividade máxima.</p>
+                    <div class="price">R$19 <span>,90 / mês</span></div>
+                     <ul>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Gerador de Plano de Aula</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Criação de planos **ilimitados**</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a **todos os modelos** semanais</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso **completo** ao Banco de Atividades</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a **todos os Modelos**</li>
+                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Exportação de PDF **sem marca d'água**</li>
+                    </ul>
+                    <a href="#access-box" class="cta-button">Assinar o Pro</a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="final-cta" class="landing-section">
+            <h2 class="section-title">Pronto para transformar seu planejamento?</h2>
+            <p class="section-subtitle">Junte-se a milhares de professores que já estão economizando tempo e energia com o Plano Mestre.</p>
+            <a href="#access-box" class="cta-button">Comece Gratuitamente Hoje</a>
+        </section>
     </div>
 
     <div id="main-content" class="hidden">
@@ -644,7 +566,7 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
                 <svg><use xlink:href="#icon-menu"></use></svg>
             </button>
-            <h1><span class="logo-icon"></span><span>Cantinho da Prof. Vane</span></h1>
+            <h1><span class="logo-icon"></span><span>Plano Mestre</span></h1>
             <div class="user-area">
                 <span id="welcome-message"></span>
                 <button id="logout-button" class="logout-button">Sair</button>
@@ -658,7 +580,7 @@
                 <div style="margin-bottom: 1.5rem;">
                     <button id="nav-planos-semanais-btn" class="filter-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        <span>Planos Semanais Prontos</span>
+                        <span>Modelos de Planos Semanais</span>
                     </button>
                     <button id="nav-aula-maker-btn" class="filter-btn">
                         <svg><use xlink:href="#icon-magic-wand"></use></svg>
@@ -668,7 +590,7 @@
             
                 <div id="catalog-section">
                     <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 1rem;">
-                    <h3 style="font-size: 1rem; color: var(--text-color-light); margin: 0 0 1rem 0.5rem; font-weight: 500;">Catálogo de Atividades</h3>
+                    <h3 style="font-size: 1rem; color: var(--text-color-light); margin: 0 0 1rem 0.5rem; font-weight: 500;">Banco de Atividades</h3>
                     
                     <div class="search-container">
                         <svg class="icon-search"><use xlink:href="#icon-search"></use></svg>
@@ -686,8 +608,8 @@
                     </div>
 
                     <section id="planos-semanais-view" class="hidden">
-                        <h2 style="color: var(--secondary-color); font-size: 1.8rem; margin-bottom: 1.5rem;">Planos de Aula Semanais da Vane</h2>
-                        <p class="description" style="margin-top: -1rem; margin-bottom: 2rem;">Selecione um plano de aula completo como ponto de partida. Ele será carregado no gerador para que você possa personalizar como quiser!</p>
+                        <h2>Modelos de Planos Semanais</h2>
+                        <p class="description" style="margin-top: -1rem; margin-bottom: 2rem;">Use nossos modelos, validados por especialistas, como um ponto de partida para o seu planejamento. Carregue um plano no gerador e personalize como quiser!</p>
                         <div id="planos-semanais-filters" style="margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
                         </div>
                         <div id="planos-semanais-grid" class="activities-grid" style="gap: 2.5rem;">
@@ -696,7 +618,7 @@
 
                     <section id="aula-maker-section" class="hidden">
                         <h2><svg width="28" height="28" style="stroke: var(--secondary-color)"><use xlink:href="#icon-magic-wand"></use></svg> Gerador de Plano de Aula</h2>
-                        <p class="description">Construa seu planejamento adicionando atividades do nosso catálogo ou criando as suas próprias. Organize a sequência e gere um PDF completo!</p>
+                        <p class="description">Construa seu planejamento adicionando atividades do nosso banco ou criando as suas próprias. Organize a sequência e gere um PDF completo!</p>
 
                         <div class="form-group">
                             <label for="maker-title">Título do Plano de Aula:</label>
@@ -726,7 +648,7 @@
                             <h4 style="margin-top: 0; color: var(--secondary-color);">Adicionar Etapa ao Plano</h4>
                             <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                                 <button id="add-catalog-activity-btn" class="add-activity-btn">
-                                    <span style="font-size: 1.2rem; margin-right: 8px;">+</span> Adicionar do Catálogo
+                                    <span style="font-size: 1.2rem; margin-right: 8px;">+</span> Adicionar do Banco de Atividades
                                 </button>
                                 <button id="add-custom-activity-inline-btn" class="add-activity-btn" style="background-color: var(--secondary-color);">
                                     <span style="font-size: 1.2rem; margin-right: 8px;">✎</span> Criar Atividade Personalizada
@@ -752,292 +674,21 @@
                         </div>
                     </section>
                 </main>
-                <footer><p style="text-align: center; color: var(--text-color-light); margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">Criado com ❤️ por Prof. Vane</p></footer>
+                <footer><p style="text-align: center; color: var(--text-color-light); margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">© 2025 Plano Mestre. Todos os direitos reservados.</p></footer>
             </div>
         </div>
     </div>
 
-    <div class="modal-container" id="modal-container"></div>
-
     <script>
-    const usuariosAutorizados = [
-        { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
-        { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
-    ];
-    
-    const todasAsAtividades = [
-        { 
-            id: 1, 
-            categoria: "Interpessoal", 
-            cor: "#3b82f6", 
-            titulo: "Duas Verdades, Uma Mentira", 
-            desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", 
-            duracao: "10 min", 
-            bncc: ["EI03EO04", "EI03EF01"],
-            objetivos: [
-                "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.",
-                "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.",
-                "Desenvolver a escuta atenta e o respeito pela vez de falar do colega."
-            ],
-            roteiro: {
-                acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.",
-                desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.",
-                expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
-                encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
-            },
-            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
-        },
-        { 
-            id: 2, 
-            categoria: "Português", 
-            cor: "#ef4444", 
-            titulo: "Criador de Histórias", 
-            desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", 
-            duracao: "20 min", 
-            bncc: ["EF15LP05", "EF02LP26"],
-            objetivos: [
-                "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.",
-                "Desenvolver a criatividade e a imaginação.",
-                "Ampliar o vocabulário e a organização do pensamento lógico."
-            ],
-            roteiro: {
-                acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.",
-                desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.",
-                expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
-                encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
-            },
-            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
-        },
-        { 
-            id: 3, 
-            categoria: "Matemática", 
-            cor: "#f59e0b", 
-            titulo: "O Problema do Dia", 
-            desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", 
-            duracao: "10 min", 
-            bncc: ["EF01MA01", "EF01MA08"],
-            objetivos: [
-                "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.",
-                "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.",
-                "Desenvolver o raciocínio lógico e estratégias de resolução de problemas."
-            ],
-            roteiro: {
-                acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.",
-                desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.",
-                expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
-                encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
-            },
-            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
-        },
-        { 
-            id: 4, 
-            categoria: "Ciências", 
-            cor: "#10b981", 
-            titulo: "Mini-Debate Científico", 
-            desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", 
-            duracao: "25 min", 
-            bncc: ["EF08CI01", "EF69LP13"],
-            objetivos: [
-                "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.",
-                "Exercitar a escuta ativa e o respeito a opiniões divergentes.",
-                "Diferenciar fatos de opiniões em um texto ou discussão."
-            ],
-            roteiro: {
-                acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).",
-                desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.",
-                expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
-                encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
-            },
-            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
-        },
-        { 
-            id: 5, 
-            free: true, 
-            categoria: "Alfabetização", 
-            cor: "#8b5cf6", 
-            titulo: "Detetive de Sílabas", 
-            desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", 
-            duracao: "15 min", 
-            bncc: ["EF01LP08", "EF01LP02"],
-            objetivos: [
-                "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.",
-                "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.",
-                "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas."
-            ],
-            roteiro: {
-                acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).",
-                desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.",
-                expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
-                encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
-            },
-            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
-        },
-        { 
-            id: 6, 
-            categoria: "Artes", 
-            cor: "#db2777", 
-            titulo: "Escultura com Massinha", 
-            desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", 
-            duracao: "25 min", 
-            bncc: ["EF15AR04", "EF15AR05"],
-            objetivos: [
-                "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.",
-                "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.",
-                "Aprimorar a coordenação motora fina e a percepção tátil."
-            ],
-            roteiro: {
-                acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.",
-                desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.",
-                expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
-                encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
-            },
-            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
-        },
-        { 
-            id: 7, 
-            categoria: "Geografia", 
-            cor: "#475569", 
-            titulo: "Mapa da Sala de Aula", 
-            desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", 
-            duracao: "30 min", 
-            bncc: ["EF01GE09", "EF01GE08"],
-            objetivos: [
-                "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.",
-                "Desenvolver noções de lateralidade, localização e representação espacial.",
-                "Compreender a função de um mapa como forma de representação de um lugar."
-            ],
-            roteiro: {
-                acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.",
-                desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).",
-                expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
-                encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
-            },
-            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
-        },
-        { 
-            id: 8, 
-            categoria: "História", 
-            cor: "#d97706", 
-            titulo: "Linha do Tempo Pessoal", 
-            desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", 
-            duracao: "20 min", 
-            bncc: ["EF01HI01", "EF01HI04"],
-            objetivos: [
-                "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.",
-                "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.",
-                "Valorizar sua própria história e a de seus familiares."
-            ],
-            roteiro: {
-                acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.",
-                desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.",
-                expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
-                encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
-            },
-            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
-        }
-    ];
-
-    /**************************************************************
-     * INÍCIO DA SEÇÃO DE PLANOS DE AULA SEMANAIS PRONTOS
-     * Para adicionar mais planos, basta copiar a estrutura de um
-     * objeto abaixo e colar no final da lista, alterando os dados.
-     **************************************************************/
-    const planosSemanaisProntos = [
-        {
-            id: "semanal-infantil-bebes-01",
-            titulo: "Texturas e Sensações",
-            anoEscolar: "Ed. Infantil (Bebês 0-1,6a)",
-            descricao: "Uma semana focada na exploração tátil e sensorial, fundamental para o desenvolvimento dos bebês, com atividades seguras e estimulantes.",
-            objetivosGerais: ["Ampliar o repertório sensorial.", "Desenvolver a coordenação motora.", "Estimular a curiosidade através da exploração de diferentes materiais."],
-            planoDiario: [
-                { dia: "Segunda-feira", foco: "Mãos e Pés", atividades: [{ type: 'custom', titulo: 'Caminho de Sensações', desc: 'Criar um tapete no chão com diferentes texturas (algodão, E.V.A., plástico bolha, grama sintética) para os bebês engatinharem ou andarem sobre ele.' }] },
-                { dia: "Terça-feira", foco: "Natureza", atividades: [{ type: 'custom', titulo: 'Cesto de Tesouros da Natureza', desc: 'Oferecer um cesto com folhas secas, pinhas, galhos lisos (higienizados e seguros) para exploração livre.' }] },
-                { dia: "Quarta-feira", foco: "Gelado e Quente", atividades: [{ type: 'custom', titulo: 'Pintura com Gelo Colorido', desc: 'Congelar água com corante alimentício em formas de picolé. Oferecer para que pintem em uma cartolina grande.' }] },
-                { dia: "Quinta-feira", foco: "Comestível", atividades: [{ type: 'custom', titulo: 'Exploração com Gelatina', desc: 'Preparar uma grande bacia de gelatina (sem açúcar) para que os bebês possam tocar, sentir a textura e experimentar com segurança.' }] },
-                { dia: "Sexta-feira", foco: "Macio e Fofo", atividades: [{ type: 'custom', titulo: 'Guerra de Pompons', desc: 'Em um ambiente seguro, espalhar pompons de lã coloridos de vários tamanhos para que os bebês possam pegar, sentir e brincar.' }] },
-            ]
-        },
-        {
-            id: "semanal-infantil-pequenos-01",
-            titulo: "O Mundo dos Animais",
-            anoEscolar: "Ed. Infantil (Crianças 1,7-3,11a)",
-            descricao: "Uma imersão no reino animal, explorando sons, movimentos e habitats de diferentes bichos, promovendo a linguagem e a expressão corporal.",
-            objetivosGerais: ["Imitar sons e movimentos de animais.", "Ampliar o vocabulário com nomes de animais.", "Desenvolver o respeito pela natureza e pelos seres vivos."],
-            planoDiario: [
-                { dia: "Segunda-feira", foco: "Animais da Fazenda", atividades: [{ type: 'custom', titulo: 'Sons da Fazendinha', desc: 'Cantar músicas como "Seu Lobato" e imitar os sons dos animais. Usar fantoches ou miniaturas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando Ovelhinhas'}] },
-                { dia: "Terça-feira", foco: "Animais da Selva", atividades: [{ type: 'custom', titulo: 'Circuito Motor da Selva', desc: 'Criar um percurso com obstáculos: "pular como o macaco", "rastejar como a cobra", "andar pesado como o elefante".' }] },
-                { dia: "Quarta-feira", foco: "Animais Aquáticos", atividades: [{ type: 'custom', titulo: 'Pintura com as Mãos: Polvo', desc: 'Pintar a palma da mão da criança com tinta guache e carimbar no papel. Os dedos formam os tentáculos do polvo.' }, { type: 'custom', titulo: 'História: O Peixinho Dourado' }] },
-                { dia: "Quinta-feira", foco: "Insetos e Bichos de Jardim", atividades: [{ type: 'custom', titulo: 'Observação com Lupa', desc: 'Levar as crianças ao jardim para procurar formigas, joaninhas e outros pequenos seres com lupas.' }] },
-                { dia: "Sexta-feira", foco: "Festa dos Animais", atividades: [{ type: 'custom', titulo: 'Baile à Fantasia Animal', desc: 'Confeccionar máscaras de animais com pratos de papel e realizar um baile onde cada um imita o seu bicho.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'Criando a História da nossa Festa' }] },
-            ]
-        },
-        {
-            id: "semanal-infantil-01",
-            titulo: "Explorando os Cinco Sentidos",
-            anoEscolar: "Ed. Infantil (Crianças 4-5,11a)",
-            descricao: "Uma semana de descobertas sensoriais para explorar o mundo através da visão, audição, olfato, paladar e tato de forma lúdica e interativa.",
-            objetivosGerais: ["Identificar e nomear os cinco sentidos.", "Desenvolver a percepção sensorial através de atividades práticas.", "Estimular a curiosidade e a capacidade de observação e descrição."],
-            planoDiario: [
-                { dia: "Segunda-feira", foco: "Visão", atividades: [ { type: 'custom', titulo: 'Roda de Conversa: O que vemos?', desc: 'Apresentar o tema da semana. Perguntar às crianças o que elas conseguem ver na sala, pela janela, etc. Explorar cores e formas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando o que Vemos' }, { type: 'custom', titulo: 'Caça às Cores', desc: 'Pedir que encontrem objetos de uma cor específica (vermelho, azul, etc.) na sala de aula.' } ] },
-                { dia: "Terça-feira", foco: "Audição", atividades: [ { type: 'custom', titulo: 'Sons Misteriosos', desc: 'Produzir diferentes sons atrás de um pano (sino, chocalho, palmas, papel amassando) e pedir que adivinhem o que é.' }, { type: 'custom', titulo: 'Estátua Musical', desc: 'Dançar livremente com uma música e ficar imóvel quando ela para. Trabalha a atenção auditiva.' } ] },
-                { dia: "Quarta-feira", foco: "Tato", atividades: [ { type: 'custom', titulo: 'Caixa Surpresa do Tato', desc: 'Colocar diferentes objetos (algodão, lixa, esponja, folha seca) em uma caixa e pedir que as crianças, de olhos vendados, descrevam a textura.' }, { type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando a Sala com as Mãos' } ] },
-                { dia: "Quinta-feira", foco: "Olfato e Paladar", atividades: [ { type: 'custom', titulo: 'Cheirinhos da Natureza', desc: 'Trazer potinhos com diferentes aromas (café, cravo, hortelã, casca de laranja) para que sintam e tentem identificar.' }, { type: 'custom', titulo: 'Degustação às Cegas', desc: 'Oferecer pequenos pedaços de frutas (banana, maçã, laranja) para que provem de olhos vendados e adivinhem o que é.' } ] },
-                { dia: "Sexta-feira", foco: "Integração dos Sentidos", atividades: [ { type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História Sensorial' }, { type: 'custom', titulo: 'Circuito Sensorial', desc: 'Montar um caminho no chão com diferentes texturas para andar descalço (tapetes, grama sintética, plástico bolha) enquanto ouvem uma música relaxante.' } ] }
-            ]
-        },
-        {
-            id: "semanal-fundamental-01",
-            titulo: "Semana da Consciência Fonológica",
-            anoEscolar: "1º Ano - Fundamental",
-            descricao: "Uma semana intensiva e divertida focada no desenvolvimento das habilidades de consciência fonológica, essenciais para o processo de alfabetização.",
-            objetivosGerais: ["Desenvolver a consciência de sílabas, rimas e aliterações.", "Segmentar palavras em sílabas oralmente.", "Associar fonemas a grafemas em atividades lúdicas."],
-            planoDiario: [
-                { dia: "Segunda-feira", foco: "Rimas", atividades: [ { type: 'catalog', id: 1, tituloPersonalizado: 'Apresentação com Rimas' }, { type: 'custom', titulo: 'Bingo de Rimas', desc: 'A professora fala uma palavra (ex: PÃO) e os alunos marcam na cartela uma figura que rime (ex: MÃO).' } ] },
-                { dia: "Terça-feira", foco: "Sílabas", atividades: [ { type: 'catalog', id: 5 }, { type: 'custom', titulo: 'Quantas Sílabas Tem?', desc: 'Mostrar figuras e pedir que batam palmas para cada sílaba, registrando o número no quadro.' } ] },
-                { dia: "Quarta-feira", foco: "Aliteração (Som Inicial)", atividades: [ { type: 'custom', titulo: 'O Barco Carregado de...', desc: 'Iniciar a brincadeira: "O barco veio carregado de coisas com a letra B...". As crianças devem falar palavras que comecem com o som /b/.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'História com Aliteração' } ] },
-                { dia: "Quinta-feira", foco: "Formação de Palavras", atividades: [ { type: 'custom', titulo: 'Sopa de Letrinhas', desc: 'Entregar um prato com letras móveis e pedir que formem palavras que a professora ditar ou palavras que conhecem.' } ] },
-                { dia: "Sexta-feira", foco: "Revisão Lúdica", atividades: [ { type: 'catalog', id: 8, tituloPersonalizado: 'A Linha do Tempo dos Sons' }, { type: 'custom', titulo: 'Gincana Fonológica', desc: 'Dividir a turma em equipes e realizar desafios rápidos envolvendo rimas, sílabas e aliterações.' } ] }
-            ]
-        },
-        {
-            id: "semanal-fundamental-02",
-            titulo: "Viagem pelo Sistema Monetário",
-            anoEscolar: "2º Ano - Fundamental",
-            descricao: "Uma introdução prática e significativa ao sistema monetário brasileiro, desenvolvendo habilidades de contagem, soma, subtração e educação financeira.",
-            objetivosGerais: ["Reconhecer cédulas e moedas do sistema monetário brasileiro.", "Resolver problemas simples envolvendo compra e venda.", "Compreender o valor do dinheiro e a importância de poupar."],
-            planoDiario: [
-                { dia: "Segunda-feira", foco: "Conhecendo o Dinheiro", atividades: [{type: 'custom', titulo: 'Explorando as Cédulas e Moedas', desc: 'Apresentar réplicas de dinheiro. Deixar que manipulem, observem os detalhes (animais, tamanhos, cores) e conversem sobre o que sabem.'}]},
-                { dia: "Terça-feira", foco: "Quanto Custa?", atividades: [{type: 'catalog', id: 3, tituloPersonalizado: 'Problema: As Compras de João'}, {type: 'custom', titulo: 'Mercadinho da Turma', desc: 'Montar um pequeno mercado com embalagens vazias e preços. Em duplas, os alunos recebem uma quantia e devem comprar produtos.'}]},
-                { dia: "Quarta-feira", foco: "Calculando o Troco", atividades: [{type: 'custom', titulo: 'Simulação de Troco', desc: 'Continuar com o mercadinho, mas agora o foco é em pagar e calcular o troco. A professora atua como caixa.'}]},
-                { dia: "Quinta-feira", foco: "De Onde Vem o Dinheiro?", atividades: [{type: 'custom', titulo: 'Roda de Conversa: Trabalho e Dinheiro', desc: 'Conversar sobre as profissões dos pais e como o trabalho gera renda para a família.'}, {type: 'catalog', id: 2, tituloPersonalizado: 'História: O Cofrinho Mágico'}]},
-                { dia: "Sexta-feira", foco: "Dia de Poupar", atividades: [{type: 'custom', titulo: 'Construindo um Cofrinho', desc: 'Usar garrafas PET ou latas para confeccionar um cofrinho. Conversar sobre metas e o que gostariam de comprar se poupassem.'}]},
-            ]
-        },
-        {
-            id: "semanal-fundamental-03",
-            titulo: "Ciclo da Água e a Natureza",
-            anoEscolar: "3º Ano - Fundamental",
-            descricao: "Uma semana de investigação científica sobre o ciclo da água, seus estados físicos e a importância vital da água para os seres vivos e o planeta.",
-            objetivosGerais: ["Compreender as etapas do ciclo da água (evaporação, condensação, precipitação).", "Identificar os estados físicos da água.", "Conscientizar-se sobre o uso consciente e a preservação da água."],
-            planoDiario: [
-                { dia: "Segunda-feira", foco: "Estados da Água", atividades: [{type: 'custom', titulo: 'Experimento: Gelo que Vira Água, Água que Vira Vapor', desc: 'Mostrar um cubo de gelo derretendo e depois aquecer a água (com segurança) para mostrar o vapor.'}, {type: 'catalog', id: 4, tituloPersonalizado: 'Debate: Como economizar água?'}]},
-                { dia: "Terça-feira", foco: "Evaporação", atividades: [{type: 'custom', titulo: 'Experimento: O Sol e a Roupa no Varal', desc: 'Molhar dois panos iguais. Colocar um no sol e outro na sombra. Observar qual seca mais rápido e discutir o porquê.'}]},
-                { dia: "Quarta-feira", foco: "Condensação e Precipitação", atividades: [{type: 'custom', titulo: 'Simulando a Chuva', desc: 'Colocar água quente em um pote de vidro, tampar com um prato e colocar gelo sobre o prato. Observar as gotículas se formando e caindo.'}]},
-                { dia: "Quinta-feira", foco: "A Água no Planeta", atividades: [{type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando os Rios do Brasil'}, {type: 'custom', titulo: 'Discussão sobre Poluição', desc: 'Mostrar imagens de rios limpos e poluídos e discutir as causas e consequências.'}]},
-                { dia: "Sexta-feira", foco: "Somos Guardiões da Água", atividades: [{type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História sobre a Gotinha Viajante'}, {type: 'custom', titulo: 'Cartaz Coletivo', desc: 'Criar um cartaz com dicas e desenhos sobre como economizar água em casa e na escola.'}]},
-            ]
-        }
-    ];
-    /**************************************************************
-     * FIM DA SEÇÃO DE PLANOS DE AULA SEMANAIS PRONTOS
-     **************************************************************/
-    
+    const usuariosAutorizados = [ { usuario: "prof.teste", senha: "222" }, { usuario: "demo", senha: "123" }, { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" } ];
+    const todasAsAtividades = [ { id: 1, categoria: "Interpessoal", cor: "#3b82f6", titulo: "Duas Verdades, Uma Mentira", desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", duracao: "10 min", bncc: ["EI03EO04", "EI03EF01"], objetivos: [ "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.", "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.", "Desenvolver a escuta atenta e o respeito pela vez de falar do colega." ], roteiro: { acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.", desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.", expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.", encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros." }, dica_pedagogica: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo." }, { id: 2, categoria: "Português", cor: "#ef4444", titulo: "Criador de Histórias", desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", duracao: "20 min", bncc: ["EF15LP05", "EF02LP26"], objetivos: [ "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.", "Desenvolver a criatividade e a imaginação.", "Ampliar o vocabulário e a organização do pensamento lógico." ], roteiro: { acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.", desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.", expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.", encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala." }, dica_pedagogica: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!" }, { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01", "EF01MA08"], objetivos: [ "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.", "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.", "Desenvolver o raciocínio lógico e estratégias de resolução de problemas." ], roteiro: { acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.", desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.", expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.", encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação." }, dica_pedagogica: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!" }, { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", duracao: "25 min", bncc: ["EF08CI01", "EF69LP13"], objetivos: [ "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.", "Exercitar a escuta ativa e o respeito a opiniões divergentes.", "Diferenciar fatos de opiniões em um texto ou discussão." ], roteiro: { acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).", desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.", expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.", encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico." }, dica_pedagogica: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate." }, { id: 5, free: true, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08", "EF01LP02"], objetivos: [ "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.", "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.", "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas." ], roteiro: { acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).", desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.", expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.", encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'." }, dica_pedagogica: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes." }, { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04", "EF15AR05"], objetivos: [ "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.", "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.", "Aprimorar a coordenação motora fina e a percepção tátil." ], roteiro: { acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.", desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.", expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.", encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais." }, dica_pedagogica: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo." }, { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09", "EF01GE08"], objetivos: [ "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.", "Desenvolver noções de lateralidade, localização e representação espacial.", "Compreender a função de um mapa como forma de representação de um lugar." ], roteiro: { acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.", desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).", expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.", encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido." }, dica_pedagogica: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente." }, { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01", "EF01HI04"], objetivos: [ "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.", "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.", "Valorizar sua própria história e a de seus familiares." ], roteiro: { acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.", desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.", expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).", encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'." }, dica_pedagogica: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade." } ];
+    const planosSemanaisProntos = [ { id: "semanal-infantil-bebes-01", titulo: "Texturas e Sensações", anoEscolar: "Ed. Infantil (Bebês 0-1,6a)", descricao: "Uma semana focada na exploração tátil e sensorial, fundamental para o desenvolvimento dos bebês, com atividades seguras e estimulantes.", objetivosGerais: ["Ampliar o repertório sensorial.", "Desenvolver a coordenação motora.", "Estimular a curiosidade através da exploração de diferentes materiais."], planoDiario: [ { dia: "Segunda-feira", foco: "Mãos e Pés", atividades: [{ type: 'custom', titulo: 'Caminho de Sensações', desc: 'Criar um tapete no chão com diferentes texturas (algodão, E.V.A., plástico bolha, grama sintética) para os bebês engatinharem ou andarem sobre ele.' }] }, { dia: "Terça-feira", foco: "Natureza", atividades: [{ type: 'custom', titulo: 'Cesto de Tesouros da Natureza', desc: 'Oferecer um cesto com folhas secas, pinhas, galhos lisos (higienizados e seguros) para exploração livre.' }] }, { dia: "Quarta-feira", foco: "Gelado e Quente", atividades: [{ type: 'custom', titulo: 'Pintura com Gelo Colorido', desc: 'Congelar água com corante alimentício em formas de picolé. Oferecer para que pintem em uma cartolina grande.' }] }, { dia: "Quinta-feira", foco: "Comestível", atividades: [{ type: 'custom', titulo: 'Exploração com Gelatina', desc: 'Preparar uma grande bacia de gelatina (sem açúcar) para que os bebês possam tocar, sentir a textura e experimentar com segurança.' }] }, { dia: "Sexta-feira", foco: "Macio e Fofo", atividades: [{ type: 'custom', titulo: 'Guerra de Pompons', desc: 'Em um ambiente seguro, espalhar pompons de lã coloridos de vários tamanhos para que os bebês possam pegar, sentir e brincar.' }] }, ] }, { id: "semanal-infantil-pequenos-01", titulo: "O Mundo dos Animais", anoEscolar: "Ed. Infantil (Crianças 1,7-3,11a)", descricao: "Uma imersão no reino animal, explorando sons, movimentos e habitats de diferentes bichos, promovendo a linguagem e a expressão corporal.", objetivosGerais: ["Imitar sons e movimentos de animais.", "Ampliar o vocabulário com nomes de animais.", "Desenvolver o respeito pela natureza e pelos seres vivos."], planoDiario: [ { dia: "Segunda-feira", foco: "Animais da Fazenda", atividades: [{ type: 'custom', titulo: 'Sons da Fazendinha', desc: 'Cantar músicas como "Seu Lobato" e imitar os sons dos animais. Usar fantoches ou miniaturas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando Ovelhinhas'}] }, { dia: "Terça-feira", foco: "Animais da Selva", atividades: [{ type: 'custom', titulo: 'Circuito Motor da Selva', desc: 'Criar um percurso com obstáculos: "pular como o macaco", "rastejar como a cobra", "andar pesado como o elefante".' }] }, { dia: "Quarta-feira", foco: "Animais Aquáticos", atividades: [{ type: 'custom', titulo: 'Pintura com as Mãos: Polvo', desc: 'Pintar a palma da mão da criança com tinta guache e carimbar no papel. Os dedos formam os tentáculos do polvo.' }, { type: 'custom', titulo: 'História: O Peixinho Dourado' }] }, { dia: "Quinta-feira", foco: "Insetos e Bichos de Jardim", atividades: [{ type: 'custom', titulo: 'Observação com Lupa', desc: 'Levar as crianças ao jardim para procurar formigas, joaninhas e outros pequenos seres com lupas.' }] }, { dia: "Sexta-feira", foco: "Festa dos Animais", atividades: [{ type: 'custom', titulo: 'Baile à Fantasia Animal', desc: 'Confeccionar máscaras de animais com pratos de papel e realizar um baile onde cada um imita o seu bicho.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'Criando a História da nossa Festa' }] }, ] }, { id: "semanal-infantil-01", titulo: "Explorando os Cinco Sentidos", anoEscolar: "Ed. Infantil (Crianças 4-5,11a)", descricao: "Uma semana de descobertas sensoriais para explorar o mundo através da visão, audição, olfato, paladar e tato de forma lúdica e interativa.", objetivosGerais: ["Identificar e nomear os cinco sentidos.", "Desenvolver a percepção sensorial através de atividades práticas.", "Estimular a curiosidade e a capacidade de observação e descrição."], planoDiario: [ { dia: "Segunda-feira", foco: "Visão", atividades: [ { type: 'custom', titulo: 'Roda de Conversa: O que vemos?', desc: 'Apresentar o tema da semana. Perguntar às crianças o que elas conseguem ver na sala, pela janela, etc. Explorar cores e formas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando o que Vemos' }, { type: 'custom', titulo: 'Caça às Cores', desc: 'Pedir que encontrem objetos de uma cor específica (vermelho, azul, etc.) na sala de aula.' } ] }, { dia: "Terça-feira", foco: "Audição", atividades: [ { type: 'custom', titulo: 'Sons Misteriosos', desc: 'Produzir diferentes sons atrás de um pano (sino, chocalho, palmas, papel amassando) e pedir que adivinhem o que é.' }, { type: 'custom', titulo: 'Estátua Musical', desc: 'Dançar livremente com uma música e ficar imóvel quando ela para. Trabalha a atenção auditiva.' } ] }, { dia: "Quarta-feira", foco: "Tato", atividades: [ { type: 'custom', titulo: 'Caixa Surpresa do Tato', desc: 'Colocar diferentes objetos (algodão, lixa, esponja, folha seca) em uma caixa e pedir que as crianças, de olhos vendados, descrevam a textura.' }, { type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando a Sala com as Mãos' } ] }, { dia: "Quinta-feira", foco: "Olfato e Paladar", atividades: [ { type: 'custom', titulo: 'Cheirinhos da Natureza', desc: 'Trazer potinhos com diferentes aromas (café, cravo, hortelã, casca de laranja) para que sintam e tentem identificar.' }, { type: 'custom', titulo: 'Degustação às Cegas', desc: 'Oferecer pequenos pedaços de frutas (banana, maçã, laranja) para que provem de olhos vendados e adivinhem o que é.' } ] }, { dia: "Sexta-feira", foco: "Integração dos Sentidos", atividades: [ { type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História Sensorial' }, { type: 'custom', titulo: 'Circuito Sensorial', desc: 'Montar um caminho no chão com diferentes texturas para andar descalço (tapetes, grama sintética, plástico bolha) enquanto ouvem uma música relaxante.' } ] } ] }, { id: "semanal-fundamental-01", titulo: "Semana da Consciência Fonológica", anoEscolar: "1º Ano - Fundamental", descricao: "Uma semana intensiva e divertida focada no desenvolvimento das habilidades de consciência fonológica, essenciais para o processo de alfabetização.", objetivosGerais: ["Desenvolver a consciência de sílabas, rimas e aliterações.", "Segmentar palavras em sílabas oralmente.", "Associar fonemas a grafemas em atividades lúdicas."], planoDiario: [ { dia: "Segunda-feira", foco: "Rimas", atividades: [ { type: 'catalog', id: 1, tituloPersonalizado: 'Apresentação com Rimas' }, { type: 'custom', titulo: 'Bingo de Rimas', desc: 'A professora fala uma palavra (ex: PÃO) e os alunos marcam na cartela uma figura que rime (ex: MÃO).' } ] }, { dia: "Terça-feira", foco: "Sílabas", atividades: [ { type: 'catalog', id: 5 }, { type: 'custom', titulo: 'Quantas Sílabas Tem?', desc: 'Mostrar figuras e pedir que batam palmas para cada sílaba, registrando o número no quadro.' } ] }, { dia: "Quarta-feira", foco: "Aliteração (Som Inicial)", atividades: [ { type: 'custom', titulo: 'O Barco Carregado de...', desc: 'Iniciar a brincadeira: "O barco veio carregado de coisas com a letra B...". As crianças devem falar palavras que comecem com o som /b/.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'História com Aliteração' } ] }, { dia: "Quinta-feira", foco: "Formação de Palavras", atividades: [ { type: 'custom', titulo: 'Sopa de Letrinhas', desc: 'Entregar um prato com letras móveis e pedir que formem palavras que a professora ditar ou palavras que conhecem.' } ] }, { dia: "Sexta-feira", foco: "Revisão Lúdica", atividades: [ { type: 'catalog', id: 8, tituloPersonalizado: 'A Linha do Tempo dos Sons' }, { type: 'custom', titulo: 'Gincana Fonológica', desc: 'Dividir a turma em equipes e realizar desafios rápidos envolvendo rimas, sílabas e aliterações.' } ] } ] }, { id: "semanal-fundamental-02", titulo: "Viagem pelo Sistema Monetário", anoEscolar: "2º Ano - Fundamental", descricao: "Uma introdução prática e significativa ao sistema monetário brasileiro, desenvolvendo habilidades de contagem, soma, subtração e educação financeira.", objetivosGerais: ["Reconhecer cédulas e moedas do sistema monetário brasileiro.", "Resolver problemas simples envolvendo compra e venda.", "Compreender o valor do dinheiro e a importância de poupar."], planoDiario: [ { dia: "Segunda-feira", foco: "Conhecendo o Dinheiro", atividades: [{type: 'custom', titulo: 'Explorando as Cédulas e Moedas', desc: 'Apresentar réplicas de dinheiro. Deixar que manipulem, observem os detalhes (animais, tamanhos, cores) e conversem sobre o que sabem.'}]}, { dia: "Terça-feira", foco: "Quanto Custa?", atividades: [{type: 'catalog', id: 3, tituloPersonalizado: 'Problema: As Compras de João'}, {type: 'custom', titulo: 'Mercadinho da Turma', desc: 'Montar um pequeno mercado com embalagens vazias e preços. Em duplas, os alunos recebem uma quantia e devem comprar produtos.'}]}, { dia: "Quarta-feira", foco: "Calculando o Troco", atividades: [{type: 'custom', titulo: 'Simulação de Troco', desc: 'Continuar com o mercadinho, mas agora o foco é em pagar e calcular o troco. A professora atua como caixa.'}]}, { dia: "Quinta-feira", foco: "De Onde Vem o Dinheiro?", atividades: [{type: 'custom', titulo: 'Roda de Conversa: Trabalho e Dinheiro', desc: 'Conversar sobre as profissões dos pais e como o trabalho gera renda para a família.'}, {type: 'catalog', id: 2, tituloPersonalizado: 'História: O Cofrinho Mágico'}]}, { dia: "Sexta-feira", foco: "Dia de Poupar", atividades: [{type: 'custom', titulo: 'Construindo um Cofrinho', desc: 'Usar garrafas PET ou latas para confeccionar um cofrinho. Conversar sobre metas e o que gostariam de comprar se poupassem.'}]}, ] }, { id: "semanal-fundamental-03", titulo: "Ciclo da Água e a Natureza", anoEscolar: "3º Ano - Fundamental", descricao: "Uma semana de investigação científica sobre o ciclo da água, seus estados físicos e a importância vital da água para os seres vivos e o planeta.", objetivosGerais: ["Compreender as etapas do ciclo da água (evaporação, condensação, precipitação).", "Identificar os estados físicos da água.", "Conscientizar-se sobre o uso consciente e a preservação da água."], planoDiario: [ { dia: "Segunda-feira", foco: "Estados da Água", atividades: [{type: 'custom', titulo: 'Experimento: Gelo que Vira Água, Água que Vira Vapor', desc: 'Mostrar um cubo de gelo derretendo e depois aquecer a água (com segurança) para mostrar o vapor.'}, {type: 'catalog', id: 4, tituloPersonalizado: 'Debate: Como economizar água?'}]}, { dia: "Terça-feira", foco: "Evaporação", atividades: [{type: 'custom', titulo: 'Experimento: O Sol e a Roupa no Varal', desc: 'Molhar dois panos iguais. Colocar um no sol e outro na sombra. Observar qual seca mais rápido e discutir o porquê.'}]}, { dia: "Quarta-feira", foco: "Condensação e Precipitação", atividades: [{type: 'custom', titulo: 'Simulando a Chuva', desc: 'Colocar água quente em um pote de vidro, tampar com um prato e colocar gelo sobre o prato. Observar as gotículas se formando e caindo.'}]}, { dia: "Quinta-feira", foco: "A Água no Planeta", atividades: [{type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando os Rios do Brasil'}, {type: 'custom', titulo: 'Discussão sobre Poluição', desc: 'Mostrar imagens de rios limpos e poluídos e discutir as causas e consequências.'}]}, { dia: "Sexta-feira", foco: "Somos Guardiões da Água", atividades: [{type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História sobre a Gotinha Viajante'}, {type: 'custom', titulo: 'Cartaz Coletivo', desc: 'Criar um cartaz com dicas e desenhos sobre como economizar água em casa e na escola.'}]}, ] } ];
     document.addEventListener('DOMContentLoaded', function() {
         const appState = {
-            currentView: 'planosSemanais', // MODIFICADO: Começa na nova tela!
+            currentView: 'planosSemanais',
             searchQuery: '', 
             activeFilter: 'Todos', 
-            activePlanoFilter: 'Todos', // NOVO: Filtro para os planos semanais
+            activePlanoFilter: 'Todos',
             currentPage: 1, 
             itemsPerPage: 6,
             favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || [],
@@ -1058,26 +709,18 @@
             menuToggle: document.getElementById('menu-toggle'),
             sidebar: document.getElementById('sidebar'),
             sidebarOverlay: document.getElementById('sidebar-overlay'),
-            
-            // Views
             catalogView: document.getElementById('catalog-view'),
             aulaMakerSection: document.getElementById('aula-maker-section'),
             planosSemanaisView: document.getElementById('planos-semanais-view'),
             planosSemanaisGrid: document.getElementById('planos-semanais-grid'),
             planosSemanaisFilters: document.getElementById('planos-semanais-filters'),
-
-            // Catalog elements
             searchInput: document.getElementById('search-input'),
             filters: document.getElementById('filters-container'),
             grid: document.getElementById('activities-grid-container'),
             pagination: document.getElementById('pagination-container'),
             resultsInfo: document.getElementById('results-info'),
-            
-            // Navigation Buttons
             navAulaMakerBtn: document.getElementById('nav-aula-maker-btn'),
             navPlanosSemanaisBtn: document.getElementById('nav-planos-semanais-btn'),
-
-            // Aula Maker elements
             makerTitleInput: document.getElementById('maker-title'),
             makerGradeInput: document.getElementById('maker-grade'),
             makerThemeInput: document.getElementById('maker-theme'),
@@ -1086,8 +729,6 @@
             selectedActivitiesList: document.getElementById('selected-activities-list'),
             noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
             clearPlanBtn: document.getElementById('clear-plan-btn'),
-            
-            // New Aula Maker action buttons
             addCatalogActivityBtn: document.getElementById('add-catalog-activity-btn'),
             addCustomActivityInlineBtn: document.getElementById('add-custom-activity-inline-btn'),
             customActivityForm: document.getElementById('custom-activity-form'),
@@ -1148,13 +789,10 @@
                 </div>
                 <div class="modal-body">
                     <p>${activity.desc}</p>
-                    
                     <h3>Objetivos de Aprendizagem</h3>
                     <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
-
                     <h3>Códigos da BNCC</h3>
                     <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
-
                     <h3>Roteiro da Aula</h3>
                     <ol class="roteiro-passos">
                         <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
@@ -1162,8 +800,7 @@
                         <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
                         <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
                     </ol>
-                    
-                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
+                    ${activity.dica_pedagogica ? `<div class="dica-pedagogica"><p><strong>💡 Dica Pedagógica:</strong> ${activity.dica_pedagogica}</p></div>` : ''}
                 </div>
                 <div class="modal-footer">
                     <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
@@ -1180,41 +817,9 @@
             });
         }
         
-        function setupLoginScreenPreview() {
-            const previewContainer = document.getElementById('preview-grid-container');
-            if (!previewContainer) return;
-
-            const freeActivity = todasAsAtividades.find(a => a.free);
-            const otherActivities = todasAsAtividades.filter(a => !a.free);
-            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
-            
-            let previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)].filter(Boolean);
-            previewActivities.sort(() => 0.5 - Math.random());
-
-            let previewHTML = '';
-            previewActivities.forEach(activity => {
-                if (activity.free) {
-                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
-                } else {
-                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
-                }
-                previewHTML += `
-                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
-                    <div class="preview-card-content">
-                        <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                        <h3>${activity.titulo}</h3>
-                        <p>${activity.desc}</p>
-                    </div>
-                    ${!activity.free ? `<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>` : ''}
-                </div>`;
-            });
-            previewContainer.innerHTML = previewHTML;
-
-            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
-                card.addEventListener('click', function() {
-                    openModal(parseInt(this.dataset.id));
-                });
-            });
+        function setupLoginScreen() {
+            // A antiga função de preview foi integrada na landing page, essa função agora só garante que a tela de login seja exibida.
+            // Se um usuário já estiver logado, a main() cuidará de pular isso.
         }
 
         function initializePanel(username) {
@@ -1229,7 +834,6 @@
         function setupEventListeners() {
             dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
             
-            // Navigation - ATUALIZADO
             dom.navPlanosSemanaisBtn.addEventListener('click', () => {
                 appState.currentView = 'planosSemanais';
                 render();
@@ -1242,16 +846,13 @@
                 document.body.classList.remove('sidebar-open');
             });
 
-            // Catalog Listeners
             dom.searchInput.addEventListener('input', () => { 
                 appState.searchQuery = dom.searchInput.value.toLowerCase(); 
                 appState.currentPage = 1; 
-                // A busca só ativa a visualização do catálogo
                 appState.currentView = 'catalog';
                 render();
             });
 
-            // Aula Maker Listeners
             dom.addCatalogActivityBtn.addEventListener('click', openSelectActivitiesModal);
             dom.addCustomActivityInlineBtn.addEventListener('click', () => {
                 dom.customActivityForm.classList.toggle('hidden');
@@ -1273,13 +874,12 @@
         }
 
         function render() {
-            // Lógica de troca de visualização - ATUALIZADA
             dom.catalogView.classList.add('hidden');
             dom.aulaMakerSection.classList.add('hidden');
             dom.planosSemanaisView.classList.add('hidden');
             dom.navPlanosSemanaisBtn.classList.remove('active');
             dom.navAulaMakerBtn.classList.remove('active');
-            document.getElementById('catalog-section').style.opacity = '0.6'; // Diminui opacidade de outras seções
+            document.getElementById('catalog-section').style.opacity = '0.6';
 
             if (appState.currentView === 'aulaMaker') {
                 dom.aulaMakerSection.classList.remove('hidden');
@@ -1289,7 +889,7 @@
                 dom.planosSemanaisView.classList.remove('hidden');
                 dom.navPlanosSemanaisBtn.classList.add('active');
                 renderPlanosSemanais();
-            } else { // 'catalog' view
+            } else { 
                 dom.catalogView.classList.remove('hidden');
                 document.getElementById('catalog-section').style.opacity = '1';
                 renderCatalog();
@@ -1325,14 +925,13 @@
                 btn.className = 'filter-btn';
                 if (isFavorite) btn.classList.add('favorite-btn');
                 
-                // O botão de filtro do catálogo fica ativo apenas na visão de catálogo
                 if (appState.currentView === 'catalog' && appState.activeFilter === filterValue) {
                     btn.classList.add('active');
                 }
 
                 btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
                 btn.onclick = () => { 
-                    appState.currentView = 'catalog'; // Clicar em um filtro de atividade sempre muda para a visão do catálogo
+                    appState.currentView = 'catalog';
                     appState.activeFilter = filterValue; 
                     appState.currentPage = 1; 
                     render(); 
@@ -1431,8 +1030,6 @@
             }
         }
 
-        // --- AULA MAKER FUNCTIONS ---
-
         function clearLessonPlan() {
             if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
                 appState.makerPlanTitle = '';
@@ -1495,7 +1092,6 @@
                     if (activityData) {
                         const listItem = document.createElement('li');
                         listItem.className = 'selected-activity-item';
-                        // Adiciona um estilo especial para os cabeçalhos de dia da semana
                         if (activityData.titulo.startsWith('---')) {
                            listItem.style.backgroundColor = 'var(--background-color)';
                            listItem.style.fontWeight = 'bold';
@@ -1504,7 +1100,7 @@
                         }
                         
                         listItem.innerHTML = `
-                            <span>${activityData.titulo} <em style="color: var(--text-color-light); font-size: 0.9em;">${activityData.categoria ? `(${activityData.categoria})` : ''}</em></span>
+                            <span>${activityData.titulo} <em style="color: var(--text-color-light); font-size: 0.9em;">${activityData.categoria && activityData.categoria !== 'Divisor' ? `(${activityData.categoria})` : ''}</em></span>
                             <div class="activity-controls">
                                 <button class="reorder-btn" data-index="${index}" data-direction="up" title="Mover para cima">↑</button>
                                 <button class="reorder-btn" data-index="${index}" data-direction="down" title="Mover para baixo">↓</button>
@@ -1681,12 +1277,12 @@
                         const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
                         
                         if (activityData) {
-                            if (yOffset > doc.internal.pageSize.height - 150) {
+                            if (yOffset > doc.internal.pageSize.height - 100) {
                                 doc.addPage();
                                 yOffset = 60;
                             }
 
-                            if(activityData.titulo.startsWith('---')) { // Estilo para cabeçalho do dia
+                            if(activityData.titulo.startsWith('---')) {
                                 doc.setFont('Helvetica', 'bold');
                                 doc.setFontSize(14);
                                 doc.setTextColor(177, 156, 217);
@@ -1696,174 +1292,3 @@
                             }
 
                             doc.setFont('Helvetica', 'bold');
-                            doc.setFontSize(14);
-                            doc.setTextColor(108, 91, 123);
-                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria || 'Personalizada'})`, margin, yOffset);
-                            yOffset += lineHeight * 1.2;
-
-                            doc.setFont('Helvetica', 'normal');
-                            doc.setFontSize(11);
-                            doc.setTextColor(51, 61, 73);
-
-                            let descText = activityData.desc || (isCustom ? 'Nenhuma descrição fornecida.' : '');
-                            if (activity.tituloPersonalizado) { // Adiciona o título personalizado se houver
-                                descText = `${activity.tituloPersonalizado}: ${descText}`;
-                            }
-
-                            const descLines = doc.splitTextToSize(`Descrição: ${descText}`, maxWidth);
-                            doc.text(descLines, margin, yOffset);
-                            yOffset += descLines.length * (lineHeight - 4);
-                            
-                            if (!isCustom) {
-                                yOffset += 10;
-                                doc.setFont('Helvetica', 'bold');
-                                doc.text('Objetivos:', margin, yOffset);
-                                yOffset += lineHeight;
-                                doc.setFont('Helvetica', 'normal');
-                                activityData.objetivos.forEach(obj => {
-                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
-                                    if(yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
-                                        doc.addPage();
-                                        yOffset = 60;
-                                    }
-                                    doc.text(objLines, margin + 10, yOffset);
-                                    yOffset += objLines.length * (lineHeight - 4);
-                                });
-                            }
-                            yOffset += 25;
-                        }
-                    });
-                }
-
-                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
-                doc.save(fileName);
-
-            } catch (error) {
-                console.error("Ocorreu um erro ao gerar o PDF do plano de aula:", error);
-                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.");
-            }
-        }
-
-        // --- NOVAS FUNÇÕES PARA OS PLANOS SEMANAIS ---
-
-        function renderPlanosSemanais() {
-            // 1. Renderizar os filtros de ano escolar
-            const anosEscolares = ['Todos', ...new Set(planosSemanaisProntos.map(p => p.anoEscolar))];
-            dom.planosSemanaisFilters.innerHTML = '<span style="font-weight: 600; color: var(--text-color-light); font-size: 0.9rem; margin-right: 8px;">Filtrar por ano:</span>';
-            anosEscolares.forEach(ano => {
-                const btn = document.createElement('button');
-                btn.textContent = ano;
-                btn.className = `pagination-btn ${appState.activePlanoFilter === ano ? 'active' : ''}`;
-                btn.style.height = '36px';
-                btn.style.minWidth = '36px';
-                btn.style.padding = '0 12px';
-                btn.onclick = () => {
-                    appState.activePlanoFilter = ano;
-                    renderPlanosSemanais();
-                };
-                dom.planosSemanaisFilters.appendChild(btn);
-            });
-
-            // 2. Filtrar e renderizar os cards dos planos
-            let planosFiltrados = planosSemanaisProntos;
-            if (appState.activePlanoFilter !== 'Todos') {
-                planosFiltrados = planosSemanaisProntos.filter(p => p.anoEscolar === appState.activePlanoFilter);
-            }
-
-            dom.planosSemanaisGrid.innerHTML = '';
-            if (planosFiltrados.length === 0) {
-                dom.planosSemanaisGrid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center;">Nenhum plano semanal encontrado para este filtro.</p>`;
-                return;
-            }
-
-            planosFiltrados.forEach(plano => {
-                const card = document.createElement('div');
-                card.className = 'activity-card';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div class="card-category" style="background-color: var(--secondary-color);">${plano.anoEscolar}</div>
-                    </div>
-                    <div class="card-content" style="padding-bottom: 1rem;">
-                        <h3 style="font-size: 1.3rem;">${plano.titulo}</h3>
-                        <p>${plano.descricao}</p>
-                    </div>
-                    <div class="card-footer">
-                        <span>📅 5 Dias</span>
-                        <button class="open-modal-btn" data-plano-id="${plano.id}">Usar este Plano</button>
-                    </div>
-                `;
-                dom.planosSemanaisGrid.appendChild(card);
-            });
-            
-            // 3. Adicionar listener para o botão "Usar este Plano"
-            dom.planosSemanaisGrid.querySelectorAll('.open-modal-btn').forEach(btn => {
-                btn.onclick = () => {
-                    if (appState.selectedActivitiesForMaker.length > 0 && !confirm("Isso substituirá seu plano atual no gerador. Deseja continuar?")) {
-                        return;
-                    }
-                    loadPlanoIntoMaker(btn.dataset.planoId);
-                }
-            });
-        }
-        
-        function loadPlanoIntoMaker(planoId) {
-            const plano = planosSemanaisProntos.find(p => p.id === planoId);
-            if (!plano) return;
-
-            // 1. Preencher os campos de texto do gerador
-            appState.makerPlanTitle = plano.titulo;
-            appState.makerPlanGrade = plano.anoEscolar;
-            appState.makerPlanTheme = `Baseado no plano: "${plano.titulo}"`;
-            appState.makerPlanNotes = `Objetivos Gerais da Semana:\n- ${plano.objetivosGerais.join('\n- ')}`;
-
-            // 2. Construir a nova lista de atividades para o gerador
-            const atividadesParaMaker = [];
-            plano.planoDiario.forEach(dia => {
-                // Adiciona um separador para o dia da semana
-                atividadesParaMaker.push({
-                    type: 'custom',
-                    id: `custom_header_${dia.dia.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`,
-                    titulo: `--- ${dia.dia} (Foco: ${dia.foco}) ---`,
-                    desc: '',
-                    categoria: 'Divisor'
-                });
-                // Adiciona as atividades do dia
-                dia.atividades.forEach(atividade => {
-                    atividadesParaMaker.push(atividade);
-                });
-            });
-            
-            appState.selectedActivitiesForMaker = atividadesParaMaker;
-            
-            // 3. Mudar para a tela do gerador e renderizar tudo
-            appState.currentView = 'aulaMaker';
-            render();
-            
-            window.scrollTo(0,0);
-        }
-
-        // --- INICIALIZAÇÃO ---
-        (function main() {
-            setupLoginScreenPreview();
-
-            const savedUser = localStorage.getItem('usuarioLogado');
-            if (savedUser) {
-                initializePanel(savedUser);
-            }
-            dom.loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const user = e.target.elements['username-input'].value.trim();
-                const pass = e.target.elements['password-input'].value.trim();
-                const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
-                if (found) {
-                    localStorage.setItem('usuarioLogado', found.usuario);
-                    initializePanel(found.usuario);
-                } else {
-                    document.getElementById('login-error').classList.remove('hidden');
-                }
-            });
-        })();
-    });
-    </script>
-</body>
-</html>
