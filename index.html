@@ -364,7 +364,6 @@
     </div>
 
     <script>
-    // Base de dados
     const usuariosAutorizados = [
         { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
         { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
@@ -396,10 +395,9 @@
         };
 
         // ======================================================
-        // INÍCIO DA CORREÇÃO: Função movida para dentro do escopo
+        // INÍCIO DA CORREÇÃO: TODAS AS FUNÇÕES DA APLICAÇÃO ESTÃO AQUI DENTRO
         // ======================================================
         function generatePdf(activityId) {
-            // Verificação de segurança para a biblioteca jsPDF
             if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
                 console.error("A biblioteca jsPDF não foi carregada corretamente.");
                 alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
@@ -435,9 +433,6 @@
                 alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
             }
         }
-        // ======================================================
-        // FIM DA CORREÇÃO
-        // ======================================================
 
         function closeModal() {
             dom.modal.classList.remove('show'); 
@@ -683,6 +678,9 @@
                 }
             });
         })();
+        // ======================================================
+        // FIM DA CORREÇÃO
+        // ======================================================
     });
     </script>
 </body>
