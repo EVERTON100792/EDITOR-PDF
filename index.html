@@ -254,8 +254,8 @@
         .favorite-icon:hover { transform: scale(1.15); }
         .card-content { padding: 0 1.5rem; flex-grow: 1; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; }
-        .card-footer-info { display: flex; align-items: center; gap: 0.75rem; }
-        .card-footer-info .icon { width: 20px; height: 20px; fill: var(--text-color-light); }
+        .card-footer-info { display: flex; align-items: center; gap: 0.75rem; color: var(--text-color-light); }
+        .card-footer-info .icon { width: 20px; height: 20px; fill: currentColor; }
         .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; }
         #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; }
         .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
@@ -336,7 +336,7 @@
                 <form id="login-form">
                     <input type="text" id="username-input" placeholder="Usuário" required>
                     <input type="password" id="password-input" placeholder="Senha" required>
-                    <button type="submit">Entrar &rarr;</button>
+                    <button type="submit">Entrar →</button>
                     <p id="login-error" class="hidden">Usuário ou senha inválidos.</p>
                 </form>
                 <div class="login-footer">
@@ -389,20 +389,37 @@
         { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
         { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
     ];
-    // =====================================================================
-    // ATIVIDADES ENRIQUECIDAS COM A NOVA ESTRUTURA DE DADOS
-    // =====================================================================
+    
     const todasAsAtividades = [
-        { id: 1, categoria: "Interpessoal", cor: "#3b82f6", titulo: "Duas Verdades, Uma Mentira", desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", duracao: "10 min", bncc: ["EI03EO04"], detalhes: "<h4>Materiais:</h4><p>Nenhum.</p><h4>Passo a Passo:</h4><ol><li>Cada aluno pensa em 3 fatos sobre si: dois verdadeiros e um falso.</li><li>Em roda, cada um compartilha suas três frases.</li><li>O resto da turma tenta adivinhar qual é a mentira.</li></ol>" },
+        { 
+            id: 1, 
+            categoria: "Interpessoal", 
+            cor: "#3b82f6", 
+            titulo: "Duas Verdades, Uma Mentira", 
+            desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", 
+            duracao: "10 min", 
+            bncc: ["EI03EO04", "EI03EF01"],
+            objetivos: [
+                "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.",
+                "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.",
+                "Desenvolver a escuta atenta e o respeito pela vez de falar do colega."
+            ],
+            roteiro: {
+                acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.",
+                desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.",
+                expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
+                encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
+            },
+            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
+        },
         { 
             id: 2, 
             categoria: "Português", 
             cor: "#ef4444", 
             titulo: "Criador de Histórias", 
             desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", 
-            duracao: "15 min", 
+            duracao: "20 min", 
             bncc: ["EF15LP05", "EF02LP26"],
-            // --- NOVOS DADOS ---
             objetivos: [
                 "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.",
                 "Desenvolver a criatividade e a imaginação.",
@@ -417,12 +434,56 @@
             dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!",
             recursos_multimidia: {
                 template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder/edit?usp=sharing"
-            },
-            // --- FIM DOS NOVOS DADOS ---
-            detalhes: "<h4>Materiais:</h4><p>Folha de atividade e lápis.</p><h4>Passo a Passo:</h4><ol><li>Entregue uma folha com 3 elementos: um personagem, um lugar e um objeto.</li><li>Peça para os alunos criarem um microconto usando os três elementos.</li></ol>" 
+            }
         },
-        { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01"], detalhes: "<h4>Materiais:</h4><p>Quadro branco.</p><h4>Exemplo de Problema:</h4><p>Se um tijolo pesa 1kg mais meio tijolo, quanto pesa um tijolo e meio?</p><p><i>(Resposta: 3kg)</i></p>" },
-        { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", duracao: "20 min", bncc: ["EF08CI01"], detalhes: "<h4>Tema Sugerido:</h4><p>'Alimentos transgênicos: risco ou solução?'</p><h4>Passo a Passo:</h4><ol><li>Divida a turma em 'A favor' e 'Contra'.</li><li>Dê 5 minutos para cada grupo listar seus argumentos.</li><li>Inicie o debate com tempo cronometrado.</li></ol>" },
+        { 
+            id: 3, 
+            categoria: "Matemática", 
+            cor: "#f59e0b", 
+            titulo: "O Problema do Dia", 
+            desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", 
+            duracao: "10 min", 
+            bncc: ["EF01MA01", "EF01MA08"],
+            objetivos: [
+                "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.",
+                "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.",
+                "Desenvolver o raciocínio lógico e estratégias de resolução de problemas."
+            ],
+            roteiro: {
+                acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.",
+                desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.",
+                expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
+                encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
+            },
+            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!",
+            recursos_multimidia: {
+                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder_problema/edit?usp=sharing"
+            }
+        },
+        { 
+            id: 4, 
+            categoria: "Ciências", 
+            cor: "#10b981", 
+            titulo: "Mini-Debate Científico", 
+            desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", 
+            duracao: "25 min", 
+            bncc: ["EF08CI01", "EF69LP13"],
+            objetivos: [
+                "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.",
+                "Exercitar a escuta ativa e o respeito a opiniões divergentes.",
+                "Diferenciar fatos de opiniões em um texto ou discussão."
+            ],
+            roteiro: {
+                acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).",
+                desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.",
+                expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
+                encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
+            },
+            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate.",
+            recursos_multimidia: {
+                video: "https://www.youtube.com/embed/videoseries?list=PL_placeholder_debate"
+            }
+        },
         { 
             id: 5, 
             free: true, 
@@ -432,7 +493,6 @@
             desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", 
             duracao: "15 min", 
             bncc: ["EF01LP08", "EF01LP02"],
-            // --- NOVOS DADOS ---
             objetivos: [
                 "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.",
                 "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.",
@@ -446,14 +506,81 @@
             },
             dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes.",
             recursos_multimidia: {
-                video: "https://www.youtube.com/embed/dQw4w9WgXcQ" // Placeholder video
-            },
-            // --- FIM DOS NOVOS DADOS ---
-            detalhes: "<h4>Materiais:</h4><p>Folha impressa, tesoura e cola.</p><h4>Passo a Passo:</h4><ol><li>A folha contém figuras (ex: BOLA) e as sílabas embaralhadas ('LA', 'BO').</li><li>A criança recorta e cola as sílabas na ordem correta.</li></ol>" 
+                video: "https://www.youtube.com/embed/placeholder_silabas"
+            }
         },
-        { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04"], detalhes: "<h4>Tema:</h4><p>Meu Animal Fantástico</p><h4>Passo a Passo:</h4><ol><li>Distribua massinha de modelar.</li><li>Peça para cada aluno criar um animal que não existe no mundo real.</li><li>Faça uma exposição das esculturas.</li></ol>" },
-        { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09"], detalhes: "<h4>Materiais:</h4><p>Cartolina e lápis de cor.</p><h4>Passo a Passo:</h4><ol><li>Discuta com a turma como seria ver a sala de aula de cima.</li><li>No papel, desenhe o contorno da sala e peça para as crianças desenharem os móveis.</li></ol>" },
-        { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01"], detalhes: "<h4>Materiais:</h4><p>Folha, régua, fotos ou desenhos.</p><h4>Passo a Passo:</h4><ol><li>Peça para a criança listar 5 eventos importantes de sua vida (nascimento, etc.).</li><li>Ajude-a a desenhar uma linha e a marcar os eventos em ordem.</li></ol>" }
+        { 
+            id: 6, 
+            categoria: "Artes", 
+            cor: "#db2777", 
+            titulo: "Escultura com Massinha", 
+            desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", 
+            duracao: "25 min", 
+            bncc: ["EF15AR04", "EF15AR05"],
+            objetivos: [
+                "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.",
+                "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.",
+                "Aprimorar a coordenação motora fina e a percepção tátil."
+            ],
+            roteiro: {
+                acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.",
+                desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.",
+                expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
+                encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
+            },
+            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo.",
+             recursos_multimidia: {
+                video: "https://www.youtube.com/embed/placeholder_escultura"
+            }
+        },
+        { 
+            id: 7, 
+            categoria: "Geografia", 
+            cor: "#475569", 
+            titulo: "Mapa da Sala de Aula", 
+            desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", 
+            duracao: "30 min", 
+            bncc: ["EF01GE09", "EF01GE08"],
+            objetivos: [
+                "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.",
+                "Desenvolver noções de lateralidade, localização e representação espacial.",
+                "Compreender a função de um mapa como forma de representação de um lugar."
+            ],
+            roteiro: {
+                acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.",
+                desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).",
+                expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
+                encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
+            },
+            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente.",
+            recursos_multimidia: {
+                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder_mapa/edit?usp=sharing"
+            }
+        },
+        { 
+            id: 8, 
+            categoria: "História", 
+            cor: "#d97706", 
+            titulo: "Linha do Tempo Pessoal", 
+            desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", 
+            duracao: "20 min", 
+            bncc: ["EF01HI01", "EF01HI04"],
+            objetivos: [
+                "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.",
+                "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.",
+                "Valorizar sua própria história e a de seus familiares."
+            ],
+            roteiro: {
+                acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.",
+                desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.",
+                expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
+                encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
+            },
+            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade.",
+            recursos_multimidia: {
+                template_editavel: "https://docs.google.com/presentation/d/1_template_placeholder_timeline/edit?usp=sharing"
+            }
+        }
     ];
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -489,10 +616,18 @@
                 doc.text(activity.titulo, 14, 22);
                 doc.setFontSize(11);
                 doc.setTextColor("#333d49");
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = activity.detalhes;
-                const detailsText = tempDiv.innerText;
-                const detailsLines = doc.splitTextToSize(`Descrição: ${activity.desc}\n\n${detailsText}`, 180);
+
+                // Gera um texto simples baseado no roteiro para o PDF
+                let detailsText = `Descrição: ${activity.desc}\n\n`;
+                if(activity.roteiro) {
+                   detailsText += `Roteiro Sugerido:\n`;
+                   detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n`;
+                   detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n`;
+                   detailsText += `3. Expansão: ${activity.roteiro.expansao}\n`;
+                   detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
+                }
+
+                const detailsLines = doc.splitTextToSize(detailsText, 180);
                 doc.text(detailsLines, 14, 32);
                 doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
             } catch (error) {
@@ -505,92 +640,69 @@
             dom.modal.classList.remove('show'); 
         }
 
-        // ======================================================
-        // FUNÇÃO DO MODAL ATUALIZADA
-        // ======================================================
         function openModal(id) {
             const activity = todasAsAtividades.find(a => a.id === id);
             if (!activity) return;
 
-            // Verifica se é uma atividade com a nova estrutura de dados
-            const isEnriched = activity.objetivos && activity.roteiro;
+            const hasVideo = activity.recursos_multimidia && activity.recursos_multimidia.video;
+            const hasTemplate = activity.recursos_multimidia && activity.recursos_multimidia.template_editavel;
 
-            let modalHTML = '';
-
-            if (isEnriched) {
-                // --- NOVO MODAL COM ABAS ---
-                const hasVideo = activity.recursos_multimidia && activity.recursos_multimidia.video;
-                const hasTemplate = activity.recursos_multimidia && activity.recursos_multimidia.template_editavel;
-
-                modalHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>${activity.titulo}</h2>
-                        <button class="close-button" aria-label="Fechar modal">&times;</button>
+            const modalHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${activity.titulo}</h2>
+                    <button class="close-button" aria-label="Fechar modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-tabs">
+                        <button class="modal-tab-btn active" data-tab="plano">Plano de Aula</button>
+                        ${hasVideo || hasTemplate ? '<button class="modal-tab-btn" data-tab="recursos">Recursos Extras</button>' : ''}
                     </div>
-                    <div class="modal-body">
-                        <div class="modal-tabs">
-                            <button class="modal-tab-btn active" data-tab="plano">Plano de Aula</button>
-                            ${hasVideo || hasTemplate ? '<button class="modal-tab-btn" data-tab="recursos">Recursos Extras</button>' : ''}
-                        </div>
+                    
+                    <div id="plano" class="modal-tab-content active">
+                        <p>${activity.desc}</p>
                         
-                        <div id="plano" class="modal-tab-content active">
-                            <p>${activity.desc}</p>
-                            
-                            <h3>Objetivos de Aprendizagem</h3>
-                            <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+                        <h3>Objetivos de Aprendizagem</h3>
+                        <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
 
-                            <h3>Códigos da BNCC</h3>
-                            <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
+                        <h3>Códigos da BNCC</h3>
+                        <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
 
-                            <h3>Roteiro da Aula</h3>
-                            <ol class="roteiro-passos">
-                                <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
-                                <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
-                                <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
-                                <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
-                            </ol>
-                            
-                            ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
-                        </div>
+                        <h3>Roteiro da Aula</h3>
+                        <ol class="roteiro-passos">
+                            <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
+                            <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
+                            <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
+                            <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
+                        </ol>
                         
-                        <div id="recursos" class="modal-tab-content">
-                            ${hasVideo ? `
-                                <h3>Vídeo de Apoio</h3>
-                                <p>Use este vídeo para introduzir o tema ou como uma atividade complementar.</p>
-                                <div class="video-container">
-                                    <iframe src="${activity.recursos_multimidia.video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>` 
-                            : ''}
-                            ${hasTemplate ? `
-                                <h3 style="${hasVideo ? 'margin-top: 2rem;' : ''}">Template Editável</h3>
-                                <p>Clique no botão abaixo para abrir uma versão editável deste recurso. Você pode personalizar, imprimir ou salvar no seu Google Drive.</p>
-                                <a href="${activity.recursos_multimidia.template_editavel}" target="_blank" class="resource-btn">
-                                    <svg class="icon"><use xlink:href="#icon-template"></use></svg>
-                                    <span>Abrir Template</span>
-                                </a>` 
-                            : ''}
-                        </div>
+                        ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
                     </div>
-                    <div class="modal-footer">
-                        <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
-                    </div>
-                </div>`;
-            } else {
-                // --- MODAL ANTIGO (PARA ATIVIDADES NÃO ATUALIZADAS) ---
-                modalHTML = `
-                <div class="modal-content" style="max-width: 650px;">
-                    <div class="modal-header"><h2>${activity.titulo}</h2><button class="close-button">&times;</button></div>
-                    <div class="modal-body" style="padding: 1.5rem 2.5rem 2.5rem;">
-                         <p>${activity.desc}</p>
-                         <div class="details" style="border-top: 1px solid var(--border-color); margin-top: 1.5rem; padding-top: 1.5rem;">${activity.detalhes}</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="download-btn" data-activity-id="${activity.id}">Baixar Material (PDF)</button>
-                    </div>
-                </div>`;
-            }
-
+                    
+                    ${hasVideo || hasTemplate ? `
+                    <div id="recursos" class="modal-tab-content">
+                        ${hasVideo ? `
+                            <h3>Vídeo de Apoio</h3>
+                            <p>Use este vídeo para introduzir o tema ou como uma atividade complementar.</p>
+                            <div class="video-container">
+                                <iframe src="${activity.recursos_multimidia.video.replace("watch?v=", "embed/")}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>` 
+                        : ''}
+                        ${hasTemplate ? `
+                            <h3 style="${hasVideo ? 'margin-top: 2rem;' : ''}">Template Editável</h3>
+                            <p>Clique no botão abaixo para abrir uma versão editável deste recurso. Você pode personalizar, imprimir ou salvar no seu Google Drive.</p>
+                            <a href="${activity.recursos_multimidia.template_editavel}" target="_blank" class="resource-btn">
+                                <svg class="icon"><use xlink:href="#icon-template"></use></svg>
+                                <span>Abrir Template</span>
+                            </a>` 
+                        : ''}
+                    </div>` : ''}
+                </div>
+                <div class="modal-footer">
+                    <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
+                </div>
+            </div>`;
+            
             dom.modal.innerHTML = modalHTML;
             dom.modal.classList.add('show');
             
@@ -601,19 +713,17 @@
                 generatePdf(parseInt(this.dataset.activityId));
             });
 
-            // Listener das Abas (se for o novo modal)
-            if (isEnriched) {
-                const tabButtons = dom.modal.querySelectorAll('.modal-tab-btn');
-                const tabContents = dom.modal.querySelectorAll('.modal-tab-content');
-                tabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        tabButtons.forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                        tabContents.forEach(content => content.classList.remove('active'));
-                        dom.modal.querySelector(`#${button.dataset.tab}`).classList.add('active');
-                    });
+            // Listener das Abas
+            const tabButtons = dom.modal.querySelectorAll('.modal-tab-btn');
+            const tabContents = dom.modal.querySelectorAll('.modal-tab-content');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    dom.modal.querySelector(`#${button.dataset.tab}`).classList.add('active');
                 });
-            }
+            });
         }
         
         function setupLoginScreenPreview() {
@@ -731,9 +841,6 @@
             addCardListeners();
         }
 
-        // ======================================================
-        // FUNÇÃO DO CARD ATUALIZADA PARA MOSTRAR ÍCONES
-        // ======================================================
         function createActivityCard(activity) {
             const isFavorited = appState.favorites.includes(activity.id);
             const card = document.createElement('article');
@@ -742,11 +849,18 @@
             const hasVideo = activity.recursos_multimidia && activity.recursos_multimidia.video;
             const hasTemplate = activity.recursos_multimidia && activity.recursos_multimidia.template_editavel;
 
-            let footerIconsHTML = `
+            let footerInfoHTML = `
+                <div class="card-footer-info" title="${activity.duracao}">
+                    <span>🕓 ${activity.duracao}</span>
+                </div>`;
+            
+            if (hasVideo || hasTemplate) {
+                 footerInfoHTML = `
                 <div class="card-footer-info">
                     ${hasVideo ? '<svg class="icon" title="Contém vídeo"><use xlink:href="#icon-video"></use></svg>' : ''}
                     ${hasTemplate ? '<svg class="icon" title="Contém template editável"><use xlink:href="#icon-template"></use></svg>' : ''}
                 </div>`;
+            }
             
             card.innerHTML = `
                 <div class="card-header">
@@ -760,7 +874,7 @@
                     <p>${activity.desc}</p>
                 </div>
                 <div class="card-footer">
-                    ${(hasVideo || hasTemplate) ? footerIconsHTML : `<span>🕓 ${activity.duracao}</span>`}
+                    ${footerInfoHTML}
                     <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
                 </div>`;
             return card;
