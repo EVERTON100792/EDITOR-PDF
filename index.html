@@ -122,10 +122,6 @@
             transition: filter 0.3s ease;
         }
         
-        /* ======================================================== */
-        /* == INÍCIO DAS ALTERAÇÕES - ESTILOS PARA ATIVIDADE GRATUITA == */
-        /* ======================================================== */
-        /* Aplica o desfoque apenas nos cards que NÃO são gratuitos */
         .preview-card:not(.free) .preview-card-content {
             filter: blur(2px);
             user-select: none;
@@ -133,7 +129,6 @@
         .preview-card:not(.free):hover .preview-card-content {
             filter: blur(1px);
         }
-        /* Estilo para a faixa "GRÁTIS" */
         .free-badge {
             position: absolute;
             top: 15px;
@@ -147,7 +142,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             z-index: 2;
         }
-        /* Borda de destaque para o card gratuito */
         .preview-card.free {
             border: 2px solid var(--accent-color);
             cursor: pointer;
@@ -155,7 +149,6 @@
         .preview-card.free:hover {
              box-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
         }
-        /* Overlay de cadeado apenas para os que não são gratuitos */
         .preview-card:not(.free) .preview-card-overlay {
             position: absolute;
             top: 0;
@@ -187,9 +180,6 @@
             font-size: 1rem;
             padding: 0 1rem;
         }
-        /* ====================================================== */
-        /* == FIM DAS ALTERAÇÕES - ESTILOS PARA ATIVIDADE GRATUITA == */
-        /* ====================================================== */
 
         .preview-card-category {
             display: inline-block;
@@ -388,7 +378,6 @@
         { id: 2, categoria: "Português", cor: "#ef4444", titulo: "Criador de Histórias", desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", duracao: "15 min", bncc: ["EF15LP05"], detalhes: "<h4>Materiais:</h4><p>Folha de atividade e lápis.</p><h4>Passo a Passo:</h4><ol><li>Entregue uma folha com 3 elementos: um personagem, um lugar e um objeto.</li><li>Peça para os alunos criarem um microconto usando os três elementos.</li></ol>" },
         { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01"], detalhes: "<h4>Materiais:</h4><p>Quadro branco.</p><h4>Exemplo de Problema:</h4><p>Se um tijolo pesa 1kg mais meio tijolo, quanto pesa um tijolo e meio?</p><p><i>(Resposta: 3kg)</i></p>" },
         { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", duracao: "20 min", bncc: ["EF08CI01"], detalhes: "<h4>Tema Sugerido:</h4><p>'Alimentos transgênicos: risco ou solução?'</p><h4>Passo a Passo:</h4><ol><li>Divida a turma em 'A favor' e 'Contra'.</li><li>Dê 5 minutos para cada grupo listar seus argumentos.</li><li>Inicie o debate com tempo cronometrado.</li></ol>" },
-        // MODIFICAÇÃO: Atividade marcada como gratuita
         { id: 5, free: true, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08"], detalhes: "<h4>Materiais:</h4><p>Folha impressa, tesoura e cola.</p><h4>Passo a Passo:</h4><ol><li>A folha contém figuras (ex: BOLA) e as sílabas embaralhadas ('LA', 'BO').</li><li>A criança recorta e cola as sílabas na ordem correta.</li></ol>" },
         { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04"], detalhes: "<h4>Tema:</h4><p>Meu Animal Fantástico</p><h4>Passo a Passo:</h4><ol><li>Distribua massinha de modelar.</li><li>Peça para cada aluno criar um animal que não existe no mundo real.</li><li>Faça uma exposição das esculturas.</li></ol>" },
         { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09"], detalhes: "<h4>Materiais:</h4><p>Cartolina e lápis de cor.</p><h4>Passo a Passo:</h4><ol><li>Discuta com a turma como seria ver a sala de aula de cima.</li><li>No papel, desenhe o contorno da sala e peça para as crianças desenharem os móveis.</li></ol>" },
@@ -396,62 +385,28 @@
     ];
 
     function generatePdf(activityId) {
-        // ... (código da função sem alterações)
+        const activity = todasAsAtividades.find(a => a.id === activityId);
+        if (!activity) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.setTextColor("#6c5b7b");
+        doc.text(activity.titulo, 14, 22);
+        doc.setFontSize(11);
+        doc.setTextColor("#333d49");
+        const descriptionLines = doc.splitTextToSize(activity.desc, 180);
+        doc.text(descriptionLines, 14, 32);
+        doc.setDrawColor("#b19cd9");
+        doc.line(14, 45, 196, 45);
+        const detailsEl = document.createElement('div');
+        detailsEl.innerHTML = activity.detalhes;
+        const detailsText = detailsEl.innerText;
+        const detailsLines = doc.splitTextToSize(detailsText, 180);
+        doc.text(detailsLines, 14, 55);
+        doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
     }
-
-    // MODIFICAÇÃO: Lógica para exibir a atividade gratuita na prévia
-    function setupLoginScreenPreview() {
-        const previewContainer = document.getElementById('preview-grid-container');
-        if (!previewContainer) return;
-
-        const freeActivity = todasAsAtividades.find(a => a.free);
-        const otherActivities = todasAsAtividades.filter(a => !a.free);
-        const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
-        
-        let previewActivities = [];
-        if (freeActivity) {
-            previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)];
-        } else {
-            previewActivities = shuffledOthers.slice(0, 3);
-        }
-        
-        // Embaralha a lista final para a posição da atividade gratuita variar
-        previewActivities.sort(() => 0.5 - Math.random());
-
-        let previewHTML = '';
-        previewActivities.forEach(activity => {
-            if (activity.free) {
-                previewHTML += `
-                    <div class="preview-card free" onclick="openModal(${activity.id})">
-                        <div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>
-                        <div class="preview-card-content">
-                            <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                            <h3>${activity.titulo}</h3>
-                            <p>${activity.desc}</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                previewHTML += `
-                    <div class="preview-card" onclick="document.getElementById('username-input').focus()">
-                        <div class="preview-card-content">
-                            <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                            <h3>${activity.titulo}</h3>
-                            <p>${activity.desc}</p>
-                        </div>
-                        <div class="preview-card-overlay">
-                            <span>🔒</span>
-                            <p>Conteúdo Exclusivo para Assinantes</p>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-        previewContainer.innerHTML = previewHTML;
-    }
-
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // ... (código do DOMContentLoaded sem alterações, exceto a chamada para a nova lógica no 'main')
         const appState = {
             searchQuery: '', activeFilter: 'Todos', currentPage: 1, itemsPerPage: 6,
             favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || []
@@ -465,6 +420,93 @@
             modal: document.getElementById('modal-container'), menuToggle: document.getElementById('menu-toggle'),
             sidebar: document.getElementById('sidebar'), sidebarOverlay: document.getElementById('sidebar-overlay')
         };
+
+        // As funções precisam ser definidas antes de serem chamadas
+        function openModal(id) {
+            const activity = todasAsAtividades.find(a => a.id === id);
+            if (!activity) return;
+            dom.modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${activity.titulo}</h2>
+                        <button class="close-button" aria-label="Fechar modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>${activity.desc}</p>
+                        <div class="details">${activity.detalhes}</div>
+                        <button class="download-btn" onclick="generatePdf(${activity.id})">📄 Baixar aqui o material</button>
+                    </div>
+                </div>`;
+            dom.modal.classList.add('show');
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
+        }
+
+        function closeModal() {
+            dom.modal.classList.remove('show'); 
+        }
+        
+        function setupLoginScreenPreview() {
+            const previewContainer = document.getElementById('preview-grid-container');
+            if (!previewContainer) return;
+
+            const freeActivity = todasAsAtividades.find(a => a.free);
+            const otherActivities = todasAsAtividades.filter(a => !a.free);
+            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
+            
+            let previewActivities = [];
+            if (freeActivity) {
+                previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)];
+            } else {
+                previewActivities = shuffledOthers.slice(0, 3);
+            }
+            
+            previewActivities.sort(() => 0.5 - Math.random());
+
+            let previewHTML = '';
+            previewActivities.forEach(activity => {
+                if (activity.free) {
+                    previewHTML += `
+                        <div class="preview-card free" data-id="${activity.id}">
+                            <div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>
+                            <div class="preview-card-content">
+                                <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
+                                <h3>${activity.titulo}</h3>
+                                <p>${activity.desc}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    previewHTML += `
+                        <div class="preview-card" onclick="document.getElementById('username-input').focus()">
+                            <div class="preview-card-content">
+                                <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
+                                <h3>${activity.titulo}</h3>
+                                <p>${activity.desc}</p>
+                            </div>
+                            <div class="preview-card-overlay">
+                                <span>🔒</span>
+                                <p>Conteúdo Exclusivo para Assinantes</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            previewContainer.innerHTML = previewHTML;
+
+            // ===============================================
+            // INÍCIO DA CORREÇÃO: Adicionando o listener de clique
+            // ===============================================
+            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
+                card.addEventListener('click', function() {
+                    const activityId = parseInt(this.dataset.id);
+                    openModal(activityId);
+                });
+            });
+            // ===============================================
+            // FIM DA CORREÇÃO
+            // ===============================================
+        }
 
         function initializePanel(username) {
             dom.loginScreen.classList.add('hidden');
@@ -606,30 +648,6 @@
                     icon.classList.toggle('favorited', index === -1);
                 }
             }
-        }
-
-        // A função openModal agora é global no escopo do script, podendo ser chamada pelo onclick
-        window.openModal = function(id) {
-            const activity = todasAsAtividades.find(a => a.id === id);
-            dom.modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2>${activity.titulo}</h2>
-                        <button class="close-button" aria-label="Fechar modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <p>${activity.desc}</p>
-                        <div class="details">${activity.detalhes}</div>
-                        <button class="download-btn" onclick="generatePdf(${activity.id})">📄 Baixar aqui o material</button>
-                    </div>
-                </div>`;
-            dom.modal.classList.add('show');
-            dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
-        }
-
-        function closeModal() {
-            dom.modal.classList.remove('show'); 
         }
 
         // --- INICIALIZAÇÃO ---
