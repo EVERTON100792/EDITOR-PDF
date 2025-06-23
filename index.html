@@ -16,9 +16,9 @@
         /* =================================================================== */
         :root {
             --primary-color: #b19cd9;      /* Lilás suave principal */
-            --secondary-color: #6c5b7b;   /* Roxo escuro para texto e detalhes */
-            --accent-color: #ffb6c1;        /* Rosa claro para destaque */
-            --background-color: #fdfcff;    /* Fundo branco com um toque de lavanda */
+            --secondary-color: #6c5b7b;    /* Roxo escuro para texto e detalhes */
+            --accent-color: #ffb6c1;       /* Rosa claro para destaque */
+            --background-color: #fdfcff;   /* Fundo branco com um toque de lavanda */
             --card-background: #ffffff;
             --text-color: #333d49;
             --text-color-light: #6b7280;
@@ -58,11 +58,27 @@
         #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
         
         /* ESTRUTURA PRINCIPAL COM SIDEBAR */
-        .app-header { background: var(--card-background); padding: 0 2rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
-        .user-area { display: flex; align-items: center; gap: 1.5rem; }
+        /* ======================================================== */
+        /* == INÍCIO DAS ALTERAÇÕES - AJUSTES NO CABEÇALHO E RESPONSIVIDADE == */
+        /* ======================================================== */
+        .app-header { 
+            background: var(--card-background); 
+            padding: 0 1rem; /* Reduzido o padding para melhor ajuste mobile */
+            height: 70px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03); 
+            border-bottom: 1px solid var(--border-color); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100;
+            gap: 1rem; /* Adicionado gap para espaçamento */
+        }
+        .user-area { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
         .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
         .logout-button:hover { background: var(--accent-color); color: white; }
-        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
+        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; /* Mantido como none, será ativado no @media */ }
         .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
         
         /* ======================================================== */
@@ -70,12 +86,15 @@
         /* ======================================================== */
         .app-header h1 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.4rem; /* Ligeiramente reduzido para caber melhor */
             font-weight: 700;
             color: var(--secondary-color);
             display: flex;
             align-items: center;
+            justify-content: center; /* Centraliza o conteúdo (logo + texto) */
             gap: 15px;
+            flex-grow: 1; /* Permite que o H1 ocupe o espaço disponível */
+            min-width: 0; /* Evita que o flex item cresça demais e empurre outros */
         }
 
         .logo-icon {
@@ -84,6 +103,7 @@
             height: 30px;
             transform: rotate(-45deg);
             transition: transform 0.3s ease;
+            flex-shrink: 0; /* Impede que o ícone seja esmagado */
         }
         .app-header:hover .logo-icon {
             transform: rotate(-45deg) scale(1.1);
@@ -130,7 +150,7 @@
 
         .content-wrapper { flex-grow: 1; padding: 2.5rem; }
         .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
-        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; } /* minmax reduzido para 280px */
         .activity-card { 
             background-color: var(--card-background); 
             border: 1px solid var(--border-color);
@@ -161,12 +181,12 @@
         .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
         .favorite-icon:hover { transform: scale(1.15); }
 
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; } /* Adicionado margin-top: auto */
         .card-footer span { font-weight: 600; }
         .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
         .open-modal-btn:hover { background-color: var(--primary-color); color: white; }
         
-        #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; }
+        #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; } /* Adicionado flex-wrap */
         .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
         .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
@@ -188,13 +208,41 @@
 
         footer { text-align: center; padding: 2.5rem; color: var(--text-color-light); }
         
+        /* ======================================================== */
+        /* == FIM DAS ALTERAÇÕES - AJUSTES NO CABEÇALHO E RESPONSIVIDADE == */
+        /* ======================================================== */
+
         @media (max-width: 992px) {
+            .app-header { padding: 0 1rem; }
             .menu-toggle { display: block; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
             #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
             body.sidebar-open .sidebar { transform: translateX(0); }
             body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
             .content-wrapper { padding: 1.5rem; }
+            .app-header h1 .logo-text { font-size: 1.2rem; } /* Exemplo de ajuste no texto do logo */
+        }
+
+        @media (max-width: 768px) {
+            .user-area #welcome-message { display: none; } /* Esconde a mensagem de boas-vindas */
+            .app-header h1 { font-size: 1.2rem; gap: 12px; }
+            .logo-icon { width: 25px; height: 25px; }
+            .login-box { padding: 2rem; }
+            .modal-header, .modal-body { padding: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .app-header h1 span:not(.logo-icon) {
+                 display: none; /* Em telas muito pequenas, mostra apenas o ícone */
+            }
+             .logout-button {
+                padding: 0.4rem;
+                font-size: 0; /* Esconde o texto */
+            }
+            .logout-button::before {
+                content: 'Sair'; /* Opcional: ou usar um ícone SVG */
+                 font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -225,7 +273,7 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
                 <svg><use xlink:href="#icon-menu"></use></svg>
             </button>
-            <h1><span class="logo-icon"></span>Cantinho da Prof. Vane</h1>
+            <h1><span class="logo-icon"></span><span>Cantinho da Prof. Vane</span></h1>
             <div class="user-area">
                 <span id="welcome-message"></span>
                 <button id="logout-button" class="logout-button">Sair</button>
@@ -407,7 +455,10 @@
                 dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada com os filtros atuais.</p>`;
                 return;
             }
-            paginated.forEach(act => dom.grid.appendChild(createActivityCard(act)));
+            paginated.forEach(act => {
+                const cardElement = createActivityCard(act);
+                dom.grid.appendChild(cardElement);
+            });
             addCardListeners();
         }
 
@@ -415,6 +466,13 @@
             const isFavorited = appState.favorites.includes(activity.id);
             const card = document.createElement('article');
             card.className = 'activity-card';
+            card.style.opacity = 0; // Para animação
+            
+            // Usando requestAnimationFrame para garantir que a transição de opacidade funcione
+            requestAnimationFrame(() => {
+                card.style.opacity = 1;
+            });
+            
             card.innerHTML = `
                 <div class="card-header">
                     <div class="card-category" style="background-color: ${activity.cor};">${activity.categoria}</div>
@@ -422,8 +480,10 @@
                         <svg><use xlink:href="#icon-heart"></use></svg>
                     </button>
                 </div>
-                <h3>${activity.titulo}</h3>
-                <p>${activity.desc}</p>
+                <div style="padding: 0 1.5rem; flex-grow: 1;">
+                    <h3>${activity.titulo}</h3>
+                    <p>${activity.desc}</p>
+                </div>
                 <div class="card-footer">
                     <span>🕓 ${activity.duracao}</span>
                     <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
