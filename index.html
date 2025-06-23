@@ -6,206 +6,63 @@
     <title>ProAtividade - Atividades para Professores</title>
     
     <style>
-        /* Importando uma fonte bonita do Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-        /* Configurações Globais */
         :root {
-            --primary-color: #007bff; /* Azul mais moderno */
+            --primary-color: #007bff;
             --secondary-color: #6c757d;
+            --success-color: #28a745; /* Cor para o botão de download */
             --background-color: #f8f9fa;
             --card-background: #ffffff;
             --text-color: #343a40;
             --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        header {
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            color: white;
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-        }
-
-        main {
-            padding: 2rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        main h2 {
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-size: 2rem;
-            color: var(--text-color);
-        }
-
-        .activities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .activity-card {
-            background-color: var(--card-background);
-            border: 1px solid #e9ecef;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .activity-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .activity-card h3 {
-            margin: 0.5rem 1.25rem;
-            color: var(--primary-color);
-        }
-
-        .activity-card p {
-            padding: 0 1.25rem;
-            flex-grow: 1;
-            font-size: 0.95rem;
-        }
-
-        .card-category {
-            padding: 0.5rem 1.25rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1.25rem;
-            border-top: 1px solid #e9ecef;
-            font-size: 0.9rem;
-            background-color: #fdfdfd;
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.6; }
+        header { background: linear-gradient(90deg, #007bff, #0056b3); color: white; text-align: center; padding: 2rem 1rem; }
+        header h1 { margin: 0; font-size: 2.5rem; }
+        main { padding: 2rem 1rem; max-width: 1200px; margin: 0 auto; }
+        main h2 { text-align: center; margin-bottom: 2.5rem; font-size: 2rem; color: var(--text-color); }
+        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .activity-card { background-color: var(--card-background); border: 1px solid #e9ecef; border-radius: 15px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .activity-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+        .activity-card h3 { margin: 0.5rem 1.25rem; color: var(--primary-color); }
+        .activity-card p { padding: 0 1.25rem; flex-grow: 1; font-size: 0.95rem; }
+        .card-category { padding: 0.5rem 1.25rem; color: white; font-weight: 600; font-size: 0.85rem; margin-bottom: 1rem; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; border-top: 1px solid #e9ecef; font-size: 0.9rem; background-color: #fdfdfd; }
+        .card-footer span { color: var(--secondary-color); font-weight: 600; }
+        .open-modal-btn { background-color: var(--primary-color); color: white; padding: 0.5rem 1rem; text-decoration: none; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; transition: background-color 0.3s; }
+        .open-modal-btn:hover { background-color: #0056b3; }
+        footer { text-align: center; padding: 2rem; margin-top: 2rem; color: #6c757d; border-top: 1px solid #dee2e6; }
+        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-container.show { display: flex; opacity: 1; }
+        .modal-content { background-color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); width: 90%; max-width: 600px; position: relative; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-container.show .modal-content { transform: scale(1); }
+        .modal-content h2 { margin-top: 0; color: var(--primary-color); }
+        .modal-content .details { border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem; margin-bottom: 2rem; }
+        .close-button { position: absolute; top: 15px; right: 20px; font-size: 2rem; font-weight: bold; color: #aaa; cursor: pointer; transition: color 0.2s; }
+        .close-button:hover { color: #333; }
         
-        .card-footer span {
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-
-        /* Botão para abrir o modal */
-        .open-modal-btn {
-            background-color: var(--primary-color);
+        /* --- NOVO ESTILO PARA O BOTÃO DE DOWNLOAD --- */
+        .download-btn {
+            display: block; /* Ocupa a largura toda */
+            background-color: var(--success-color);
             color: white;
-            padding: 0.5rem 1rem;
+            text-align: center;
+            padding: 0.8rem 1rem;
             text-decoration: none;
-            border: none;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            transition: background-color 0.3s;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.2s;
         }
-
-        .open-modal-btn:hover {
-            background-color: #0056b3;
+        .download-btn:hover {
+            background-color: #218838;
+            transform: scale(1.02);
         }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 2rem;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
-        }
-        
-        /* --- ESTILOS DO MODAL (A JANELA QUE ABRE) --- */
-
-        .modal-container {
-            position: fixed; /* Fica fixo na tela */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
-            display: none; /* Começa escondido */
-            align-items: center;
-            justify-content: center;
-            z-index: 1000; /* Fica na frente de tudo */
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-container.show {
-            display: flex; /* Mostra o modal */
-            opacity: 1;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 600px;
-            position: relative;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-        }
-        
-        .modal-container.show .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-content h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-        }
-        
-        .modal-content .details {
-            border-top: 1px solid #eee;
-            margin-top: 1rem;
-            padding-top: 1rem;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #aaa;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-button:hover {
-            color: #333;
-        }
-
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>ProAtividade 🚀</h1>
-        <p>Sua fonte de atividades prontas para a sala de aula.</p>
-    </header>
+    <header><h1>ProAtividade 🚀</h1><p>Sua fonte de atividades prontas para a sala de aula.</p></header>
 
     <main>
         <h2>Atividades em Destaque</h2>
@@ -214,14 +71,15 @@
             <article class="activity-card">
                 <div class="card-category" style="background-color: #17a2b8;">Interpessoal</div>
                 <h3>Duas Verdades, Uma Mentira</h3>
-                <p>Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos no início do ano ou em novas turmas.</p>
+                <p>Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.</p>
                 <div class="card-footer">
                     <span>🕓 5-10 min</span>
                     <button class="open-modal-btn" 
                             data-title="Duas Verdades, Uma Mentira"
                             data-description="Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos no início do ano ou em novas turmas."
-                            data-details="<h4>Materiais Necessários:</h4><p>Papel e caneta para cada aluno.</p><h4>Passo a Passo:</h4><ol><li>Peça para cada aluno escrever três sentenças sobre si mesmo: duas verdadeiras e uma falsa.</li><li>Divida a turma em pequenos grupos.</li><li>Em turnos, cada aluno lê suas três sentenças para o grupo.</li><li>O grupo debate e vota em qual sentença eles acham que é a mentira.</li><li>O aluno revela a resposta. A atividade continua até que todos no grupo tenham participado.</li></ol>">
-                        Ver Atividade
+                            data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade impressa para cada aluno ou grupo.</p><h4>Passo a Passo:</h4><ol><li>Distribua a folha de atividade.</li><li>Peça para cada aluno preencher suas três sentenças.</li><li>Organize a turma em grupos para que compartilhem e tentem adivinhar a mentira uns dos outros.</li></ol>"
+                            data-pdf-url="https://github.com/SEU-USUARIO/SEU-REPOSITORIO/raw/main/materiais/atividade_verdade_mentira.pdf">
+                        Ver Detalhes
                     </button>
                 </div>
             </article>
@@ -229,54 +87,23 @@
             <article class="activity-card">
                 <div class="card-category" style="background-color: #dc3545;">Português</div>
                 <h3>Criador de Histórias</h3>
-                <p>Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas de forma rápida e divertida.</p>
+                <p>Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.</p>
                 <div class="card-footer">
                     <span>🕓 15 min</span>
                     <button class="open-modal-btn"
                             data-title="Criador de Histórias"
                             data-description="Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas de forma rápida e divertida."
-                            data-details="<h4>Materiais Necessários:</h4><p>Quadro branco ou projetor, papel e caneta para os alunos.</p><h4>Passo a Passo:</h4><ol><li>Escreva 3 a 5 palavras aleatórias e desconexas no quadro (ex: Elefante, Foguete, Sorvete, Chave).</li><li>Desafie os alunos a escreverem um parágrafo ou um microconto que utilize todas as palavras de forma coerente.</li><li>Dê 10 minutos para a escrita.</li><li>Peça para alguns voluntários lerem suas histórias para a turma. As histórias costumam ser muito criativas e engraçadas.</li></ol>">
-                        Ver Atividade
+                            data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade impressa e caneta/lápis.</p><h4>Passo a Passo:</h4><ol><li>Entregue a folha de atividade para os alunos.</li><li>Explique que eles devem criar um microconto usando as palavras-chave fornecidas na folha.</li><li>Dê 10-15 minutos para a escrita e depois abra para compartilhamento.</li></ol>"
+                            data-pdf-url="https://github.com/SEU-USUARIO/SEU-REPOSITORIO/raw/main/materiais/atividade_cria_historias.pdf">
+                        Ver Detalhes
                     </button>
                 </div>
             </article>
 
-            <article class="activity-card">
-                <div class="card-category" style="background-color: #ffc107; color: #333;">Matemática</div>
-                <h3>O Problema do Dia</h3>
-                <p>Uma forma de começar a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.</p>
-                <div class="card-footer">
-                    <span>🕓 10 min</span>
-                     <button class="open-modal-btn"
-                            data-title="O Problema do Dia"
-                            data-description="Uma forma de começar a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas."
-                            data-details="<h4>Materiais Necessários:</h4><p>Quadro branco ou projetor.</p><h4>Passo a Passo:</h4><ol><li>Prepare um problema de lógica ou um desafio matemático que possa ser resolvido em poucos minutos.</li><li>Apresente o problema no início da aula.</li><li>Os alunos podem tentar resolver individualmente ou em duplas.</li><li>Discuta a solução com a turma, mostrando diferentes caminhos para chegar ao resultado. Pode-se oferecer um pequeno bônus simbólico para quem acertar primeiro.</li></ol><h4>Exemplo de Problema:</h4><p>Se um tijolo pesa 1kg mais meio tijolo, quanto pesa um tijolo e meio?</p><p><i>(Resposta: 3kg)</i></p>">
-                        Ver Atividade
-                    </button>
-                </div>
-            </article>
-
-            <article class="activity-card">
-                <div class="card-category" style="background-color: #28a745;">Ciências</div>
-                <h3>Mini-Debate Científico</h3>
-                <p>Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista com base em evidências.</p>
-                <div class="card-footer">
-                    <span>🕓 20 min</span>
-                     <button class="open-modal-btn"
-                            data-title="Mini-Debate Científico"
-                            data-description="Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista com base em evidências."
-                            data-details="<h4>Materiais Necessários:</h4><p>Quadro para anotar os pontos principais.</p><h4>Passo a Passo:</h4><ol><li>Escolha um tema científico atual e com diferentes pontos de vista (Ex: 'Alimentos transgênicos são um risco ou uma solução?').</li><li>Divida a turma em dois grandes grupos: 'A favor' e 'Contra'. Dê 5 minutos para que cada grupo liste seus principais argumentos.</li><li>Inicie o debate, com tempo cronometrado para cada grupo apresentar um argumento e para a réplica do outro.</li><li>Atue como mediador, garantindo que o debate seja respeitoso.</li><li>Ao final, faça um resumo dos principais argumentos apresentados pelos dois lados, sem declarar um 'vencedor'.</li></ol>">
-                        Ver Atividade
-                    </button>
-                </div>
-            </article>
-
-        </section>
+            </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 ProAtividade. Todos os direitos reservados.</p>
-    </footer>
+    <footer><p>&copy; 2025 ProAtividade. Todos os direitos reservados.</p></footer>
 
     <div id="modal-container" class="modal-container">
         <div class="modal-content">
@@ -284,59 +111,45 @@
             <h2 id="modal-title"></h2>
             <p id="modal-description"></p>
             <div id="modal-details" class="details"></div>
+            
+            <a href="#" id="modal-download-btn" class="download-btn" download>
+                🖨️ Baixar PDF da Atividade
+            </a>
         </div>
     </div>
 
-
     <script>
-        // Espera o documento HTML ser totalmente carregado antes de executar o script
         document.addEventListener('DOMContentLoaded', function() {
-            
-            // Pega todos os elementos importantes da página
             const modalContainer = document.getElementById('modal-container');
             const closeButton = document.querySelector('.close-button');
             const openModalButtons = document.querySelectorAll('.open-modal-btn');
+            
+            // **** MUDANÇA 3: Pegamos a referência do novo botão de download ****
+            const downloadBtn = document.getElementById('modal-download-btn');
 
-            // Adiciona um evento de clique para cada botão "Ver Atividade"
             openModalButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Pega as informações dos 'data-attributes' do botão que foi clicado
                     const title = this.dataset.title;
                     const description = this.dataset.description;
                     const details = this.dataset.details;
+                    // **** MUDANÇA 4: Pegamos a URL do PDF do data-attribute ****
+                    const pdfUrl = this.dataset.pdfUrl;
 
-                    // Coloca essas informações dentro do modal
                     document.getElementById('modal-title').textContent = title;
                     document.getElementById('modal-description').textContent = description;
-                    document.getElementById('modal-details').innerHTML = details; // innerHTML para renderizar as tags HTML (como <h4> e <ol>)
+                    document.getElementById('modal-details').innerHTML = details;
+                    
+                    // **** MUDANÇA 5: Atualizamos o link do botão de download dinamicamente ****
+                    downloadBtn.href = pdfUrl;
 
-                    // Mostra o modal
                     modalContainer.classList.add('show');
                 });
             });
 
-            // Função para fechar o modal
-            function closeModal() {
-                modalContainer.classList.remove('show');
-            }
-
-            // Adiciona o evento para fechar o modal no botão 'X'
+            function closeModal() { modalContainer.classList.remove('show'); }
             closeButton.addEventListener('click', closeModal);
-
-            // Adiciona o evento para fechar o modal se o usuário clicar fora da caixa de conteúdo
-            modalContainer.addEventListener('click', function(event) {
-                if (event.target === modalContainer) {
-                    closeModal();
-                }
-            });
-
-            // Adiciona o evento para fechar o modal se o usuário apertar a tecla 'Escape'
-            window.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && modalContainer.classList.contains('show')) {
-                    closeModal();
-                }
-            });
-
+            modalContainer.addEventListener('click', function(event) { if (event.target === modalContainer) { closeModal(); } });
+            window.addEventListener('keydown', function(event) { if (event.key === 'Escape' && modalContainer.classList.contains('show')) { closeModal(); } });
         });
     </script>
 
