@@ -3,24 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProAtividade - Atividades para Professores</title>
+    <title>ProAtividade - Bem-vindo(a)!</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        
+        /* NOVA PALETA DE CORES - PEDAGÓGICA E MODERNA
+        - Verde Água (Principal): Calmo, criativo, moderno.
+        - Amarelo Sol (Destaque): Energia, atenção, otimismo.
+        - Cinza Escuro (Texto): Suave para os olhos, melhor que preto puro.
+        - Fundo "Papel" (Background): Aconchegante e orgânico.
+        - Branco (Cards): Limpo, organizado.
+        */
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --success-color: #28a745; /* Cor para o botão de download */
-            --background-color: #f8f9fa;
+            --primary-color: #00a896; /* Verde Água */
+            --secondary-color: #f0b400; /* Amarelo Sol */
+            --background-color: #fdfaf6; /* Fundo "Papel" */
             --card-background: #ffffff;
-            --text-color: #343a40;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --text-color: #2c3e50; /* Cinza Escuro Azulado */
+            --shadow: 0 4px H20px rgba(0, 0, 0, 0.08);
+            --success-color: #28a745; 
         }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; line-height: 1.6; }
-        header { background: linear-gradient(90deg, #007bff, #0056b3); color: white; text-align: center; padding: 2rem 1rem; }
-        header h1 { margin: 0; font-size: 2.5rem; }
-        main { padding: 2rem 1rem; max-width: 1200px; margin: 0 auto; }
-        main h2 { text-align: center; margin-bottom: 2.5rem; font-size: 2rem; color: var(--text-color); }
+
+        /* --- ESTILOS GERAIS E ANIMAÇÕES --- */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--background-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            line-height: 1.6; 
+        }
+
+        /* Classe para esconder elementos */
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ESTILOS DA TELA DE LOGIN "TOP" --- */
+        #login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), #007a76);
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        /* Animações de entrada para cada item */
+        .login-box > * {
+            animation: fadeIn 0.6s ease-out both;
+        }
+        .login-box h1 { animation-delay: 0.1s; }
+        .login-box p { animation-delay: 0.2s; }
+        .login-box #login-form { animation-delay: 0.3s; }
+
+        .login-box .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            color: var(--primary-color);
+        }
+
+        .login-box h1 {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .login-box p {
+            margin-bottom: 2rem;
+            color: #777;
+        }
+
+        #login-form input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #login-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.2);
+        }
+
+        #login-form button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        #login-form button:hover {
+            background-color: #008f80;
+            transform: translateY(-2px);
+        }
+
+        /* --- ESTILOS DO CONTEÚDO PRINCIPAL --- */
+        #main-content header { 
+            background: var(--card-background); 
+            color: var(--text-color); 
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        #main-content header h1 { 
+            margin: 0; 
+            font-size: 1.5rem; 
+            color: var(--primary-color);
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .user-area #welcome-message {
+            font-weight: 600;
+        }
+
+        #logout-button {
+            background: none;
+            border: 2px solid #ddd;
+            color: #777;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        #logout-button:hover {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        #main-content main { padding: 2rem 1rem; max-width: 1200px; margin: 0 auto; }
+        #main-content main h2 { text-align: center; margin-bottom: 2.5rem; font-size: 2rem; }
+        
+        /* Cards e resto do layout (reestilizados com a nova paleta) */
         .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
         .activity-card { background-color: var(--card-background); border: 1px solid #e9ecef; border-radius: 15px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .activity-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
@@ -28,10 +183,12 @@
         .activity-card p { padding: 0 1.25rem; flex-grow: 1; font-size: 0.95rem; }
         .card-category { padding: 0.5rem 1.25rem; color: white; font-weight: 600; font-size: 0.85rem; margin-bottom: 1rem; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; border-top: 1px solid #e9ecef; font-size: 0.9rem; background-color: #fdfdfd; }
-        .card-footer span { color: var(--secondary-color); font-weight: 600; }
+        .card-footer span { color: #777; font-weight: 600; }
         .open-modal-btn { background-color: var(--primary-color); color: white; padding: 0.5rem 1rem; text-decoration: none; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; transition: background-color 0.3s; }
-        .open-modal-btn:hover { background-color: #0056b3; }
-        footer { text-align: center; padding: 2rem; margin-top: 2rem; color: #6c757d; border-top: 1px solid #dee2e6; }
+        .open-modal-btn:hover { background-color: #008f80; }
+        
+        #main-content footer { text-align: center; padding: 2rem; margin-top: 2rem; color: #aaa; border-top: 1px solid #eee; }
+        
         .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
         .modal-container.show { display: flex; opacity: 1; }
         .modal-content { background-color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); width: 90%; max-width: 600px; position: relative; transform: scale(0.95); transition: transform 0.3s ease; }
@@ -40,116 +197,143 @@
         .modal-content .details { border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem; margin-bottom: 2rem; }
         .close-button { position: absolute; top: 15px; right: 20px; font-size: 2rem; font-weight: bold; color: #aaa; cursor: pointer; transition: color 0.2s; }
         .close-button:hover { color: #333; }
-        
-        /* --- NOVO ESTILO PARA O BOTÃO DE DOWNLOAD --- */
-        .download-btn {
-            display: block; /* Ocupa a largura toda */
-            background-color: var(--success-color);
-            color: white;
-            text-align: center;
-            padding: 0.8rem 1rem;
-            text-decoration: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .download-btn:hover {
-            background-color: #218838;
-            transform: scale(1.02);
-        }
+        .download-btn { display: block; background-color: var(--success-color); color: white; text-align: center; padding: 0.8rem 1rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; }
+        .download-btn:hover { background-color: #218838; transform: scale(1.02); }
+
     </style>
 </head>
 <body>
 
-    <header><h1>ProAtividade 🚀</h1><p>Sua fonte de atividades prontas para a sala de aula.</p></header>
-
-    <main>
-        <h2>Atividades em Destaque</h2>
-        <section class="activities-grid">
-            
-            <article class="activity-card">
-                <div class="card-category" style="background-color: #17a2b8;">Interpessoal</div>
-                <h3>Duas Verdades, Uma Mentira</h3>
-                <p>Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.</p>
-                <div class="card-footer">
-                    <span>🕓 5-10 min</span>
-                    <button class="open-modal-btn" 
-                            data-title="Duas Verdades, Uma Mentira"
-                            data-description="Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos no início do ano ou em novas turmas."
-                            data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade impressa para cada aluno ou grupo.</p><h4>Passo a Passo:</h4><ol><li>Distribua a folha de atividade.</li><li>Peça para cada aluno preencher suas três sentenças.</li><li>Organize a turma em grupos para que compartilhem e tentem adivinhar a mentira uns dos outros.</li></ol>"
-                            data-pdf-url="https://github.com/SEU-USUARIO/SEU-REPOSITORIO/raw/main/materiais/atividade_verdade_mentira.pdf">
-                        Ver Detalhes
-                    </button>
-                </div>
-            </article>
-
-            <article class="activity-card">
-                <div class="card-category" style="background-color: #dc3545;">Português</div>
-                <h3>Criador de Histórias</h3>
-                <p>Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.</p>
-                <div class="card-footer">
-                    <span>🕓 15 min</span>
-                    <button class="open-modal-btn"
-                            data-title="Criador de Histórias"
-                            data-description="Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas de forma rápida e divertida."
-                            data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade impressa e caneta/lápis.</p><h4>Passo a Passo:</h4><ol><li>Entregue a folha de atividade para os alunos.</li><li>Explique que eles devem criar um microconto usando as palavras-chave fornecidas na folha.</li><li>Dê 10-15 minutos para a escrita e depois abra para compartilhamento.</li></ol>"
-                            data-pdf-url="https://github.com/SEU-USUARIO/SEU-REPOSITORIO/raw/main/materiais/atividade_cria_historias.pdf">
-                        Ver Detalhes
-                    </button>
-                </div>
-            </article>
-
-            </section>
-    </main>
-
-    <footer><p>&copy; 2025 ProAtividade. Todos os direitos reservados.</p></footer>
-
-    <div id="modal-container" class="modal-container">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2 id="modal-title"></h2>
-            <p id="modal-description"></p>
-            <div id="modal-details" class="details"></div>
-            
-            <a href="#" id="modal-download-btn" class="download-btn" download>
-                🖨️ Baixar PDF da Atividade
-            </a>
+    <div id="login-screen">
+        <div class="login-box">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"></path></svg>
+            <h1>Bem-vindo(a) ao ProAtividade!</h1>
+            <p>Sua plataforma de atividades criativas. Para começar, digite seu nome abaixo.</p>
+            <form id="login-form">
+                <input type="text" id="teacher-name-input" placeholder="Ex: Prof. Carlos" required>
+                <button type="submit">Entrar &rarr;</button>
+            </form>
         </div>
     </div>
 
+
+    <div id="main-content" class="hidden">
+        <header>
+            <h1>ProAtividade 🚀</h1>
+            <div class="user-area">
+                <span id="welcome-message"></span>
+                <button id="logout-button">Sair</button>
+            </div>
+        </header>
+
+        <main>
+            <h2>Atividades em Destaque</h2>
+            <section class="activities-grid">
+                <article class="activity-card">
+                    <div class="card-category" style="background-color: #17a2b8;">Interpessoal</div>
+                    <h3>Duas Verdades, Uma Mentira</h3>
+                    <p>Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.</p>
+                    <div class="card-footer">
+                        <span>🕓 5-10 min</span>
+                        <button class="open-modal-btn" 
+                                data-title="Duas Verdades, Uma Mentira"
+                                data-description="Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos no início do ano ou em novas turmas."
+                                data-details="<h4>Materiais Necessários:</h4><p>A folha de atividade impressa para cada aluno ou grupo.</p><h4>Passo a Passo:</h4><ol><li>Distribua a folha de atividade.</li><li>Peça para cada aluno preencher suas três sentenças.</li><li>Organize a turma em grupos para que compartilhem e tentem adivinhar a mentira uns dos outros.</li></ol>"
+                                data-pdf-url="#"> Ver Detalhes
+                        </button>
+                    </div>
+                </article>
+                </section>
+        </main>
+        
+        <footer><p>&copy; 2025 ProAtividade. Todos os direitos reservados.</p></footer>
+
+        <div id="modal-container" class="modal-container">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 id="modal-title"></h2>
+                <p id="modal-description"></p>
+                <div id="modal-details" class="details"></div>
+                <a href="#" id="modal-download-btn" class="download-btn" download>
+                    🖨️ Baixar PDF da Atividade
+                </a>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const modalContainer = document.getElementById('modal-container');
-            const closeButton = document.querySelector('.close-button');
-            const openModalButtons = document.querySelectorAll('.open-modal-btn');
             
-            // **** MUDANÇA 3: Pegamos a referência do novo botão de download ****
-            const downloadBtn = document.getElementById('modal-download-btn');
+            // --- Seleção dos Elementos ---
+            const loginScreen = document.getElementById('login-screen');
+            const mainContent = document.getElementById('main-content');
+            const loginForm = document.getElementById('login-form');
+            const teacherNameInput = document.getElementById('teacher-name-input');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const logoutButton = document.getElementById('logout-button');
+            
+            // --- Lógica de Login e "Lembrar-me" ---
+            
+            // 1. Ao carregar a página, verifica se já existe um nome salvo
+            const savedName = localStorage.getItem('teacherName');
+            if (savedName) {
+                // Se existe, pula a tela de login e vai direto para o conteúdo
+                showMainContent(savedName);
+            }
 
-            openModalButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const title = this.dataset.title;
-                    const description = this.dataset.description;
-                    const details = this.dataset.details;
-                    // **** MUDANÇA 4: Pegamos a URL do PDF do data-attribute ****
-                    const pdfUrl = this.dataset.pdfUrl;
-
-                    document.getElementById('modal-title').textContent = title;
-                    document.getElementById('modal-description').textContent = description;
-                    document.getElementById('modal-details').innerHTML = details;
-                    
-                    // **** MUDANÇA 5: Atualizamos o link do botão de download dinamicamente ****
-                    downloadBtn.href = pdfUrl;
-
-                    modalContainer.classList.add('show');
-                });
+            // 2. Quando o formulário de login é enviado
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Impede o recarregamento da página
+                const name = teacherNameInput.value.trim(); // Pega o nome e remove espaços em branco
+                if (name) {
+                    localStorage.setItem('teacherName', name); // Salva o nome no navegador
+                    showMainContent(name); // Mostra o conteúdo principal
+                }
             });
 
-            function closeModal() { modalContainer.classList.remove('show'); }
-            closeButton.addEventListener('click', closeModal);
-            modalContainer.addEventListener('click', function(event) { if (event.target === modalContainer) { closeModal(); } });
-            window.addEventListener('keydown', function(event) { if (event.key === 'Escape' && modalContainer.classList.contains('show')) { closeModal(); } });
+            // 3. Função para mostrar o conteúdo principal e esconder o login
+            function showMainContent(name) {
+                welcomeMessage.textContent = `Olá, ${name}!`; // Personaliza a mensagem de boas-vindas
+                loginScreen.classList.add('hidden'); // Esconde a tela de login
+                mainContent.classList.remove('hidden'); // Mostra o conteúdo principal
+            }
+
+            // 4. Lógica de Logout
+            logoutButton.addEventListener('click', function() {
+                localStorage.removeItem('teacherName'); // Remove o nome salvo
+                location.reload(); // Recarrega a página para voltar à tela de login
+            });
+
+
+            // --- Lógica do Modal de Atividades (código anterior, sem alterações) ---
+            const modalContainer = document.getElementById('modal-container');
+            if (modalContainer) { // Adiciona uma verificação para segurança
+                const closeButton = document.querySelector('.close-button');
+                const openModalButtons = document.querySelectorAll('.open-modal-btn');
+                const downloadBtn = document.getElementById('modal-download-btn');
+
+                openModalButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const title = this.dataset.title;
+                        const description = this.dataset.description;
+                        const details = this.dataset.details;
+                        const pdfUrl = this.dataset.pdfUrl;
+
+                        document.getElementById('modal-title').textContent = title;
+                        document.getElementById('modal-description').textContent = description;
+                        document.getElementById('modal-details').innerHTML = details;
+                        downloadBtn.href = pdfUrl;
+
+                        modalContainer.classList.add('show');
+                    });
+                });
+
+                function closeModal() { modalContainer.classList.remove('show'); }
+                closeButton.addEventListener('click', closeModal);
+                modalContainer.addEventListener('click', function(event) { if (event.target === modalContainer) { closeModal(); } });
+                window.addEventListener('keydown', function(event) { if (event.key === 'Escape' && modalContainer.classList.contains('show')) { closeModal(); } });
+            }
         });
     </script>
 
