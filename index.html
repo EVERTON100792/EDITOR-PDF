@@ -325,8 +325,7 @@
             </div>
             <div class="preview-section" id="preview-section">
                 <h2>Um pouco do que você encontrará aqui dentro...</h2>
-                <div class="preview-grid" id="preview-grid-container">
-                    </div>
+                <div class="preview-grid" id="preview-grid-container"></div>
             </div>
         </div>
     </div>
@@ -342,7 +341,6 @@
                 <button id="logout-button" class="logout-button">Sair</button>
             </div>
         </header>
-        
         <div id="app-body">
             <div id="sidebar-overlay"></div>
             <aside class="sidebar" id="sidebar">
@@ -353,7 +351,6 @@
                 </div>
                 <ul id="filters-container"></ul>
             </aside>
-
             <div class="content-wrapper">
                 <main>
                     <div id="results-info"></div>
@@ -363,7 +360,6 @@
                 <footer><p>Criado com ❤️ por Prof. Vane</p></footer>
             </div>
         </div>
-        
         <div class="modal-container" id="modal-container"></div>
     </div>
 
@@ -383,28 +379,6 @@
         { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09"], detalhes: "<h4>Materiais:</h4><p>Cartolina e lápis de cor.</p><h4>Passo a Passo:</h4><ol><li>Discuta com a turma como seria ver a sala de aula de cima.</li><li>No papel, desenhe o contorno da sala e peça para as crianças desenharem os móveis.</li></ol>" },
         { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01"], detalhes: "<h4>Materiais:</h4><p>Folha, régua, fotos ou desenhos.</p><h4>Passo a Passo:</h4><ol><li>Peça para a criança listar 5 eventos importantes de sua vida (nascimento, etc.).</li><li>Ajude-a a desenhar uma linha e a marcar os eventos em ordem.</li></ol>" }
     ];
-
-    function generatePdf(activityId) {
-        const activity = todasAsAtividades.find(a => a.id === activityId);
-        if (!activity) return;
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.setTextColor("#6c5b7b");
-        doc.text(activity.titulo, 14, 22);
-        doc.setFontSize(11);
-        doc.setTextColor("#333d49");
-        const descriptionLines = doc.splitTextToSize(activity.desc, 180);
-        doc.text(descriptionLines, 14, 32);
-        doc.setDrawColor("#b19cd9");
-        doc.line(14, 45, 196, 45);
-        const detailsEl = document.createElement('div');
-        detailsEl.innerHTML = activity.detalhes;
-        const detailsText = detailsEl.innerText;
-        const detailsLines = doc.splitTextToSize(detailsText, 180);
-        doc.text(detailsLines, 14, 55);
-        doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
-    }
     
     document.addEventListener('DOMContentLoaded', function() {
         const appState = {
@@ -421,6 +395,50 @@
             sidebar: document.getElementById('sidebar'), sidebarOverlay: document.getElementById('sidebar-overlay')
         };
 
+        // ======================================================
+        // INÍCIO DA CORREÇÃO: Função movida para dentro do escopo
+        // ======================================================
+        function generatePdf(activityId) {
+            // Verificação de segurança para a biblioteca jsPDF
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                console.error("A biblioteca jsPDF não foi carregada corretamente.");
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const activity = todasAsAtividades.find(a => a.id === activityId);
+                if (!activity) {
+                    console.error(`Atividade com ID ${activityId} não encontrada.`);
+                    return;
+                }
+                
+                const doc = new jsPDF();
+                doc.setFontSize(18);
+                doc.setTextColor("#6c5b7b");
+                doc.text(activity.titulo, 14, 22);
+                doc.setFontSize(11);
+                doc.setTextColor("#333d49");
+                const descriptionLines = doc.splitTextToSize(activity.desc, 180);
+                doc.text(descriptionLines, 14, 32);
+                doc.setDrawColor("#b19cd9");
+                doc.line(14, 45, 196, 45);
+                const detailsEl = document.createElement('div');
+                detailsEl.innerHTML = activity.detalhes;
+                const detailsText = detailsEl.innerText;
+                const detailsLines = doc.splitTextToSize(detailsText, 180);
+                doc.text(detailsLines, 14, 55);
+                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
+            }
+        }
+        // ======================================================
+        // FIM DA CORREÇÃO
+        // ======================================================
+
         function closeModal() {
             dom.modal.classList.remove('show'); 
         }
@@ -429,9 +447,6 @@
             const activity = todasAsAtividades.find(a => a.id === id);
             if (!activity) return;
 
-            // ===============================================
-            // INÍCIO DA CORREÇÃO: Removendo o 'onclick' do HTML
-            // ===============================================
             dom.modal.innerHTML = `
                 <div class="modal-content">
                     <div class="modal-header">
@@ -447,18 +462,13 @@
             
             dom.modal.classList.add('show');
             
-            // Adicionando listeners de forma segura
             dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
+            dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); }, { once: true });
 
-            // Adicionando o listener para o botão de download
             dom.modal.querySelector('.download-btn').addEventListener('click', function() {
                 const activityIdToDownload = parseInt(this.dataset.activityId);
                 generatePdf(activityIdToDownload);
             });
-            // ===============================================
-            // FIM DA CORREÇÃO
-            // ===============================================
         }
         
         function setupLoginScreenPreview() {
@@ -481,7 +491,7 @@
             let previewHTML = '';
             previewActivities.forEach(activity => {
                 if (activity.free) {
-                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`; // Removido onclick
+                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
                 } else {
                     previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
                 }
