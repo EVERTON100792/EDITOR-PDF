@@ -1078,7 +1078,7 @@
         };
 
         // ===================================================================
-        // INÍCIO DAS FUNÇÕES PRINCIPAIS (CORRIGIDAS E COMPLETAS)
+        // INÍCIO DAS FUNÇÕES PRINCIPAIS
         // ===================================================================
 
         function setupEventListeners() {
@@ -1203,7 +1203,7 @@
             dom.makerNotesInput.value = appState.makerPlanNotes;
         }
 
-        function generatePdf(activityId) {
+        function generateActivityPdf(activityId) {
             if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
                 console.error("A biblioteca jsPDF não foi carregada corretamente.");
                 alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
@@ -1213,25 +1213,39 @@
                 const { jsPDF } = window.jspdf;
                 const activity = todasAsAtividades.find(a => a.id === activityId);
                 if (!activity) return;
-                const doc = new jsPDF();
-                doc.setFontSize(18);
-                doc.setTextColor("#6c5b7b");
-                doc.text(activity.titulo, 14, 22);
-                doc.setFontSize(11);
-                doc.setTextColor("#333d49");
-                let detailsText = `Descrição: ${activity.desc}\n\n`;
-                if (activity.roteiro) {
-                    detailsText += `Roteiro Sugerido:\n`;
-                    detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
-                    detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
-                    detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
-                    detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
+
+                const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+                const pdf = new PdfManager(doc);
+                pdf.yOffset = pdf.margin;
+                pdf.drawFooter();
+
+                pdf.drawHeader(activity.titulo);
+                
+                pdf.writeText(activity.desc, 11, 'italic');
+                pdf.yOffset += 20;
+
+                pdf.drawSubheader("Objetivos de Aprendizagem");
+                activity.objetivos.forEach(obj => {
+                    pdf.writeText(`• ${obj}`, 10, 'normal', 10);
+                });
+                pdf.yOffset += 20;
+                
+                pdf.drawSubheader("Roteiro Sugerido");
+                const roteiro = activity.roteiro;
+                pdf.writeText(`Acolhida: ${roteiro.acolhida}`, 10, 'normal', 10);
+                pdf.writeText(`Desenvolvimento: ${roteiro.desenvolvimento}`, 10, 'normal', 10);
+                pdf.writeText(`Expansão: ${roteiro.expansao}`, 10, 'normal', 10);
+                pdf.writeText(`Encerramento: ${roteiro.encerramento}`, 10, 'normal', 10);
+                pdf.yOffset += 20;
+
+                if (activity.dica_pedagogica) {
+                    pdf.drawSubheader("Dica Pedagógica");
+                    pdf.writeText(activity.dica_pedagogica, 10, 'italic', 10);
                 }
-                const detailsLines = doc.splitTextToSize(detailsText, 180);
-                doc.text(detailsLines, 14, 32);
-                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
+
+                doc.save(`Atividade_${activity.titulo.replace(/\s+/g, '-')}.pdf`);
             } catch (error) {
-                console.error("Ocorreu um erro ao gerar o PDF:", error);
+                console.error("Ocorreu um erro ao gerar o PDF da atividade:", error);
                 alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
             }
         }
@@ -1266,7 +1280,7 @@
             dom.modal.classList.add('show');
             dom.modal.querySelector('.close-button').onclick = closeModal;
             dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal() });
-            dom.modal.querySelector('.download-btn').addEventListener('click', function() { generatePdf(parseInt(this.dataset.activityId)) });
+            dom.modal.querySelector('.download-btn').addEventListener('click', function() { generateActivityPdf(parseInt(this.dataset.activityId)) });
         }
 
         function setupLoginScreenPreview() {
@@ -1279,12 +1293,8 @@
             previewActivities.sort(() => 0.5 - Math.random());
             let previewHTML = '';
             previewActivities.forEach(activity => {
-                if (activity.free) {
-                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
-                } else {
-                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
-                }
-                previewHTML += `${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
+                previewHTML += `<div class="preview-card ${activity.free ? 'free' : ''}" data-id="${activity.id}">
+                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
                     <div class="preview-card-content">
                         <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
                         <h3>${activity.titulo}</h3><p>${activity.desc}</p>
@@ -1293,8 +1303,13 @@
                 </div>`;
             });
             previewContainer.innerHTML = previewHTML;
+            
+            // CORREÇÃO: Mover a lógica de clique do HTML para o JS
             previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
                 card.addEventListener('click', function() { openModal(parseInt(this.dataset.id)) })
+            });
+            previewContainer.querySelectorAll('.preview-card:not(.free)').forEach(card => {
+                card.addEventListener('click', () => document.getElementById('username-input').focus());
             });
         }
 
@@ -1515,7 +1530,7 @@
         }
 
         // ===================================================================
-        // FUNÇÕES DE GERAÇÃO DE PDF (REFEITAS E NOVAS)
+        // FUNÇÕES DE GERAÇÃO DE PDF (REFEITAS E CORRIGIDAS)
         // ===================================================================
 
         function checkPdfLibrary() {
@@ -1524,13 +1539,22 @@
                 return false;
             }
             if (typeof window.jspdf.jsPDF.autoTable === 'undefined') {
-                // This check is for the Super Document, but good to have.
-                // The simple plan doesn't use it.
                 console.warn("Aviso: O plugin de tabelas (jsPDF-AutoTable) não foi carregado. A geração de tabelas falhará.");
             }
             return true;
         }
         
+        function varGet(varName) {
+            const colorStr = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+            if (colorStr.startsWith('#')) {
+                const r = parseInt(colorStr.slice(1, 3), 16);
+                const g = parseInt(colorStr.slice(3, 5), 16);
+                const b = parseInt(colorStr.slice(5, 7), 16);
+                return [r, g, b];
+            }
+            return [0, 0, 0]; // Default black
+        }
+
         // Classe auxiliar para gerenciar a criação do PDF
         class PdfManager {
             constructor(doc) {
@@ -1561,10 +1585,12 @@
                 this.checkNewPage(60);
                 this.doc.setFont('helvetica', 'bold');
                 this.doc.setFontSize(16);
-                this.doc.setTextColor(varGet('--secondary-color'));
+                // CORREÇÃO: Usar o operador de propagação "..."
+                this.doc.setTextColor(...varGet('--secondary-color'));
                 this.doc.text(text, this.margin, this.yOffset);
                 this.yOffset += 15;
-                this.doc.setDrawColor(varGet('--primary-color'));
+                 // CORREÇÃO: Usar o operador de propagação "..."
+                this.doc.setDrawColor(...varGet('--primary-color'));
                 this.doc.setLineWidth(1.5);
                 this.doc.line(this.margin, this.yOffset, this.margin + this.maxWidth, this.yOffset);
                 this.yOffset += 25;
@@ -1574,7 +1600,8 @@
                 this.checkNewPage(30);
                 this.doc.setFont('helvetica', 'bold');
                 this.doc.setFontSize(12);
-                this.doc.setTextColor(varGet('--primary-color'));
+                 // CORREÇÃO: Usar o operador de propagação "..."
+                this.doc.setTextColor(...varGet('--primary-color'));
                 this.doc.text(text, this.margin, this.yOffset);
                 this.yOffset += 20;
             }
@@ -1582,25 +1609,14 @@
             writeText(text, size = 10, style = 'normal', indent = 0) {
                 this.doc.setFontSize(size);
                 this.doc.setFont('helvetica', style);
-                this.doc.setTextColor(varGet('--text-color'));
+                 // CORREÇÃO: Usar o operador de propagação "..."
+                this.doc.setTextColor(...varGet('--text-color'));
                 const lines = this.doc.splitTextToSize(text, this.maxWidth - indent);
                 this.checkNewPage(lines.length * (size * 1.2));
                 this.doc.text(lines, this.margin + indent, this.yOffset);
                 this.yOffset += lines.length * (size * 1.2);
             }
         }
-        
-        function varGet(varName) {
-            const colorStr = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-            if (colorStr.startsWith('#')) {
-                const r = parseInt(colorStr.slice(1, 3), 16);
-                const g = parseInt(colorStr.slice(3, 5), 16);
-                const b = parseInt(colorStr.slice(5, 7), 16);
-                return [r, g, b];
-            }
-            return [0, 0, 0];
-        }
-
 
         function generateLessonPlanPdf() {
             if (!checkPdfLibrary()) return;
@@ -1618,6 +1634,7 @@
                 // --- PÁGINA DE ROSTO ---
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(28);
+                // CORREÇÃO: Usar o operador de propagação "..."
                 doc.setTextColor(...varGet('--secondary-color'));
                 doc.text("Plano de Aula", pdf.doc.internal.pageSize.width / 2, pdf.yOffset + 20, { align: 'center' });
                 pdf.yOffset += 80;
@@ -1628,6 +1645,7 @@
                 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
+                // CORREÇÃO: Usar o operador de propagação "..."
                 doc.setTextColor(...varGet('--text-color-light'));
                 doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não informado'}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.yOffset += 20;
@@ -1855,8 +1873,8 @@
                          headStyles: { fillColor: varGet('--primary-color') }
                      });
                  } else {
-                    console.error("jsPDF-AutoTable plugin not loaded. Skipping table generation.");
-                    pdf.writeText("ERRO: A tabela de checklist não pôde ser gerada pois o plugin 'autoTable' não foi carregado.", 10, 'italic');
+                     console.error("jsPDF-AutoTable plugin not loaded. Skipping table generation.");
+                     pdf.writeText("ERRO: A tabela de checklist não pôde ser gerada pois o plugin 'autoTable' não foi carregado.", 10, 'italic');
                  }
 
                 // --- FINALIZAÇÃO E DOWNLOAD ---
