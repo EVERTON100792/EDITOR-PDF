@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StyloVendas - Sistema Funcional</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         :root {
             --primary-color: #6a11cb;
@@ -29,7 +32,7 @@
         .login-container h2 { color: var(--primary-color); margin-bottom: 10px; font-size: 2rem; }
         .login-container .logo { font-weight: 700; letter-spacing: 1px; }
         .login-container p { color: #888; margin-bottom: 30px; }
-        .input-group { position: relative; margin-bottom: 25px; }
+        .input-group { position: relative; margin-bottom: 25px; text-align: left; }
         .input-group input { width: 100%; padding: 15px 15px 15px 45px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; }
         .input-group input:focus { outline: none; border-color: var(--primary-color); }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
@@ -45,7 +48,7 @@
         .sidebar-menu li a:hover, .sidebar-menu li a.active { background-color: rgba(37, 117, 252, 0.2); color: var(--sidebar-text-hover); }
         .sidebar-menu li a i { width: 20px; text-align: center; }
         .sidebar-footer { margin-top: auto; }
-        .header { grid-area: header; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header { grid-area: header; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: var(--card-bg); box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10; }
         .header .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; color: var(--text-color); }
         .header .user-info { display: flex; align-items: center; gap: 15px; }
         .header .user-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
@@ -82,7 +85,7 @@
         .status.in-stock { background-color: #e0f7fa; color: #00838f; }
         /* Modal Styles */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
-        .modal-content { background-color: #fefefe; margin: 10% auto; padding: 30px; border-radius: var(--border-radius); width: 90%; max-width: 500px; }
+        .modal-content { background-color: #fefefe; margin: 10% auto; padding: 30px; border-radius: var(--border-radius); width: 90%; max-width: 500px; animation: scaleIn 0.3s; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .close-btn { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
         .modal-body form .input-group { margin-bottom: 15px; }
@@ -100,20 +103,57 @@
 <body>
 
     <div id="login-screen">
+        <div class="login-container">
+            <h2 class="logo"><i class="fas fa-gem"></i> StyloVendas</h2>
+            <p>Faça login para gerenciar sua loja</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Usuário" required value="admin">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Senha" required value="1234">
+                </div>
+                <button type="submit" class="login-btn">Entrar</button>
+            </form>
         </div>
+    </div>
 
     <div id="main-app">
         <aside class="sidebar">
-             </aside>
+            <div class="sidebar-header">
+                <i class="fas fa-gem logo-icon"></i>
+                <h2>StyloVendas</h2>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-target="sales"><i class="fas fa-cash-register"></i> Registrar Venda</a></li>
+                    <li><a href="#" class="nav-link" data-target="products"><i class="fas fa-tshirt"></i> Produtos</a></li>
+                    <li><a href="#" class="nav-link" data-target="customers"><i class="fas fa-users"></i> Clientes</a></li>
+                    <li><a href="#" class="nav-link" data-target="inventory"><i class="fas fa-boxes"></i> Estoque</a></li>
+                    <li><a href="#" class="nav-link" data-target="debts"><i class="fas fa-hand-holding-usd"></i> Contas a Receber</a></li>
+                    <li><a href="#" class="nav-link" data-target="reports"><i class="fas fa-chart-pie"></i> Relatórios</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </aside>
+
         <header class="header">
-             </header>
+            <i class="fas fa-bars menu-toggle"></i>
+            <div class="user-info">
+                <span>Olá, <strong>Admin</strong></span>
+                <img src="https://i.pravatar.cc/150?img=32" alt="Foto do Usuário">
+            </div>
+        </header>
 
         <main class="main-content">
-            
             <div id="dashboard" class="page-content active">
                 <div class="page-header"><h1>Dashboard</h1><p>Visão geral do seu negócio.</p></div>
-                <div class="cards-container" id="dashboard-cards">
-                    </div>
+                <div class="cards-container" id="dashboard-cards"></div>
             </div>
             
             <div id="products" class="page-content">
@@ -125,8 +165,7 @@
                     </div>
                     <table>
                         <thead><tr><th>SKU</th><th>Produto</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
-                        <tbody id="products-table-body">
-                            </tbody>
+                        <tbody id="products-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -140,17 +179,15 @@
                     </div>
                     <table>
                         <thead><tr><th>Nome</th><th>Contato</th><th>Desde</th><th>Ações</th></tr></thead>
-                        <tbody id="customers-table-body">
-                            </tbody>
+                        <tbody id="customers-table-body"></tbody>
                     </table>
                 </div>
             </div>
             
-            <div id="sales" class="page-content">...</div>
-            <div id="inventory" class="page-content">...</div>
-            <div id="debts" class="page-content">...</div>
-            <div id="reports" class="page-content">...</div>
-
+            <div id="sales" class="page-content"><div class="page-header"><h1>Registrar Venda</h1><p>Funcionalidade em desenvolvimento.</p></div></div>
+            <div id="inventory" class="page-content"><div class="page-header"><h1>Controle de Estoque</h1><p>Funcionalidade em desenvolvimento.</p></div></div>
+            <div id="debts" class="page-content"><div class="page-header"><h1>Contas a Receber</h1><p>Funcionalidade em desenvolvimento.</p></div></div>
+            <div id="reports" class="page-content"><div class="page-header"><h1>Relatórios</h1><p>Funcionalidade em desenvolvimento.</p></div></div>
         </main>
     </div>
     
@@ -185,198 +222,151 @@
         </div>
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- INICIALIZAÇÃO E ELEMENTOS GLOBAIS ---
+            // --- ELEMENTOS GLOBAIS ---
             const mainApp = document.getElementById('main-app');
             const loginForm = document.getElementById('login-form');
             const loginScreen = document.getElementById('login-screen');
-
-            // Nosso "Banco de Dados" em JavaScript
-            let db;
+            let db; // Nosso "Banco de Dados" em JavaScript
 
             // --- LÓGICA DO BANCO DE DADOS LOCALSTORAGE ---
-
-            // Função para carregar o banco de dados do localStorage
             function loadDatabase() {
                 const dbJSON = localStorage.getItem('styloVendasDB');
                 if (dbJSON) {
                     db = JSON.parse(dbJSON);
                 } else {
-                    // Se não houver banco, cria um novo com dados de exemplo
                     db = {
-                        products: [
-                            {id: 1, sku: 'C001-B-M', name: 'Camiseta Básica Branca M', price: 49.90, stock: 150},
-                            {id: 2, sku: 'J002-A-40', name: 'Calça Jeans Skinny 40', price: 189.90, stock: 75}
-                        ],
-                        customers: [
-                            {id: 1, name: 'Ana Silva', contact: '(11) 98765-4321', since: new Date().toLocaleDateString('pt-BR')},
-                        ],
+                        products: [{id: 1, sku: 'C001-B-M', name: 'Camiseta Básica Branca M', price: 49.90, stock: 150}],
+                        customers: [{id: 1, name: 'Ana Silva', contact: '(11) 98765-4321', since: new Date().toLocaleDateString('pt-BR')}],
                         sales: []
                     };
                 }
             }
-
-            // Função para salvar o banco de dados no localStorage
             function saveDatabase() {
                 localStorage.setItem('styloVendasDB', JSON.stringify(db));
             }
-            
-            // Função para renderizar tudo na tela. Chamada sempre que há uma mudança.
             function render() {
                 renderDashboard();
                 renderCustomersTable();
                 renderProductsTable();
-                // Chamar outras funções de renderização aqui (estoque, vendas, etc.)
             }
 
-            // --- FUNÇÕES DE RENDERIZAÇÃO (mostrar dados na tela) ---
-
+            // --- FUNÇÕES DE RENDERIZAÇÃO ---
             function renderDashboard() {
-                const totalCustomers = db.customers.length;
-                const totalProducts = db.products.length;
-                // Lógicas mais complexas (vendas, receita) seriam adicionadas aqui
-                
                 const container = document.getElementById('dashboard-cards');
                 container.innerHTML = `
-                    <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${totalCustomers}</h3><p>Clientes Cadastrados</p></div></div>
-                    <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${totalProducts}</h3><p>Tipos de Produto</p></div></div>
-                    <div class="card revenue"><div class="icon-wrapper"><i class="fas fa-dollar-sign"></i></div><div class="card-info"><h3>R$ 0,00</h3><p>Receita do Dia</p></div></div>
-                    <div class="card pending"><div class="icon-wrapper"><i class="fas fa-file-invoice-dollar"></i></div><div class="card-info"><h3>R$ 0,00</h3><p>Pendentes</p></div></div>
-                `;
+                    <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${db.customers.length}</h3><p>Clientes</p></div></div>
+                    <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${db.products.length}</h3><p>Produtos</p></div></div>
+                    <div class="card revenue"><div class="icon-wrapper"><i class="fas fa-dollar-sign"></i></div><div class="card-info"><h3>R$ 0,00</h3><p>Receita</p></div></div>
+                    <div class="card pending"><div class="icon-wrapper"><i class="fas fa-file-invoice-dollar"></i></div><div class="card-info"><h3>R$ 0,00</h3><p>Pendentes</p></div></div>`;
             }
-
             function renderCustomersTable() {
                 const tableBody = document.getElementById('customers-table-body');
-                tableBody.innerHTML = ''; // Limpa a tabela antes de redesenhar
+                tableBody.innerHTML = '';
                 db.customers.forEach(customer => {
-                    const row = `
+                    tableBody.innerHTML += `
                         <tr>
-                            <td>${customer.name}</td>
-                            <td>${customer.contact}</td>
-                            <td>${customer.since}</td>
-                            <td class="actions">
-                                <i class="fas fa-edit" onclick="editCustomer(${customer.id})"></i>
-                                <i class="fas fa-trash" onclick="deleteCustomer(${customer.id})"></i>
-                            </td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
+                            <td>${customer.name}</td><td>${customer.contact}</td><td>${customer.since}</td>
+                            <td class="actions"><i class="fas fa-trash" onclick="deleteCustomer(${customer.id})"></i></td>
+                        </tr>`;
                 });
             }
-            
             function renderProductsTable() {
                 const tableBody = document.getElementById('products-table-body');
                 tableBody.innerHTML = '';
                 db.products.forEach(product => {
-                    const row = `
+                    tableBody.innerHTML += `
                         <tr>
-                            <td>${product.sku}</td>
-                            <td>${product.name}</td>
-                            <td>R$ ${product.price.toFixed(2)}</td>
-                            <td>${product.stock}</td>
-                            <td class="actions">
-                                <i class="fas fa-edit" onclick="editProduct(${product.id})"></i>
-                                <i class="fas fa-trash" onclick="deleteProduct(${product.id})"></i>
-                            </td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
+                            <td>${product.sku}</td><td>${product.name}</td><td>R$ ${product.price.toFixed(2)}</td><td>${product.stock}</td>
+                            <td class="actions"><i class="fas fa-trash" onclick="deleteProduct(${product.id})"></i></td>
+                        </tr>`;
                 });
             }
 
             // --- LÓGICA DE CRUD (Create, Read, Update, Delete) ---
+            window.deleteCustomer = id => {
+                if (confirm('Tem certeza?')) { db.customers = db.customers.filter(c => c.id !== id); saveDatabase(); render(); }
+            }
+            window.deleteProduct = id => {
+                if (confirm('Tem certeza?')) { db.products = db.products.filter(p => p.id !== id); saveDatabase(); render(); }
+            }
 
-            window.deleteCustomer = function(id) {
-                if (confirm('Tem certeza que deseja excluir este cliente?')) {
-                    db.customers = db.customers.filter(c => c.id !== id);
-                    saveDatabase();
-                    render();
-                }
-            }
-            
-            window.deleteProduct = function(id) {
-                 if (confirm('Tem certeza que deseja excluir este produto?')) {
-                    db.products = db.products.filter(p => p.id !== id);
-                    saveDatabase();
-                    render();
-                }
-            }
-            
-            // Funções de Edição (editCustomer, editProduct) seriam mais complexas,
-            // envolvendo abrir o modal com os dados preenchidos.
-            
             // --- MODAIS ---
             const customerModal = document.getElementById('customer-modal');
             const productModal = document.getElementById('product-modal');
-            const modals = [customerModal, productModal];
+            const modals = {
+                customer: customerModal,
+                product: productModal
+            };
+            document.getElementById('add-customer-btn').onclick = () => modals.customer.style.display = 'block';
+            document.getElementById('add-product-btn').onclick = () => modals.product.style.display = 'block';
             
-            document.getElementById('add-customer-btn').onclick = () => customerModal.style.display = 'block';
-            document.getElementById('add-product-btn').onclick = () => productModal.style.display = 'block';
-
-            modals.forEach(modal => {
+            Object.values(modals).forEach(modal => {
                 modal.querySelector('.close-btn').onclick = () => modal.style.display = 'none';
             });
-            window.onclick = (event) => {
-                modals.forEach(modal => {
+            window.onclick = event => {
+                Object.values(modals).forEach(modal => {
                     if (event.target == modal) modal.style.display = 'none';
                 });
             }
             
-            // Formulário de Cliente
             document.getElementById('customer-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const newCustomer = {
-                    id: Date.now(), // ID único baseado no tempo
+                db.customers.push({
+                    id: Date.now(),
                     name: document.getElementById('customer-name').value,
                     contact: document.getElementById('customer-contact').value,
                     since: new Date().toLocaleDateString('pt-BR')
-                };
-                db.customers.push(newCustomer);
-                saveDatabase();
-                render();
-                this.reset();
-                customerModal.style.display = 'none';
+                });
+                saveDatabase(); render(); this.reset(); modals.customer.style.display = 'none';
             });
             
-            // Formulário de Produto
             document.getElementById('product-form').addEventListener('submit', function(e) {
                 e.preventDefault();
-                const newProduct = {
+                db.products.push({
                     id: Date.now(),
                     name: document.getElementById('product-name').value,
                     sku: document.getElementById('product-sku').value,
                     price: parseFloat(document.getElementById('product-price').value),
                     stock: parseInt(document.getElementById('product-stock').value)
-                };
-                db.products.push(newProduct);
-                saveDatabase();
-                render();
-                this.reset();
-                productModal.style.display = 'none';
+                });
+                saveDatabase(); render(); this.reset(); modals.product.style.display = 'none';
             });
 
             // --- NAVEGAÇÃO E INICIALIZAÇÃO ---
-            // (O código de navegação da sidebar, login e logout continua o mesmo)
-             const navLinks = document.querySelectorAll('.nav-link');
-             const pages = document.querySelectorAll('.page-content');
-             const menuToggle = document.querySelector('.menu-toggle');
-             const sidebar = document.querySelector('.sidebar');
-             const logoutBtn = document.getElementById('logout-btn');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page-content');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
 
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                loadDatabase(); // CARREGA O BANCO DE DADOS NO LOGIN
-                render(); // RENDERIZA OS DADOS NA TELA
+            loginForm.addEventListener('submit', e => {
+                e.preventDefault(); loadDatabase(); render();
                 loginScreen.style.opacity = '0';
                 setTimeout(() => {
-                    loginScreen.style.display = 'none';
-                    mainApp.style.display = 'grid';
+                    loginScreen.style.display = 'none'; mainApp.style.display = 'grid';
                 }, 500);
             });
             
-            // ... (resto do código de navegação, logout, etc. igual ao anterior) ...
+            document.getElementById('logout-btn').addEventListener('click', e => {
+                e.preventDefault(); mainApp.style.display = 'none';
+                loginScreen.style.display = 'flex';
+                setTimeout(() => loginScreen.style.opacity = '1', 50);
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    if(link.id === 'logout-btn') return;
+                    const targetId = link.getAttribute('data-target');
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    link.classList.add('active');
+                    pages.forEach(page => page.classList.toggle('active', page.id === targetId));
+                    if (window.innerWidth <= 768) sidebar.classList.remove('show');
+                });
+            });
+            
+            menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
         });
     </script>
 </body>
