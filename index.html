@@ -596,8 +596,7 @@
             renderSaleCart();
             showNotification(`${product.name} adicionado ao carrinho.`, 'info');
             
-            // **CORREÇÃO APLICADA AQUI**
-            // Em vez de resetar o formulário inteiro, reseta apenas os campos necessários.
+            // Apenas reseta os campos do formulário de adicionar, não o formulário inteiro.
             productSelect.selectedIndex = 0;
             quantityInput.value = 1;
         });
@@ -630,9 +629,10 @@
             
             showNotification('Venda registrada com sucesso!', 'success');
             currentSale = { items: [], total: 0 };
-            document.getElementById('add-to-cart-form').reset();
+            
             renderSaleCart();
-            renderAll();
+            renderAll(); // Atualiza o dashboard e outras tabelas
+            renderSalePage(); // Atualiza os selects da página de vendas com o novo estoque
         });
 
         // --- CONTAS A RECEBER (FIADO) ---
@@ -784,7 +784,7 @@
             const title = document.getElementById(`${type}-modal-title`);
 
             if (id) { // Edit mode
-                const item = db[type].find(i => i.id === id);
+                const item = db[type + 's'].find(i => i.id === id); 
                 title.innerText = `Editar ${type === 'customer' ? 'Cliente' : 'Produto'}`;
                 document.getElementById(`${type}-id`).value = id;
                 Object.keys(item).forEach(key => {
@@ -844,46 +844,57 @@
         // --- NAVEGAÇÃO E INICIALIZAÇÃO ---
         const navLinks=document.querySelectorAll('.nav-link'),pages=document.querySelectorAll('.page-content'),menuToggle=document.querySelector('.menu-toggle'),sidebar=document.querySelector('.sidebar');
         
-        loginForm.addEventListener('submit',e=>{
-            e.preventDefault();
+        function showMainApp() {
             loadDatabase();
             renderAll();
-            loginScreen.style.opacity='0';
-            setTimeout(()=>{
-                loginScreen.style.display='none';
-                mainApp.style.display='grid';
-                showNotification('Login bem-sucedido!', 'success');
-            },500);
-        });
+            loginScreen.style.opacity = '0';
+            setTimeout(() => {
+                loginScreen.style.display = 'none';
+                mainApp.style.display = 'grid';
+            }, 500);
+        }
         
-        document.getElementById('logout-btn').addEventListener('click',e=>{
+        loginForm.addEventListener('submit', e => {
             e.preventDefault();
-            destroyCharts();
-            mainApp.style.display='none';
-            loginScreen.style.display='flex';
-            setTimeout(()=>loginScreen.style.opacity='1',50);
+            sessionStorage.setItem('styloVendasLoggedIn', 'true');
+            showMainApp();
+            showNotification('Login bem-sucedido!', 'success');
         });
         
-        navLinks.forEach(link=>{
-            link.addEventListener('click',e=>{
+        document.getElementById('logout-btn').addEventListener('click', e => {
+            e.preventDefault();
+            sessionStorage.removeItem('styloVendasLoggedIn');
+            destroyCharts();
+            mainApp.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            setTimeout(() => loginScreen.style.opacity = '1', 50);
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
                 e.preventDefault();
-                if(link.id==='logout-btn') return;
+                if(link.id === 'logout-btn') return;
                 
-                const targetId=link.getAttribute('data-target');
+                const targetId = link.getAttribute('data-target');
                 
-                if(targetId==='sales') renderSalePage();
-                if(targetId==='debts') renderDebtsPage();
-                if(targetId==='reports') renderReportsPage();
+                if(targetId === 'sales') renderSalePage();
+                if(targetId === 'debts') renderDebtsPage();
+                if(targetId === 'reports') renderReportsPage();
 
-                navLinks.forEach(n=>n.classList.remove('active'));
+                navLinks.forEach(n => n.classList.remove('active'));
                 link.classList.add('active');
                 
-                pages.forEach(p=>p.classList.toggle('active',p.id===targetId));
-                if(window.innerWidth<=768) sidebar.classList.remove('show');
+                pages.forEach(p => p.classList.toggle('active', p.id === targetId));
+                if(window.innerWidth <= 768) sidebar.classList.remove('show');
             })
         });
         
-        menuToggle.addEventListener('click',()=>sidebar.classList.toggle('show'));
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+        // --- VERIFICAÇÃO INICIAL ---
+        if (sessionStorage.getItem('styloVendasLoggedIn') === 'true') {
+            showMainApp();
+        }
 
         if (!localStorage.getItem('styloVendasDB')) {
             const sampleDB = {
