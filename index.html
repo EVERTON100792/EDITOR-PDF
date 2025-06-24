@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materiais Pedagógicos Prof. Vane</title>
+    <title>Plataforma de Planos de Aula</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -12,7 +12,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
         
         :root {
-            --primary-color: #b19cd9;
+            --primary-color: #b19cd9; /* Mantido por ser uma cor agradável */
             --secondary-color: #6c5b7b;
             --accent-color: #ffb6c1;
             --background-color: #fdfcff;
@@ -200,6 +200,7 @@
             margin: 0;
         }
 
+        /* MODIFICADO: Título genérico */
         .login-box h1 { font-size: 2.25rem; margin-top: 0; }
         .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); }
         #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -275,9 +276,9 @@
         .modal-body h3:first-child { margin-top: 0; }
         .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
         .modal-body ul { list-style-position: inside; padding-left: 0; }
-        .dica-da-vane { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-        .dica-da-vane p { margin: 0; font-weight: 500; }
-        .dica-da-vane strong { color: var(--accent-color); font-weight: 700; }
+        .dica-pedagogica { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
+        .dica-pedagogica p { margin: 0; font-weight: 500; }
+        .dica-pedagogica strong { color: var(--accent-color); font-weight: 700; }
         .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
         .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
         .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
@@ -620,7 +621,7 @@
     <div id="login-screen">
         <div class="login-container">
             <div class="login-box">
-                <h1>Materiais Pedagógicos</h1>
+                <h1>Plataforma do Professor</h1>
                 <p>Acesso exclusivo para assinantes.</p>
                 <form id="login-form">
                     <input type="text" id="username-input" placeholder="Usuário" required>
@@ -644,7 +645,7 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
                 <svg><use xlink:href="#icon-menu"></use></svg>
             </button>
-            <h1><span class="logo-icon"></span><span>Cantinho da Prof. Vane</span></h1>
+            <h1><span class="logo-icon"></span><span>Plano Mestre</span></h1>
             <div class="user-area">
                 <span id="welcome-message"></span>
                 <button id="logout-button" class="logout-button">Sair</button>
@@ -739,7 +740,7 @@
                         </div>
                     </section>
                 </main>
-                <footer><p style="text-align: center; color: var(--text-color-light); margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">Criado com ❤️ por Prof. Vane</p></footer>
+                <footer><p style="text-align: center; color: var(--text-color-light); margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">Plataforma do Professor &copy; 2025</p></footer>
             </div>
         </div>
     </div>
@@ -747,11 +748,13 @@
     <div class="modal-container" id="modal-container"></div>
 
     <script>
+    // MODIFICADO: Usuários de exemplo, em um produto real isso viria de um banco de dados.
     const usuariosAutorizados = [
-        { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
+        { usuario: "prof.teste", senha: "222" }, { usuario: "demo", senha: "123" },
         { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
     ];
     
+    // MODIFICADO: Este seria o catálogo inicial de atividades, vindo de um banco de dados.
     const todasAsAtividades = [
         { 
             id: 1, 
@@ -772,7 +775,8 @@
                 expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
                 encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
             },
-            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
+            // MODIFICADO: De "dica_vane" para "dica_pedagogica"
+            dica_pedagogica: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
         },
         { 
             id: 2, 
@@ -793,7 +797,7 @@
                 expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
                 encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
             },
-            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
+            dica_pedagogica: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
         },
         { 
             id: 3, 
@@ -814,7 +818,7 @@
                 expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
                 encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
             },
-            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
+            dica_pedagogica: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
         },
         { 
             id: 4, 
@@ -835,7 +839,7 @@
                 expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
                 encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
             },
-            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
+            dica_pedagogica: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
         },
         { 
             id: 5, 
@@ -857,7 +861,7 @@
                 expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
                 encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
             },
-            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
+            dica_pedagogica: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
         },
         { 
             id: 6, 
@@ -878,7 +882,7 @@
                 expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
                 encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
             },
-            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
+            dica_pedagogica: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
         },
         { 
             id: 7, 
@@ -899,7 +903,7 @@
                 expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
                 encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
             },
-            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
+            dica_pedagogica: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
         },
         { 
             id: 8, 
@@ -920,7 +924,7 @@
                 expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
                 encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
             },
-            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
+            dica_pedagogica: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
         }
     ];
     
@@ -931,7 +935,8 @@
             activeFilter: 'Todos', 
             currentPage: 1, 
             itemsPerPage: 6,
-            favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || [],
+            // MODIFICADO: Nome do item no localStorage para ser genérico
+            favorites: JSON.parse(localStorage.getItem('lessonPlannerFavoritesV1')) || [],
             // Aula Maker State
             selectedActivitiesForMaker: [],
             makerPlanTitle: '',
@@ -1028,6 +1033,7 @@
             const activity = todasAsAtividades.find(a => a.id === id);
             if (!activity) return;
 
+            // MODIFICADO: Usa "dica_pedagogica" e a classe "dica-pedagogica"
             const modalHTML = `
             <div class="modal-content">
                 <div class="modal-header">
@@ -1051,7 +1057,7 @@
                         <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
                     </ol>
                     
-                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
+                    ${activity.dica_pedagogica ? `<div class="dica-pedagogica"><p><strong>✨ Dica Pedagógica:</strong> ${activity.dica_pedagogica}</p></div>` : ''}
                 </div>
                 <div class="modal-footer">
                     <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
@@ -1115,13 +1121,13 @@
         }
 
         function setupEventListeners() {
-            dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
+            // MODIFICADO: Nome do item no localStorage para ser genérico
+            dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('loggedInUser'); location.reload(); });
             
             // Navigation
             dom.navAulaMakerBtn.addEventListener('click', () => {
                 appState.currentView = 'aulaMaker';
                 render();
-                /* CORREÇÃO 1: Garante que a sidebar feche em dispositivos móveis ao clicar no botão */
                 document.body.classList.remove('sidebar-open');
             });
 
@@ -1291,7 +1297,8 @@
             } else {
                 appState.favorites.push(id);
             }
-            localStorage.setItem('profVaneFavoritesV1', JSON.stringify(appState.favorites));
+            // MODIFICADO: Nome do item no localStorage para ser genérico
+            localStorage.setItem('lessonPlannerFavoritesV1', JSON.stringify(appState.favorites));
             
             if (appState.activeFilter === 'Favoritos' && appState.currentView === 'catalog') {
                 appState.currentPage = 1;
@@ -1602,7 +1609,8 @@
         (function main() {
             setupLoginScreenPreview();
 
-            const savedUser = localStorage.getItem('usuarioLogado');
+            // MODIFICADO: Nome do item no localStorage para ser genérico
+            const savedUser = localStorage.getItem('loggedInUser');
             if (savedUser) {
                 initializePanel(savedUser);
             }
@@ -1612,7 +1620,8 @@
                 const pass = e.target.elements['password-input'].value.trim();
                 const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
                 if (found) {
-                    localStorage.setItem('usuarioLogado', found.usuario);
+                    // MODIFICADO: Nome do item no localStorage para ser genérico
+                    localStorage.setItem('loggedInUser', found.usuario);
                     initializePanel(found.usuario);
                 } else {
                     document.getElementById('login-error').classList.remove('hidden');
