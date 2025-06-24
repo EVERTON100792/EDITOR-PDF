@@ -121,6 +121,11 @@
             border-color: #444;
             opacity: 0.6;
         }
+        
+        .secondary-btn {
+             background: #4A5568; color: #fff; padding: 5px 10px; font-size: .8rem; border-radius: 5px; cursor: pointer; transition: all .2s; border: none;
+        }
+        .secondary-btn:hover { background: #2D3748; }
 
         #main-app {
             display: none;
@@ -233,10 +238,13 @@
         table .actions i { cursor: pointer; margin-right: 15px; color: #777; transition: color .2s; font-size: 1.1rem; }
         table .actions i.fa-trash:hover { color: var(--danger-color); }
         table .actions i.fa-edit:hover { color: var(--primary-color); }
+        .stock-adjust-cell { display: flex; align-items: center; gap: 10px; }
+        .stock-adjust-cell input { width: 70px; padding: 8px; }
 
         .status { padding: 5px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; text-align: center; }
         .status.paid { background-color: rgba(16, 185, 129, 0.2); color: #10b981; }
         .status.pending { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .status.low-stock { background-color: rgba(245, 158, 11, 0.2); color: #f59e0b; }
 
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0;
@@ -337,8 +345,9 @@
             <nav class="sidebar-menu">
                 <ul>
                     <li><a href="#" class="nav-link" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-target="sales"><i class="fas fa-cash-register"></i> Registrar Venda</a></li>
+                    <li><a href="#" class="nav-link" data-target="cashier"><i class="fas fa-cash-register"></i> Caixa</a></li>
                     <li><a href="#" class="nav-link" data-target="products"><i class="fas fa-tshirt"></i> Produtos</a></li>
+                    <li><a href="#" class="nav-link" data-target="inventory"><i class="fas fa-boxes-stacked"></i> Estoques</a></li>
                     <li><a href="#" class="nav-link" data-target="customers"><i class="fas fa-users"></i> Clientes</a></li>
                     <li><a href="#" class="nav-link" data-target="debts"><i class="fas fa-hand-holding-usd"></i> Contas a Receber</a></li>
                     <li><a href="#" class="nav-link" data-target="reports"><i class="fas fa-chart-pie"></i> Relatórios</a></li>
@@ -386,14 +395,14 @@
                 </div>
             </div>
             
-            <div id="sales" class="page-content">
-                <div class="page-header"><h1>Registrar Nova Venda</h1></div>
+            <div id="cashier" class="page-content">
+                <div class="page-header"><h1>Caixa (Ponto de Venda)</h1></div>
                 <div class="content-block">
                     <h2 style="margin-bottom: 20px; color: var(--heading-color);">1. Adicionar Produto ao Carrinho</h2>
                     <form id="add-to-cart-form">
                         <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: flex-end;">
-                            <div class="input-group" style="margin:0;"><label>Produto</label><select id="sale-product" required></select></div>
-                            <div class="input-group" style="margin:0;"><label>Qtd.</label><input type="number" id="sale-quantity" value="1" min="1" required></div>
+                            <div class="input-group" style="margin:0;"><label>Produto</label><select id="cashier-product" required></select></div>
+                            <div class="input-group" style="margin:0;"><label>Qtd.</label><input type="number" id="cashier-quantity" value="1" min="1" required></div>
                             <button type="submit" id="add-to-cart-btn" class="primary-btn">Adicionar</button>
                         </div>
                     </form>
@@ -404,8 +413,8 @@
                         <div id="current-sale-cart"></div>
                         <div id="checkout-controls">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-                                <div class="input-group"><label>Cliente</label><select id="sale-customer" required></select></div>
-                                <div class="input-group"><label>Forma de Pagamento</label><select id="sale-payment-method" required><option value="Dinheiro">Dinheiro</option><option value="Cartão de Crédito">Cartão de Crédito</option><option value="Cartão de Débito">Cartão de Débito</option><option value="Pix">Pix</option><option value="Fiado">Fiado</option></select></div>
+                                <div class="input-group"><label>Cliente</label><select id="cashier-customer" required></select></div>
+                                <div class="input-group"><label>Forma de Pagamento</label><select id="cashier-payment-method" required><option value="Dinheiro">Dinheiro</option><option value="Cartão de Crédito">Cartão de Crédito</option><option value="Cartão de Débito">Cartão de Débito</option><option value="Pix">Pix</option><option value="Fiado">Fiado</option></select></div>
                             </div>
                             <button type="submit" id="finalize-sale-btn" class="primary-btn" style="width: 100%; margin-top: 20px;">Finalizar Venda</button>
                         </div>
@@ -423,6 +432,20 @@
                     <table>
                         <thead><tr><th>SKU</th><th>Produto</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
                         <tbody id="products-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="inventory" class="page-content">
+                <div class="page-header">
+                    <h1>Gestão de Estoques</h1>
+                    <p>Adicione, remova ou ajuste a quantidade de produtos em seu inventário.</p>
+                </div>
+                <div class="content-block">
+                    <div class="content-block-header"><h2>Controle de Inventário</h2></div>
+                     <table>
+                        <thead><tr><th>SKU</th><th>Produto</th><th>Estoque Atual</th><th style="text-align: right;">Ajustar Estoque</th></tr></thead>
+                        <tbody id="inventory-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -544,7 +567,7 @@
             const container = document.getElementById('notification-container');
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            const icon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+            const icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-times-circle' : 'fa-info-circle');
             notification.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
             container.appendChild(notification);
             setTimeout(() => {
@@ -580,11 +603,22 @@
             localStorage.setItem('flordeMariaDB', JSON.stringify(db));
         }
 
-        function renderAll() {
+        function renderAll(pageToRefresh = null) {
             if (!db) return;
-            renderDashboard();
-            renderProductsTable();
-            renderCustomersTable();
+            
+            // Renderiza apenas a página ativa ou todas se nenhuma for especificada
+            const activePage = pageToRefresh || sessionStorage.getItem('activePage') || 'dashboard';
+
+            if (activePage === 'dashboard') renderDashboard();
+            if (activePage === 'products') renderProductsTable();
+            if (activePage === 'inventory') renderInventoryPage();
+            if (activePage === 'customers') renderCustomersTable();
+            if (activePage === 'debts') renderDebtsPage();
+            if (activePage === 'cashier') initializeCashierPage();
+            if (activePage === 'reports') renderReportsPage();
+
+            // Renderiza componentes que precisam de atualização constante em segundo plano
+            if (activePage !== 'dashboard') renderDashboardCards(); // Cards do dashboard sempre atualizados
         }
 
         // --- LÓGICA DE NAVEGAÇÃO E PÁGINAS ---
@@ -596,10 +630,14 @@
             
             destroyAllCharts();
 
-            if (targetId === 'sales') initializeSalePage();
+            // Chamadas de renderização específicas da página
+            if (targetId === 'cashier') initializeCashierPage();
             if (targetId === 'debts') renderDebtsPage();
             if (targetId === 'reports') renderReportsPage();
             if (targetId === 'dashboard') renderDashboard();
+            if (targetId === 'products') renderProductsTable();
+            if (targetId === 'customers') renderCustomersTable();
+            if (targetId === 'inventory') renderInventoryPage();
             
             navLinks.forEach(n => n.classList.remove('active'));
             pages.forEach(p => p.classList.remove('active'));
@@ -616,21 +654,27 @@
                 sidebar.classList.remove('show');
             }
         }
-
-        function renderDashboard() {
-            const totalRevenue = db.sales.filter(sale => sale.status === 'Pago').reduce((sum, sale) => sum + sale.total, 0);
-            document.getElementById('dashboard-cards').innerHTML = `
+        
+        function renderDashboardCards() {
+             const totalRevenue = db.sales.filter(sale => sale.status === 'Pago').reduce((sum, sale) => sum + sale.total, 0);
+             const totalProductsInStock = db.products.reduce((sum, product) => sum + product.stock, 0);
+             document.getElementById('dashboard-cards').innerHTML = `
                 <div class="card revenue"><div class="icon-wrapper"><i class="fas fa-dollar-sign"></i></div><div class="card-info"><h3>R$ ${totalRevenue.toFixed(2)}</h3><p>Receita (Pago)</p></div></div>
                 <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tags"></i></div><div class="card-info"><h3>${db.sales.length}</h3><p>Vendas Totais</p></div></div>
                 <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${db.customers.length}</h3><p>Clientes</p></div></div>
-                <div class="card products"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${db.products.length}</h3><p>Produtos</p></div></div>`;
+                <div class="card products"><div class="icon-wrapper"><i class="fas fa-boxes-stacked"></i></div><div class="card-info"><h3>${totalProductsInStock}</h3><p>Itens em Estoque</p></div></div>`;
+        }
+
+        function renderDashboard() {
+            renderDashboardCards();
             renderDashboardCharts();
         }
 
         function renderProductsTable() {
             const tableBody = document.getElementById('products-table-body');
             tableBody.innerHTML = db.products.map(p => `<tr>
-                <td>${p.sku}</td><td>${p.name}</td><td>R$ ${p.price.toFixed(2)}</td><td>${p.stock}</td>
+                <td>${p.sku}</td><td>${p.name}</td><td>R$ ${p.price.toFixed(2)}</td>
+                <td><span class="status ${p.stock <= 5 ? 'pending' : ''}">${p.stock}</span></td>
                 <td class="actions">
                     <i class="fas fa-edit" onclick="openEditModal('product', ${p.id})"></i>
                     <i class="fas fa-trash" onclick="deleteEntity('products', ${p.id})"></i>
@@ -647,11 +691,46 @@
                 </td></tr>`).join('');
         }
         
-        // --- LÓGICA DE VENDA ---
+        // --- LÓGICA DE ESTOQUE ---
+
+        function renderInventoryPage() {
+            const tableBody = document.getElementById('inventory-table-body');
+            if(!tableBody) return;
+            tableBody.innerHTML = db.products.map(p => `<tr>
+                <td>${p.sku}</td>
+                <td>${p.name}</td>
+                <td><span class="status ${p.stock <= 5 ? (p.stock === 0 ? 'pending' : 'low-stock') : ''}">${p.stock}</span></td>
+                <td class="stock-adjust-cell" style="text-align: right;">
+                    <input type="number" class="input-group" id="stock-adjust-input-${p.id}" value="${p.stock}" min="0">
+                    <button class="secondary-btn" onclick="adjustStock(${p.id})">Salvar</button>
+                </td>
+            </tr>`).join('');
+        }
+
+        window.adjustStock = (productId) => {
+            const input = document.getElementById(`stock-adjust-input-${productId}`);
+            const newStock = parseInt(input.value);
+
+            if (isNaN(newStock) || newStock < 0) {
+                showNotification('Por favor, insira um valor de estoque válido.', 'error');
+                return;
+            }
+
+            const product = db.products.find(p => p.id === productId);
+            if(product) {
+                product.stock = newStock;
+                saveDatabase();
+                showNotification(`Estoque de "${product.name}" atualizado para ${newStock}.`, 'success');
+                renderInventoryPage(); // Re-renderiza a tabela de estoque
+                renderProductsTable(); // Re-renderiza a tabela de produtos também
+            }
+        };
+
+        // --- LÓGICA DO CAIXA (VENDA) ---
         
-        function initializeSalePage() {
-            const productSelect = document.getElementById('sale-product');
-            const customerSelect = document.getElementById('sale-customer');
+        function initializeCashierPage() {
+            const productSelect = document.getElementById('cashier-product');
+            const customerSelect = document.getElementById('cashier-customer');
             const addToCartBtn = document.getElementById('add-to-cart-btn');
 
             productSelect.innerHTML = '<option value="">Selecione um produto...</option>' + 
@@ -669,8 +748,8 @@
         }
         
         function toggleCheckoutControls(enabled) {
-            document.getElementById('sale-customer').disabled = !enabled;
-            document.getElementById('sale-payment-method').disabled = !enabled;
+            document.getElementById('cashier-customer').disabled = !enabled;
+            document.getElementById('cashier-payment-method').disabled = !enabled;
             document.getElementById('finalize-sale-btn').disabled = !enabled;
         }
         
@@ -709,8 +788,8 @@
 
         document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const productSelect = document.getElementById('sale-product');
-            const quantityInput = document.getElementById('sale-quantity');
+            const productSelect = document.getElementById('cashier-product');
+            const quantityInput = document.getElementById('cashier-quantity');
             const productId = parseInt(productSelect.value);
             const quantity = parseInt(quantityInput.value);
 
@@ -733,8 +812,7 @@
             updateCartIcon();
             renderCurrentSaleCart();
             productSelect.value = "";
-            // CORREÇÃO DEFINITIVA: A linha abaixo foi removida para não resetar a quantidade.
-            // quantityInput.value = 1; 
+            quantityInput.value = 1; 
             document.getElementById('add-to-cart-btn').disabled = true;
         });
         
@@ -750,24 +828,29 @@
 
             const saleRecord = {
                 id: Date.now(),
-                customerId: parseInt(document.getElementById('sale-customer').value),
+                customerId: parseInt(document.getElementById('cashier-customer').value),
                 items: currentSale.items.map(item => {
+                    // ATUALIZA O ESTOQUE AQUI
                     const product = db.products.find(p => p.id === item.productId);
-                    if (product) product.stock -= item.quantity;
+                    if (product) {
+                        product.stock -= item.quantity;
+                    }
                     return {...item, priceAtSale: product ? product.price : 0};
                 }),
                 total: currentSale.total,
-                paymentMethod: document.getElementById('sale-payment-method').value,
-                status: document.getElementById('sale-payment-method').value === 'Fiado' ? 'Pendente' : 'Pago',
+                paymentMethod: document.getElementById('cashier-payment-method').value,
+                status: document.getElementById('cashier-payment-method').value === 'Fiado' ? 'Pendente' : 'Pago',
                 date: new Date().toISOString()
             };
 
             db.sales.push(saleRecord);
             saveDatabase();
             showNotification('Venda registrada com sucesso!', 'success');
+            
             currentSale = { items: [], total: 0 };
             updateCartIcon();
-            initializeSalePage();
+            initializeCashierPage();
+            renderAll('dashboard'); // Atualiza o dashboard após a venda
         });
 
         // --- LÓGICA DE CONTAS A RECEBER ---
@@ -811,6 +894,9 @@
         function createChart(canvasId, type, data, options) {
             const ctx = document.getElementById(canvasId);
             if (ctx) {
+                 if (chartInstances[canvasId]) {
+                    chartInstances[canvasId].destroy();
+                }
                 chartInstances[canvasId] = new Chart(ctx, { type, data, options });
             }
         }
@@ -870,10 +956,19 @@
         // --- MODAIS E CRUD ---
 
         window.deleteEntity = (type, id) => {
+            if(type === 'products' && db.sales.some(sale => sale.items.some(item => item.productId === id))) {
+                 showNotification('Não é possível excluir produtos que já possuem vendas registradas.', 'error');
+                 return;
+            }
+            if(type === 'customers' && db.sales.some(sale => sale.customerId === id)) {
+                 showNotification('Não é possível excluir clientes que já possuem vendas registradas.', 'error');
+                 return;
+            }
+
             if (confirm(`Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.`)) {
                 db[type] = db[type].filter(item => item.id !== id);
                 saveDatabase();
-                renderAll();
+                navigateToPage(sessionStorage.getItem('activePage')); // Re-renderiza a página atual
                 showNotification('Item excluído com sucesso.', 'success');
             }
         }
@@ -935,6 +1030,7 @@
             }
             saveDatabase();
             renderProductsTable();
+            renderInventoryPage(); // Atualiza a página de estoques também
             this.reset();
             modals.product.style.display='none';
             showNotification('Produto salvo com sucesso!', 'success');
@@ -950,7 +1046,6 @@
 
         function showMainApp() {
             loadDatabase();
-            renderAll();
             loginScreen.style.display = 'none';
             mainApp.style.display = 'grid';
             const lastPage = sessionStorage.getItem('activePage') || 'dashboard';
