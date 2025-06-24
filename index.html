@@ -38,7 +38,6 @@
             font-family: 'Poppins', sans-serif;
         }
         
-        /* CORREÇÃO: Evita o "flash" da tela de login */
         body.loading > * {
             display: none;
         }
@@ -90,7 +89,7 @@
         .input-group input, .input-group select {
             width: 100%; padding: 15px; padding-left: 45px;
             border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;
-            transition: border-color .3s, box-shadow .3s;
+            transition: all .3s;
             background-color: #2a3f50;
             color: var(--heading-color);
         }
@@ -106,19 +105,22 @@
             width: 100%; padding: 15px; border: none; border-radius: 8px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: #fff; font-size: 1.1rem; font-weight: 600;
-            cursor: pointer; transition: transform .2s, box-shadow .2s, background-color .2s;
+            cursor: pointer; transition: all .2s;
         }
-        .login-btn:hover, .primary-btn:hover {
+        .login-btn:hover, .primary-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
         }
-        .primary-btn:disabled, select:disabled { 
+
+        /* MELHORIA: Estilo visual para elementos desabilitados */
+        .primary-btn:disabled, select:disabled, input:disabled { 
             background: #555; 
             cursor: not-allowed; 
             transform: none; 
             box-shadow: none; 
             color: #888; 
             border-color: #444;
+            opacity: 0.6;
         }
 
         #main-app {
@@ -465,12 +467,12 @@
                         <canvas id="reports-revenue-chart"></canvas>
                     </div>
                     <div class="chart-container">
-                        <h2>Vendas por Forma de Pagamento</h2>
-                        <canvas id="reports-payment-method-chart"></canvas>
+                        <h2>Produtos Mais Vendidos (Top 10)</h2>
+                        <canvas id="reports-top-products-chart"></canvas>
                     </div>
                     <div class="chart-container">
-                        <h2>Produtos Mais Vendidos</h2>
-                        <canvas id="reports-top-products-chart"></canvas>
+                        <h2>Vendas por Forma de Pagamento</h2>
+                        <canvas id="reports-payment-method-chart"></canvas>
                     </div>
                 </div>
             </div>
@@ -537,6 +539,8 @@
         Chart.defaults.color = '#b0c4de';
         Chart.defaults.borderColor = '#2a3f50';
 
+        // --- FUNÇÕES PRINCIPAIS ---
+
         function showNotification(message, type = 'success', duration = 3000) {
             const container = document.getElementById('notification-container');
             const notification = document.createElement('div');
@@ -578,58 +582,93 @@
         }
 
         function renderAll() {
+            if (!db) return;
             renderDashboard();
             renderProductsTable();
             renderCustomersTable();
         }
 
+        // --- LÓGICA DE NAVEGAÇÃO E PÁGINAS ---
+
+        function navigateToPage(targetId) {
+            if (!targetId || !document.getElementById(targetId)) {
+                targetId = 'dashboard'; // Segurança: volta para o dashboard se a página não existir
+            }
+            
+            destroyAllCharts();
+
+            if (targetId === 'sales') initializeSalePage();
+            if (targetId === 'debts') renderDebtsPage();
+            if (targetId === 'reports') renderReportsPage();
+            if (targetId === 'dashboard') renderDashboard();
+            
+            navLinks.forEach(n => n.classList.remove('active'));
+            pages.forEach(p => p.classList.remove('active'));
+
+            const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+            const activePage = document.getElementById(targetId);
+
+            if (activeLink) activeLink.classList.add('active');
+            if (activePage) activePage.classList.add('active');
+            
+            sessionStorage.setItem('activePage', targetId);
+            
+            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
+        }
+
         function renderDashboard() {
-            const totalRevenue = db.sales
-                .filter(sale => sale.status === 'Pago')
-                .reduce((sum, sale) => sum + sale.total, 0);
-            const totalSales = db.sales.length;
-            const totalCustomers = db.customers.length;
-            const totalProducts = db.products.length;
+            const totalRevenue = db.sales.filter(sale => sale.status === 'Pago').reduce((sum, sale) => sum + sale.total, 0);
             document.getElementById('dashboard-cards').innerHTML = `
                 <div class="card revenue"><div class="icon-wrapper"><i class="fas fa-dollar-sign"></i></div><div class="card-info"><h3>R$ ${totalRevenue.toFixed(2)}</h3><p>Receita (Pago)</p></div></div>
-                <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tags"></i></div><div class="card-info"><h3>${totalSales}</h3><p>Vendas Totais</p></div></div>
-                <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${totalCustomers}</h3><p>Clientes</p></div></div>
-                <div class="card products"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${totalProducts}</h3><p>Produtos</p></div></div>`;
+                <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tags"></i></div><div class="card-info"><h3>${db.sales.length}</h3><p>Vendas Totais</p></div></div>
+                <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${db.customers.length}</h3><p>Clientes</p></div></div>
+                <div class="card products"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${db.products.length}</h3><p>Produtos</p></div></div>`;
             renderDashboardCharts();
         }
 
         function renderProductsTable() {
             const tableBody = document.getElementById('products-table-body');
-            tableBody.innerHTML = '';
-            db.products.forEach(p => {
-                tableBody.innerHTML += `<tr>
-                    <td>${p.sku}</td><td>${p.name}</td><td>R$ ${p.price.toFixed(2)}</td><td>${p.stock}</td>
-                    <td class="actions">
-                        <i class="fas fa-edit" onclick="openEditModal('product', ${p.id})"></i>
-                        <i class="fas fa-trash" onclick="deleteEntity('products', ${p.id})"></i>
-                    </td></tr>`;
-            });
+            tableBody.innerHTML = db.products.map(p => `<tr>
+                <td>${p.sku}</td><td>${p.name}</td><td>R$ ${p.price.toFixed(2)}</td><td>${p.stock}</td>
+                <td class="actions">
+                    <i class="fas fa-edit" onclick="openEditModal('product', ${p.id})"></i>
+                    <i class="fas fa-trash" onclick="deleteEntity('products', ${p.id})"></i>
+                </td></tr>`).join('');
         }
+
         function renderCustomersTable() {
             const tableBody = document.getElementById('customers-table-body');
-            tableBody.innerHTML = '';
-            db.customers.forEach(c => {
-                tableBody.innerHTML += `<tr>
-                    <td>${c.name}</td><td>${c.contact}</td><td>${c.since}</td>
-                    <td class="actions">
-                        <i class="fas fa-edit" onclick="openEditModal('customer', ${c.id})"></i>
-                        <i class="fas fa-trash" onclick="deleteEntity('customers', ${c.id})"></i>
-                    </td></tr>`;
+            tableBody.innerHTML = db.customers.map(c => `<tr>
+                <td>${c.name}</td><td>${c.contact}</td><td>${c.since}</td>
+                <td class="actions">
+                    <i class="fas fa-edit" onclick="openEditModal('customer', ${c.id})"></i>
+                    <i class="fas fa-trash" onclick="deleteEntity('customers', ${c.id})"></i>
+                </td></tr>`).join('');
+        }
+        
+        // --- LÓGICA DE VENDA ---
+        
+        function initializeSalePage() {
+            const productSelect = document.getElementById('sale-product');
+            const customerSelect = document.getElementById('sale-customer');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+            productSelect.innerHTML = '<option value="">Selecione um produto...</option>' + 
+                db.products.filter(p => p.stock > 0).map(p => `<option value="${p.id}">${p.name} (Estoque: ${p.stock})</option>`).join('');
+            
+            customerSelect.innerHTML = '<option value="0">Consumidor Final</option>' + 
+                db.customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            addToCartBtn.disabled = true;
+            productSelect.addEventListener('change', function() {
+                addToCartBtn.disabled = !this.value;
             });
+            
+            renderCurrentSaleCart();
         }
         
-        function updateCartIcon() {
-            const count = currentSale.items.length;
-            cartItemCount.innerText = count;
-            cartItemCount.classList.toggle('visible', count > 0);
-        }
-        
-        // MELHORIA: Função para controlar o estado dos controles de finalização
         function toggleCheckoutControls(enabled) {
             document.getElementById('sale-customer').disabled = !enabled;
             document.getElementById('sale-payment-method').disabled = !enabled;
@@ -641,34 +680,32 @@
             
             if (currentSale.items.length === 0) {
                 cartContainer.innerHTML = '<p style="text-align:center; padding: 20px 0;">Seu carrinho está vazio.</p>';
-                toggleCheckoutControls(false); // Desabilita controles se o carrinho estiver vazio
+                toggleCheckoutControls(false);
                 return;
             }
-            let tableHTML = `
-                <table>
-                    <thead><tr><th>Produto</th><th>Qtd.</th><th>Preço Unit.</th><th>Subtotal</th><th>Ação</th></tr></thead>
-                    <tbody>`;
+
             currentSale.total = 0;
-            currentSale.items.forEach(item => {
+            const tableRows = currentSale.items.map(item => {
                 const product = db.products.find(p => p.id === item.productId);
-                if (!product) return; // Segurança caso o produto seja deletado
+                if (!product) return '';
                 const subtotal = item.quantity * product.price;
                 currentSale.total += subtotal;
-                tableHTML += `
-                    <tr>
-                        <td>${product.name}</td>
-                        <td>${item.quantity}</td>
-                        <td>R$ ${product.price.toFixed(2)}</td>
-                        <td>R$ ${subtotal.toFixed(2)}</td>
-                        <td><button type="button" class="danger-btn" onclick="removeFromCart(${product.id})">Remover</button></td>
-                    </tr>`;
-            });
-            tableHTML += `
-                    </tbody>
-                    <tfoot><tr><td colspan="3">TOTAL</td><td colspan="2">R$ ${currentSale.total.toFixed(2)}</td></tr></tfoot>
-                </table>`;
-            cartContainer.innerHTML = tableHTML;
-            toggleCheckoutControls(true); // Habilita controles
+                return `<tr>
+                    <td>${product.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>R$ ${product.price.toFixed(2)}</td>
+                    <td>R$ ${subtotal.toFixed(2)}</td>
+                    <td><button type="button" class="danger-btn" onclick="removeFromCart(${product.id})">Remover</button></td>
+                </tr>`;
+            }).join('');
+
+            cartContainer.innerHTML = `<table>
+                <thead><tr><th>Produto</th><th>Qtd.</th><th>Preço Unit.</th><th>Subtotal</th><th>Ação</th></tr></thead>
+                <tbody>${tableRows}</tbody>
+                <tfoot><tr><td colspan="3">TOTAL</td><td colspan="2">R$ ${currentSale.total.toFixed(2)}</td></tr></tfoot>
+            </table>`;
+            
+            toggleCheckoutControls(true);
         }
 
         document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
@@ -678,25 +715,15 @@
             const productId = parseInt(productSelect.value);
             const quantity = parseInt(quantityInput.value);
 
-            if (!productId) { 
-                showNotification('Por favor, selecione um produto.', 'error'); 
-                return; 
-            }
+            if (!productId) { showNotification('Por favor, selecione um produto.', 'error'); return; }
             
-            // CORREÇÃO: Verificação do produto movida para cima e mais robusta
             const product = db.products.find(p => p.id === productId);
-            if (!product) {
-                showNotification('Erro: Produto não encontrado no sistema.', 'error');
-                return;
-            }
+            if (!product) { showNotification('Erro: Produto não encontrado.', 'error'); return; }
 
             const existingItem = currentSale.items.find(item => item.productId === productId);
             const totalQuantity = (existingItem ? existingItem.quantity : 0) + quantity;
 
-            if (totalQuantity > product.stock) { 
-                showNotification(`Estoque insuficiente! Disponível: ${product.stock}`, 'error'); 
-                return; 
-            }
+            if (totalQuantity > product.stock) { showNotification(`Estoque insuficiente! Disponível: ${product.stock}`, 'error'); return; }
             
             if (existingItem) {
                 existingItem.quantity += quantity;
@@ -706,31 +733,28 @@
             showNotification(`${product.name} adicionado ao carrinho.`, 'info');
             updateCartIcon();
             renderCurrentSaleCart();
-            productSelect.value = ""; 
-            quantityInput.value = 1;
+            productSelect.value = "";
+            // CORREÇÃO: Não reseta a quantidade para '1', mantendo a escolha do usuário.
+            // quantityInput.value = 1; 
             document.getElementById('add-to-cart-btn').disabled = true;
         });
         
         window.removeFromCart = (productId) => {
             currentSale.items = currentSale.items.filter(item => item.productId !== productId);
-            renderCurrentSaleCart();
             updateCartIcon();
+            renderCurrentSaleCart();
         }
 
         document.getElementById('checkout-form').addEventListener('submit', function(e) {
             e.preventDefault();
             if (currentSale.items.length === 0) { showNotification('O carrinho está vazio!', 'error'); return; }
 
-            currentSale.items.forEach(item => {
-                const product = db.products.find(p => p.id === item.productId);
-                if (product) product.stock -= item.quantity;
-            });
-
             const saleRecord = {
                 id: Date.now(),
                 customerId: parseInt(document.getElementById('sale-customer').value),
                 items: currentSale.items.map(item => {
                     const product = db.products.find(p => p.id === item.productId);
+                    if (product) product.stock -= item.quantity; // Abate o estoque
                     return {...item, priceAtSale: product ? product.price : 0};
                 }),
                 total: currentSale.total,
@@ -738,35 +762,34 @@
                 status: document.getElementById('sale-payment-method').value === 'Fiado' ? 'Pendente' : 'Pago',
                 date: new Date().toISOString()
             };
+
             db.sales.push(saleRecord);
             saveDatabase();
             showNotification('Venda registrada com sucesso!', 'success');
             currentSale = { items: [], total: 0 };
             updateCartIcon();
-            initializeSalePage();
-            renderAll();
+            initializeSalePage(); // Reseta a página de venda
         });
 
+        // --- LÓGICA DE CONTAS A RECEBER ---
 
         function renderDebtsPage() {
-             const tableBody = document.getElementById('debts-table-body');
-            tableBody.innerHTML = '';
+            const tableBody = document.getElementById('debts-table-body');
             const pendingSales = db.sales.filter(s => s.status === 'Pendente').sort((a, b) => new Date(a.date) - new Date(b.date));
             if(pendingSales.length === 0){
                 tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma conta pendente.</td></tr>';
                 return;
             }
-            pendingSales.forEach(sale => {
+            tableBody.innerHTML = pendingSales.map(sale => {
                 const customer = db.customers.find(c => c.id === sale.customerId) || { name: 'Consumidor Final' };
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${customer.name}</td>
-                        <td>${new Date(sale.date).toLocaleDateString('pt-BR')}</td>
-                        <td>R$ ${sale.total.toFixed(2)}</td>
-                        <td><span class="status pending">Pendente</span></td>
-                        <td><button class="primary-btn" onclick="markDebtAsPaid(${sale.id})">Marcar como Pago</button></td>
-                    </tr>`;
-            });
+                return `<tr>
+                    <td>${customer.name}</td>
+                    <td>${new Date(sale.date).toLocaleDateString('pt-BR')}</td>
+                    <td>R$ ${sale.total.toFixed(2)}</td>
+                    <td><span class="status pending">Pendente</span></td>
+                    <td><button class="primary-btn" onclick="markDebtAsPaid(${sale.id})">Marcar como Pago</button></td>
+                </tr>`;
+            }).join('');
         }
         window.markDebtAsPaid = (saleId) => {
             const sale = db.sales.find(s => s.id === saleId);
@@ -774,11 +797,13 @@
                 sale.status = 'Pago';
                 saveDatabase();
                 showNotification('Conta marcada como paga com sucesso!', 'success');
-                renderAll();
-                renderDebtsPage();
+                renderDebtsPage(); // Apenas atualiza a tabela de dívidas
+                renderDashboard(); // E o dashboard para refletir a receita
             }
         }
         
+        // --- LÓGICA DOS GRÁFICOS (CHARTS) ---
+
         function destroyAllCharts() {
             Object.values(chartInstances).forEach(chart => {
                 if (chart) chart.destroy();
@@ -786,70 +811,79 @@
             chartInstances = {};
         }
 
+        function createChart(canvasId, type, data, options) {
+            const ctx = document.getElementById(canvasId);
+            if (ctx) {
+                chartInstances[canvasId] = new Chart(ctx, { type, data, options });
+            }
+        }
+        
         function renderDashboardCharts() {
-            destroyAllCharts(); // Garante que todos os gráficos sejam destruídos antes de recriar
-
-            const revenueData = {};
-            const last12Months = Array.from({length: 12}, (_, i) => {
-                const d = new Date();
-                d.setMonth(d.getMonth() - i);
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            }).reverse();
-            last12Months.forEach(month => revenueData[month] = 0);
+            const last12Months = Array.from({length: 12}, (_, i) => { const d = new Date(); d.setMonth(d.getMonth() - i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; }).reverse();
+            const revenueData = last12Months.reduce((acc, month) => ({...acc, [month]: 0}), {});
             db.sales.filter(s => s.status === 'Pago').forEach(sale => {
                 const saleMonth = sale.date.substring(0, 7);
-                if (revenueData[saleMonth] !== undefined) {
-                    revenueData[saleMonth] += sale.total;
-                }
-            });
-            chartInstances.dashboardRevenue = new Chart(document.getElementById('dashboard-revenue-chart'), {
-                type: 'bar', data: { labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })), datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                if (revenueData[saleMonth] !== undefined) revenueData[saleMonth] += sale.total;
             });
 
-            const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
+            createChart('dashboard-revenue-chart', 'bar', {
+                labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })),
+                datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
+            }, { responsive: true, scales: { y: { beginAtZero: true } } });
+
+            const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => ({...acc, [item.productId]: (acc[item.productId] || 0) + item.quantity }), {});
             const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 5);
-            const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
-            const productQuantities = sortedProducts.map(([,qty]) => qty);
-            chartInstances.dashboardTopProducts = new Chart(document.getElementById('dashboard-top-products-chart'), {
-                type: 'bar', data: { labels: productLabels, datasets: [{ label: 'Quantidade Vendida', data: productQuantities, backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, indexAxis: 'y' }
-            });
             
-            const paymentData = db.sales.reduce((acc, sale) => { acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + 1; return acc; }, {});
-            chartInstances.dashboardPayment = new Chart(document.getElementById('dashboard-payment-method-chart'), {
-                type: 'doughnut', data: { labels: Object.keys(paymentData), datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: 'top' } } }
-            });
+            createChart('dashboard-top-products-chart', 'bar', {
+                labels: sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name),
+                datasets: [{ label: 'Quantidade Vendida', data: sortedProducts.map(([,qty]) => qty), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
+            }, { responsive: true, indexAxis: 'y' });
+            
+            const paymentData = db.sales.reduce((acc, sale) => ({...acc, [sale.paymentMethod]: (acc[sale.paymentMethod] || 0) + 1 }), {});
+            createChart('dashboard-payment-method-chart', 'doughnut', {
+                labels: Object.keys(paymentData),
+                datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }]
+            }, { responsive: true, plugins: { legend: { position: 'top' } } });
         }
 
+        // CORREÇÃO: Função de relatório independente
         function renderReportsPage() {
-            destroyAllCharts();
-            // Simplesmente reutiliza a lógica dos gráficos do dashboard
-            const revenueCtx = document.getElementById('reports-revenue-chart').getContext('2d');
-            chartInstances.reportsRevenue = new Chart(revenueCtx, chartInstances.dashboardRevenue.config);
-
-            const paymentCtx = document.getElementById('reports-payment-method-chart').getContext('2d');
-            chartInstances.reportsPayment = new Chart(paymentCtx, chartInstances.dashboardPayment.config);
-            
-            const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
-            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10); // Mostra Top 10 nos relatórios
-            const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
-            const productQuantities = sortedProducts.map(([,qty]) => qty);
-            chartInstances.reportsTopProducts = new Chart(document.getElementById('reports-top-products-chart'), {
-                type: 'bar', data: { labels: productLabels, datasets: [{ label: 'Quantidade Vendida', data: productQuantities, backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, indexAxis: 'y' }
+            // Reutiliza a mesma lógica de obtenção de dados, mas não depende das instâncias de chart do dashboard
+            const last12Months = Array.from({length: 12}, (_, i) => { const d = new Date(); d.setMonth(d.getMonth() - i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; }).reverse();
+            const revenueData = last12Months.reduce((acc, month) => ({...acc, [month]: 0}), {});
+            db.sales.filter(s => s.status === 'Pago').forEach(sale => {
+                const saleMonth = sale.date.substring(0, 7);
+                if (revenueData[saleMonth] !== undefined) revenueData[saleMonth] += sale.total;
             });
-        }
+            createChart('reports-revenue-chart', 'bar', {
+                labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })),
+                datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
+            }, { responsive: true, scales: { y: { beginAtZero: true } } });
 
+            const paymentData = db.sales.reduce((acc, sale) => ({...acc, [sale.paymentMethod]: (acc[sale.paymentMethod] || 0) + 1 }), {});
+            createChart('reports-payment-method-chart', 'doughnut', {
+                labels: Object.keys(paymentData),
+                datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }]
+            }, { responsive: true, plugins: { legend: { position: 'top' } } });
+
+            const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => ({...acc, [item.productId]: (acc[item.productId] || 0) + item.quantity }), {});
+            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10); // Top 10 para relatórios
+            createChart('reports-top-products-chart', 'bar', {
+                labels: sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: 'Produto Deletado'}).name),
+                datasets: [{ label: 'Quantidade Vendida', data: sortedProducts.map(([,qty]) => qty), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
+            }, { responsive: true, indexAxis: 'y' });
+        }
+        
+        // --- MODAIS E CRUD ---
 
         window.deleteEntity = (type, id) => {
             if (confirm(`Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.`)) {
                 db[type] = db[type].filter(item => item.id !== id);
                 saveDatabase();
-                renderAll();
+                renderAll(); // Atualiza todas as tabelas
                 showNotification('Item excluído com sucesso.', 'success');
             }
         }
-        
-        document.getElementById('add-customer-btn').onclick=()=>openEditModal('customer');
-        document.getElementById('add-product-btn').onclick=()=>openEditModal('product');
         
         window.openEditModal = (type, id = null) => {
             const form = document.getElementById(`${type}-form`);
@@ -859,10 +893,7 @@
             const title = document.getElementById(`${type}-modal-title`);
             if (id) {
                 const item = db[type + 's'].find(i => i.id === id);
-                if (!item) {
-                    showNotification('Item não encontrado.', 'error');
-                    return;
-                }
+                if (!item) { showNotification('Item não encontrado.', 'error'); return; }
                 title.innerText = `Editar ${type === 'customer' ? 'Cliente' : 'Produto'}`;
                 document.getElementById(`${type}-id`).value = id;
                 Object.keys(item).forEach(key => {
@@ -875,128 +906,60 @@
             modal.style.display = 'block';
         }
         
-        document.querySelectorAll('.modal .close-btn').forEach(btn => {
-            btn.onclick = () => {
-                btn.closest('.modal').style.display = 'none';
-            };
-        });
-        
-        // MELHORIA: Listener de click para fechar modais e a sidebar
-        window.addEventListener('click', e => {
-            // Fecha modal
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
-            }
-            // Fecha sidebar em modo mobile
-            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
-                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                    sidebar.classList.remove('show');
-                }
-            }
-        });
+        document.querySelectorAll('.modal .close-btn').forEach(btn => btn.onclick = () => btn.closest('.modal').style.display = 'none');
+        document.getElementById('add-customer-btn').onclick = () => openEditModal('customer');
+        document.getElementById('add-product-btn').onclick = () => openEditModal('product');
 
-
-        document.getElementById('customer-form').addEventListener('submit',function(e){
+        document.getElementById('customer-form').addEventListener('submit', function(e){
             e.preventDefault();
             const id = parseInt(document.getElementById('customer-id').value);
             const customerData = { name: document.getElementById('customer-name').value, contact: document.getElementById('customer-contact').value };
             if(id) {
                 const index = db.customers.findIndex(c => c.id === id);
                 db.customers[index] = { ...db.customers[index], ...customerData };
-                showNotification('Cliente atualizado com sucesso!', 'success');
             } else {
                 customerData.id = Date.now();
                 customerData.since = new Date().toLocaleDateString('pt-BR');
                 db.customers.push(customerData);
-                showNotification('Cliente salvo com sucesso!', 'success');
             }
-            saveDatabase();renderAll();this.reset();modals.customer.style.display='none';
+            saveDatabase();
+            renderCustomersTable();
+            this.reset();
+            modals.customer.style.display='none';
+            showNotification('Cliente salvo com sucesso!', 'success');
         });
 
-        document.getElementById('product-form').addEventListener('submit',function(e){
+        document.getElementById('product-form').addEventListener('submit', function(e){
             e.preventDefault();
             const id = parseInt(document.getElementById('product-id').value);
             const productData = { name: document.getElementById('product-name').value, sku: document.getElementById('product-sku').value, price: parseFloat(document.getElementById('product-price').value), stock: parseInt(document.getElementById('product-stock').value) };
-             if(id) {
+            if(id) {
                 const index = db.products.findIndex(p => p.id === id);
                 db.products[index] = { ...db.products[index], ...productData };
-                showNotification('Produto atualizado com sucesso!', 'success');
             } else {
                 productData.id = Date.now();
                 db.products.push(productData);
-                showNotification('Produto salvo com sucesso!', 'success');
             }
-            saveDatabase();renderAll();this.reset();modals.product.style.display='none';
+            saveDatabase();
+            renderProductsTable();
+            this.reset();
+            modals.product.style.display='none';
+            showNotification('Produto salvo com sucesso!', 'success');
         });
-        
-        function initializeSalePage() {
-            const productSelect = document.getElementById('sale-product');
-            const customerSelect = document.getElementById('sale-customer');
-            const addToCartBtn = document.getElementById('add-to-cart-btn');
 
-            productSelect.innerHTML = '<option value="">Selecione um produto...</option>';
-            db.products
-              .filter(p => p.stock > 0)
-              .forEach(p => { productSelect.innerHTML += `<option value="${p.id}">${p.name} (Estoque: ${p.stock})</option>`; });
-            
-            customerSelect.innerHTML = '<option value="0">Consumidor Final</option>';
-            db.customers.forEach(c => { customerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
+        // --- AUTENTICAÇÃO E INICIALIZAÇÃO ---
 
-            addToCartBtn.disabled = true;
-            productSelect.addEventListener('change', function() {
-                addToCartBtn.disabled = !this.value;
-            });
-            
-            renderCurrentSaleCart();
+        function updateCartIcon() {
+            const count = currentSale.items.length;
+            cartItemCount.innerText = count;
+            cartItemCount.classList.toggle('visible', count > 0);
         }
-        
-        // MELHORIA: Função centralizada para navegação
-        function navigateToPage(targetId) {
-             if (!targetId) return;
-
-             // Lógica específica da página antes de navegar
-            if (targetId === 'sales') initializeSalePage();
-            if (targetId === 'debts') renderDebtsPage();
-            if (targetId === 'reports') renderReportsPage();
-            if (targetId === 'dashboard') renderDashboardCharts();
-            
-            navLinks.forEach(n => n.classList.remove('active'));
-            pages.forEach(p => p.classList.remove('active'));
-
-            const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
-            const activePage = document.getElementById(targetId);
-
-            if (activeLink) activeLink.classList.add('active');
-            if (activePage) activePage.classList.add('active');
-            
-            // MELHORIA: Salva a página ativa na sessão
-            sessionStorage.setItem('activePage', targetId);
-            
-            if (window.innerWidth <= 768) sidebar.classList.remove('show');
-        }
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                if(link.id === 'logout-btn') {
-                    logout();
-                    return;
-                }
-                const targetId = link.getAttribute('data-target');
-                navigateToPage(targetId);
-            })
-        });
-        
-        menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
 
         function showMainApp() {
             loadDatabase();
             renderAll();
-            
             loginScreen.style.display = 'none';
             mainApp.style.display = 'grid';
-            
-            // MELHORIA: Carrega a última página visitada ou o dashboard
             const lastPage = sessionStorage.getItem('activePage') || 'dashboard';
             navigateToPage(lastPage);
         }
@@ -1016,24 +979,26 @@
 
         loginForm.addEventListener('submit', e => {
             e.preventDefault();
-            // Aqui você pode adicionar uma validação de usuário/senha real se necessário
             sessionStorage.setItem('flordeMariaLoggedIn', 'true');
             showMainApp();
             showNotification('Login bem-sucedido!', 'success');
         });
 
-        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
-        function initializeApp() {
-            if (sessionStorage.getItem('flordeMariaLoggedIn') === 'true') {
-                showMainApp();
-            } else {
-                showLoginScreen();
-            }
-            document.body.classList.remove('loading');
-        }
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                if (link.id === 'logout-btn') {
+                    logout();
+                    return;
+                }
+                navigateToPage(link.getAttribute('data-target'));
+            });
+        });
 
-        initializeApp();
-    });
-    </script>
-</body>
-</html>
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+        window.addEventListener('click', e => {
+            if (e.target.classList.contains('modal')) { e.target.style.display = 'none'; }
+            if (window.innerWidth <= 768 && sidebar.classList.contains('show') && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('show');
+            }
