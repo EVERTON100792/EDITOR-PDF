@@ -1356,9 +1356,12 @@
             dom.mainContent.classList.remove('hidden');
             dom.welcomeMsg.textContent = `Olá, ${username.split('.')[0].charAt(0).toUpperCase() + username.split('.')[0].slice(1)}!`;
             // Set default date for the plan
-            const today = new Date().toISOString().split('T')[0];
-            appState.makerPlanDate = today;
-            dom.makerDateInput.value = today;
+            const today = new Date();
+            const offset = today.getTimezoneOffset();
+            const localDate = new Date(today.getTime() - (offset*60*1000));
+            const formattedDate = localDate.toISOString().split('T')[0];
+            appState.makerPlanDate = formattedDate;
+            dom.makerDateInput.value = formattedDate;
 
             setupEventListeners();
             setupMobileMenu();
@@ -1494,9 +1497,13 @@
                 appState.makerPlanNotes = '';
                 appState.selectedActivitiesForMaker = [];
                 // Reset date to today
-                const today = new Date().toISOString().split('T')[0];
-                appState.makerPlanDate = today;
-                dom.makerDateInput.value = today;
+                const today = new Date();
+                const offset = today.getTimezoneOffset();
+                const localDate = new Date(today.getTime() - (offset*60*1000));
+                const formattedDate = localDate.toISOString().split('T')[0];
+                appState.makerPlanDate = formattedDate;
+                dom.makerDateInput.value = formattedDate;
+
                 renderAulaMaker();
             }
         }
@@ -1729,7 +1736,7 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
                 doc.setTextColor(...varGet('--text-color-light'));
-                const dateFormatted = appState.makerPlanDate ? new Date(appState.makerPlanDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Data não informada';
+                const dateFormatted = appState.makerPlanDate ? new Date(appState.makerPlanDate + 'T12:00:00Z').toLocaleDateString('pt-BR') : 'Data não informada';
                 doc.text(`Data da Aula: ${dateFormatted}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.yOffset += 20;
                 doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não informado'}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
@@ -1787,7 +1794,7 @@
         }
         
         // ===================================================================
-        // LÓGICA DO SUPER GERADOR
+        // LÓGICA DO SUPER GERADOR (COM ATIVIDADES MAIS RICAS)
         // ===================================================================
         function openSuperDocModal() {
             if (appState.selectedActivitiesForMaker.length === 0) {
@@ -1874,7 +1881,7 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
                 doc.setTextColor(...varGet('--text-color-light'));
-                const dateFormatted = appState.makerPlanDate ? new Date(appState.makerPlanDate + 'T00:00:00').toLocaleDateString('pt-BR') : 'Data não informada';
+                const dateFormatted = appState.makerPlanDate ? new Date(appState.makerPlanDate + 'T12:00:00Z').toLocaleDateString('pt-BR') : 'Data não informada';
                 doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não informado'} | Data: ${dateFormatted}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.drawFooter();
 
@@ -1897,8 +1904,7 @@
                     if(index < selectedActivities.length - 1) pdf.drawActivitySeparator();
                 });
 
-                // --- FOLHAS DE ATIVIDADES PARA ALUNOS (GERAÇÃO DINÂMICA SIMULADA) ---
-                pdf.checkNewPage();
+                // --- FOLHAS DE ATIVIDADES PARA ALUNOS (GERAÇÃO DINÂMICA SIMULADA E MELHORADA) ---
                 doc.addPage();
                 pdf.yOffset = pdf.margin;
                 pdf.drawFooter();
@@ -1915,33 +1921,86 @@
                     }
                     pdf.yOffset += 15;
 
-                    // SIMULAÇÃO DA IA GERANDO EXERCÍCIOS
-                    if (activity.id === 5) { // Detetive de Sílabas
-                        pdf.writeText("1. Junte as sílabas e escreva a palavra secreta.", 11);
-                        pdf.writeText("BO + LA = _________", 12, 'normal', 20);
-                        pdf.writeText("MA + CA + CO = _________", 12, 'normal', 20);
-                        pdf.writeText("PA + NE + LA = _________", 12, 'normal', 20);
-                    } else if (activity.id === 2) { // Criador de Histórias
-                        pdf.writeText("1. Use os elementos abaixo para criar uma pequena história. Não se esqueça do título!", 11);
-                        pdf.writeText("Personagem: um robô amigo | Lugar: uma cidade na lua | Objeto: uma estrela brilhante", 10, 'bold', 20);
-                        for(let i=0; i<8; i++) {
-                            doc.line(pdf.margin, pdf.yOffset + 20, pdf.margin + pdf.maxWidth, pdf.yOffset + 20);
+                    // SIMULAÇÃO DA IA GERANDO EXERCÍCIOS RICOS
+                    switch(activity.id) {
+                        case 5: // Alfabetização: Detetive de Sílabas
+                            pdf.writeText("1. Junte as sílabas e escreva a palavra secreta.", 11);
+                            pdf.writeText("BO + LA = _________         CA + SA = _________", 12, 'normal', 20);
+                            pdf.writeText("MA + CA + CO = _________   PA + TO = _________", 12, 'normal', 20);
+                            pdf.yOffset += 15;
+                            pdf.writeText("2. Separe as sílabas das palavras abaixo.", 11);
+                            pdf.writeText("PANELA: ____ - ____ - ____", 12, 'normal', 20);
+                            pdf.writeText("SAPATO: ____ - ____ - ____", 12, 'normal', 20);
+                            break;
+
+                        case 2: // Português: Criador de Histórias
+                            pdf.writeText("1. Use os elementos abaixo para criar uma pequena história. Não se esqueça do título!", 11);
+                            pdf.writeText("Personagem: um cão corajoso | Lugar: uma floresta misteriosa | Objeto: um mapa do tesouro", 10, 'bold', 20);
+                            for(let i=0; i<5; i++) {
+                                doc.line(pdf.margin, pdf.yOffset + 20, pdf.margin + pdf.maxWidth, pdf.yOffset + 20);
+                                pdf.yOffset += 20;
+                            }
+                            pdf.yOffset += 15;
+                            pdf.writeText("2. Agora, desenhe o tesouro que o cão encontrou!", 11);
+                            doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 100, 'S');
+                            pdf.yOffset += 110;
+                            break;
+
+                        case 3: // Matemática: O Problema do Dia
+                            pdf.writeText("1. Resolva os problemas abaixo. Você pode desenhar para ajudar!", 11);
+                            pdf.writeText("a) Ana tinha 5 lápis e ganhou mais 3 de seu amigo. Com quantos lápis Ana ficou no total?", 11, 'normal', 20);
+                            doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 60, 'S');
+                            pdf.yOffset += 70;
+                            pdf.writeText("b) João tinha 8 bolinhas de gude e perdeu 2 no recreio. Com quantas bolinhas ele ficou?", 11, 'normal', 20);
+                            doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 60, 'S');
+                            pdf.yOffset += 70;
+                             pdf.writeText("2. Resolva as continhas:", 11);
+                             pdf.writeText("5 + 4 = ____      9 - 1 = ____      3 + 6 = ____", 12, 'normal', 20);
+                            break;
+
+                        case 4: // Ciências: Mini-Debate
+                            pdf.writeText("Anote os argumentos para o nosso debate. Tema: " + (appState.makerPlanTheme || "Tema da Aula"), 11);
+                             pdf.yOffset += 10;
+                             doc.autoTable({
+                                head: [['Argumentos a Favor (Prós)'], ['Argumentos Contra']],
+                                body: [[' '], [' '], [' '], [' ']], // Espaços em branco
+                                startY: pdf.yOffset,
+                                headStyles: { fillColor: varGet('--primary-color') }
+                             });
+                             pdf.yOffset = doc.autoTable.previous.finalY + 20;
+                            break;
+
+                        case 8: // História: Linha do Tempo Pessoal
+                            pdf.writeText("Desenhe os momentos mais importantes da sua vida na linha do tempo abaixo.", 11);
                             pdf.yOffset += 20;
-                        }
-                    } else if (activity.id === 3) { // O Problema do Dia
-                         pdf.writeText("1. Resolva o problema abaixo. Você pode desenhar para ajudar!", 11);
-                         pdf.writeText("Ana tinha 5 lápis e ganhou mais 3 de seu amigo. Com quantos lápis Ana ficou no total?", 12, 'normal', 20);
-                         doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 100);
-                         pdf.yOffset += 110;
-                    } else {
-                        pdf.writeText(`1. Siga as instruções do professor para completar a atividade "${activity.titulo}".`, 11);
-                         doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 150);
-                         pdf.yOffset += 160;
+                            doc.setLineWidth(1.5);
+                            doc.line(pdf.margin, pdf.yOffset + 50, pdf.margin + pdf.maxWidth, pdf.yOffset + 50);
+                            
+                            // Boxes on timeline
+                            doc.rect(pdf.margin + 20, pdf.yOffset, 120, 80, 'S');
+                            doc.text("Quando eu era bebê", pdf.margin + 35, pdf.yOffset + 95);
+                            
+                            doc.rect(pdf.margin + 200, pdf.yOffset, 120, 80, 'S');
+                            doc.text("Um dia especial", pdf.margin + 220, pdf.yOffset + 95);
+
+                            doc.rect(pdf.margin + 380, pdf.yOffset, 120, 80, 'S');
+                            doc.text("Hoje", pdf.margin + 425, pdf.yOffset + 95);
+                            pdf.yOffset += 120;
+                            break;
+
+                        default:
+                            pdf.writeText(`1. Siga as instruções do professor para completar a atividade "${activity.titulo}".`, 11);
+                            doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 150, 'S');
+                            pdf.yOffset += 160;
+                            break;
                     }
-                    pdf.drawActivitySeparator();
+
+                    if (selectedActivities.indexOf(activity) < selectedActivities.length - 1) {
+                         pdf.drawActivitySeparator();
+                    }
                 });
                 
-                // --- GABARITO ---
+                // --- GABARITO (MELHORADO) ---
                 doc.addPage();
                 pdf.yOffset = pdf.margin;
                 pdf.drawFooter();
@@ -1949,10 +2008,13 @@
                  selectedActivities.forEach(activity => {
                     pdf.checkNewPage(60);
                     pdf.drawSubheader(activity.titulo);
-                     if (activity.id === 5) pdf.writeText("Respostas: BOLA, MACACO, PANELA.", 10);
-                     else if (activity.id === 2) pdf.writeText("Resposta pessoal. Avaliar criatividade, coerência e uso dos elementos.", 10);
-                     else if (activity.id === 3) pdf.writeText("Resposta: 5 + 3 = 8. Ana ficou com 8 lápis.", 10);
-                     else pdf.writeText("Resposta conforme a condução da atividade.", 10);
+                     switch(activity.id) {
+                        case 5: pdf.writeText("1. BOLA, CASA, MACACO, PATO.\n2. PANELA: PA-NE-LA, SAPATO: SA-PA-TO.", 10); break;
+                        case 2: pdf.writeText("1. Resposta pessoal. Avaliar criatividade e uso dos elementos.\n2. Avaliar a representação do personagem.", 10); break;
+                        case 3: pdf.writeText("1. a) 5 + 3 = 8 lápis. b) 8 - 2 = 6 bolinhas.\n2. 9, 8, 9.", 10); break;
+                        default: pdf.writeText("Resposta conforme a condução da atividade e observação do professor.", 10); break;
+                     }
+                     pdf.yOffset += 10;
                  });
 
 
