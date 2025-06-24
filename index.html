@@ -7,93 +7,337 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
 
     <style>
-        /* --- CONFIGURAÇÕES GERAIS --- */
+        /* --- CONFIGURAÇÕES GERAIS E NOVO TEMA --- */
         :root {
-            --primary-color: #d63384;
-            --secondary-color: #fce3ec;
+            --primary-color: #4A658A; /* Azul Ardósia */
+            --primary-dark-color: #3C5270;
+            --secondary-color: #F0F4F8; /* Azul muito claro */
+            --accent-color: #5D82B1;
             --text-color: #333;
-            --bg-color: #f4f7fa;
+            --text-light-color: #667;
+            --bg-color: #F8F9FA;
             --white-color: #fff;
-            --gray-color: #ddd;
+            --gray-color: #DDE2E8;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --shadow-color: rgba(74, 101, 138, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; font-family: 'Poppins', sans-serif; color: var(--text-color); background-color: var(--bg-color); }
+        
+        html, body {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            -webkit-font-smoothing: antialiased;
+        }
+
         .hidden { display: none !important; }
         .flex { display: flex; }
         .flex-column { flex-direction: column; }
+        .flex-1 { flex: 1; }
         .gap-1 { gap: 0.5rem; }
         .gap-2 { gap: 1rem; }
         .gap-3 { gap: 1.5rem; }
-        .mb-1 { margin-bottom: 0.5rem; }
         .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .mt-2 { margin-top: 1rem; }
         .mt-3 { margin-top: 1.5rem; }
         .p-3 { padding: 1.5rem; }
+        .align-items-end { align-items: flex-end; }
 
         /* --- TELA DE LOGIN --- */
-        #login-screen { background: linear-gradient(135deg, var(--secondary-color), #ffc1d6); display: flex; justify-content: center; align-items: center; height: 100%; }
-        .login-box { background-color: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); text-align: center; width: 380px; }
-        .login-box h1 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; }
-        .login-box .subtitle { color: #666; margin-bottom: 30px; }
-        .input-group { position: relative; margin-bottom: 30px; }
-        .input-group input, .form-group select, .form-group input { width: 100%; padding: 12px; border: 1px solid var(--gray-color); border-radius: 5px; font-size: 1rem; font-family: 'Poppins', sans-serif; }
-        .input-group input { border: none; border-bottom: 2px solid #ccc; background-color: transparent; }
-        .input-group label { position: absolute; left: 0; bottom: 10px; color: #999; pointer-events: none; transition: all 0.3s ease; }
-        .input-group input:focus ~ label, .input-group input:valid ~ label { transform: translateY(-20px); font-size: 0.8rem; color: var(--primary-color); }
-        .btn-login { width: 100%; padding: 12px; border: none; border-radius: 25px; background: linear-gradient(135deg, var(--primary-color), #ff69b4); color: white; font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+        #login-screen {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 1rem;
+        }
+        .login-box {
+            background-color: var(--white-color);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .login-box .subtitle {
+            color: var(--text-light-color);
+            margin-bottom: 35px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 35px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px 0;
+            border: none;
+            border-bottom: 2px solid var(--gray-color);
+            background-color: transparent;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+        .input-group label {
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            color: #999;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        /* CORREÇÃO: Lógica para o label flutuante */
+        .input-group input:focus,
+        .input-group input:valid {
+            outline: none;
+            border-bottom-color: var(--primary-color);
+        }
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            transform: translateY(-22px);
+            font-size: 0.8rem;
+            color: var(--primary-color);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .btn-login:hover {
+            background: var(--primary-dark-color);
+        }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
         .shake-animation { animation: shake 0.5s; }
-        .error-message { color: var(--primary-color); margin-top: 15px; height: 20px; font-size: 0.9rem; font-weight: 500; }
+        .error-message { color: var(--danger-color); margin-top: 15px; height: 20px; font-size: 0.9rem; font-weight: 500; }
 
-        /* --- DASHBOARD --- */
-        #dashboard-screen { display: flex; height: 100%; }
-        .sidebar { width: 260px; background: var(--white-color); box-shadow: 2px 0 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
-        .sidebar-header { text-align: center; margin-bottom: 40px; }
-        .sidebar-header h2 { color: var(--primary-color); }
+        /* --- DASHBOARD LAYOUT --- */
+        #dashboard-screen { display: flex; height: 100vh; }
+        
+        .sidebar {
+            width: 260px;
+            background: var(--white-color);
+            box-shadow: 2px 0 10px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 15px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+        .sidebar-header h2 {
+            color: var(--primary-color);
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+        }
         .sidebar-nav ul { list-style: none; }
-        .sidebar-nav li a { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #555; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: all 0.3s ease; font-weight: 500; }
-        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: var(--secondary-color); color: var(--primary-color); }
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            color: var(--text-light-color);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
         .sidebar-footer { margin-top: auto; }
-        .logout-btn { display: block; width: 100%; padding: 15px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; }
-        .logout-btn:hover { background: var(--primary-color); color: white; }
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        .logout-btn {
+            display: block; width: 100%; padding: 15px;
+            border: 1px solid var(--accent-color); background: transparent;
+            color: var(--accent-color); border-radius: 8px; cursor: pointer;
+            font-size: 1rem; font-weight: 500; transition: all 0.3s ease;
+        }
+        .logout-btn:hover { background: var(--accent-color); color: white; }
+        
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .main-header {
+            display: none; /* Oculto por padrão, visível em mobile */
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        #menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        #menu-toggle .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-dark-color);
+            margin: 5px 0;
+            transition: 0.4s;
+        }
+
         .content-section { display: none; }
         .content-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .main-content h1 { font-size: 2.2rem; margin-bottom: 20px; color: var(--text-color); }
-        
+        .main-content h1 { font-size: 2rem; margin-bottom: 20px; color: var(--primary-dark-color); font-weight: 600; }
+
         /* --- CARDS, FORMS & TABLES --- */
-        .card { background: var(--white-color); padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-top: 20px; }
-        .card h2 { margin-bottom: 20px; color: var(--primary-color); }
+        .card {
+            background: var(--white-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            margin-top: 20px;
+        }
+        .card h2 { margin-bottom: 20px; color: var(--primary-color); font-weight: 600; }
+        .card h3 { font-weight: 600; color: var(--primary-dark-color); }
+
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
-        .btn, .btn-submit { padding: 12px 25px; border: none; border-radius: 5px; background: var(--primary-color); color: white; font-size: 1rem; cursor: pointer; transition: background 0.3s; }
-        .btn-secondary { background: #6c757d; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-light-color);
+            font-size: 0.9rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--white-color);
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 101, 138, 0.2);
+        }
+
+        .btn, .btn-submit {
+            padding: 12px 25px; border: none; border-radius: 5px;
+            background: var(--primary-color); color: white;
+            font-size: 1rem; cursor: pointer; transition: background 0.3s;
+            font-weight: 500;
+        }
+        .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); }
+        
+        .table-responsive-container { overflow-x: auto; } /* RESPONSIVIDADE TABELA */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background-color: #f8f9fa; font-weight: 600; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--gray-color); white-space: nowrap; }
+        th { background-color: var(--secondary-color); font-weight: 600; color: var(--primary-dark-color); }
+        td { color: var(--text-light-color); }
+
         .btn-action { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: 500; }
-        .btn-paid { background-color: #28a745; }
-        .btn-delete { background-color: #dc3545; }
-        .status-pendente { color: #ffc107; font-weight: bold; }
-        .status-pago { color: #28a745; font-weight: bold; }
-        #venda-itens-tabela td, #venda-itens-tabela th { padding: 10px; }
+        .btn-paid { background-color: var(--success-color); }
+        .btn-delete { background-color: var(--danger-color); }
+        .status-pendente { color: var(--warning-color); font-weight: bold; }
+        .status-pago { color: var(--success-color); font-weight: bold; }
         #relatorio-container .card { background-color: var(--secondary-color); }
+
+        /* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                padding: 20px;
+                margin-left: 0;
+            }
+            .main-header {
+                display: flex;
+            }
+            .main-content h1 {
+                font-size: 1.8rem;
+            }
+            .login-box {
+                padding: 30px 20px;
+            }
+            .flex {
+                flex-direction: column;
+                gap: 0;
+            }
+            .align-items-end { /* Reset alignment for stacking */
+                align-items: stretch;
+            }
+            .align-items-end .btn {
+                margin-top: 1rem;
+            }
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            .card {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="login-screen">
-        <div class="login-box"><h1>Flor de Maira</h1><p class="subtitle">Acesse seu painel de vendas</p><form id="login-form"><div class="input-group"><input type="text" id="username" required><label for="username">Usuário</label></div><div class="input-group"><input type="password" id="password" required><label for="password">Senha</label></div><button type="submit" class="btn-login">Entrar</button><p id="error-message" class="error-message"></p></form></div>
+        <div class="login-box">
+            <h1>Flor de Maira</h1>
+            <p class="subtitle">Acesse seu painel de vendas</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="text" id="username" required>
+                    <label for="username">Usuário</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" required>
+                    <label for="password">Senha</label>
+                </div>
+                <button type="submit" class="btn-login">Entrar</button>
+                <p id="error-message" class="error-message"></p>
+            </form>
+        </div>
     </div>
 
     <div id="dashboard-screen" class="hidden">
-        <aside class="sidebar">
-            <div class="sidebar-header"><h2>Flor de Maira</h2></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Flor de Maira</h2>
+            </div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#dashboard" class="nav-link active" data-target="dashboard-view"><span>Dashboard</span></a></li>
@@ -104,25 +348,33 @@
                     <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><span>Relatórios</span></a></li>
                 </ul>
             </nav>
-            <div class="sidebar-footer"><button class="logout-btn" id="logout-btn">Sair</button></div>
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logout-btn">Sair</button>
+            </div>
         </aside>
 
         <main class="main-content">
+            <header class="main-header">
+                <button id="menu-toggle">
+                    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                </button>
+            </header>
+            
             <section id="dashboard-view" class="content-section active">
                 <h1>Bem-vinda, Maira!</h1>
-                <div class="card"><p>Sistema de gestão integrado. Use o menu para navegar e controlar seu negócio.</p></div>
+                <div class="card"><p>Sistema de gestão integrado. Use o menu lateral para navegar e controlar seu negócio.</p></div>
             </section>
             
             <section id="clientes-view" class="content-section">
                 <h1>Gestão de Clientes</h1>
-                <div class="card"><h2>Cadastrar Novo Cliente</h2><form id="form-add-cliente" class="flex flex-column gap-2"><div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div><div class="form-group"><label for="contato-cliente">Telefone ou E-mail</label><input type="text" id="contato-cliente"></div><button type="submit" class="btn-submit">Salvar Cliente</button></form></div>
-                <div class="card"><h2>Clientes Cadastrados</h2><div id="tabela-clientes-container"></div></div>
+                <div class="card"><h2>Cadastrar Novo Cliente</h2><form id="form-add-cliente"><div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div><div class="form-group"><label for="contato-cliente">Telefone ou E-mail</label><input type="text" id="contato-cliente"></div><button type="submit" class="btn-submit">Salvar Cliente</button></form></div>
+                <div class="card"><h2>Clientes Cadastrados</h2><div id="tabela-clientes-container" class="table-responsive-container"></div></div>
             </section>
 
             <section id="estoque-view" class="content-section">
                 <h1>Gestão de Estoque</h1>
-                <div class="card"><h2>Cadastrar Novo Produto</h2><form id="form-add-produto" class="flex flex-column gap-2"><div class="form-group"><label for="nome-produto">Nome do Produto</label><input type="text" id="nome-produto" required></div><div class="flex gap-2"><div class="form-group flex-1"><label for="qtd-produto">Quantidade Inicial</label><input type="number" id="qtd-produto" required></div><div class="form-group flex-1"><label for="preco-produto">Preço de Venda (R$)</label><input type="number" step="0.01" id="preco-produto" required></div></div><button type="submit" class="btn-submit">Adicionar ao Estoque</button></form></div>
-                <div class="card"><h2>Produtos em Estoque</h2><div id="tabela-produtos-container"></div></div>
+                <div class="card"><h2>Cadastrar Novo Produto</h2><form id="form-add-produto"><div class="form-group"><label for="nome-produto">Nome do Produto</label><input type="text" id="nome-produto" required></div><div class="flex gap-2"><div class="form-group flex-1"><label for="qtd-produto">Quantidade Inicial</label><input type="number" id="qtd-produto" required></div><div class="form-group flex-1"><label for="preco-produto">Preço de Venda (R$)</label><input type="number" step="0.01" id="preco-produto" required></div></div><button type="submit" class="btn-submit">Adicionar ao Estoque</button></form></div>
+                <div class="card"><h2>Produtos em Estoque</h2><div id="tabela-produtos-container" class="table-responsive-container"></div></div>
             </section>
 
             <section id="vendas-view" class="content-section">
@@ -131,19 +383,19 @@
                     <h2>Nova Venda</h2>
                     <div class="form-group"><label for="venda-cliente">Selecione o Cliente</label><select id="venda-cliente" required></select></div>
                     <div class="card mt-3"><h3 class="mb-2">Adicionar Item à Venda</h3><div class="flex gap-3 align-items-end"><div class="form-group flex-1"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px;"></div><button type="button" id="btn-add-item-venda" class="btn">Adicionar</button></div></div>
-                    <div class="card mt-3"><h3>Itens da Venda</h3><div id="venda-itens-container"></div><h3 class="mt-3" style="text-align: right;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
+                    <div class="card mt-3"><h3>Itens da Venda</h3><div id="venda-itens-container" class="table-responsive-container"></div><h3 class="mt-3" style="text-align: right;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
                     <div class="card mt-3"><h3>Pagamento</h3><div class="form-group"><label for="venda-pagamento">Método de Pagamento</label><select id="venda-pagamento"><option value="vista">À Vista</option><option value="fiado">Fiado (30 dias)</option><option value="parcelado">Parcelado</option></select></div><div class="form-group hidden" id="venda-parcelas-group"><label for="venda-parcelas">Número de Parcelas</label><select id="venda-parcelas"><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option></select></div><button type="button" id="btn-finalizar-venda" class="btn-submit mt-3" style="width: 100%;">Finalizar Venda</button></div>
                 </div>
             </section>
 
             <section id="contas-a-receber-view" class="content-section">
                 <h1>Contas a Receber</h1>
-                <div class="card"><h2>Registros Pendentes e Pagos</h2><div id="tabela-contas-container"></div></div>
+                <div class="card"><h2>Registros Pendentes e Pagos</h2><div id="tabela-contas-container" class="table-responsive-container"></div></div>
             </section>
 
             <section id="relatorios-view" class="content-section">
                 <h1>Relatórios</h1>
-                <div class="card"><h2>Gerar Relatório de Vendas</h2><div class="flex gap-2"><div class="form-group flex-1"><label for="relatorio-inicio">Data Início</label><input type="date" id="relatorio-inicio"></div><div class="form-group flex-1"><label for="relatorio-fim">Data Fim</label><input type="date" id="relatorio-fim"></div><button id="btn-gerar-relatorio" class="btn" style="align-self: flex-end;">Gerar</button></div></div>
+                <div class="card"><h2>Gerar Relatório de Vendas</h2><div class="flex gap-2 align-items-end"><div class="form-group flex-1"><label for="relatorio-inicio">Data Início</label><input type="date" id="relatorio-inicio"></div><div class="form-group flex-1"><label for="relatorio-fim">Data Fim</label><input type="date" id="relatorio-fim"></div><button id="btn-gerar-relatorio" class="btn">Gerar</button></div></div>
                 <div id="relatorio-container" class="mt-3"></div>
             </section>
         </main>
@@ -158,18 +410,18 @@
         const logoutBtn = document.getElementById('logout-btn');
         const navLinks = document.querySelectorAll('.nav-link');
         const contentSections = document.querySelectorAll('.content-section');
-        const notification = document.createElement('div');
-        notification.style.position = 'fixed';
-        notification.style.bottom = '20px';
-        notification.style.right = '20px';
-        notification.style.padding = '15px 25px';
-        notification.style.borderRadius = '5px';
-        notification.style.color = 'white';
-        notification.style.zIndex = '1000';
-        notification.style.opacity = '0';
-        notification.style.transition = 'opacity 0.5s';
-        document.body.appendChild(notification);
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
 
+        // --- Notificação ---
+        const notification = document.createElement('div');
+        Object.assign(notification.style, {
+            position: 'fixed', bottom: '20px', right: '20px', padding: '15px 25px',
+            borderRadius: '5px', color: 'white', zIndex: '1000', opacity: '0',
+            transition: 'opacity 0.5s', boxShadow: '0 5px 15px rgba(0,0,0,0.2)'
+        });
+        document.body.appendChild(notification);
+        
         // --- ESTADO DA APLICAÇÃO ---
         let clientes = [], produtos = [], vendas = [], contasAReceber = [];
         let carrinhoVenda = [];
@@ -181,7 +433,7 @@
         const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('pt-BR');
         const showNotification = (message, isError = false) => {
             notification.textContent = message;
-            notification.style.backgroundColor = isError ? '#dc3545' : '#28a745';
+            notification.style.backgroundColor = isError ? 'var(--danger-color)' : 'var(--success-color)';
             notification.style.opacity = '1';
             setTimeout(() => { notification.style.opacity = '0'; }, 3000);
         };
@@ -210,7 +462,7 @@
                     <td>${formatCurrency(conta.valor)}</td>
                     <td>${formatDate(conta.dataVencimento)}</td>
                     <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
-                    <td>${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : ''}</td>
+                    <td>${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Pago'}</td>
                 </tr>
             `);
         };
@@ -249,24 +501,25 @@
             const clienteId = document.getElementById('venda-cliente').value;
             if (!clienteId || carrinhoVenda.length === 0) { showNotification('Selecione um cliente e adicione itens!', true); return; }
             const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
-            const novaVenda = { id: Date.now(), clienteId: parseInt(clienteId), itens: carrinhoVenda, total, metodoPagamento: document.getElementById('venda-pagamento').value, data: new Date().toISOString().split('T')[0] };
+            const novaVenda = { id: Date.now(), clienteId: parseInt(clienteId), itens: [...carrinhoVenda], total, metodoPagamento: document.getElementById('venda-pagamento').value, data: new Date().toISOString().split('T')[0] };
             vendas.push(novaVenda);
             carrinhoVenda.forEach(item => {
                 const produtoEstoque = produtos.find(p => p.id == item.produtoId);
-                produtoEstoque.quantidade -= item.quantidade;
+                if(produtoEstoque) produtoEstoque.quantidade -= item.quantidade;
             });
             if (novaVenda.metodoPagamento === 'fiado' || novaVenda.metodoPagamento === 'parcelado') {
                 const parcelas = novaVenda.metodoPagamento === 'fiado' ? 1 : parseInt(document.getElementById('venda-parcelas').value);
                 const valorParcela = total / parcelas;
                 for (let i = 1; i <= parcelas; i++) {
                     const dataVencimento = new Date();
-                    dataVencimento.setDate(dataVencimento.getDate() + (30 * i));
+                    dataVencimento.setMonth(dataVencimento.getMonth() + i);
                     contasAReceber.push({ id: Date.now() + i, vendaId: novaVenda.id, clienteId: novaVenda.clienteId, valor: valorParcela, dataVencimento: dataVencimento.toISOString().split('T')[0], status: 'Pendente' });
                 }
             }
             saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber);
             showNotification('Venda realizada com sucesso!');
-            carrinhoVenda = []; renderCarrinho(); document.getElementById('venda-itens-container').innerHTML = ''; popularFormulariosVenda();
+            carrinhoVenda = []; renderCarrinho(); document.getElementById('venda-form').reset(); popularFormulariosVenda();
+            renderContasAReceber(); renderProdutos();
         };
 
         // --- LÓGICA DE RELATÓRIOS ---
@@ -275,7 +528,7 @@
             const fim = document.getElementById('relatorio-fim').value;
             const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
             const vendasFiltradas = vendas.filter(v => {
-                const vendaData = new Date(v.data);
+                const vendaData = new Date(v.data + 'T00:00:00');
                 const inicioData = inicio ? new Date(inicio + 'T00:00:00') : null;
                 const fimData = fim ? new Date(fim + 'T23:59:59') : null;
                 if (inicioData && vendaData < inicioData) return false;
@@ -286,13 +539,13 @@
             if(vendasFiltradas.length === 0) { container.innerHTML = '<div class="card"><p>Nenhuma venda encontrada no período.</p></div>'; return;}
             const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
             let relatorioHTML = `<div class="card"><h2>Relatório do Período</h2><p><strong>Total Vendido:</strong> ${formatCurrency(totalVendido)}</p><p><strong>Número de Vendas:</strong> ${vendasFiltradas.length}</p></div>`;
-            relatorioHTML += `<div class="card mt-3"><h2>Detalhes das Vendas</h2>` + `<table><thead><tr><th>Data</th><th>Cliente</th><th>Total</th><th>Itens</th></tr></thead><tbody>` +
+            relatorioHTML += `<div class="card mt-3"><h2>Detalhes das Vendas</h2><div class="table-responsive-container">` + `<table><thead><tr><th>Data</th><th>Cliente</th><th>Total</th><th>Itens</th></tr></thead><tbody>` +
                 vendasFiltradas.map(v => `<tr>
                     <td>${formatDate(v.data)}</td>
                     <td>${getNomeCliente(v.clienteId)}</td>
                     <td>${formatCurrency(v.total)}</td>
                     <td>${v.itens.map(i => `${i.quantidade}x ${i.nome}`).join('<br>')}</td>
-                </tr>`).join('') + `</tbody></table></div>`;
+                </tr>`).join('') + `</tbody></table></div></div>`;
             container.innerHTML = relatorioHTML;
         };
 
@@ -300,21 +553,56 @@
         const initDashboard = () => {
             clientes = loadData('clientes'); produtos = loadData('produtos'); vendas = loadData('vendas'); contasAReceber = loadData('contasAReceber');
             renderClientes(); renderProdutos(); renderContasAReceber(); popularFormulariosVenda();
+            document.getElementById('venda-form').id = 'venda-form-processed'; // Evita re-anexação de listeners
         };
 
         loginForm.addEventListener('submit', e => { e.preventDefault(); if(document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') { localStorage.setItem('isLoggedIn', 'true'); loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); initDashboard(); } else { document.getElementById('error-message').textContent = 'Usuário ou senha inválidos.'; document.querySelector('.login-box').classList.add('shake-animation'); setTimeout(() => document.querySelector('.login-box').classList.remove('shake-animation'), 500); } });
         logoutBtn.addEventListener('click', () => { localStorage.removeItem('isLoggedIn'); dashboardScreen.classList.add('hidden'); loginScreen.classList.remove('hidden'); });
-        navLinks.forEach(link => link.addEventListener('click', e => { e.preventDefault(); const targetId = link.getAttribute('data-target'); navLinks.forEach(l => l.classList.remove('active')); link.classList.add('active'); contentSections.forEach(s => s.classList.toggle('active', s.id === targetId)); if (targetId === 'vendas-view') popularFormulariosVenda(); }));
+        
+        // Navegação
+        navLinks.forEach(link => link.addEventListener('click', e => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-target');
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            contentSections.forEach(s => s.classList.toggle('active', s.id === targetId));
+            if (targetId === 'vendas-view') popularFormulariosVenda();
+            if (window.innerWidth <= 768) sidebar.classList.remove('open'); // Fecha a sidebar ao clicar no mobile
+        }));
+
+        // Menu mobile (hamburger)
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+        // Forms
         document.getElementById('form-add-cliente').addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); showNotification('Cliente salvo!'); e.target.reset(); });
         document.getElementById('form-add-produto').addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); showNotification('Produto salvo!'); e.target.reset(); });
+        
+        // Lógica de Vendas e Contas
         document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
         document.getElementById('venda-itens-container').addEventListener('click', e => { if(e.target.classList.contains('btn-delete')) { const id = e.target.getAttribute('data-id'); carrinhoVenda = carrinhoVenda.filter(item => item.produtoId != id); renderCarrinho(); } });
         document.getElementById('venda-pagamento').addEventListener('change', e => document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado'));
-        document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
-        document.getElementById('tabela-contas-container').addEventListener('click', e => { if(e.target.classList.contains('btn-paid')) { const id = parseInt(e.target.getAttribute('data-id')); const conta = contasAReceber.find(c => c.id === id); conta.status = 'Pago'; saveData('contasAReceber', contasAReceber); renderContasAReceber(); } });
+        document.getElementById('btn-finalizar-venda').addEventListener('click', () => {
+            finalizarVenda();
+            // Limpa formulário da venda após finalizar
+            document.getElementById('venda-cliente').value = '';
+            document.getElementById('venda-produto').value = '';
+            document.getElementById('venda-qtd').value = 1;
+            document.getElementById('venda-pagamento').value = 'vista';
+            document.getElementById('venda-parcelas-group').classList.add('hidden');
+        });
+        document.getElementById('tabela-contas-container').addEventListener('click', e => { if(e.target.classList.contains('btn-paid')) { const id = parseInt(e.target.getAttribute('data-id')); const conta = contasAReceber.find(c => c.id === id); if(conta) { conta.status = 'Pago'; saveData('contasAReceber', contasAReceber); renderContasAReceber(); } } });
         document.getElementById('btn-gerar-relatorio').addEventListener('click', gerarRelatorioVendas);
 
-        if (localStorage.getItem('isLoggedIn') === 'true') { loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); initDashboard(); }
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            // Adiciona um listener para o formulário de venda somente uma vez
+            if (!document.getElementById('venda-form-processed')) {
+                const vendaForm = document.querySelector('#vendas-view .card > h2').parentElement;
+                vendaForm.id = 'venda-form';
+            }
+            initDashboard();
+        }
     });
     </script>
 </body>
