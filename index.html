@@ -200,7 +200,6 @@
             margin: 0;
         }
 
-        /* MODIFICADO: Título genérico */
         .login-box h1 { font-size: 2.25rem; margin-top: 0; }
         .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); }
         #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
@@ -656,8 +655,13 @@
             <path d="M10.5 10.5l-2.5-2.5"></path>
             <path d="M13.5 13.5l-2.5-2.5"></path>
         </symbol>
-        <symbol id="icon-super-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M12 18l-2-2 4-4-2-2"></path>
+        <symbol id="icon-super-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5">
+            <path d="M15.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.5L15.5 2z" />
+            <path d="M8 14h3" />
+            <path d="M8 18h3" />
+            <path d="M13 10V4.5L18 10h-5z" />
+            <path d="m15 15-1.5 1.5-1.5-1.5" />
+            <path d="m12 18-1.5-1.5 1.5-1.5" />
         </symbol>
     </svg>
 
@@ -1008,7 +1012,6 @@
         }
     ];
 
-    //-- DADOS FALSOS DA BNCC --//
     const bnccSimulada = [
         { code: "EF01LP08", desc: "Relacionar elementos sonoros com sua representação escrita.", status: "covered" },
         { code: "EF01MA01", desc: "Utilizar números naturais como indicador de quantidade.", status: "covered" },
@@ -1022,7 +1025,7 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         const appState = {
-            currentView: 'aulaMaker', // 'aulaMaker', 'catalog', 'bncc'
+            currentView: 'aulaMaker',
             searchQuery: '', 
             activeFilter: 'Todos', 
             currentPage: 1, 
@@ -1070,9 +1073,12 @@
             bnccGridContainer: document.getElementById('bncc-grid-container'),
             optimizeSequenceBtn: document.getElementById('optimize-sequence-btn'),
             generateAssessmentBtn: document.getElementById('generate-assessment-btn'),
-            // NOVO BOTÃO
             generateSuperDocBtn: document.getElementById('generate-super-doc-btn'),
         };
+
+        // ===================================================================
+        // INÍCIO DAS FUNÇÕES PRINCIPAIS (CORRIGIDAS E COMPLETAS)
+        // ===================================================================
 
         function setupEventListeners() {
             dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('loggedInUser'); location.reload(); });
@@ -1107,13 +1113,11 @@
                 alert("✨ FUNÇÃO IA SIMULADA ✨\n\nA IA está analisando os objetivos das atividades no seu plano...\n\nBaseado em 'Detetive de Sílabas' e 'Criador de Histórias', aqui está uma sugestão de avaliação:\n\n1. Qual palavra é formada pela junção das sílabas 'CA' + 'NE' + 'TA'?\n   a) Caneca\n   b) Caneta\n   c) Careta\n\n2. Crie uma pequena frase usando a palavra 'GATO'.\n\n(Numa aplicação real, isso geraria um modal com o texto completo e um botão para imprimir/salvar em PDF).");
             });
 
-            // LÓGICA DO NOVO BOTÃO
             dom.generateSuperDocBtn.addEventListener('click', () => {
                 if (appState.selectedActivitiesForMaker.length === 0) {
                     alert("Adicione pelo menos uma atividade ao plano para gerar um Super Documento.");
                     return;
                 }
-                // Simulação em etapas
                 setTimeout(() => alert("✨ GERANDO SUPER DOCUMENTO (IA) ✨\n\nEtapa 1: Analisando o plano de aula e os objetivos de aprendizagem..."), 100);
                 setTimeout(() => alert("Etapa 2: Criando folhas de atividades personalizadas para os alunos com base em 'Detetive de Sílabas' e 'Criador de Histórias'..."), 1200);
                 setTimeout(() => alert("Etapa 3: Gerando um gabarito para o professor..."), 2300);
@@ -1129,7 +1133,9 @@
             dom.bnccView.classList.add('hidden');
             dom.navAulaMakerBtn.classList.remove('active');
             dom.navBnccBtn.classList.remove('active');
-            dom.filters.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if(dom.filters) {
+                dom.filters.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            }
             document.getElementById('catalog-section').style.display = 'none';
 
             if (appState.currentView === 'aulaMaker') {
@@ -1142,8 +1148,11 @@
                 dom.catalogView.classList.remove('hidden');
                 document.getElementById('catalog-section').style.display = 'block';
                 let filtered = [...todasAsAtividades];
-                if (appState.activeFilter === 'Favoritos') filtered = filtered.filter(a => appState.favorites.includes(a.id));
-                else if (appState.activeFilter !== 'Todos') filtered = filtered.filter(a => a.categoria === appState.activeFilter);
+                if (appState.activeFilter === 'Favoritos') {
+                    filtered = filtered.filter(a => appState.favorites.includes(a.id));
+                } else if (appState.activeFilter !== 'Todos') {
+                    filtered = filtered.filter(a => a.categoria === appState.activeFilter);
+                }
                 if (appState.searchQuery) {
                     const query = appState.searchQuery;
                     filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
@@ -1185,8 +1194,12 @@
                         dom.selectedActivitiesList.appendChild(listItem);
                     }
                 });
-                dom.selectedActivitiesList.querySelectorAll('.remove-activity-btn').forEach(btn => btn.onclick = (e) => removeActivityFromMaker(e.currentTarget.dataset.id));
-                dom.selectedActivitiesList.querySelectorAll('.reorder-btn').forEach(btn => btn.onclick = (e) => reorderActivity(parseInt(e.currentTarget.dataset.index), e.currentTarget.dataset.direction));
+                dom.selectedActivitiesList.querySelectorAll('.remove-activity-btn').forEach(btn => {
+                    btn.onclick = (e) => removeActivityFromMaker(e.currentTarget.dataset.id)
+                });
+                dom.selectedActivitiesList.querySelectorAll('.reorder-btn').forEach(btn => {
+                    btn.onclick = (e) => reorderActivity(parseInt(e.currentTarget.dataset.index), e.currentTarget.dataset.direction)
+                });
                 dom.selectedActivitiesList.querySelectorAll('.resource-suggestion-btn').forEach(btn => {
                     btn.onclick = (e) => {
                         const title = e.currentTarget.dataset.title;
@@ -1200,16 +1213,54 @@
             dom.makerNotesInput.value = appState.makerPlanNotes;
         }
 
-        // --- FUNÇÕES QUE NÃO FORAM MODIFICADAS ---
-        function generatePdf(activityId){ if(typeof window.jspdf ==='undefined'||typeof window.jspdf.jsPDF ==='undefined'){console.error("A biblioteca jsPDF não foi carregada corretamente.");alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");return}try{const{jsPDF}=window.jspdf;const activity=todasAsAtividades.find(a=>a.id===activityId);if(!activity)return;const doc=new jsPDF;doc.setFontSize(18);doc.setTextColor("#6c5b7b");doc.text(activity.titulo,14,22);doc.setFontSize(11);doc.setTextColor("#333d49");let detailsText=`Descrição: ${activity.desc}\n\n`;if(activity.roteiro){detailsText+=`Roteiro Sugerido:\n`;detailsText+=`1. Acolhida: ${activity.roteiro.acolhida}\n\n`;detailsText+=`2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;detailsText+=`3. Expansão: ${activity.roteiro.expansao}\n\n`;detailsText+=`4. Encerramento: ${activity.roteiro.encerramento}\n`}const detailsLines=doc.splitTextToSize(detailsText,180);doc.text(detailsLines,14,32);doc.save(`${activity.titulo.replace(/\s+/g,'-')}.pdf`)}catch(error){console.error("Ocorreu um erro ao gerar o PDF:",error);alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.")}}
-        function closeModal(){dom.modal.classList.remove('show');setTimeout(()=>{dom.modal.innerHTML=''},300)}
-        function openModal(id){const activity=todasAsAtividades.find(a=>a.id===id);if(!activity)return;const modalHTML=`
+        function generatePdf(activityId) {
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                console.error("A biblioteca jsPDF não foi carregada corretamente.");
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
+            try {
+                const { jsPDF } = window.jspdf;
+                const activity = todasAsAtividades.find(a => a.id === activityId);
+                if (!activity) return;
+                const doc = new jsPDF();
+                doc.setFontSize(18);
+                doc.setTextColor("#6c5b7b");
+                doc.text(activity.titulo, 14, 22);
+                doc.setFontSize(11);
+                doc.setTextColor("#333d49");
+                let detailsText = `Descrição: ${activity.desc}\n\n`;
+                if (activity.roteiro) {
+                    detailsText += `Roteiro Sugerido:\n`;
+                    detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
+                    detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
+                    detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
+                    detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
+                }
+                const detailsLines = doc.splitTextToSize(detailsText, 180);
+                doc.text(detailsLines, 14, 32);
+                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
+            }
+        }
+
+        function closeModal() {
+            dom.modal.classList.remove('show');
+            setTimeout(() => { dom.modal.innerHTML = '' }, 300);
+        }
+
+        function openModal(id) {
+            const activity = todasAsAtividades.find(a => a.id === id);
+            if (!activity) return;
+            const modalHTML = `
             <div class="modal-content">
                 <div class="modal-header"><h2>${activity.titulo}</h2><button class="close-button" aria-label="Fechar modal">×</button></div>
                 <div class="modal-body">
                     <p>${activity.desc}</p>
-                    <h3>Objetivos de Aprendizagem</h3><ul>${activity.objetivos.map(o=>`<li>${o}</li>`).join('')}</ul>
-                    <h3>Códigos da BNCC</h3><ul>${activity.bncc.map(b=>`<li>${b}</li>`).join('')}</ul>
+                    <h3>Objetivos de Aprendizagem</h3><ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+                    <h3>Códigos da BNCC</h3><ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
                     <h3>Roteiro da Aula</h3>
                     <ol class="roteiro-passos">
                         <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
@@ -1217,62 +1268,375 @@
                         <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
                         <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
                     </ol>
-                    ${activity.dica_pedagogica?`<div class="dica-pedagogica"><p><strong>✨ Dica Pedagógica:</strong> ${activity.dica_pedagogica}</p></div>`:''}
+                    ${activity.dica_pedagogica ? `<div class="dica-pedagogica"><p><strong>✨ Dica Pedagógica:</strong> ${activity.dica_pedagogica}</p></div>` : ''}
                 </div>
                 <div class="modal-footer"><button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button></div>
-            </div>`;dom.modal.innerHTML=modalHTML;dom.modal.classList.add('show');dom.modal.querySelector('.close-button').onclick=closeModal;dom.modal.addEventListener('click',e=>{if(e.target.classList.contains('modal-container'))closeModal()});dom.modal.querySelector('.download-btn').addEventListener('click',function(){generatePdf(parseInt(this.dataset.activityId))})}
-        function setupLoginScreenPreview(){const previewContainer=document.getElementById('preview-grid-container');if(!previewContainer)return;const freeActivity=todasAsAtividades.find(a=>a.free);const otherActivities=todasAsAtividades.filter(a=>!a.free);const shuffledOthers=otherActivities.sort(()=>0.5-Math.random());let previewActivities=[freeActivity,...shuffledOthers.slice(0,2)].filter(Boolean);previewActivities.sort(()=>0.5-Math.random());let previewHTML='';previewActivities.forEach(activity=>{if(activity.free){previewHTML+=`<div class="preview-card free" data-id="${activity.id}">`}else{previewHTML+=`<div class="preview-card" onclick="document.getElementById('username-input').focus()">`}
-        previewHTML+=`${activity.free?'<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>':''}
+            </div>`;
+            dom.modal.innerHTML = modalHTML;
+            dom.modal.classList.add('show');
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal() });
+            dom.modal.querySelector('.download-btn').addEventListener('click', function() { generatePdf(parseInt(this.dataset.activityId)) });
+        }
+
+        function setupLoginScreenPreview() {
+            const previewContainer = document.getElementById('preview-grid-container');
+            if (!previewContainer) return;
+            const freeActivity = todasAsAtividades.find(a => a.free);
+            const otherActivities = todasAsAtividades.filter(a => !a.free);
+            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
+            let previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)].filter(Boolean);
+            previewActivities.sort(() => 0.5 - Math.random());
+            let previewHTML = '';
+            previewActivities.forEach(activity => {
+                if (activity.free) {
+                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
+                } else {
+                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
+                }
+                previewHTML += `${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
                     <div class="preview-card-content">
                         <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
                         <h3>${activity.titulo}</h3><p>${activity.desc}</p>
                     </div>
-                    ${!activity.free?`<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>`:''}
-                </div>`;});previewContainer.innerHTML=previewHTML;previewContainer.querySelectorAll('.preview-card.free').forEach(card=>{card.addEventListener('click',function(){openModal(parseInt(this.dataset.id))})})}
-        function initializePanel(username){dom.loginScreen.classList.add('hidden');dom.mainContent.classList.remove('hidden');dom.welcomeMsg.textContent=`Olá, ${username.split('.')[0].charAt(0).toUpperCase()+username.split('.')[0].slice(1)}!`;setupEventListeners();setupMobileMenu();render()}
-        function setupMobileMenu(){dom.menuToggle.addEventListener('click',()=>document.body.classList.add('sidebar-open'));dom.sidebarOverlay.addEventListener('click',()=>document.body.classList.remove('sidebar-open'))}
-        function renderFilters(){const categories=['Todos',...new Set(todasAsAtividades.map(a=>a.categoria))];dom.filters.innerHTML='';const createFilterButton=(filterValue,text,iconId,isFavorite=false)=>{const li=document.createElement('li');const btn=document.createElement('button');btn.className='filter-btn';if(isFavorite)btn.classList.add('favorite-btn');if(appState.currentView==='catalog'&&appState.activeFilter===filterValue){btn.classList.add('active')}
-        btn.innerHTML=`<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;btn.onclick=()=>{appState.currentView='catalog';appState.activeFilter=filterValue;appState.currentPage=1;render();document.body.classList.remove('sidebar-open')};li.appendChild(btn);return li};categories.forEach(cat=>{const icon=cat==='Todos'?'#icon-all':'#icon-category';dom.filters.appendChild(createFilterButton(cat,cat,icon))});dom.filters.appendChild(createFilterButton('Favoritos','Favoritos','#icon-heart',true))}
-        function renderGrid(activities){dom.grid.innerHTML='';const start=(appState.currentPage-1)*appState.itemsPerPage;const paginated=activities.slice(start,start+appState.itemsPerPage);if(paginated.length===0){dom.grid.innerHTML=`<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada.</p>`;return}
-        paginated.forEach((act,index)=>{const cardElement=createActivityCard(act);cardElement.style.animationDelay=`${index*50}ms`;dom.grid.appendChild(cardElement)});addCardListeners()}
-        function createActivityCard(activity){const isFavorited=appState.favorites.includes(activity.id);const card=document.createElement('article');card.className='activity-card';card.innerHTML=`
+                    ${!activity.free ? `<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>` : ''}
+                </div>`;
+            });
+            previewContainer.innerHTML = previewHTML;
+            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
+                card.addEventListener('click', function() { openModal(parseInt(this.dataset.id)) })
+            });
+        }
+
+        function initializePanel(username) {
+            dom.loginScreen.classList.add('hidden');
+            dom.mainContent.classList.remove('hidden');
+            dom.welcomeMsg.textContent = `Olá, ${username.split('.')[0].charAt(0).toUpperCase() + username.split('.')[0].slice(1)}!`;
+            setupEventListeners();
+            setupMobileMenu();
+            render();
+        }
+
+        function setupMobileMenu() {
+            dom.menuToggle.addEventListener('click', () => document.body.classList.add('sidebar-open'));
+            dom.sidebarOverlay.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
+        }
+
+        function renderFilters() {
+            const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
+            dom.filters.innerHTML = '';
+            const createFilterButton = (filterValue, text, iconId, isFavorite = false) => {
+                const li = document.createElement('li');
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                if (isFavorite) btn.classList.add('favorite-btn');
+                if (appState.currentView === 'catalog' && appState.activeFilter === filterValue) {
+                    btn.classList.add('active');
+                }
+                btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
+                btn.onclick = () => {
+                    appState.currentView = 'catalog';
+                    appState.activeFilter = filterValue;
+                    appState.currentPage = 1;
+                    render();
+                    document.body.classList.remove('sidebar-open');
+                };
+                li.appendChild(btn);
+                return li;
+            };
+            categories.forEach(cat => {
+                const icon = cat === 'Todos' ? '#icon-all' : '#icon-category';
+                dom.filters.appendChild(createFilterButton(cat, cat, icon));
+            });
+            dom.filters.appendChild(createFilterButton('Favoritos', 'Favoritos', '#icon-heart', true));
+        }
+
+        function renderGrid(activities) {
+            dom.grid.innerHTML = '';
+            const start = (appState.currentPage - 1) * appState.itemsPerPage;
+            const paginated = activities.slice(start, start + appState.itemsPerPage);
+            if (paginated.length === 0) {
+                dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada.</p>`;
+                return;
+            }
+            paginated.forEach((act, index) => {
+                const cardElement = createActivityCard(act);
+                cardElement.style.animationDelay = `${index * 50}ms`;
+                dom.grid.appendChild(cardElement);
+            });
+            addCardListeners();
+        }
+
+        function createActivityCard(activity) {
+            const isFavorited = appState.favorites.includes(activity.id);
+            const card = document.createElement('article');
+            card.className = 'activity-card';
+            card.innerHTML = `
                 <div class="card-header">
                     <div class="card-category" style="background-color: ${activity.cor};">${activity.categoria}</div>
-                    <button class="favorite-icon ${isFavorited?'favorited':''}" data-id="${activity.id}" aria-label="Favoritar"><svg><use xlink:href="#icon-heart"></use></svg></button>
+                    <button class="favorite-icon ${isFavorited ? 'favorited' : ''}" data-id="${activity.id}" aria-label="Favoritar"><svg><use xlink:href="#icon-heart"></use></svg></button>
                 </div>
                 <div class="card-content"><h3>${activity.titulo}</h3><p>${activity.desc}</p></div>
-                <div class="card-footer"><span>🕓 ${activity.duracao}</span><button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button></div>`;return card}
-        function renderPagination(totalItems){dom.pagination.innerHTML='';const totalPages=Math.ceil(totalItems/appState.itemsPerPage);if(totalPages<=1)return;for(let i=1;i<=totalPages;i++){const btn=document.createElement('button');btn.className=`pagination-btn ${i===appState.currentPage?'active':''}`;btn.textContent=i;btn.onclick=()=>{appState.currentPage=i;render();window.scrollTo(0,0)};dom.pagination.appendChild(btn)}}
-        function addCardListeners(){dom.grid.querySelectorAll('.open-modal-btn').forEach(b=>b.onclick=()=>openModal(parseInt(b.dataset.id)));dom.grid.querySelectorAll('.favorite-icon').forEach(b=>b.onclick=e=>{e.currentTarget.classList.remove('favorited');void e.currentTarget.offsetWidth;toggleFavorite(parseInt(b.dataset.id))})}
-        function toggleFavorite(id){const index=appState.favorites.indexOf(id);if(index>-1){appState.favorites.splice(index,1)}else{appState.favorites.push(id)}
-        localStorage.setItem('lessonPlannerFavoritesV1',JSON.stringify(appState.favorites));if(appState.activeFilter==='Favoritos'&&appState.currentView==='catalog'){appState.currentPage=1;render()}else{const icon=document.querySelector(`.favorite-icon[data-id='${id}']`);if(icon){icon.classList.toggle('favorited',index===-1)}}}
-        function renderBnccCoverage(){dom.bnccGridContainer.innerHTML='';bnccSimulada.forEach(habilidade=>{const statusClass={'covered':'bncc-covered','partially':'bncc-partially','not-covered':'bncc-not-covered'}[habilidade.status];const codeEl=document.createElement('div');codeEl.className=`bncc-code ${statusClass}`;codeEl.textContent=habilidade.code;codeEl.title=`Descrição: ${habilidade.desc}`;dom.bnccGridContainer.appendChild(codeEl)})}
-        function clearLessonPlan(){if(confirm('Tem certeza que deseja limpar todo o plano de aula atual?')){appState.makerPlanTitle='';appState.makerPlanGrade='';appState.makerPlanTheme='';appState.makerPlanNotes='';appState.selectedActivitiesForMaker=[];renderAulaMaker()}}
-        function addCustomActivityToMaker(){const titleInput=document.getElementById('custom-activity-title');const descInput=document.getElementById('custom-activity-desc');const title=titleInput.value.trim();if(!title){alert('Por favor, insira um título para a atividade personalizada.');titleInput.focus();return}
-        const newActivity={type:'custom',id:`custom_${Date.now()}`,titulo:title,desc:descInput.value.trim(),categoria:'Personalizada'};appState.selectedActivitiesForMaker.push(newActivity);renderAulaMaker();titleInput.value='';descInput.value='';dom.customActivityForm.classList.add('hidden')}
-        function reorderActivity(index,direction){const list=appState.selectedActivitiesForMaker;if(direction==='up'&&index>0){[list[index],list[index-1]]=[list[index-1],list[index]]}else if(direction==='down'&&index<list.length-1){[list[index],list[index+1]]=[list[index+1],list[index]]}
-        renderAulaMaker()}
-        function removeActivityFromMaker(id){appState.selectedActivitiesForMaker=appState.selectedActivitiesForMaker.filter(activity=>String(activity.id)!==String(id));renderAulaMaker()}
-        function openSelectActivitiesModal(){const existingCatalogIds=appState.selectedActivitiesForMaker.filter(a=>a.type==='catalog').map(a=>a.id);let tempSelected=[...existingCatalogIds];const selectModalHTML=`
+                <div class="card-footer"><span>🕓 ${activity.duracao}</span><button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button></div>`;
+            return card;
+        }
+
+        function renderPagination(totalItems) {
+            dom.pagination.innerHTML = '';
+            const totalPages = Math.ceil(totalItems / appState.itemsPerPage);
+            if (totalPages <= 1) return;
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `pagination-btn ${i === appState.currentPage ? 'active' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => { appState.currentPage = i; render(); window.scrollTo(0, 0) };
+                dom.pagination.appendChild(btn);
+            }
+        }
+
+        function addCardListeners() {
+            dom.grid.querySelectorAll('.open-modal-btn').forEach(b => b.onclick = () => openModal(parseInt(b.dataset.id)));
+            dom.grid.querySelectorAll('.favorite-icon').forEach(b => b.onclick = e => {
+                e.currentTarget.classList.remove('favorited');
+                void e.currentTarget.offsetWidth;
+                toggleFavorite(parseInt(b.dataset.id));
+            });
+        }
+
+        function toggleFavorite(id) {
+            const index = appState.favorites.indexOf(id);
+            if (index > -1) {
+                appState.favorites.splice(index, 1);
+            } else {
+                appState.favorites.push(id);
+            }
+            localStorage.setItem('lessonPlannerFavoritesV1', JSON.stringify(appState.favorites));
+            if (appState.activeFilter === 'Favoritos' && appState.currentView === 'catalog') {
+                appState.currentPage = 1;
+                render();
+            } else {
+                const icon = document.querySelector(`.favorite-icon[data-id='${id}']`);
+                if (icon) {
+                    icon.classList.toggle('favorited', index === -1);
+                }
+            }
+        }
+
+        function renderBnccCoverage() {
+            dom.bnccGridContainer.innerHTML = '';
+            bnccSimulada.forEach(habilidade => {
+                const statusClass = {
+                    'covered': 'bncc-covered',
+                    'partially': 'bncc-partially',
+                    'not-covered': 'bncc-not-covered'
+                }[habilidade.status];
+                const codeEl = document.createElement('div');
+                codeEl.className = `bncc-code ${statusClass}`;
+                codeEl.textContent = habilidade.code;
+                codeEl.title = `Descrição: ${habilidade.desc}`;
+                dom.bnccGridContainer.appendChild(codeEl);
+            });
+        }
+
+        function clearLessonPlan() {
+            if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
+                appState.makerPlanTitle = '';
+                appState.makerPlanGrade = '';
+                appState.makerPlanTheme = '';
+                appState.makerPlanNotes = '';
+                appState.selectedActivitiesForMaker = [];
+                renderAulaMaker();
+            }
+        }
+
+        function addCustomActivityToMaker() {
+            const titleInput = document.getElementById('custom-activity-title');
+            const descInput = document.getElementById('custom-activity-desc');
+            const title = titleInput.value.trim();
+            if (!title) {
+                alert('Por favor, insira um título para a atividade personalizada.');
+                titleInput.focus();
+                return;
+            }
+            const newActivity = { type: 'custom', id: `custom_${Date.now()}`, titulo: title, desc: descInput.value.trim(), categoria: 'Personalizada' };
+            appState.selectedActivitiesForMaker.push(newActivity);
+            renderAulaMaker();
+            titleInput.value = '';
+            descInput.value = '';
+            dom.customActivityForm.classList.add('hidden');
+        }
+
+        function reorderActivity(index, direction) {
+            const list = appState.selectedActivitiesForMaker;
+            if (direction === 'up' && index > 0) {
+                [list[index], list[index - 1]] = [list[index - 1], list[index]];
+            } else if (direction === 'down' && index < list.length - 1) {
+                [list[index], list[index + 1]] = [list[index + 1], list[index]];
+            }
+            renderAulaMaker();
+        }
+
+        function removeActivityFromMaker(id) {
+            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activity => String(activity.id) !== String(id));
+            renderAulaMaker();
+        }
+
+        function openSelectActivitiesModal() {
+            const existingCatalogIds = appState.selectedActivitiesForMaker.filter(a => a.type === 'catalog').map(a => a.id);
+            let tempSelected = [...existingCatalogIds];
+            const selectModalHTML = `
                 <div class="modal-content" id="select-activities-modal">
                     <div class="modal-header"><h2>Selecionar Atividades para o Plano</h2><button class="close-button" aria-label="Fechar modal">×</button></div>
                     <div class="modal-body activities-grid">
-                        ${todasAsAtividades.map(act=>{const isSelected=tempSelected.includes(act.id)?'selected':'';return`
-                                <article class="activity-card ${isSelected}" data-id="${act.id}">
+                        ${todasAsAtividades.map(act => {
+                            const isSelected = tempSelected.includes(act.id) ? 'selected' : '';
+                            return `<article class="activity-card ${isSelected}" data-id="${act.id}">
                                     <div class="card-header"><div class="card-category" style="background-color: ${act.cor};">${act.categoria}</div></div>
                                     <div class="card-content"><h3>${act.titulo}</h3><p>${act.desc}</p></div>
-                                </article>`}).join('')}
+                                </article>`
+                        }).join('')}
                     </div>
                     <div class="modal-footer"><button id="confirm-selection-btn">Confirmar Seleção</button></div>
-                </div>`;dom.modal.innerHTML=selectModalHTML;dom.modal.classList.add('show');dom.modal.querySelector('.close-button').onclick=closeModal;dom.modal.addEventListener('click',e=>{if(e.target.classList.contains('modal-container'))closeModal()});dom.modal.querySelectorAll('.activity-card').forEach(card=>{card.onclick=function(){const id=parseInt(this.dataset.id);const index=tempSelected.indexOf(id);if(index>-1){tempSelected.splice(index,1);this.classList.remove('selected')}else{tempSelected.push(id);this.classList.add('selected')}}});dom.modal.querySelector('#confirm-selection-btn').onclick=()=>{const customActivities=appState.selectedActivitiesForMaker.filter(a=>a.type==='custom');const newCatalogActivities=tempSelected.map(id=>({type:'catalog',id:id}));appState.selectedActivitiesForMaker=[...customActivities,...newCatalogActivities];renderAulaMaker();closeModal()}}
-        function generateLessonPlanPdf(){if(appState.selectedActivitiesForMaker.length===0&&!appState.makerPlanTitle){alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");return}
-        if(typeof window.jspdf ==='undefined'||typeof window.jspdf.jsPDF ==='undefined'){console.error("A biblioteca jsPDF não foi carregada corretamente.");alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");return}
-        try{const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'});let yOffset=60;const margin=40;const lineHeight=18;const maxWidth=doc.internal.pageSize.width-(margin*2);doc.setFont('Helvetica','bold');doc.setFontSize(22);doc.setTextColor(40,40,40);doc.text("Plano de Aula",doc.internal.pageSize.width/2,yOffset,{align:'center'});yOffset+=40;doc.setFont('Helvetica','bold');doc.setFontSize(12);doc.text(`Título:`,margin,yOffset);doc.setFont('Helvetica','normal');doc.text(doc.splitTextToSize(appState.makerPlanTitle||'Sem Título',maxWidth-50),margin+50,yOffset);yOffset+=lineHeight*1.5;doc.setFont('Helvetica','bold');doc.text(`Ano/Turma:`,margin,yOffset);doc.setFont('Helvetica','normal');doc.text(doc.splitTextToSize(appState.makerPlanGrade||'Não Informado',maxWidth-75),margin+75,yOffset);if(appState.makerPlanTheme){yOffset+=lineHeight;doc.setFont('Helvetica','bold');doc.text(`Tema:`,margin,yOffset);doc.setFont('Helvetica','normal');doc.text(doc.splitTextToSize(appState.makerPlanTheme,maxWidth-45),margin+45,yOffset)}
-        yOffset+=lineHeight*2;if(appState.makerPlanNotes){doc.setFont('Helvetica','bold');doc.setFontSize(14);doc.text("Observações Gerais / Materiais:",margin,yOffset);yOffset+=lineHeight*1.5;doc.setFont('Helvetica','normal');doc.setFontSize(11);const notesLines=doc.splitTextToSize(appState.makerPlanNotes,maxWidth);doc.text(notesLines,margin,yOffset);yOffset+=notesLines.length*(lineHeight-4)+20}
-        doc.setLineWidth(1);doc.setDrawColor(177,156,217);doc.line(margin,yOffset,maxWidth+margin,yOffset);yOffset+=30;doc.setFont('Helvetica','bold');doc.setFontSize(16);doc.text("Sequência de Atividades",margin,yOffset);yOffset+=25;if(appState.selectedActivitiesForMaker.length===0){doc.setFont('Helvetica','italic');doc.setFontSize(11);doc.setTextColor("#6b7280");doc.text("Nenhuma atividade selecionada para este plano.",margin,yOffset)}else{appState.selectedActivitiesForMaker.forEach((activity,index)=>{const isCustom=activity.type==='custom';const activityData=isCustom?activity:todasAsAtividades.find(a=>a.id===activity.id);if(activityData){if(yOffset>doc.internal.pageSize.height-150){doc.addPage();yOffset=60}
-        doc.setFont('Helvetica','bold');doc.setFontSize(14);doc.setTextColor(108,91,123);doc.text(`${index+1}. ${activityData.titulo} (${activityData.categoria})`,margin,yOffset);yOffset+=lineHeight*1.2;doc.setFont('Helvetica','normal');doc.setFontSize(11);doc.setTextColor(51,61,73);if(isCustom){const descLines=doc.splitTextToSize(`Descrição: ${activityData.desc||'Nenhuma descrição fornecida.'}`,maxWidth);doc.text(descLines,margin,yOffset);yOffset+=descLines.length*(lineHeight-4)}else{const descLines=doc.splitTextToSize(activityData.desc,maxWidth);doc.text(descLines,margin,yOffset);yOffset+=descLines.length*(lineHeight-4)+10;doc.setFont('Helvetica','bold');doc.text('Objetivos:',margin,yOffset);yOffset+=lineHeight;doc.setFont('Helvetica','normal');activityData.objetivos.forEach(obj=>{const objLines=doc.splitTextToSize(`• ${obj}`,maxWidth-10);if(yOffset+objLines.length*(lineHeight-4)>doc.internal.pageSize.height-40){doc.addPage();yOffset=60}
-        doc.text(objLines,margin+10,yOffset);yOffset+=objLines.length*(lineHeight-4)})}}
-        yOffset+=25})}}catch(error){console.error("Ocorreu um erro ao gerar o PDF do plano de aula:",error);alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.")} const fileName=(appState.makerPlanTitle||"Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g,'_')+'.pdf';doc.save(fileName);}
+                </div>`;
+            dom.modal.innerHTML = selectModalHTML;
+            dom.modal.classList.add('show');
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal() });
+            dom.modal.querySelectorAll('.activity-card').forEach(card => {
+                card.onclick = function() {
+                    const id = parseInt(this.dataset.id);
+                    const index = tempSelected.indexOf(id);
+                    if (index > -1) {
+                        tempSelected.splice(index, 1);
+                        this.classList.remove('selected');
+                    } else {
+                        tempSelected.push(id);
+                        this.classList.add('selected');
+                    }
+                }
+            });
+            dom.modal.querySelector('#confirm-selection-btn').onclick = () => {
+                const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
+                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
+                appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
+                renderAulaMaker();
+                closeModal();
+            };
+        }
+
+        function generateLessonPlanPdf() {
+            if (appState.selectedActivitiesForMaker.length === 0 && !appState.makerPlanTitle) {
+                alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");
+                return;
+            }
+            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
+                return;
+            }
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+                let yOffset = 60;
+                const margin = 40;
+                const lineHeight = 18;
+                const maxWidth = doc.internal.pageSize.width - (margin * 2);
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(22);
+                doc.setTextColor(40, 40, 40);
+                doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
+                yOffset += 40;
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(12);
+                doc.text(`Título:`, margin, yOffset);
+                doc.setFont('Helvetica', 'normal');
+                doc.text(doc.splitTextToSize(appState.makerPlanTitle || 'Sem Título', maxWidth - 50), margin + 50, yOffset);
+                yOffset += lineHeight * 1.5;
+                doc.setFont('Helvetica', 'bold');
+                doc.text(`Ano/Turma:`, margin, yOffset);
+                doc.setFont('Helvetica', 'normal');
+                doc.text(doc.splitTextToSize(appState.makerPlanGrade || 'Não Informado', maxWidth - 75), margin + 75, yOffset);
+                if (appState.makerPlanTheme) {
+                    yOffset += lineHeight;
+                    doc.setFont('Helvetica', 'bold');
+                    doc.text(`Tema:`, margin, yOffset);
+                    doc.setFont('Helvetica', 'normal');
+                    doc.text(doc.splitTextToSize(appState.makerPlanTheme, maxWidth - 45), margin + 45, yOffset);
+                }
+                yOffset += lineHeight * 2;
+                if (appState.makerPlanNotes) {
+                    doc.setFont('Helvetica', 'bold');
+                    doc.setFontSize(14);
+                    doc.text("Observações Gerais / Materiais:", margin, yOffset);
+                    yOffset += lineHeight * 1.5;
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setFontSize(11);
+                    const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
+                    doc.text(notesLines, margin, yOffset);
+                    yOffset += notesLines.length * (lineHeight - 4) + 20;
+                }
+                doc.setLineWidth(1);
+                doc.setDrawColor(177, 156, 217);
+                doc.line(margin, yOffset, maxWidth + margin, yOffset);
+                yOffset += 30;
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(16);
+                doc.text("Sequência de Atividades", margin, yOffset);
+                yOffset += 25;
+                if (appState.selectedActivitiesForMaker.length === 0) {
+                    doc.setFont('Helvetica', 'italic');
+                    doc.setFontSize(11);
+                    doc.setTextColor("#6b7280");
+                    doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
+                } else {
+                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
+                        const isCustom = activity.type === 'custom';
+                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
+                        if (activityData) {
+                            if (yOffset > doc.internal.pageSize.height - 150) {
+                                doc.addPage();
+                                yOffset = 60;
+                            }
+                            doc.setFont('Helvetica', 'bold');
+                            doc.setFontSize(14);
+                            doc.setTextColor(108, 91, 123);
+                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
+                            yOffset += lineHeight * 1.2;
+                            doc.setFont('Helvetica', 'normal');
+                            doc.setFontSize(11);
+                            doc.setTextColor(51, 61, 73);
+                            if (isCustom) {
+                                const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4);
+                            } else {
+                                const descLines = doc.splitTextToSize(activityData.desc, maxWidth);
+                                doc.text(descLines, margin, yOffset);
+                                yOffset += descLines.length * (lineHeight - 4) + 10;
+                                doc.setFont('Helvetica', 'bold');
+                                doc.text('Objetivos:', margin, yOffset);
+                                yOffset += lineHeight;
+                                doc.setFont('Helvetica', 'normal');
+                                activityData.objetivos.forEach(obj => {
+                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
+                                    if (yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
+                                        doc.addPage();
+                                        yOffset = 60;
+                                    }
+                                    doc.text(objLines, margin + 10, yOffset);
+                                    yOffset += objLines.length * (lineHeight - 4);
+                                });
+                            }
+                            yOffset += 25;
+                        }
+                    });
+                }
+                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
+                doc.save(fileName);
+            } catch (error) {
+                console.error("Ocorreu um erro ao gerar o PDF do plano de aula:", error);
+                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.");
+            }
+        }
 
         // --- INICIALIZAÇÃO ---
         (function main() {
@@ -1294,6 +1658,7 @@
                 }
             });
         })();
+    });
     </script>
 </body>
 </html>
