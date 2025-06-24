@@ -1,1113 +1,553 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plano Mestre | Planejamento de Aulas Inteligente</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Demonstração - Portal do Professor</title>
 
     <style>
-        /* Importa a fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
-        
+        /* Estilos Gerais */
         :root {
-            --primary-color: #b19cd9;
-            --secondary-color: #6c5b7b;
-            --accent-color: #ffb6c1;
-            --background-color: #fdfcff;
-            --card-background: #ffffff;
-            --text-color: #333d49;
-            --text-color-light: #6b7280;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.08);
-            --sidebar-width: 280px;
+            --primary-color: #2a6fdb; /* Azul Educacional */
+            --secondary-color: #ffc107; /* Amarelo Destaque */
+            --background-color: #f4f7f6;
+            --text-color: #333;
+            --white: #fff;
+            --dark-blue: #2c3e50; /* Azul escuro para o painel */
+            --light-gray: #ecf0f1; /* Cinza claro para fundos */
         }
 
-        /* ESTILOS GERAIS E ANIMAÇÕES */
-        *, *::before, *::after { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
-            line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .hidden { display: none !important; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popEffect { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes contentFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* --- ESTILOS DA NOVA LANDING PAGE --- */
-        #login-screen {
-            display: block;
-            width: 100%;
-            height: auto;
-            min-height: auto;
-            padding: 0;
-            background: var(--background-color);
-        }
-        .landing-hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 5rem 1.5rem 8rem 1.5rem;
-            text-align: center;
-        }
-        .landing-hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        }
-        .landing-hero p {
-            font-size: 1.25rem;
-            max-width: 650px;
-            margin: 0 auto 2rem auto;
-            opacity: 0.9;
-        }
-        
-        .access-box-container {
-            margin-top: -6rem;
-            position: relative;
-            z-index: 10;
-        }
-        .access-box {
-            background: var(--card-background);
-            padding: 2.5rem;
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            width: 90%;
-            max-width: 450px;
-            margin: 0 auto;
-            border-top: 5px solid var(--accent-color);
-        }
-        .access-box h2 {
-            font-size: 1.75rem;
-            margin-top: 0; 
-            color: var(--secondary-color);
-        }
-        
-        .demo-access-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 1rem;
-            padding: 0.5rem;
-            text-decoration: underline;
-        }
-        .demo-access-btn:hover {
-            filter: brightness(1.2);
-        }
-
-        .landing-section {
-            padding: 5rem 1.5rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .section-title {
-            text-align: center;
-            font-size: 2.25rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.1rem;
-            color: var(--text-color-light);
-            max-width: 700px;
-            margin: 0 auto 3.5rem auto;
-        }
-
-        /* Seção de Features */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-        .feature-card {
-            background: var(--card-background);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-        .feature-card .icon {
-            display: inline-block;
-            padding: 1rem;
-            background-color: rgba(177, 156, 217, 0.1);
-            border-radius: 50%;
-            margin-bottom: 1.5rem;
-        }
-        .feature-card .icon svg {
-            width: 32px;
-            height: 32px;
-            stroke: var(--primary-color);
-        }
-        .feature-card h3 {
-            font-size: 1.25rem;
-            margin: 0 0 0.5rem 0;
-        }
-
-        /* Seção de Depoimentos */
-        #testimonials {
-             background-color: #f9f8fc;
-        }
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        .testimonial-card {
-            background: var(--card-background);
-            border-left: 5px solid var(--primary-color);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        .testimonial-card p.quote {
-            font-style: italic;
             color: var(--text-color);
-            margin: 0 0 1.5rem 0;
-            position: relative;
-        }
-        .testimonial-card p.quote::before {
-            content: '“';
-            font-family: Georgia, serif;
-            font-size: 3.5rem;
-            color: var(--primary-color);
-            opacity: 0.2;
-            position: absolute;
-            top: -1.5rem;
-            left: -1.5rem;
-        }
-        .testimonial-card .author {
-            font-weight: 700;
-        }
-        .testimonial-card .role {
-            font-size: 0.9rem;
-            color: var(--text-color-light);
+            background-color: var(--background-color);
+            transition: background-color 0.5s ease;
         }
 
-        /* Seção de Preços */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
+        /* Esconde todas as seções por padrão */
+        .page-section {
+            display: none;
+        }
+
+        /* Mostra a seção ativa */
+        .page-section.active {
+            display: block;
+        }
+        
+        /* --- Estilos da Landing Page --- */
+        #landing-page-section {
+             animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .header-nav {
+            background-color: var(--white);
+            padding: 10px 5%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .pricing-card {
-            background: var(--card-background);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            text-align: center;
+
+        .header-nav .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
         }
-        .pricing-card.pro {
-            border: 2px solid var(--primary-color);
-            transform: scale(1.05);
-            position: relative;
-        }
-        .pro-badge {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary-color);
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            color: var(--secondary-color);
-            margin-top: 0;
-        }
-        .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 0.5rem 0;
-        }
-        .pricing-card .price span {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-color-light);
-        }
-        .pricing-card ul {
+
+        .header-nav ul {
             list-style: none;
+            margin: 0;
             padding: 0;
-            margin: 2rem 0;
-            text-align: left;
-        }
-        .pricing-card li {
-            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
         }
-        .pricing-card li svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.75rem;
-            stroke-width: 3;
-            flex-shrink: 0;
-        }
-        .pricing-card li .check { stroke: #10b981; }
-        .pricing-card li .cross { stroke: #ef4444; }
 
-        /* Final CTA */
-        #final-cta {
-            background: var(--secondary-color);
-            color: white;
-            text-align: center;
-            border-radius: 20px;
-            margin: 0 1.5rem 5rem 1.5rem;
+        .header-nav ul li {
+            margin-left: 20px;
         }
-        #final-cta h2 {
-            color: white;
-        }
-        #final-cta p {
-            color: white;
-            opacity: 0.8;
-        }
-        .cta-button {
-            display: inline-block;
-            background: var(--accent-color);
-            color: white !important;
-            padding: 1rem 2.5rem;
-            border-radius: 999px;
-            font-size: 1.1rem;
-            font-weight: 700;
+
+        .header-nav ul li a {
             text-decoration: none;
-            transition: transform 0.2s ease, filter 0.2s ease;
+            color: var(--text-color);
+            font-weight: bold;
+            transition: color 0.3s;
         }
-        .cta-button:hover {
-            transform: scale(1.05);
-            filter: brightness(1.1);
-        }
-        
-        #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
-        #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
-        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
-        #login-form button[type="submit"] { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
-        #login-form button[type="submit"]:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
-        
-        /* ESTRUTURA PRINCIPAL (PÓS-LOGIN) */
-        .app-header { background: var(--card-background); padding: 0 1rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; gap: 1rem; }
-        .user-area { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-        .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
-        .logout-button:hover { background: var(--accent-color); color: white; }
-        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
-        .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
-        .app-header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); display: flex; align-items: center; justify-content: center; gap: 15px; flex-grow: 1; min-width: 0; }
-        .logo-icon { position: relative; width: 30px; height: 30px; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; }
-        .app-header:hover .logo-icon { transform: rotate(-45deg) scale(1.1); }
-        .logo-icon::before, .logo-icon::after { content: ''; position: absolute; box-sizing: border-box; }
-        .logo-icon::before { width: 100%; height: 70%; background: var(--primary-color); border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
-        .logo-icon::after { top: 70%; width: 100%; height: 30%; background: #f3d7b6; border-bottom-right-radius: 50% 100%; border-top-right-radius: 5px; }
-        #app-body { display: flex; }
-        .sidebar { flex-shrink: 0; width: var(--sidebar-width); background-color: var(--card-background); border-right: 1px solid var(--border-color); padding: 2rem; height: calc(100vh - 70px); position: sticky; top: 70px; overflow-y: auto; }
-        .sidebar h2 { font-size: 1.25rem; margin: 0 0 1.5rem 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-        .search-container { position: relative; margin-bottom: 1.5rem; }
-        #search-input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1rem; }
-        .search-container .icon-search { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: #9ca3af; }
-        #filters-container { list-style: none; padding: 0; margin: 0; }
-        .filter-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; background: none; border: none; text-align: left; padding: 0.9rem 1rem; border-radius: 10px; font-size: 1rem; font-family: 'Poppins'; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-color-light); }
-        .filter-btn svg { width: 20px; height: 20px; stroke: var(--text-color-light); transition: all 0.2s; flex-shrink: 0; }
-        .filter-btn.active { background-color: rgba(177, 156, 217, 0.15); color: var(--primary-color); font-weight: 600; }
-        .filter-btn.active svg { stroke: var(--primary-color); }
-        .filter-btn.favorite-btn.active { background-color: rgba(255, 182, 193, 0.15); color: var(--accent-color); }
-        .filter-btn.favorite-btn.active svg { stroke: var(--accent-color); }
-        .filter-btn:hover:not(.active) { background-color: var(--background-color); }
-        .content-wrapper { flex-grow: 1; padding: 2.5rem; }
-        .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
-        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .activity-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.4s ease, box-shadow 0.4s ease; animation: fadeIn 0.5s ease-out forwards; opacity: 0; position: relative; }
-        .activity-card.locked::after { content: '🔒 Apenas para usuários Pro'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255, 0.7); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; font-weight: 700; color: var(--secondary-color); text-align: center; cursor: pointer; }
-        .activity-card:hover { transform: translateY(-10px) rotate(1deg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 0 15px rgba(255, 182, 193, 0.5); }
-        .open-modal-btn { position: relative; overflow: hidden; transition: all 0.4s ease; }
-        .open-modal-btn::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); opacity: 0; transition: right 0.4s ease, opacity 0.4s ease; }
-        .activity-card:hover .open-modal-btn { background-color: var(--primary-color); border-color: var(--primary-color); color: white; padding-right: 2.5rem; }
-        .activity-card:hover .open-modal-btn::after { right: 1rem; opacity: 1; }
-        .favorite-icon.favorited { animation: popEffect 0.4s ease; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem 0; }
-        .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .favorite-icon { background: none; border: none; padding: 0.5rem; cursor: pointer; transition: transform 0.2s ease; }
-        .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; transition: all 0.2s ease; }
-        .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
-        .favorite-icon:hover { transform: scale(1.15); }
-        .card-content { padding: 0 1.5rem; flex-grow: 1; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; }
-        .card-footer span { font-weight: 600; color: var(--text-color-light); }
-        .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; }
-        #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; }
-        .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-        .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
-        
-        /* --- ESTILOS DO MODAL SIMPLIFICADO --- */
-        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 20, 30, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
-        .modal-container.show { display: flex; opacity: 1; }
-        .modal-content { background-color: white; padding: 0; border-radius: 20px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 750px; position: relative; overflow: hidden; transform: translateY(-30px); opacity: 0; display: flex; flex-direction: column; max-height: 90vh; }
-        .modal-container.show .modal-content { animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        .modal-header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); position: relative; flex-shrink: 0; }
-        .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; line-height: 1.3; }
-        .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
-        .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 2rem 2.5rem; animation: contentFadeIn 0.4s ease-out;}
-        .modal-body h3 { font-size: 1.1rem; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .modal-body h3:first-child { margin-top: 0; }
-        .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
-        .modal-body ul { list-style-position: inside; padding-left: 0; }
-        .dica-pedagogica { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-        .dica-pedagogica p { margin: 0; font-weight: 500; }
-        .dica-pedagogica strong { color: var(--accent-color); font-weight: 700; }
-        .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
-        .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
-        .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-        .modal-footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--border-color); background-color: #fcfcfd; flex-shrink: 0; text-align: right; }
-        .download-btn { display: inline-block; background: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
-        .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        /* AULA MAKER SECTION */
-        #aula-maker-section { background-color: var(--card-background); border-radius: 20px; box-shadow: var(--shadow); padding: 2.5rem; animation: fadeIn 0.7s ease-out forwards; }
-        #aula-maker-section h2, #planos-semanais-view h2 { color: var(--secondary-color); font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
-        #aula-maker-section .description, #planos-semanais-view .description { color: var(--text-color-light); margin-bottom: 2rem; font-size: 1rem; max-width: 80ch; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-color); }
-        #aula-maker-section input[type="text"], #aula-maker-section textarea { width: 100%; padding: 0.8rem 1.2rem; border: 1px solid var(--border-color); border-radius: 10px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
-        #aula-maker-section input[type="text"]:focus, #aula-maker-section textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
-        #aula-maker-section h3 { font-size: 1.2rem; color: var(--secondary-color); margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        #no-activities-selected { font-style: italic; margin-bottom: 1.5rem; text-align: center; padding: 2rem 1rem; background: #f8fafc; border-radius: 12px; border: 1px dashed var(--border-color); }
-        #selected-activities-list { list-style: none; padding: 0; margin-bottom: 2rem; }
-        .selected-activity-item { display: flex; justify-content: space-between; align-items: center; background-color: #fcfcfd; border: 1px solid var(--border-color); border-radius: 12px; padding: 0.8rem 1.2rem; margin-bottom: 0.75rem; box-shadow: var(--shadow); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .selected-activity-item:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); }
-        .selected-activity-item span { font-weight: 500; color: var(--text-color); flex-grow: 1; padding-right: 1rem; }
-        .activity-controls { display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem; flex-shrink: 0; }
-        .reorder-btn, .remove-activity-btn { background: none; border: none; cursor: pointer; padding: 0 0.5rem; transition: transform 0.2s, color 0.2s; font-size: 1.5rem; line-height: 1; }
-        .reorder-btn { color: var(--text-color-light); }
-        .reorder-btn:hover { color: var(--primary-color); transform: scale(1.2); }
-        .remove-activity-btn { color: #ef4444; }
-        .remove-activity-btn:hover { transform: scale(1.2); }
-        .main-action-buttons { margin-top: 2rem; display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
-        .add-activity-btn, .generate-plan-btn, .clear-plan-btn { padding: 0.8rem 1.8rem; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); display: inline-flex; align-items: center; justify-content: center; }
-        .add-activity-btn { background: var(--primary-color); color: white; }
-        .add-activity-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.1); }
-        .clear-plan-btn { background: #eef2f7; color: var(--text-color-light); border: 1px solid var(--border-color); margin-right: auto; }
-        .clear-plan-btn:hover { background: #ef4444; color: white; border-color: #ef4444; }
-        .generate-plan-btn { background: linear-gradient(to right, var(--primary-color), var(--accent-color)); color: white; }
-        .generate-plan-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.1); }
-        #select-activities-modal .modal-content { max-width: 900px; width: 95%; }
-        #select-activities-modal .modal-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; padding: 1.5rem 2.5rem; }
-        #select-activities-modal .activity-card { cursor: pointer; border: 2px solid transparent; }
-        #select-activities-modal .activity-card.selected { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(177, 156, 217, 0.8); transform: translateY(-5px); }
-        #select-activities-modal .activity-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-        #select-activities-modal .card-footer { display: none; }
-        #select-activities-modal .modal-footer { text-align: center; }
-        #confirm-selection-btn { background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; padding: 0.8rem 2rem; border: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
-        #confirm-selection-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-
-        /* Responsive adjustments */
-        @media (max-width: 992px) {
-            .app-header { padding: 0 1rem; }
-            .menu-toggle { display: block; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-            #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
-            body.sidebar-open .sidebar { transform: translateX(0); }
-            body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
-            .content-wrapper { padding: 1.5rem; }
-            .pricing-grid { grid-template-columns: 1fr; }
+        .header-nav ul li a:hover {
+            color: var(--primary-color);
         }
+        
+        .btn-login {
+            background-color: var(--primary-color);
+            color: var(--white) !important;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #1e4b9f;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(42, 111, 219, 0.8), rgba(30, 75, 159, 0.8)), url('https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2132&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            color: var(--white);
+            text-align: center;
+            padding: 100px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+        
+        .cta-button, .cta-button-form {
+            display: inline-block;
+            padding: 15px 30px;
+            border: none;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .cta-button:hover, .cta-button-form:hover {
+            background-color: #ffca2c;
+            transform: translateY(-3px);
+        }
+        
+        .cta-button-form {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .cta-button-form:hover {
+            background-color: #1e4b9f;
+        }
+
+
+        /* --- Estilos da Tela de Login --- */
+        #login-page-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), #1e4b9f);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .login-container {
+            display: flex;
+            width: 90%;
+            max-width: 850px;
+            min-height: 550px;
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+
+        .login-info-panel {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 40px;
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .login-info-panel h2 {
+            font-size: 1.8em;
+        }
+
+        .login-form-panel {
+            padding: 40px;
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Garante que o padding não aumente a largura */
+        }
+        
+        .login-links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .login-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+
+        /* --- Estilos do Painel do Assinante --- */
+        #painel-page-section {
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Evita a barra de rolagem no body */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--dark-blue);
+            color: var(--white);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0; /* Impede que o sidebar encolha */
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-header h3 {
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            flex-grow: 1; /* Faz o menu ocupar o espaço disponível */
+            overflow-y: auto; /* Adiciona rolagem se o menu for grande */
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 15px 25px;
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu li a:hover, .sidebar-menu li.active a {
+            background-color: #34495e;
+            color: var(--white);
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .menu-header {
+            padding: 15px 25px 5px 25px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: #95a5a6;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar-footer a {
+            color: var(--light-gray);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .sidebar-footer a:hover {
+            color: var(--white);
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            height: 100vh;
+            background-color: var(--background-color);
+        }
+
+        .content-header {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .material-card, .material-detalhado {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+            margin-bottom: 25px;
+        }
+        
+        .material-detalhado {
+            line-height: 1.7;
+        }
+
+        .material-detalhado h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .material-detalhado h4 {
+            border-left: 3px solid var(--secondary-color);
+            padding-left: 10px;
+            margin-top: 25px;
+        }
+        
+        .material-detalhado ol, .material-detalhado ul {
+            padding-left: 20px;
+        }
+        
+        .download-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        /* Responsividade */
         @media (max-width: 768px) {
-            .landing-hero h1 { font-size: 2.25rem; }
-            .landing-hero p { font-size: 1.1rem; }
-            .user-area #welcome-message { display: none; }
-            .app-header h1 { font-size: 1.2rem; gap: 12px; }
-            .logo-icon { width: 25px; height: 25px; }
-            .access-box { padding: 2rem; }
-            .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
-            #aula-maker-section, #planos-semanais-view { padding: 1.5rem; }
-            #aula-maker-section h2, #planos-semanais-view h2 { font-size: 1.5rem; }
-            .main-action-buttons { flex-direction: column-reverse; align-items: stretch; }
-            .add-activity-btn, .generate-plan-btn, .clear-plan-btn { width: 100%; margin-right: 0; }
-            .clear-plan-btn { margin-bottom: 1rem; }
-            #select-activities-modal .modal-body { grid-template-columns: 1fr; }
-            #add-to-plan-actions .add-activity-btn { width: 100%; }
-            .selected-activity-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; padding-bottom: 0.5rem; }
-            .selected-activity-item .activity-controls { width: 100%; justify-content: flex-end; margin-left: 0; padding: 0.25rem; border-top: 1px solid var(--border-color); }
+            .login-container {
+                flex-direction: column;
+                width: 100%;
+                height: auto;
+                min-height: 100vh;
+                border-radius: 0;
+            }
+            .login-info-panel, .login-form-panel {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .login-info-panel {
+                padding: 40px 20px;
+            }
+            #painel-page-section {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content-area {
+                height: auto;
+            }
         }
+
     </style>
 </head>
 <body>
-    <svg width="0" height="0" style="position:absolute;visibility:hidden">
-        <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></symbol>
-        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
-        <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
-        <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
-        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
-        <symbol id="icon-magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 21l-7-7 1.5-1.5 7 7-1.5 1.5z"></path><path d="M11 7l-2 2-1.5-1.5 2-2 1.5 1.5z"></path><path d="M15 3l-2 2-1.5-1.5 2-2 1.5 1.5z"></path><path d="M4 17l-1 1 3 3 1-1-3-3z"></path><path d="M10.5 10.5l-2.5-2.5"></path><path d="M13.5 13.5l-2.5-2.5"></path></symbol>
-        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></symbol>
-        <symbol id="icon-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></symbol>
-    </svg>
 
-    <div id="login-screen">
-        <header class="landing-hero">
-            <h1>Recupere seu tempo. Reinvente seu jeito de planejar.</h1>
-            <p>O Plano Mestre é a plataforma que automatiza a parte chata do planejamento para que você possa focar no que realmente importa: ensinar.</p>
-            <a href="#pricing" class="cta-button">Ver Planos e Preços</a>
-        </header>
-
-        <div class="access-box-container" id="access-box">
-            <div class="access-box">
-                <h2>Acesse ou crie sua conta</h2>
+    <div id="login-page-section" class="page-section active">
+        <div class="login-container">
+            <div class="login-info-panel">
+                <h2>Bem-vindo(a) de volta!</h2>
+                <p>Sua plataforma de recursos para transformar a educação.</p>
+            </div>
+            <div class="login-form-panel">
                 <form id="login-form">
-                    <input type="text" id="username-input" placeholder="Seu usuário" required>
-                    <input type="password" id="password-input" placeholder="Sua senha" required>
-                    <button type="submit">Entrar →</button>
-                    <p id="login-error" class="hidden">Usuário ou senha inválidos.</p>
-                    <button type="button" class="demo-access-btn" id="demo-access-btn">Ou, explore o Plano Mestre como visitante</button>
+                    <h3>Acesse sua conta</h3>
+                    <div id="error-message" style="color: red; margin-bottom: 15px; text-align: center; display: none;"></div>
+                    <div class="input-group">
+                        <label for="username">Usuário (E-mail)</label>
+                        <input type="email" id="username" name="username" value="professor@exemplo.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" name="password" value="1234" required>
+                    </div>
+                    <button type="submit" class="cta-button-form">Entrar</button>
+                    <div class="login-links">
+                        <a href="#">Esqueceu sua senha?</a>
+                        <p>Não tem uma conta? <a href="#" id="go-to-landing">Assine agora!</a></p>
+                    </div>
                 </form>
             </div>
         </div>
-
-        <section id="features" class="landing-section">
-            <h2 class="section-title">Tudo que você precisa em um só lugar</h2>
-            <p class="section-subtitle">Nossos recursos foram pensados para otimizar cada etapa do seu planejamento pedagógico.</p>
-            <div class="features-grid">
-                       <div class="feature-card"> <div class="icon"><svg><use xlink:href="#icon-magic-wand"></use></svg></div> <h3>Gerador Inteligente</h3> <p>Crie planos de aula completos em minutos, combinando atividades prontas ou personalizando as suas.</p> </div> <div class="feature-card"> <div class="icon"><svg><use xlink:href="#icon-all"></use></svg></div> <h3>Modelos Prontos</h3> <p>Use planos semanais, validados por especialistas e alinhados à BNCC, como ponto de partida.</p> </div> <div class="feature-card"> <div class="icon"><svg><use xlink:href="#icon-category"></use></svg></div> <h3>Banco de Atividades</h3> <p>Filtre e encontre a atividade perfeita para sua turma em nosso crescente acervo de recursos pedagógicos.</p> </div> <div class="feature-card"> <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div> <h3>Exporte para PDF</h3> <p>Gere um documento PDF profissional do seu plano de aula com um único clique, pronto para imprimir ou compartilhar.</p> </div>
-            </div>
-        </section>
-
-        <section id="testimonials" class="landing-section">
-            <h2 class="section-title">Amado por professores de todo o Brasil</h2>
-            <p class="section-subtitle">Veja o que educadores como você estão dizendo sobre o Plano Mestre.</p>
-            <div class="testimonial-grid">
-                <div class="testimonial-card"> <p class="quote">"O Plano Mestre devolveu minhas noites de domingo. O que eu levava 3 horas para fazer, agora faço em 30 minutos. É revolucionário!"</p> <p class="author">Juliana S.</p> <p class="role">Professora, 2º Ano Fundamental</p> </div>
-                <div class="testimonial-card"> <p class="quote">"Finalmente uma ferramenta que entende a realidade da educação infantil. Os modelos são criativos e super fáceis de adaptar. Meus pequenos amam as atividades."</p> <p class="author">Marcos P.</p> <p class="role">Educador, Ed. Infantil</p> </div>
-                <div class="testimonial-card"> <p class="quote">"Ter o banco de atividades alinhado à BNCC é uma mão na roda. A busca é rápida e me dá a segurança de que estou no caminho certo."</p> <p class="author">Carla M.</p> <p class="role">Coordenadora Pedagógica</p> </div>
-            </div>
-        </section>
-
-        <section id="pricing" class="landing-section">
-            <h2 class="section-title">Escolha o plano perfeito para você</h2>
-            <p class="section-subtitle">Comece de graça e evolua quando estiver pronto. Sem compromisso, sem cartão de crédito.</p>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Gratuito</h3>
-                    <p>Para experimentar as funcionalidades essenciais.</p>
-                    <div class="price">R$0 <span>/ para sempre</span></div>
-                    <ul>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Gerador de Plano de Aula</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Criação de até 3 planos</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a 1 modelo semanal</li>
-                        <li><svg class="cross"><use xlink:href="#icon-cross"></use></svg>Acesso completo ao Banco de Atividades</li>
-                        <li><svg class="cross"><use xlink:href="#icon-cross"></use></svg>Acesso a todos os Modelos</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Exportação de PDF com marca d'água</li>
-                    </ul>
-                    <a href="#access-box" class="cta-button" style="background: var(--secondary-color);">Comece Agora</a>
-                </div>
-                <div class="pricing-card pro">
-                    <div class="pro-badge">Mais Popular</div>
-                    <h3>Pro</h3>
-                    <p>Para professores que querem produtividade máxima.</p>
-                    <div class="price">R$19 <span>,90 / mês</span></div>
-                    <ul>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Gerador de Plano de Aula</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Criação de planos **ilimitados**</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a **todos os modelos** semanais</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso **completo** ao Banco de Atividades</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a **todos os Modelos**</li>
-                        <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Exportação de PDF **sem marca d'água**</li>
-                    </ul>
-                    <a href="#access-box" class="cta-button">Assinar o Pro</a>
-                </div>
-            </div>
-        </section>
-        
-        <section id="final-cta" class="landing-section">
-            <h2 class="section-title">Pronto para transformar seu planejamento?</h2>
-            <p class="section-subtitle">Junte-se a milhares de professores que já estão economizando tempo e energia com o Plano Mestre.</p>
-            <a href="#access-box" class="cta-button">Comece Gratuitamente Hoje</a>
-        </section>
     </div>
 
-    <div id="main-content" class="hidden">
-        <header class="app-header"> <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu"> <svg><use xlink:href="#icon-menu"></use></svg> </button> <h1><span class="logo-icon"></span><span>Plano Mestre</span></h1> <div class="user-area"> <span id="welcome-message"></span> <button id="logout-button" class="logout-button">Sair</button> </div> </header>
-        <div id="app-body">
-            <div id="sidebar-overlay"></div>
-            <aside class="sidebar" id="sidebar">
-                <h2>Navegação</h2>
-                <div style="margin-bottom: 1.5rem;"> <button id="nav-planos-semanais-btn" class="filter-btn"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> <span>Modelos de Planos Semanais</span> </button> <button id="nav-aula-maker-btn" class="filter-btn"> <svg><use xlink:href="#icon-magic-wand"></use></svg> <span>Gerador de Plano de Aula</span> </button> </div>
-                <div id="catalog-section">
-                    <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 1rem;">
-                    <h3 style="font-size: 1rem; color: var(--text-color-light); margin: 0 0 1rem 0.5rem; font-weight: 500;">Banco de Atividades</h3>
-                    <div class="search-container"> <svg class="icon-search"><use xlink:href="#icon-search"></use></svg> <input type="text" id="search-input" placeholder="Pesquisar atividades..."> </div>
-                    <ul id="filters-container"></ul>
-                </div>
-            </aside>
-            <div class="content-wrapper">
-                <main>
-                    <div id="catalog-view" class="hidden"> <div id="results-info"></div> <section class="activities-grid" id="activities-grid-container"></section> <div id="pagination-container"></div> </div>
-                    <section id="planos-semanais-view" class="hidden">
-                        <h2>Modelos de Planos Semanais</h2>
-                        <p class="description" style="margin-top: -1rem; margin-bottom: 2rem;">Use nossos modelos, validados por especialistas, como um ponto de partida para o seu planejamento. Carregue um plano no gerador e personalize como quiser!</p>
-                        <div id="planos-semanais-filters" style="margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;"> </div>
-                        <div id="planos-semanais-grid" class="activities-grid" style="gap: 2.5rem;"> </div>
-                    </section>
-                    <section id="aula-maker-section" class="hidden">
-                        <h2><svg width="28" height="28" style="stroke: var(--secondary-color)"><use xlink:href="#icon-magic-wand"></use></svg> Gerador de Plano de Aula</h2>
-                        <p class="description">Construa seu planejamento adicionando atividades do nosso banco ou criando as suas próprias. Organize a sequência e gere um PDF completo!</p>
-                        <div class="form-group"> <label for="maker-title">Título do Plano de Aula:</label> <input type="text" id="maker-title" placeholder="Ex: Plano Semanal - 1º Ano B"> </div>
-                        <div class="form-group"> <label for="maker-grade">Ano/Turma:</label> <input type="text" id="maker-grade" placeholder="Ex: 3º Ano Fundamental"> </div>
-                        <div class="form-group"> <label for="maker-theme">Tema da Aula (Opcional):</label> <input type="text" id="maker-theme" placeholder="Ex: Sustentabilidade e Meio Ambiente"> </div>
-                        <div class="form-group"> <label for="maker-notes">Observações Gerais / Materiais Necessários:</label> <textarea id="maker-notes" rows="4" placeholder="Ex: Levar tesoura sem ponta, cola bastão e revistas antigas para recorte."></textarea> </div>
-                        <h3>Sequência da Aula</h3>
-                        <p id="no-activities-selected">Seu plano de aula está vazio.</p>
-                        <ul id="selected-activities-list"></ul>
-                        <div id="add-to-plan-actions" style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; background-color: #fdfcff;">
-                            <h4 style="margin-top: 0; color: var(--secondary-color);">Adicionar Etapa ao Plano</h4>
-                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;"> <button id="add-catalog-activity-btn" class="add-activity-btn"> <span style="font-size: 1.2rem; margin-right: 8px;">+</span> Adicionar do Banco de Atividades </button> <button id="add-custom-activity-inline-btn" class="add-activity-btn" style="background-color: var(--secondary-color);"> <span style="font-size: 1.2rem; margin-right: 8px;">✎</span> Criar Atividade Personalizada </button> </div>
-                            <div id="custom-activity-form" class="hidden" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-                                <div class="form-group"> <label for="custom-activity-title">Título da Atividade Personalizada:</label> <input type="text" id="custom-activity-title" placeholder="Ex: Roda de conversa inicial"> </div>
-                                <div class="form-group" style="margin-bottom: 1rem;"> <label for="custom-activity-desc">Descrição / Roteiro (Opcional):</label> <textarea id="custom-activity-desc" rows="3" placeholder="Detalhes sobre como a atividade será conduzida."></textarea> </div>
-                                <button id="confirm-add-custom-btn" class="add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Adicionar ao Plano</button>
-                            </div>
-                        </div>
-                        <div class="main-action-buttons"> <button id="clear-plan-btn" class="clear-plan-btn">Limpar Plano</button> <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button> </div>
-                    </section>
-                </main>
-                <footer><p style="text-align: center; color: var(--text-color-light); margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">© 2025 Plano Mestre. Todos os direitos reservados.</p></footer>
-            </div>
-        </div>
+    <div id="landing-page-section" class="page-section">
+        <header class="header-nav">
+            <div class="logo">Portal do Professor</div>
+            <ul>
+                <li><a href="#hero-section">Início</a></li>
+                <li><a href="#" class="btn-login" id="go-to-login">Já sou assinante</a></li>
+            </ul>
+        </header>
+
+        <main>
+            <section class="hero" id="hero-section">
+                <h1>Planejamentos de Aula Prontos em Minutos</h1>
+                <p>Menos tempo planejando, mais tempo ensinando com qualidade. Tenha acesso a centenas de materiais pedagógicos prontos e editáveis.</p>
+                <a href="#" class="cta-button">Quero Facilitar Minha Vida</a>
+            </section>
+            </main>
     </div>
 
-    <div class="modal-container" id="modal-container"></div>
+    <div id="painel-page-section" class="page-section">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Portal do Professor</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-header">Conteúdos por Disciplina</li>
+                <li class="active"><a href="#">Português</a></li>
+                <li><a href="#">Matemática</a></li>
+                <li><a href="#">Ciências</a></li>
+                <li><a href="#">História</a></li>
+                <li><a href="#">Geografia</a></li>
+                <li class="menu-header">Recursos Especiais</li>
+                <li><a href="#">Datas Comemorativas</a></li>
+                <li><a href="#">Projetos Interdisciplinares</a></li>
+                <li><a href="#">Gestão de Sala de Aula</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a id="logout-button">Sair</a>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <header class="content-header">
+                <h2>Bem-vindo(a), Professor(a)!</h2>
+                <p>Explore nossos materiais mais recentes de Português.</p>
+            </header>
+            
+            <article class="material-detalhado">
+                <h3>Explicação Pedagógica: Atividade de Frações com Pizza</h3>
+            
+                <p><strong>Objetivo:</strong> Introduzir o conceito de frações de forma visual e concreta, associando as partes de um todo a uma experiência cotidiana dos alunos (comer pizza).</p>
+                
+                <p><strong>Alinhamento BNCC:</strong> Competência Específica de Matemática (EF04MA09) - Reconhecer as frações unitárias mais usuais (1/2, 1/3, 1/4, 1/5, 1/10 e 1/100) como unidades de medida menores do que uma unidade, utilizando a reta numérica como recurso.</p>
+                
+                <h4>Passo a Passo da Aula:</h4>
+                <ol>
+                    <li><strong>Introdução (10 min):</strong> Comece uma conversa sobre pizza. "Quem gosta de pizza? Como dividimos uma pizza para todos comerem um pedaço?" Use a lousa para desenhar círculos e dividi-los.</li>
+                    <li><strong>Atividade Principal (20 min):</strong> Distribua os moldes de pizza em papel (disponíveis para download abaixo). Peça para eles pintarem e recortarem as "fatias".</li>
+                    <li><strong>Conceituação (15 min):</strong> Use as fatias para explicar o que é 1/2, 1/4, 1/8. Mostre que 2 fatias de 1/8 formam 1/4. Peça para que montem frações equivalentes.</li>
+                    <li><strong>Avaliação Formativa:</strong> Observe a participação, as perguntas e peça para que montem frações que você ditar. Ex: "Montem três oitavos com suas fatias".</li>
+                </ol>
+                
+                <h4>Materiais Necessários:</h4>
+                <ul>
+                    <li>PDF da "Pizza de Frações" (link para download abaixo).</li>
+                    <li>Tesoura sem ponta.</li>
+                    <li>Lápis de cor ou giz de cera.</li>
+                    <li>Cola.</li>
+                </ul>
+
+                <div class="download-section">
+                    <a href="#" class="cta-button" onclick="alert('Iniciando o download do arquivo.pdf!')">Baixar PDF da Atividade</a>
+                </div>
+            </article>
+
+        </main>
+    </div>
+
 
     <script>
-    // --- BANCO DE DADOS (Simulado) ---
-    const usuariosAutorizados = [
-        { usuario: "prof.teste", senha: "222", plano: "pro" },    
-        { usuario: "marcia.lopes", senha: "proativa", plano: "pro" },
-        { usuario: "visitante", senha: "12345", plano: "gratuito" }    
-    ];
-    
-    const todasAsAtividades = [    
-        { id: 1, categoria: "Interpessoal", cor: "#3b82f6", titulo: "Duas Verdades, Uma Mentira", desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", duracao: "10 min", bncc: ["EI03EO04", "EI03EF01"], objetivos: [ "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.", "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.", "Desenvolver a escuta atenta e o respeito pela vez de falar do colega." ], roteiro: { acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.", desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.", expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.", encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros." }, dica_pedagogica: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo." },    
-        { id: 2, categoria: "Português", cor: "#ef4444", titulo: "Criador de Histórias", desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", duracao: "20 min", bncc: ["EF15LP05", "EF02LP26"], objetivos: [ "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.", "Desenvolver a criatividade e a imaginação.", "Ampliar o vocabulário e a organização do pensamento lógico." ], roteiro: { acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.", desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.", expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.", encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala." }, dica_pedagogica: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!" },    
-        { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01", "EF01MA08"], objetivos: [ "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.", "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.", "Desenvolver o raciocínio lógico e estratégias de resolução de problemas." ], roteiro: { acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.", desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.", expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.", encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação." }, dica_pedagogica: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!" },    
-        { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", duracao: "25 min", bncc: ["EF08CI01", "EF69LP13"], objetivos: [ "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.", "Exercitar a escuta ativa e o respeito a opiniões divergentes.", "Diferenciar fatos de opiniões em um texto ou discussão." ], roteiro: { acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).", desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.", expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.", encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico." }, dica_pedagogica: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate." },    
-        { id: 5, free: true, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08", "EF01LP02"], objetivos: [ "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.", "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.", "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas." ], roteiro: { acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).", desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.", expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.", encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'." }, dica_pedagogica: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes." },    
-        { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04", "EF15AR05"], objetivos: [ "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.", "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.", "Aprimorar a coordenação motora fina e a percepção tátil." ], roteiro: { acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.", desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.", expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.", encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais." }, dica_pedagogica: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo." },    
-        { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09", "EF01GE08"], objetivos: [ "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.", "Desenvolver noções de lateralidade, localização e representação espacial.", "Compreender a função de um mapa como forma de representação de um lugar." ], roteiro: { acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.", desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).", expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.", encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido." }, dica_pedagogica: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente." },    
-        { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01", "EF01HI04"], objetivos: [ "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.", "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.", "Valorizar sua própria história e a de seus familiares." ], roteiro: { acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.", desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.", expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).", encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'." }, dica_pedagogica: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade." },
-        { id: 9, categoria: "Língua Portuguesa", cor: "#a21caf", titulo: "Caça-Palavras Temático", desc: "Estimula a leitura, o reconhecimento visual de palavras e a ampliação do vocabulário dentro de um tema específico.", duracao: "15 min", bncc: ["EF01LP09", "EF02LP07"], objetivos: [ "Localizar e identificar palavras em diferentes gêneros textuais (Caça-Palavras).", "Ampliar o vocabulário e o reconhecimento de grafemas.", "Desenvolver a atenção e a concentração." ], roteiro: { acolhida: "Apresente o tema do caça-palavras (ex: 'Animais da Floresta'). Pergunte aos alunos quais animais eles conhecem e escreva os nomes no quadro.", desenvolvimento: "Entregue a folha do caça-palavras. Peça para que leiam as palavras da lista e as encontrem na grade de letras. Eles podem usar lápis de cor para cada palavra.", expansao: "Após terminarem, peça para que escolham 2 ou 3 palavras que encontraram e formem frases com elas.", encerramento: "Corrija o caça-palavras coletivamente, incentivando a participação de todos." }, dica_pedagogica: "Para tornar a atividade mais interativa, crie um 'Caça-Palavras Gigante' no chão da sala com fita crepe e cartões de letras. As crianças param e pulam sobre as letras para formar as palavras." },
-        { id: 10, categoria: "Matemática", cor: "#059669", titulo: "Bingo de Adição/Subtração", desc: "Revisa e reforça conceitos de adição e subtração de forma lúdica e competitiva.", duracao: "20 min", bncc: ["EF01MA06", "EF02MA05"], objetivos: [ "Resolver e elaborar problemas de adição e subtração de números naturais.", "Associar operações a resultados de forma rápida e divertida.", "Desenvolver o cálculo mental e a agilidade de raciocínio." ], roteiro: { acolhida: "Explique as regras do Bingo: cada criança terá uma cartela com resultados. Você vai ditar operações (ex: 'Quanto é 5 + 3?') e eles devem marcar o resultado correto na cartela.", desenvolvimento: "Distribua as cartelas e marcadores (tampinhas, feijões). Comece a ditar as operações de forma clara e pausada. Repita se necessário.", expansao: "A primeira criança a completar uma linha ou a cartela inteira grita 'Bingo!'. Verifique as respostas e continue até que alguns 'vencedores' sejam declarados.", encerramento: "Parabenize todos os participantes. Discuta algumas das operações que causaram mais dificuldade." }, dica_pedagogica: "Prepare cartelas com diferentes níveis de dificuldade ou crie variações com multiplicação ou divisão para turmas mais avançadas. A tematização (ex: 'Bingo do Natal' com problemas envolvendo presentes) também aumenta o engajamento." },
-        { id: 11, categoria: "Educação Física", cor: "#ef4444", titulo: "Circuito de Desafios Motores", desc: "Promove o desenvolvimento da coordenação motora ampla, equilíbrio e agilidade de forma divertida e desafiadora.", duracao: "30 min", bncc: ["EI03ET05", "EF01EF04"], objetivos: [ "Coordenar ações corporais em diferentes situações e brincadeiras.", "Desenvolver a percepção espacial e temporal.", "Estimular a participação em atividades coletivas e o respeito às regras." ], roteiro: { acolhida: "Apresente o 'Circuito dos Heróis/Heroínas'. Explique cada estação do circuito (ex: 'Pular corda 5 vezes', 'Andar sobre a linha reta', 'Passar por baixo do túnel de tecido', 'Jogar a bola no alvo').", desenvolvimento: "Divida a turma em pequenos grupos e os oriente para as estações. Monitore e incentive a participação de todos, oferecendo ajuda quando necessário.", expansao: "Após todos terem passado por todas as estações, organize uma 'corrida de revezamento' em uma versão simplificada do circuito.", encerramento: "Faça uma roda de conversa, perguntando qual foi o desafio mais divertido e qual foi o mais difícil. Reforce a importância do movimento para a saúde." }, dica_pedagogica: "Use materiais simples e acessíveis, como cones, bambolês, cordas, tecidos e caixas de papelão. Adapte os desafios à faixa etária e às habilidades motoras da turma, sempre priorizando a segurança." },
-        { id: 12, categoria: "Música", cor: "#d946ef", titulo: "Bandinha Rítmica da Sala", desc: "Explora a musicalidade, ritmo e trabalho em equipe através da criação de uma 'banda' com instrumentos improvisados.", duracao: "20 min", bncc: ["EI03TS03", "EF15AR17"], objetivos: [ "Experimentar e apreciar diferentes formas de expressão musical.", "Reconhecer e reproduzir padrões rítmicos simples.", "Desenvolver a coordenação motora e o senso de coletividade." ], roteiro: { acolhida: "Apresente diferentes sons (bater palmas, estalar os dedos, bater o pé no chão). Pergunte às crianças que outros 'instrumentos' podemos criar com objetos da sala.", desenvolvimento: "Distribua materiais como potes vazios, colheres de pau, chocalhos feitos com garrafas PET e grãos, panelas, etc. Dê um tempo para exploração livre dos sons.", expansao: "Ensine um ritmo simples e peça para que todos tentem reproduzir juntos. Depois, divida a turma em 'seções' (ex: 'percussão com potes', 'chocalhos') e crie uma pequena melodia rítmica em conjunto.", encerramento: "Apresente a 'Bandinha Rítmica da Sala' para outras turmas ou para os pais em um pequeno evento. Celebre o talento musical de todos!" }, dica_pedagogica: "Utilize músicas infantis conhecidas e peça para as crianças criarem os 'acompanhamentos rítmicos'. Grave a performance da bandinha para que as crianças possam se ver e ouvir." }
-    ];
+        document.addEventListener('DOMContentLoaded', () => {
 
-    const planosSemanaisProntos = [    
-        { id: "semanal-infantil-bebes-01", titulo: "Texturas e Sensações", anoEscolar: "Ed. Infantil (Bebês 0-1,6a)", descricao: "Uma semana focada na exploração tátil e sensorial, fundamental para o desenvolvimento dos bebês, com atividades seguras e estimulantes.", objetivosGerais: ["Ampliar o repertório sensorial.", "Desenvolver a coordenação motora.", "Estimular a curiosidade através da exploração de diferentes materiais."], planoDiario: [ { dia: "Segunda-feira", foco: "Mãos e Pés", atividades: [{ type: 'custom', titulo: 'Caminho de Sensações', desc: 'Criar um tapete no chão com diferentes texturas (algodão, E.V.A., plástico bolha, grama sintética) para os bebês engatinharem ou caminharem sobre ele.' }] }, { dia: "Terça-feira", foco: "Natureza", atividades: [{ type: 'custom', titulo: 'Cesto de Tesouros da Natureza', desc: 'Oferecer um cesto com folhas secas, pinhas, galhos lisos (higienizados e seguros) para exploração livre.' }] }, { dia: "Quarta-feira", foco: "Gelado e Quente", atividades: [{ type: 'custom', titulo: 'Pintura com Gelo Colorido', desc: 'Congelar água com corante alimentício em formas de picolé. Oferecer para que pintem em uma cartolina grande.' }] }, { dia: "Quinta-feira", foco: "Comestível", atividades: [{ type: 'custom', titulo: 'Exploração com Gelatina', desc: 'Preparar uma grande bacia de gelatina (sem açúcar) para que os bebês possam tocar, sentir a textura e experimentar com segurança.' }] }, { dia: "Sexta-feira", foco: "Macio e Fofo", atividades: [{ type: 'custom', titulo: 'Guerra de Pompons', desc: 'Em um ambiente seguro, espalhar pompons de lã coloridos de vários tamanhos para que os bebês possam pegar, sentir e brincar.' }] }, ] },    
-        { id: "semanal-infantil-pequenos-01", titulo: "O Mundo dos Animais", anoEscolar: "Ed. Infantil (Crianças 1,7-3,11a)", descricao: "Uma imersão no reino animal, explorando sons, movimentos e habitats de diferentes bichos, promovendo a linguagem e a expressão corporal.", objetivosGerais: ["Imitar sons e movimentos de animais.", "Ampliar o vocabulário com nomes de animais.", "Desenvolver o respeito pela natureza e pelos seres vivos."], planoDiario: [ { dia: "Segunda-feira", foco: "Animais da Fazenda", atividades: [{ type: 'custom', titulo: 'Sons da Fazendinha', desc: 'Cantar músicas como "Seu Lobato" e imitar os sons dos animais. Usar fantoches ou miniaturas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando Ovelhinhas'}] }, { dia: "Terça-feira", foco: "Animais da Selva", atividades: [{ type: 'custom', titulo: 'Circuito Motor da Selva', desc: 'Criar um percurso com obstáculos: "pular como o macaco", "rastejar como a cobra", "andar pesado como o elefante".' }] }, { dia: "Quarta-feira", foco: "Animais Aquáticos", atividades: [{ type: 'custom', titulo: 'Pintura com as Mãos: Polvo', desc: 'Pintar a palma da mão da criança com tinta guache e carimbar no papel. Os dedos formam os tentáculos do polvo.' }, { type: 'custom', titulo: 'História: O Peixinho Dourado' }] }, { dia: "Quinta-feira", foco: "Insetos e Bichos de Jardim", atividades: [{ type: 'custom', titulo: 'Observação com Lupa', desc: 'Levar as crianças ao jardim para procurar formigas, joaninhas e outros pequenos seres com lupas.' }] }, { dia: "Sexta-feira", foco: "Festa dos Animais", atividades: [{ type: 'custom', titulo: 'Baile à Fantasia Animal', desc: 'Confeccionar máscaras de animais com pratos de papel e realizar um baile onde cada um imita o seu bicho.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'Criando a História da nossa Festa' }] }, ] },    
-        { id: "semanal-infantil-01", titulo: "Explorando os Cinco Sentidos", anoEscolar: "Ed. Infantil (Crianças 4-5,11a)", descricao: "Uma semana de descobertas sensoriais para explorar o mundo através da visão, audição, olfato, paladar e tato de forma lúdica e interativa.", objetivosGerais: ["Identificar e nomear os cinco sentidos.", "Desenvolver a percepção sensorial através de atividades práticas.", "Estimular a curiosidade e a capacidade de observação e descrição."], planoDiario: [ { dia: "Segunda-feira", foco: "Visão", atividades: [ { type: 'custom', titulo: 'Roda de Conversa: O que vemos?', desc: 'Apresentar o tema da semana. Perguntar às crianças o que elas conseguem ver na sala, pela janela, etc. Explorar cores e formas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando o que Vemos' }, { type: 'custom', titulo: 'Caça às Cores', desc: 'Pedir que encontrem objetos de uma cor específica (vermelho, azul, etc.) na sala de aula.' } ] }, { dia: "Terça-feira", foco: "Audição", atividades: [ { type: 'custom', titulo: 'Sons Misteriosos', desc: 'Produzir diferentes sons atrás de um pano (sino, chocalho, palmas, papel amassando) e pedir que adivinhem o que é.' }, { type: 'custom', titulo: 'Estátua Musical', desc: 'Dançar livremente com uma música e ficar imóvel quando ela para. Trabalha a atenção auditiva.' } ] }, { dia: "Quarta-feira", foco: "Tato", atividades: [ { type: 'custom', titulo: 'Caixa Surpresa do Tato', desc: 'Colocar diferentes objetos (algodão, lixa, esponja, folha seca) em uma caixa e pedir que as crianças, de olhos vendados, descrevam a textura.' }, { type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando a Sala com as Mãos' } ] }, { dia: "Quinta-feira", foco: "Olfato e Paladar", atividades: [ { type: 'custom', titulo: 'Cheirinhos da Natureza', desc: 'Trazer potinhos com diferentes aromas (café, cravo, hortelã, casca de laranja) para que sintam e tentem identificar.' }, { type: 'custom', titulo: 'Degustação às Cegas', desc: 'Oferecer pequenos pedaços de frutas (banana, maçã, laranja) para que provem de olhos vendados e adivinhem o que é.' } ] }, { dia: "Sexta-feira", foco: "Integração dos Sentidos", atividades: [ { type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História Sensorial' }, { type: 'custom', titulo: 'Circuito Sensorial', desc: 'Montar um caminho no chão com diferentes texturas para andar descalço (tapetes, grama sintética, plástico bolha) enquanto ouvem uma música relaxante.' } ] } ] },    
-        { id: "semanal-fundamental-01", titulo: "Semana da Consciência Fonológica", anoEscolar: "1º Ano - Fundamental", descricao: "Uma semana intensiva e divertida focada no desenvolvimento das habilidades de consciência fonológica, essenciais para o processo de alfabetização.", objetivosGerais: ["Desenvolver a consciência de sílabas, rimas e aliterações.", "Segmentar palavras em sílabas oralmente.", "Associar fonemas a grafemas em atividades lúdicas."], planoDiario: [ { dia: "Segunda-feira", foco: "Rimas", atividades: [ { type: 'catalog', id: 1, tituloPersonalizado: 'Apresentação com Rimas' }, { type: 'custom', titulo: 'Bingo de Rimas', desc: 'A professora fala uma palavra (ex: PÃO) e os alunos marcam na cartela uma figura que rime (ex: MÃO).' } ] }, { dia: "Terça-feira", foco: "Sílabas", atividades: [ { type: 'catalog', id: 5 }, { type: 'custom', titulo: 'Quantas Sílabas Tem?', desc: 'Mostrar figuras e pedir que batam palmas para cada sílaba, registrando o número no quadro.' } ] }, { dia: "Quarta-feira", foco: "Aliteração (Som Inicial)", atividades: [ { type: 'custom', titulo: 'O Barco Carregado de...', desc: 'Iniciar a brincadeira: "O barco veio carregado de coisas com a letra B...". As crianças devem falar palavras que comecem com o som /b/.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'História com Aliteração' } ] }, { dia: "Quinta-feira", foco: "Formação de Palavras", atividades: [ { type: 'custom', titulo: 'Sopa de Letrinhas', desc: 'Entregar um prato com letras móveis e pedir que formem palavras que a professora ditar ou palavras que conhecem.' } ] }, { dia: "Sexta-feira", foco: "Revisão Lúdica", atividades: [ { type: 'catalog', id: 8, tituloPersonalizado: 'A Linha do Tempo dos Sons' }, { type: 'custom', titulo: 'Gincana Fonológica', desc: 'Dividir a turma em equipes e realizar desafios rápidos envolvendo rimas, sílabas e aliterações.' } ] } ] },    
-        { id: "semanal-fundamental-02", titulo: "Viagem pelo Sistema Monetário", anoEscolar: "2º Ano - Fundamental", descricao: "Uma introdução prática e significativa ao sistema monetário brasileiro, desenvolvendo habilidades de contagem, soma, subtração e educação financeira.", objetivosGerais: ["Reconhecer cédulas e moedas do sistema monetário brasileiro.", "Resolver problemas simples envolvendo compra e venda.", "Compreender o valor do dinheiro e a importância de poupar."], planoDiario: [ { dia: "Segunda-feira", foco: "Conhecendo o Dinheiro", atividades: [{type: 'custom', titulo: 'Explorando as Cédulas e Moedas', desc: 'Apresentar réplicas de dinheiro. Deixar que manipulem, observem os detalhes (animais, tamanhos, cores) e conversem sobre o que sabem.'}]}, { dia: "Terça-feira", foco: "Quanto Custa?", atividades: [{type: 'catalog', id: 3, tituloPersonalizado: 'Problema: As Compras de João'}, {type: 'custom', titulo: 'Mercadinho da Turma', desc: 'Montar um pequeno mercado com embalagens vazias e preços. Em duplas, os alunos recebem uma quantia e devem comprar produtos.'}]}, { dia: "Quarta-feira", foco: "Calculando o Troco", atividades: [{type: 'custom', titulo: 'Simulação de Troco', desc: 'Continuar com o mercadinho, mas agora o foco é em pagar e calcular o troco. A professora atua como caixa.'}]}, { dia: "Quinta-feira", foco: "De Onde Vem o Dinheiro?", atividades: [{type: 'custom', titulo: 'Roda de Conversa: Trabalho e Dinheiro', desc: 'Conversar sobre as profissões dos pais e como o trabalho gera renda para a família.'}, {type: 'catalog', id: 2, tituloPersonalizado: 'História: O Cofrinho Mágico'}]}, { dia: "Sexta-feira", foco: "Dia de Poupar", atividades: [{type: 'custom', titulo: 'Construindo um Cofrinho', desc: 'Usar garrafas PET ou latas para confeccionar um cofrinho. Conversar sobre metas e o que gostariam de comprar se poupassem.'}]}, ] } ,
-        { id: "semanal-fundamental-04", titulo: "Descobrindo o Espaço Sideral", anoEscolar: "4º Ano - Fundamental", descricao: "Uma semana para viajar pelo universo, aprendendo sobre planetas, estrelas e fenômenos celestes de forma investigativa e criativa.", objetivosGerais: ["Compreender a composição do sistema solar.", "Identificar planetas e corpos celestes.", "Estimular a curiosidade científica sobre o universo."], planoDiario: [ { dia: "Segunda-feira", foco: "Nosso Sistema Solar", atividades: [{type: 'custom', titulo: 'Roda de Conversa: O que sabemos sobre o espaço?', desc: 'Iniciando com uma discussão sobre o que os alunos já conhecem do espaço. Apresentar um modelo (ou ilustração) do sistema solar.'}, {type: 'catalog', id: 4, tituloPersonalizado: 'Debate: Seria Marte habitável?'}]}, { dia: "Terça-feira", foco: "As Estrelas e Constelações", atividades: [{type: 'custom', titulo: 'Contação de Histórias: Mitos e Lendas das Constelações', desc: 'Narrar lendas sobre constelações (Ursa Maior, Órion) e pedir que os alunos desenhem suas constelações preferidas.'}]}, { dia: "Quarta-feira", foco: "Viagem Espacial (Criação)", atividades: [{type: 'custom', titulo: 'Construindo o Foguete da Sala', desc: 'Usar materiais recicláveis (garrafas PET, rolos de papel) para construir um foguete coletivo.'}, {type: 'catalog', id: 2, tituloPersonalizado: 'Criando a história da nossa viagem espacial'}]}, { dia: "Quinta-feira", foco: "Fenômenos Naturais no Espaço", atividades: [{type: 'custom', titulo: 'Observando as Fases da Lua (simulado)', desc: 'Usar uma bola de isopor e uma lanterna para simular as fases da Lua. Discutir eclipses e outros fenômenos.'}]}, { dia: "Sexta-feira", foco: "Somos Astrônomos!", atividades: [{type: 'custom', titulo: 'Desenho: Como seria minha estação espacial?', desc: 'Pedir que os alunos desenhem e descrevam sua própria estação espacial ou planeta imaginário.'}, {type: 'catalog', id: 6, tituloPersonalizado: 'Esculturas de Alienígenas com Massinha'}]}, ] } ,
-        { id: "semanal-fundamental-05", titulo: "Grandes Descobertas e Invenções", anoEscolar: "5º Ano - Fundamental", descricao: "Explora o impacto das principais descobertas e invenções da história na vida humana, estimulando o pensamento inovador e a linha do tempo histórica.", objetivosGerais: ["Identificar grandes invenções e seus inventores.", "Compreender o impacto da ciência e tecnologia na sociedade.", "Desenvolver o pensamento crítico sobre o progresso humano."], planoDiario: [ { dia: "Segunda-feira", foco: "A Roda e o Fogo", atividades: [{type: 'catalog', id: 8, tituloPersonalizado: 'Linha do Tempo das Invenções Primitivas'}, {type: 'custom', titulo: 'Discussão: Como seria o mundo sem a roda?', desc: 'Incentivar os alunos a imaginar a vida sem invenções básicas e debater sua importância.'}]}, { dia: "Terça-feira", foco: "A Imprensa de Gutenberg", atividades: [{type: 'custom', titulo: 'Oficina de Tipografia (simples)', desc: 'Usar carimbos de letras para 'imprimir' pequenas palavras ou nomes em papéis, simulando a prensa.'}]}, { dia: "Quarta-feira", foco: "Eletricidade e Iluminação", atividades: [{type: 'custom', titulo: 'Experimento: Pilha de Batata', desc: 'Montar uma pilha com batatas, fios e pequenos LEDs para mostrar como a eletricidade pode ser gerada.'}, {type: 'catalog', id: 4, tituloPersonalizado: 'Debate: Energia renovável ou não renovável?'}]}, { dia: "Quinta-feira", foco: "A Internet e a Comunicação", atividades: [{type: 'custom', titulo: 'Linha do Tempo da Comunicação', desc: 'Criar uma linha do tempo visual de como a comunicação evoluiu (carta, telégrafo, telefone, internet).'}, {type: 'catalog', id: 9, tituloPersonalizado: 'Caça-palavras da Tecnologia'}]}, { dia: "Sexta-feira", foco: "Inovação para o Futuro", atividades: [{type: 'custom', titulo: 'Meu Projeto de Invenção', desc: 'Em grupos, os alunos criam uma 'invenção do futuro' para resolver um problema. Apresentam um desenho e uma breve descrição.'}]}, ] }
-    ];
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        // ----- App State and Global Variables -----
-        const appState = {
-            currentView: 'planosSemanais',
-            searchQuery: '',
-            activeFilter: 'Todos',
-            activePlanoFilter: 'Todos',
-            currentPage: 1,
-            itemsPerPage: 6,
-            favorites: JSON.parse(localStorage.getItem('planoMestreFavoritesV1')) || [],
-            selectedActivitiesForMaker: [],
-            makerPlanTitle: '',
-            makerPlanGrade: '',
-            makerPlanTheme: '',
-            makerPlanNotes: ''
-        };
+            // Seleciona todas as seções da página
+            const loginPage = document.getElementById('login-page-section');
+            const landingPage = document.getElementById('landing-page-section');
+            const painelPage = document.getElementById('painel-page-section');
 
-        const dom = {
-            loginScreen: document.getElementById('login-screen'),
-            mainContent: document.getElementById('main-content'),
-            modal: document.getElementById('modal-container'),
-        };
-
-        // ----- Core Functions -----
-
-        const isUserPro = () => localStorage.getItem('planoMestreUserPlan') === 'pro';
-
-        function initializePanel(user) {
-            localStorage.setItem('planoMestreUser', JSON.stringify(user));
-            localStorage.setItem('planoMestreUserPlan', user.plano);
-            dom.loginScreen.classList.add('hidden');
-            dom.mainContent.classList.remove('hidden');
-            
-            // Populate DOM object with main panel elements
-            Object.assign(dom, {
-                logoutButton: document.getElementById('logout-button'),
-                welcomeMsg: document.getElementById('welcome-message'),
-                menuToggle: document.getElementById('menu-toggle'),
-                sidebar: document.getElementById('sidebar'),
-                sidebarOverlay: document.getElementById('sidebar-overlay'),
-                catalogView: document.getElementById('catalog-view'),
-                aulaMakerSection: document.getElementById('aula-maker-section'),
-                planosSemanaisView: document.getElementById('planos-semanais-view'),
-                planosSemanaisGrid: document.getElementById('planos-semanais-grid'),
-                planosSemanaisFilters: document.getElementById('planos-semanais-filters'),
-                searchInput: document.getElementById('search-input'),
-                filters: document.getElementById('filters-container'),
-                grid: document.getElementById('activities-grid-container'),
-                pagination: document.getElementById('pagination-container'),
-                resultsInfo: document.getElementById('results-info'),
-                navAulaMakerBtn: document.getElementById('nav-aula-maker-btn'),
-                navPlanosSemanaisBtn: document.getElementById('nav-planos-semanais-btn'),
-                makerTitleInput: document.getElementById('maker-title'),
-                makerGradeInput: document.getElementById('maker-grade'),
-                makerThemeInput: document.getElementById('maker-theme'),
-                makerNotesInput: document.getElementById('maker-notes'),
-                generatePlanBtn: document.getElementById('generate-plan-btn'),
-                selectedActivitiesList: document.getElementById('selected-activities-list'),
-                noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
-                clearPlanBtn: document.getElementById('clear-plan-btn'),
-                addCatalogActivityBtn: document.getElementById('add-catalog-activity-btn'),
-                addCustomActivityInlineBtn: document.getElementById('add-custom-activity-inline-btn'),
-                customActivityForm: document.getElementById('custom-activity-form'),
-                confirmAddCustomBtn: document.getElementById('confirm-add-custom-btn'),
-                customActivityTitleInput: document.getElementById('custom-activity-title'),
-                customActivityDescInput: document.getElementById('custom-activity-desc'),
-            });
-
-            const firstName = user.usuario.split('.')[0];
-            dom.welcomeMsg.textContent = `Olá, ${firstName.charAt(0).toUpperCase() + firstName.slice(1)}!`;
-            
-            setupEventListeners();
-            loadMakerPlanState();
-            render();
-        }
-
-        function setupEventListeners() {
-            dom.logoutButton.addEventListener('click', () => {
-                localStorage.clear();
-                location.reload();
-            });
-            dom.menuToggle.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
-            dom.sidebarOverlay.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
-            dom.navPlanosSemanaisBtn.addEventListener('click', () => switchView('planosSemanais'));
-            dom.navAulaMakerBtn.addEventListener('click', () => switchView('aulaMaker'));
-            dom.searchInput.addEventListener('input', () => {
-                appState.searchQuery = dom.searchInput.value.toLowerCase();
-                switchView('catalog', 1);
-            });
-            dom.addCatalogActivityBtn.addEventListener('click', openSelectActivitiesModal);
-            dom.addCustomActivityInlineBtn.addEventListener('click', () => dom.customActivityForm.classList.toggle('hidden'));
-            dom.confirmAddCustomBtn.addEventListener('click', addCustomActivityToMaker);
-            dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdfWithWatermark);
-            dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
-            
-            ['makerTitleInput', 'makerGradeInput', 'makerThemeInput', 'makerNotesInput'].forEach(key => {
-                dom[key].addEventListener('input', () => {
-                    appState[key.replace('Input', '')] = dom[key].value;
-                    saveAppState();
-                });
-            });
-        }
-        
-        // ----- State and Rendering -----
-        function saveAppState() {
-            const stateToSave = {
-                selectedActivitiesForMaker: appState.selectedActivitiesForMaker,
-                makerPlanTitle: appState.makerPlanTitle,
-                makerPlanGrade: appState.makerPlanGrade,
-                makerPlanTheme: appState.makerPlanTheme,
-                makerPlanNotes: appState.makerPlanNotes,
-            };
-            localStorage.setItem('planoMestreMakerState', JSON.stringify(stateToSave));
-            localStorage.setItem('planoMestreFavoritesV1', JSON.stringify(appState.favorites));
-        }
-
-        function loadMakerPlanState() {
-            const savedState = JSON.parse(localStorage.getItem('planoMestreMakerState'));
-            if (savedState) {
-                Object.assign(appState, savedState);
-                Object.assign(dom, {
-                    makerTitleInput: { value: appState.makerPlanTitle },
-                    makerGradeInput: { value: appState.makerPlanGrade },
-                    makerThemeInput: { value: appState.makerPlanTheme },
-                    makerNotesInput: { value: appState.makerPlanNotes },
-                });
-            }
-        }
-
-        function switchView(view, page = 1) {
-            appState.currentView = view;
-            appState.currentPage = page;
-            if (document.body.classList.contains('sidebar-open')) {
-                document.body.classList.remove('sidebar-open');
-            }
-            render();
-        }
-
-        function render() {
-            const views = ['catalogView', 'aulaMakerSection', 'planosSemanaisView'];
-            views.forEach(view => dom[view].classList.add('hidden'));
-
-            const navButtons = {
-                planosSemanais: dom.navPlanosSemanaisBtn,
-                aulaMaker: dom.navAulaMakerBtn,
-                catalog: null
-            };
-
-            Object.values(navButtons).forEach(btn => btn?.classList.remove('active'));
-            document.getElementById('catalog-section').style.opacity = '0.5';
-
-            if (appState.currentView === 'catalog') {
-                dom.catalogView.classList.remove('hidden');
-                document.getElementById('catalog-section').style.opacity = '1';
-                renderCatalog();
-            } else if (appState.currentView === 'aulaMaker') {
-                dom.aulaMakerSection.classList.remove('hidden');
-                navButtons.aulaMaker.classList.add('active');
-                renderAulaMaker();
-            } else { // planosSemanais
-                dom.planosSemanaisView.classList.remove('hidden');
-                navButtons.planosSemanais.classList.add('active');
-                renderPlanosSemanais();
-            }
-            renderFilters();
-        }
-
-        function renderFilters() {
-            const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
-            dom.filters.innerHTML = ''; // Clear existing
-            
-            const createBtn = (category, icon, isFav = false) => {
-                const li = document.createElement('li');
-                const btn = document.createElement('button');
-                btn.className = `filter-btn ${isFav ? 'favorite-btn' : ''} ${appState.activeFilter === category ? 'active' : ''}`;
-                btn.innerHTML = `<svg><use xlink:href="#${icon}"></use></svg> <span>${category}</span>`;
-                btn.onclick = () => switchView('catalog');
-                li.appendChild(btn);
-                return li;
-            };
-
-            dom.filters.appendChild(createBtn('Todos', 'icon-all'));
-            categories.slice(1).forEach(cat => dom.filters.appendChild(createBtn(cat, 'icon-category')));
-            dom.filters.appendChild(createBtn('Favoritos', 'icon-heart', true));
-        }
-
-        // Other rendering functions (renderCatalog, renderGrid, renderPlanosSemanais, etc.) would go here...
-        // For brevity, including just the core logic. The rest of the functions from your original file are fine.
-
-        function renderCatalog() {
-            // This function and its helpers (renderGrid, createActivityCard, etc.) can remain largely the same
-            // as they were in the original file, as they correctly render the content.
-            // The key fix was ensuring the data they process is correct.
-            const filtered = todasAsAtividades.filter(activity => {
-                const searchMatch = appState.searchQuery === '' || 
-                                  activity.titulo.toLowerCase().includes(appState.searchQuery) || 
-                                  activity.desc.toLowerCase().includes(appState.searchQuery);
-                const filterMatch = appState.activeFilter === 'Todos' || 
-                                  activity.categoria === appState.activeFilter ||
-                                  (appState.activeFilter === 'Favoritos' && appState.favorites.includes(activity.id));
-                return searchMatch && filterMatch;
-            });
-
-            dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
-            renderGrid(filtered);
-            renderPagination(filtered.length);
-        }
-
-        function renderGrid(items) {
-            dom.grid.innerHTML = '';
-            if (items.length === 0) {
-                dom.grid.innerHTML = '<p class="results-info">Nenhuma atividade encontrada.</p>';
-                return;
-            }
-            const paginatedItems = items.slice((appState.currentPage - 1) * appState.itemsPerPage, appState.currentPage * appState.itemsPerPage);
-            paginatedItems.forEach((item, index) => dom.grid.appendChild(createActivityCard(item, index)));
-            // Re-attach listeners for newly created cards
-             dom.grid.querySelectorAll('.open-modal-btn').forEach(button => {
-                button.addEventListener('click', () => openModal(parseInt(button.dataset.id)));
-            });
-            dom.grid.querySelectorAll('.favorite-icon').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleFavorite(parseInt(button.dataset.id));
-                    button.classList.toggle('favorited');
-                });
-            });
-        }
-        
-        function createActivityCard(activity, index) {
-            const card = document.createElement('div');
-            card.className = 'activity-card';
-            card.style.animationDelay = `${index * 50}ms`;
-            const isFavorited = appState.favorites.includes(activity.id);
-            card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-category" style="background-color: ${activity.cor};">${activity.categoria}</div>
-                    <button class="favorite-icon ${isFavorited ? 'favorited' : ''}" data-id="${activity.id}" aria-label="Adicionar aos favoritos">
-                        <svg><use xlink:href="#icon-heart"></use></svg>
-                    </button>
-                </div>
-                <div class="card-content">
-                    <h3>${activity.titulo}</h3>
-                    <p>${activity.desc.length > 120 ? activity.desc.substring(0, 120) + '...' : activity.desc}</p>
-                </div>
-                <div class="card-footer">
-                    <span>${activity.duracao}</span>
-                    <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
-                </div>`;
-            return card;
-        }
-
-        function renderPagination(totalItems) {
-            dom.pagination.innerHTML = '';
-            const totalPages = Math.ceil(totalItems / appState.itemsPerPage);
-            if (totalPages <= 1) return;
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement('button');
-                button.textContent = i;
-                button.className = `pagination-btn ${appState.currentPage === i ? 'active' : ''}`;
-                button.onclick = () => switchView(appState.currentView, i);
-                dom.pagination.appendChild(button);
-            }
-        }
-        
-        function renderPlanosSemanais() {
-            // ... (this function can also remain as is, since the data fix is the main point)
-            const anosEscolares = ['Todos', ...new Set(planosSemanaisProntos.map(p => p.anoEscolar))];
-            dom.planosSemanaisFilters.innerHTML = '<span style="font-weight: 600; color: var(--text-color-light); font-size: 0.9rem; margin-right: 8px;">Filtrar por ano:</span>';
-            anosEscolares.forEach(ano => {
-                const btn = document.createElement('button');
-                btn.textContent = ano;
-                btn.className = `pagination-btn ${appState.activePlanoFilter === ano ? 'active' : ''}`;
-                btn.style.height = '36px'; btn.style.minWidth = '36px'; btn.style.padding = '0 12px';
-                btn.onclick = () => { appState.activePlanoFilter = ano; renderPlanosSemanais(); };
-                dom.planosSemanaisFilters.appendChild(btn);
-            });
-
-            const planosFiltrados = appState.activePlanoFilter === 'Todos' 
-                ? planosSemanaisProntos 
-                : planosSemanaisProntos.filter(p => p.anoEscolar === appState.activePlanoFilter);
-            
-            dom.planosSemanaisGrid.innerHTML = '';
-            planosFiltrados.forEach((plano, index) => {
-                const isLocked = !isUserPro() && index > 0;
-                const card = document.createElement('div');
-                card.className = `activity-card ${isLocked ? 'locked' : ''}`;
-                card.innerHTML = `
-                    <div class="card-header">
-                        <div class="card-category" style="background-color: var(--secondary-color);">${plano.anoEscolar}</div>
-                    </div>
-                    <div class="card-content" style="padding-bottom: 1rem;">
-                        <h3 style="font-size: 1.3rem;">${plano.titulo}</h3>
-                        <p>${plano.descricao.length > 150 ? plano.descricao.substring(0, 150) + '...' : plano.descricao}</p>
-                    </div>
-                    <div class="card-footer">
-                        <span>📅 5 Dias</span>
-                        <button class="open-modal-btn" data-plano-id="${plano.id}">${isLocked ? 'Assine o Pro' : 'Usar este Modelo'}</button>
-                    </div>`;
-                
-                const button = card.querySelector('.open-modal-btn');
-                if (isLocked) {
-                    card.addEventListener('click', () => alert('Este modelo é exclusivo para assinantes do Plano Pro. Faça o upgrade para ter acesso a todos os recursos!'));
-                    button.disabled = true;
-                } else {
-                    button.addEventListener('click', () => {
-                        if (appState.selectedActivitiesForMaker.length > 0 && !confirm("Isso substituirá seu plano atual no gerador. Deseja continuar?")) return;
-                        loadPlanoIntoMaker(plano.id);
-                    });
-                }
-                dom.planosSemanaisGrid.appendChild(card);
-            });
-        }
-        
-        function loadPlanoIntoMaker(planoId) {
-            const plano = planosSemanaisProntos.find(p => p.id === planoId);
-            if (!plano) return alert("Modelo de plano não encontrado.");
-
-            appState.makerPlanTitle = plano.titulo;
-            appState.makerPlanGrade = plano.anoEscolar;
-            appState.makerPlanTheme = plano.descricao;
-            appState.makerPlanNotes = `Objetivos Gerais do Modelo: ${plano.objetivosGerais.join('; ')}.`;
-            appState.selectedActivitiesForMaker = [];
-            
-            plano.planoDiario.forEach(dia => {
-                // Ensure dia.atividades exists before calling forEach
-                if(dia.atividades && Array.isArray(dia.atividades)) {
-                    dia.atividades.forEach(act => {
-                        const activity = act.type === 'catalog' ? todasAsAtividades.find(a => a.id === act.id) : act;
-                        if(activity) {
-                            appState.selectedActivitiesForMaker.push({ ...activity, id: `loaded-${Date.now()}${Math.random()}` });
-                        }
-                    });
-                }
-            });
-            
-            saveAppState();
-            switchView('aulaMaker');
-        }
-
-
-        // The rest of the functions like openModal, generatePdf, etc., can be included here as they were.
-        // For brevity, they are omitted but are necessary for full functionality. All other helper
-        // functions like toggleFavorite, renderAulaMaker, etc., should also be included.
-        function toggleFavorite(id) {
-            const index = appState.favorites.indexOf(id);
-            if (index > -1) {
-                appState.favorites.splice(index, 1);
-            } else {
-                appState.favorites.push(id);
-            }
-            saveAppState();
-            if (appState.activeFilter === 'Favoritos') {
-                render();
-            }
-        }
-        function renderAulaMaker() {
-            dom.makerTitleInput.value = appState.makerPlanTitle;
-            dom.makerGradeInput.value = appState.makerPlanGrade;
-            dom.makerThemeInput.value = appState.makerPlanTheme;
-            dom.makerNotesInput.value = appState.makerPlanNotes;
-            
-            dom.noActivitiesSelectedMsg.classList.toggle('hidden', appState.selectedActivitiesForMaker.length > 0);
-            dom.selectedActivitiesList.innerHTML = '';
-            appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                const li = document.createElement('li');
-                li.className = 'selected-activity-item';
-                li.innerHTML = `
-                    <span>${index + 1}. ${activity.titulo}</span>
-                    <div class="activity-controls">
-                        <button class="reorder-btn move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>↑</button>
-                        <button class="reorder-btn move-down" data-index="${index}" ${index === appState.selectedActivitiesForMaker.length - 1 ? 'disabled' : ''}>↓</button>
-                        <button class="remove-activity-btn" data-id="${activity.id}" aria-label="Remover atividade">×</button>
-                    </div>`;
-                li.querySelector('.remove-activity-btn').onclick = () => removeActivityFromMaker(activity.id);
-                li.querySelectorAll('.reorder-btn').forEach(btn => btn.onclick = (e) => {
-                    const direction = e.currentTarget.classList.contains('move-up') ? -1 : 1;
-                    reorderActivity(index, direction);
-                });
-                dom.selectedActivitiesList.appendChild(li);
-            });
-        }
-        function removeActivityFromMaker(id) {
-            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(a => a.id !== id);
-            saveAppState();
-            renderAulaMaker();
-        }
-        function reorderActivity(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex >= 0 && newIndex < appState.selectedActivitiesForMaker.length) {
-                const [movedActivity] = appState.selectedActivitiesForMaker.splice(index, 1);
-                appState.selectedActivitiesForMaker.splice(newIndex, 0, movedActivity);
-                saveAppState();
-                renderAulaMaker();
-            }
-        }
-        function clearLessonPlan() {
-            if (confirm("Tem certeza que deseja limpar o plano de aula?")) {
-                appState.makerPlanTitle = '';
-                appState.makerPlanGrade = '';
-                appState.makerPlanTheme = '';
-                appState.makerPlanNotes = '';
-                appState.selectedActivitiesForMaker = [];
-                saveAppState();
-                renderAulaMaker();
-            }
-        }
-        function addCustomActivityToMaker() {
-            const title = dom.customActivityTitleInput.value.trim();
-            if (!title) {
-                alert("O título da atividade personalizada não pode estar vazio.");
-                return;
-            }
-            const newActivity = {
-                id: `custom-${Date.now()}`, type: 'custom', titulo: title, desc: dom.customActivityDescInput.value.trim() || 'Atividade personalizada.', duracao: 'Variável', bncc: [], objetivos: [], roteiro: {}, dica_pedagogica: ''
-            };
-            appState.selectedActivitiesForMaker.push(newActivity);
-            saveAppState();
-            renderAulaMaker();
-            dom.customActivityTitleInput.value = '';
-            dom.customActivityDescInput.value = '';
-            dom.customActivityForm.classList.add('hidden');
-        }
-        function openSelectActivitiesModal() {
-            // This function remains the same
-        }
-        function generateLessonPlanPdfWithWatermark() {
-            // This function remains the same
-        }
-        // ... include all other helper functions from the original script here
-
-        // ----- INITIALIZATION LOGIC (Corrected) -----
-        const savedUser = localStorage.getItem('planoMestreUser');
-        if (savedUser) {
-            try {
-                initializePanel(JSON.parse(savedUser));
-            } catch (error) {
-                console.error("Falha ao carregar sessão. Limpando dados.", error);
-                localStorage.clear();
-                location.reload();
-            }
-        } else {
+            // Seleciona os formulários e botões
             const loginForm = document.getElementById('login-form');
-            const demoAccessBtn = document.getElementById('demo-access-btn');
-            const loginError = document.getElementById('login-error');
+            const logoutButton = document.getElementById('logout-button');
+            const goToLandingLink = document.getElementById('go-to-landing');
+            const goToLoginLink = document.getElementById('go-to-login');
+            const errorMessage = document.getElementById('error-message');
 
-            if (loginForm && demoAccessBtn && loginError) {
-                loginForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const user = document.getElementById('username-input').value.trim();
-                    const pass = document.getElementById('password-input').value.trim();
-                    const foundUser = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
-                    if (foundUser) {
-                        loginError.classList.add('hidden');
-                        initializePanel(foundUser);
-                    } else {
-                        loginError.classList.remove('hidden');
-                    }
+            // Função para navegar entre as "páginas"
+            function navigateTo(page) {
+                // Esconde todas as seções
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active');
                 });
+                // Mostra a seção desejada
+                page.classList.add('active');
+            }
 
-                demoAccessBtn.addEventListener('click', () => {
-                    const demoUser = usuariosAutorizados.find(u => u.usuario === 'visitante');
-                    if (demoUser) {
-                        loginError.classList.add('hidden');
-                        initializePanel(demoUser);
+            // --- Lógica do Formulário de Login ---
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Impede o envio real do formulário
+
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+
+                    // LÓGICA DE LOGIN FAKE (APENAS PARA DEMONSTRAÇÃO)
+                    // No mundo real, isso seria verificado no servidor.
+                    if (username === 'professor@exemplo.com' && password === '1234') {
+                        //alert('Login bem-sucedido! Redirecionando...');
+                        errorMessage.style.display = 'none';
+                        navigateTo(painelPage); // Navega para o painel
                     } else {
-                        alert("Usuário de demonstração não encontrado.");
+                        errorMessage.textContent = 'Usuário ou senha inválidos.';
+                        errorMessage.style.display = 'block';
                     }
                 });
             }
-        }
-    });
+            
+            // --- Lógica de Logout ---
+            if(logoutButton) {
+                logoutButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Limpa o formulário de login para a próxima vez
+                    if(loginForm) loginForm.reset();
+                    navigateTo(loginPage); // Volta para a tela de login
+                });
+            }
+            
+            // --- Lógica dos links de navegação ---
+            if(goToLandingLink) {
+                goToLandingLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateTo(landingPage);
+                });
+            }
+            
+            if(goToLoginLink) {
+                goToLoginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateTo(loginPage);
+                });
+            }
+
+        });
     </script>
 </body>
 </html>
