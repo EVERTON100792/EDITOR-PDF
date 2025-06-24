@@ -43,7 +43,6 @@
             color: var(--text-color);
         }
         
-        /* --- TELA DE LOGIN --- */
         #login-screen {
             display: flex;
             justify-content: center;
@@ -81,7 +80,6 @@
         .login-container .logo i { text-shadow: 0 0 10px var(--primary-color); }
         .login-container p { color: #e0e0e0; margin-bottom: 30px; }
         
-        /* --- LAYOUT PRINCIPAL (DARK THEME) --- */
         .input-group { position: relative; margin-bottom: 25px; text-align: left; }
         .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-color); }
         .input-group input, .input-group select {
@@ -103,11 +101,18 @@
             width: 100%; padding: 15px; border: none; border-radius: 8px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: #fff; font-size: 1.1rem; font-weight: 600;
-            cursor: pointer; transition: transform .2s, box-shadow .2s;
+            cursor: pointer; transition: transform .2s, box-shadow .2s, background-color .2s;
         }
         .login-btn:hover, .primary-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
+        }
+        .primary-btn:disabled { 
+            background: #555; 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none; 
+            color: #888; 
         }
 
         #main-app {
@@ -205,7 +210,7 @@
         .content-block-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .content-block-header h2 { font-size: 1.5rem; color: var(--heading-color); }
         .primary-btn { width: auto; font-size: 1rem; padding: 10px 20px; }
-        .primary-btn:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
+        
         .danger-btn {
             background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color);
             padding: 5px 10px; font-size: .8rem; border-radius: 5px; cursor: pointer; transition: all .2s;
@@ -226,7 +231,6 @@
         .status.paid { background-color: rgba(16, 185, 129, 0.2); color: #10b981; }
         .status.pending { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
 
-        /* --- MODAIS --- */
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0;
             width: 100%; height: 100%; overflow: auto;
@@ -244,7 +248,6 @@
         .close-btn:hover { color: var(--heading-color); }
         .modal-body form .input-group { margin-bottom: 15px; }
 
-        /* --- NOTIFICAÇÕES --- */
         #notification-container {
             position: fixed; top: 20px; right: 20px; z-index: 9999;
             display: flex; flex-direction: column; gap: 10px;
@@ -263,7 +266,6 @@
         .notification.error { background-color: var(--danger-color); }
         .notification.info { background-color: var(--primary-color); }
 
-        /* --- DASHBOARD & RELATÓRIOS --- */
         .charts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -279,7 +281,6 @@
             grid-column: 1 / -1;
         }
 
-        /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
             #main-app {
                 grid-template-columns: 1fr;
@@ -343,7 +344,6 @@
 
         <header class="header">
             <i class="fas fa-bars menu-toggle"></i>
-            
             <div class="header-actions">
                 <div id="cart-icon-wrapper" class="cart-icon-wrapper">
                     <i class="fas fa-shopping-cart"></i>
@@ -387,15 +387,14 @@
                         <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: flex-end;">
                             <div class="input-group" style="margin:0;"><label>Produto</label><select id="sale-product" required></select></div>
                             <div class="input-group" style="margin:0;"><label>Qtd.</label><input type="number" id="sale-quantity" value="1" min="1" required></div>
-                            <button type="submit" class="primary-btn">Adicionar</button>
+                            <button type="submit" id="add-to-cart-btn" class="primary-btn">Adicionar</button>
                         </div>
                     </form>
                 </div>
                 <div class="content-block">
                     <h2 style="margin-bottom: 20px; color: var(--heading-color);">2. Carrinho e Finalização</h2>
                     <form id="checkout-form">
-                        <div id="current-sale-cart">
-                            </div>
+                        <div id="current-sale-cart"></div>
                          <div id="checkout-controls" style="display: none;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                                 <div class="input-group"><label>Cliente</label><select id="sale-customer" required></select></div>
@@ -524,11 +523,9 @@
         const customerModal = document.getElementById('customer-modal');
         const productModal = document.getElementById('product-modal');
 
-        // --- AJUSTES GLOBAIS PARA GRÁFICOS (TEMA DARK) ---
         Chart.defaults.color = '#b0c4de';
         Chart.defaults.borderColor = '#2a3f50';
 
-        // --- SISTEMA DE NOTIFICAÇÃO ---
         function showNotification(message, type = 'success', duration = 3000) {
             const container = document.getElementById('notification-container');
             const notification = document.createElement('div');
@@ -543,7 +540,6 @@
             }, duration);
         }
 
-        // --- BANCO DE DADOS LOCALSTORAGE ---
         function loadDatabase() {
             const dbJSON = localStorage.getItem('flordeMariaDB');
             db = dbJSON ? JSON.parse(dbJSON) : { products: [], customers: [], sales: [] };
@@ -557,7 +553,6 @@
             renderCustomersTable();
         }
 
-        // --- RENDERIZAÇÃO GERAL ---
         function renderDashboard() {
             const totalRevenue = db.sales
                 .filter(sale => sale.status === 'Pago')
@@ -599,7 +594,6 @@
             });
         }
         
-        // --- LÓGICA DE VENDAS (NOVO FLUXO) ---
         function updateCartIcon() {
             const count = currentSale.items.length;
             cartItemCount.innerText = count;
@@ -647,13 +641,30 @@
             const quantityInput = document.getElementById('sale-quantity');
             const productId = parseInt(productSelect.value);
             const quantity = parseInt(quantityInput.value);
-            if (!productId) { showNotification('Selecione um produto.', 'error'); return; }
+
+            // A verificação `!productId` já previne erros se nada for selecionado.
+            if (!productId) { 
+                showNotification('Por favor, selecione um produto.', 'error'); 
+                return; 
+            }
 
             const product = db.products.find(p => p.id === productId);
+
+            // -----> INÍCIO DA CORREÇÃO <-----
+            // Adiciona uma verificação para garantir que o produto foi encontrado no banco de dados.
+            if (!product) {
+                showNotification('Erro: Produto não encontrado no sistema.', 'error');
+                return;
+            }
+            // -----> FIM DA CORREÇÃO <-----
+
             const existingItem = currentSale.items.find(item => item.productId === productId);
             const totalQuantity = (existingItem ? existingItem.quantity : 0) + quantity;
 
-            if (totalQuantity > product.stock) { showNotification('Quantidade solicitada maior que o estoque!', 'error'); return; }
+            if (totalQuantity > product.stock) { 
+                showNotification('Quantidade solicitada maior que o estoque!', 'error'); 
+                return; 
+            }
             
             if (existingItem) {
                 existingItem.quantity += quantity;
@@ -662,9 +673,10 @@
             }
             showNotification(`${product.name} adicionado ao carrinho.`, 'info');
             updateCartIcon();
-            renderCurrentSaleCart(); // Atualiza o carrinho na página
-            productSelect.selectedIndex = 0;
+            renderCurrentSaleCart();
+            productSelect.value = ""; // Reseta a seleção do produto
             quantityInput.value = 1;
+            document.getElementById('add-to-cart-btn').disabled = true; // Desabilita o botão novamente
         });
         
         window.removeFromCart = (productId) => {
@@ -699,12 +711,11 @@
             showNotification('Venda registrada com sucesso!', 'success');
             currentSale = { items: [], total: 0 };
             updateCartIcon();
-            initializeSalePage(); // Reseta a página de vendas
+            initializeSalePage();
             renderAll();
         });
 
 
-        // --- CONTAS A RECEBER (FIADO) ---
         function renderDebtsPage() {
              const tableBody = document.getElementById('debts-table-body');
             tableBody.innerHTML = '';
@@ -736,7 +747,6 @@
             }
         }
         
-        // --- GRÁFICOS E RELATÓRIOS ---
         function destroyCharts() {
             Object.values(chartInstances).forEach(chart => {
                 if (chart) chart.destroy();
@@ -749,7 +759,6 @@
              if (chartInstances.dashboardTopProducts) chartInstances.dashboardTopProducts.destroy();
              if (chartInstances.dashboardPayment) chartInstances.dashboardPayment.destroy();
 
-            // Revenue Chart
             const revenueData = {};
             const last12Months = Array.from({length: 12}, (_, i) => {
                 const d = new Date();
@@ -767,7 +776,6 @@
                 type: 'bar', data: { labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })), datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } }
             });
 
-            // Top Products Chart
             const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
             const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 5);
             const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
@@ -776,7 +784,6 @@
                 type: 'bar', data: { labels: productLabels, datasets: [{ label: 'Quantidade Vendida', data: productQuantities, backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, indexAxis: 'y' }
             });
             
-             // Payment Method Chart
             const paymentData = db.sales.reduce((acc, sale) => { acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + 1; return acc; }, {});
             chartInstances.dashboardPayment = new Chart(document.getElementById('dashboard-payment-method-chart'), {
                 type: 'doughnut', data: { labels: Object.keys(paymentData), datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: 'top' } } }
@@ -788,7 +795,6 @@
             if (chartInstances.reportsPayment) chartInstances.reportsPayment.destroy();
             if (chartInstances.reportsTopProducts) chartInstances.reportsTopProducts.destroy();
 
-            // Revenue Chart
             const revenueData = {};
             const last12Months = Array.from({length: 12}, (_, i) => {
                 const d = new Date(); d.setMonth(d.getMonth() - i);
@@ -803,15 +809,13 @@
                 type: 'bar', data: { labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })), datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } }
             });
 
-            // Payment Method Chart
             const paymentData = db.sales.reduce((acc, sale) => { acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + 1; return acc; }, {});
             chartInstances.reportsPayment = new Chart(document.getElementById('reports-payment-method-chart'), {
                 type: 'doughnut', data: { labels: Object.keys(paymentData), datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { labels: { color: '#b0c4de' } } } }
             });
 
-            // Top Products Chart
             const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
-            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10); // Top 10 for reports
+            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10);
             const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
             const productQuantities = sortedProducts.map(([,qty]) => qty);
             chartInstances.reportsTopProducts = new Chart(document.getElementById('reports-top-products-chart'), {
@@ -820,7 +824,6 @@
         }
 
 
-        // --- CRUD E MODAIS ---
         window.deleteEntity = (type, id) => {
             if (confirm(`Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.`)) {
                 db[type] = db[type].filter(item => item.id !== id);
@@ -899,23 +902,31 @@
             saveDatabase();renderAll();this.reset();modals.product.style.display='none';
         });
 
-        // --- NAVEGAÇÃO E INICIALIZAÇÃO ---
         const navLinks=document.querySelectorAll('.nav-link'),pages=document.querySelectorAll('.page-content'),menuToggle=document.querySelector('.menu-toggle'),sidebar=document.querySelector('.sidebar');
         
         function initializeSalePage() {
-            // Popula o select de produtos
             const productSelect = document.getElementById('sale-product');
-            productSelect.innerHTML = '<option value="">Selecione um produto</option>';
+            const customerSelect = document.getElementById('sale-customer');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+            productSelect.innerHTML = '<option value="">Selecione um produto...</option>';
             db.products
               .filter(p => p.stock > 0)
               .forEach(p => { productSelect.innerHTML += `<option value="${p.id}">${p.name} (Estoque: ${p.stock})</option>`; });
             
-            // Popula o select de clientes
-            const customerSelect = document.getElementById('sale-customer');
             customerSelect.innerHTML = '<option value="0">Consumidor Final</option>';
             db.customers.forEach(c => { customerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
 
-            // Renderiza o carrinho (que estará vazio inicialmente)
+            // ----> INÍCIO DA MELHORIA <----
+            // Desabilita o botão 'Adicionar' por padrão
+            addToCartBtn.disabled = true;
+
+            // Adiciona um listener para habilitar o botão quando um produto for selecionado
+            productSelect.addEventListener('change', function() {
+                addToCartBtn.disabled = !this.value; // Desabilita se o valor for "", habilita caso contrário
+            });
+            // ----> FIM DA MELHORIA <----
+
             renderCurrentSaleCart();
         }
         
@@ -951,11 +962,10 @@
                 if(link.id === 'logout-btn') return;
                 const targetId = link.getAttribute('data-target');
                 
-                // Lógica específica por página
                 if(targetId === 'sales') initializeSalePage();
                 if(targetId === 'debts') renderDebtsPage();
                 if(targetId === 'reports') renderReportsPage();
-                if(targetId === 'dashboard') renderDashboardCharts(); // Re-renderiza gráficos ao voltar
+                if(targetId === 'dashboard') renderDashboardCharts();
                 
                 navLinks.forEach(n => n.classList.remove('active'));
                 link.classList.add('active');
@@ -966,7 +976,6 @@
         
         menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
 
-        // --- VERIFICAÇÃO INICIAL ---
         if (sessionStorage.getItem('flordeMariaLoggedIn') === 'true') {
             showMainApp();
         }
