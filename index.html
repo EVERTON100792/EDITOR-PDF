@@ -112,7 +112,6 @@
             box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
         }
 
-        /* MELHORIA: Estilo visual para elementos desabilitados */
         .primary-btn:disabled, select:disabled, input:disabled { 
             background: #555; 
             cursor: not-allowed; 
@@ -592,7 +591,7 @@
 
         function navigateToPage(targetId) {
             if (!targetId || !document.getElementById(targetId)) {
-                targetId = 'dashboard'; // Segurança: volta para o dashboard se a página não existir
+                targetId = 'dashboard'; 
             }
             
             destroyAllCharts();
@@ -734,7 +733,7 @@
             updateCartIcon();
             renderCurrentSaleCart();
             productSelect.value = "";
-            // CORREÇÃO: Não reseta a quantidade para '1', mantendo a escolha do usuário.
+            // CORREÇÃO DEFINITIVA: A linha abaixo foi removida para não resetar a quantidade.
             // quantityInput.value = 1; 
             document.getElementById('add-to-cart-btn').disabled = true;
         });
@@ -754,7 +753,7 @@
                 customerId: parseInt(document.getElementById('sale-customer').value),
                 items: currentSale.items.map(item => {
                     const product = db.products.find(p => p.id === item.productId);
-                    if (product) product.stock -= item.quantity; // Abate o estoque
+                    if (product) product.stock -= item.quantity;
                     return {...item, priceAtSale: product ? product.price : 0};
                 }),
                 total: currentSale.total,
@@ -768,7 +767,7 @@
             showNotification('Venda registrada com sucesso!', 'success');
             currentSale = { items: [], total: 0 };
             updateCartIcon();
-            initializeSalePage(); // Reseta a página de venda
+            initializeSalePage();
         });
 
         // --- LÓGICA DE CONTAS A RECEBER ---
@@ -797,17 +796,15 @@
                 sale.status = 'Pago';
                 saveDatabase();
                 showNotification('Conta marcada como paga com sucesso!', 'success');
-                renderDebtsPage(); // Apenas atualiza a tabela de dívidas
-                renderDashboard(); // E o dashboard para refletir a receita
+                renderDebtsPage();
+                renderDashboard();
             }
         }
         
         // --- LÓGICA DOS GRÁFICOS (CHARTS) ---
 
         function destroyAllCharts() {
-            Object.values(chartInstances).forEach(chart => {
-                if (chart) chart.destroy();
-            });
+            Object.values(chartInstances).forEach(chart => { if (chart) chart.destroy(); });
             chartInstances = {};
         }
 
@@ -825,7 +822,6 @@
                 const saleMonth = sale.date.substring(0, 7);
                 if (revenueData[saleMonth] !== undefined) revenueData[saleMonth] += sale.total;
             });
-
             createChart('dashboard-revenue-chart', 'bar', {
                 labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })),
                 datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
@@ -833,7 +829,6 @@
 
             const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => ({...acc, [item.productId]: (acc[item.productId] || 0) + item.quantity }), {});
             const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 5);
-            
             createChart('dashboard-top-products-chart', 'bar', {
                 labels: sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name),
                 datasets: [{ label: 'Quantidade Vendida', data: sortedProducts.map(([,qty]) => qty), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
@@ -846,9 +841,7 @@
             }, { responsive: true, plugins: { legend: { position: 'top' } } });
         }
 
-        // CORREÇÃO: Função de relatório independente
         function renderReportsPage() {
-            // Reutiliza a mesma lógica de obtenção de dados, mas não depende das instâncias de chart do dashboard
             const last12Months = Array.from({length: 12}, (_, i) => { const d = new Date(); d.setMonth(d.getMonth() - i); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; }).reverse();
             const revenueData = last12Months.reduce((acc, month) => ({...acc, [month]: 0}), {});
             db.sales.filter(s => s.status === 'Pago').forEach(sale => {
@@ -867,7 +860,7 @@
             }, { responsive: true, plugins: { legend: { position: 'top' } } });
 
             const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => ({...acc, [item.productId]: (acc[item.productId] || 0) + item.quantity }), {});
-            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10); // Top 10 para relatórios
+            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10);
             createChart('reports-top-products-chart', 'bar', {
                 labels: sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: 'Produto Deletado'}).name),
                 datasets: [{ label: 'Quantidade Vendida', data: sortedProducts.map(([,qty]) => qty), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }]
@@ -880,7 +873,7 @@
             if (confirm(`Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.`)) {
                 db[type] = db[type].filter(item => item.id !== id);
                 saveDatabase();
-                renderAll(); // Atualiza todas as tabelas
+                renderAll();
                 showNotification('Item excluído com sucesso.', 'success');
             }
         }
@@ -950,7 +943,7 @@
         // --- AUTENTICAÇÃO E INICIALIZAÇÃO ---
 
         function updateCartIcon() {
-            const count = currentSale.items.length;
+            const count = currentSale.items.reduce((sum, item) => sum + item.quantity, 0);
             cartItemCount.innerText = count;
             cartItemCount.classList.toggle('visible', count > 0);
         }
