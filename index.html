@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ---- NOVA PALETA DE CORES E FONTES ---- */
         :root {
             --primary-color: #8E44AD; /* Roxo Moderno */
             --secondary-color: #2ECC71; /* Verde Complementar */
@@ -18,44 +17,25 @@
             --text-color: #34495E;
             --border-color: #EAECEE;
             --shadow-color: rgba(44, 62, 80, 0.1);
-            --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family: 'Poppins', sans-serif;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); }
+        .hidden { display: none !important; }
 
-        /* ---- RESET E ESTILOS GLOBAIS ---- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* ---- TELA DE LOGIN (Sem alterações, já estava boa) ---- */
-        @keyframes gradientAnimation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes gradientAnimation { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
 
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000;
-            background: linear-gradient(-45deg, #8E44AD, #3498DB, #2ECC71, #F1C40F);
-            background-size: 400% 400%; animation: gradientAnimation 15s ease infinite;
+            background: linear-gradient(-45deg, #8E44AD, #3498DB, #2ECC71, #F1C40F); background-size: 400% 400%; animation: gradientAnimation 15s ease infinite;
         }
-
         .login-container {
-            background: rgba(44, 62, 80, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2); padding: 40px; border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); text-align: center; width: 90%; max-width: 400px;
+            background: rgba(44, 62, 80, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px; border-radius: 15px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); text-align: center; width: 90%; max-width: 400px;
             color: white; animation: fadeIn 0.7s ease-out;
         }
-        
         .login-container.shake { animation: shake 0.5s ease-in-out; }
         .login-container h2 { font-weight: 600; font-size: 2.5rem; margin-bottom: 10px; }
         .login-container p { margin-bottom: 30px; font-weight: 300; }
@@ -67,70 +47,41 @@
         .login-container button { width: 100%; padding: 14px; background: white; color: var(--primary-color); border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
         .login-container button:hover { background: #f1f1f1; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-        /* ---- LAYOUT PRINCIPAL REMODELADO ---- */
         .app-container { display: flex; height: 100vh; }
-        
-        .sidebar { 
-            width: 260px; background-color: var(--dark-color); color: var(--light-color);
-            display: flex; flex-direction: column; transition: transform 0.3s ease-in-out; 
-            border-right: 1px solid #253544;
-        }
-        
+        .sidebar { width: 260px; background-color: var(--dark-color); color: var(--light-color); display: flex; flex-direction: column; transition: transform 0.3s ease-in-out; border-right: 1px solid #253544; }
         .sidebar-header { padding: 25px; font-size: 24px; text-align: center; font-weight: 700; color: var(--secondary-color); }
         .sidebar-menu { list-style: none; flex-grow: 1; }
-        .sidebar-menu li a { display: flex; align-items: center; padding: 18px 25px; color: #BDC3C7; text-decoration: none; transition: all 0.2s ease-in-out; font-weight: 500; }
+        .sidebar-menu li a { display: flex; align-items: center; padding: 18px 25px; color: #BDC3C7; text-decoration: none; transition: all 0.2s ease-in-out; font-weight: 500; cursor: pointer; }
         .sidebar-menu li a:hover { background-color: #34495E; color: var(--light-color); }
         .sidebar-menu li.active a { background-color: var(--primary-color); color: var(--light-color); }
         .sidebar-menu li a i { margin-right: 15px; width: 20px; text-align: center; font-size: 1.1em; }
         .soon-badge { background-color: #f39c12; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto; font-weight: bold; }
         
         .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; background-color: var(--background-color); }
-        
-        .main-header { 
-            background: var(--light-color); padding: 15px 30px; display: flex; align-items: center;
-            border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10; 
-        }
+        .main-header { background: var(--light-color); padding: 15px 30px; display: flex; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10; }
         .main-header h1 { font-size: 1.5rem; color: var(--dark-color); font-weight: 600; }
-        
         .mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; cursor: pointer; margin-right: 20px; }
         
         .content-body { padding: 40px; }
-        
-        .form-section { background-color: var(--light-color); padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 20px var(--shadow-color); }
-        
-        .form-section h3 { font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 25px; border-left: 4px solid var(--primary-color); padding-left: 10px; }
-        
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 20px; }
-        
-        .input-field label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem; }
-        
-        .input-field input[type="text"], .input-field select, .input-field textarea {
-            width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;
-            font-family: var(--font-family); transition: all 0.3s ease;
-        }
-        .input-field input[type="text"]:focus, .input-field select:focus, .input-field textarea:focus {
-            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.15);
-        }
-        .input-field textarea { resize: vertical; min-height: 80px; }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease-out; }
 
+        .form-section { background-color: var(--light-color); padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 20px var(--shadow-color); }
+        .form-section h3 { font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 25px; border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 20px; }
+        .input-field label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem; }
+        .input-field input[type="text"], .input-field select, .input-field textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: var(--font-family); transition: all 0.3s ease; }
+        .input-field input[type="text"]:focus, .input-field select:focus, .input-field textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.15); }
+        .input-field textarea { resize: vertical; min-height: 80px; }
         hr { border: 0; border-top: 1px solid var(--border-color); margin: 40px 0; }
 
-        /* ---- NOVOS CARDS DE QUESTÃO COM ANIMAÇÃO ---- */
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .questao-card {
-            background-color: #FFFFFF; padding: 25px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 20px;
-            position: relative; transition: all 0.3s ease; animation: slideIn 0.4s ease-out;
-        }
-        .questao-card:hover {
-            transform: translateY(-5px); box-shadow: 0 8px 25px var(--shadow-color); border-color: var(--primary-color);
-        }
-
+        .questao-card { background-color: #FFFFFF; padding: 25px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 20px; position: relative; transition: all 0.3s ease; animation: slideIn 0.4s ease-out; }
+        .questao-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px var(--shadow-color); border-color: var(--primary-color); }
         .questao-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .questao-header label { font-weight: 600; color: var(--dark-color); font-size: 1rem; }
         .btn-remover-questao { background: none; border: none; color: #95A5A6; font-size: 22px; cursor: pointer; transition: color 0.3s ease; }
         .btn-remover-questao:hover { color: #E74C3C; }
-        
         .questao-card textarea { width: 100%; min-height: 90px; padding: 15px; border: 1px solid #DCDFE4; border-radius: 8px; font-family: var(--font-family); font-size: 1rem; resize: vertical; }
         .questao-card textarea:focus { outline: none; border-color: var(--primary-color); }
         
@@ -141,7 +92,17 @@
         .btn-secondary { background-color: #ECF0F1; color: var(--dark-color); }
         .btn-secondary:hover { background-color: #DCDFE4; }
 
-        /* ---- FOLHA DE IMPRESSÃO PROFISSIONAL ---- */
+        /* ESTILOS PARA A NOVA ABA DE MATERIAIS */
+        .materiais-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .material-card { background-color: var(--light-color); border-radius: 12px; box-shadow: 0 4px 20px var(--shadow-color); overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; }
+        .material-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(44, 62, 80, 0.15); }
+        .material-thumbnail { width: 100%; height: 200px; background-color: var(--border-color); background-size: cover; background-position: center; border-bottom: 1px solid var(--border-color); }
+        .material-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .material-info h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; }
+        .material-info p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+        .material-info .btn-primary { width: 100%; }
+
+        /* ESTILOS PARA IMPRESSÃO */
         .preview-section { margin-top: 40px; background: #EAECEE; padding: 40px; }
         #folha-a4 { background: white; width: 21cm; min-height: 29.7cm; padding: 2cm; margin: 0 auto; box-shadow: 0 0 15px rgba(0,0,0,0.1); font-family: 'Georgia', 'Times New Roman', serif; font-size: 11pt; color: #333; }
         .cabecalho-prova { text-align: center; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 25px; }
@@ -177,14 +138,8 @@
             <h2>Professor Pro</h2>
             <p>Bem-vindo(a) de volta!</p>
             <form id="login-form">
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="username" placeholder="Usuário" required>
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="password" placeholder="Senha" required>
-                </div>
+                <div class="input-group"> <i class="fa-solid fa-user"></i> <input type="text" id="username" placeholder="Usuário" required> </div>
+                <div class="input-group"> <i class="fa-solid fa-lock"></i> <input type="password" id="password" placeholder="Senha" required> </div>
                 <button type="submit">Entrar</button>
             </form>
         </div>
@@ -192,83 +147,48 @@
 
     <div id="app" class="app-container hidden">
         <nav class="sidebar">
-            <div class="sidebar-header">
-                Professor Pro
-            </div>
+            <div class="sidebar-header"> Professor Pro </div>
             <ul class="sidebar-menu">
-                <li class="active"><a href="#"><i class="fa-solid fa-pen-to-square"></i> Criar Prova</a></li>
-                <li><a href="#"><i class="fa-solid fa-box-archive"></i> Provas Prontas <span class="soon-badge">Em Breve</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i> Caça-Palavras <span class="soon-badge">Em Breve</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-user-gear"></i> Minha Conta</a></li>
-                <li><a href="#" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</a></li>
+                <li id="menu-criar-prova" class="active"><a><i class="fa-solid fa-pen-to-square"></i> Criar Prova</a></li>
+                <li id="menu-materiais"><a><i class="fa-solid fa-book-open-reader"></i> Materiais Pedagógicos</a></li>
+                <li><a id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</a></li>
             </ul>
         </nav>
 
         <main class="main-content">
             <header class="main-header">
                 <button id="mobile-menu-btn" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
-                <h1>Gerador de Atividades</h1>
+                <h1 id="main-title">Gerador de Atividades</h1>
             </header>
 
             <div class="content-body">
-                <div class="form-section">
-                    <h3>Informações do Cabeçalho</h3>
-                    <div class="form-grid">
-                        <div class="input-field">
-                            <label for="instituicao">Nome da Instituição</label>
-                            <input type="text" id="instituicao" placeholder="Ex: Colégio Saber">
+                <section id="secao-criar-prova" class="content-section active">
+                    <div class="form-section">
+                        <h3>Informações do Cabeçalho</h3>
+                        <div class="form-grid">
+                            <div class="input-field"> <label for="instituicao">Nome da Instituição</label> <input type="text" id="instituicao" placeholder="Ex: Colégio Saber"> </div>
+                            <div class="input-field"> <label for="titulo-prova">Título da Avaliação</label> <input type="text" id="titulo-prova" placeholder="Ex: Avaliação Mensal"> </div>
+                            <div class="input-field"> <label for="nome-professor">Nome do(a) Professor(a)</label> <input type="text" id="nome-professor" placeholder="Ex: Prof.ª Ana Maria"> </div>
+                             <div class="input-field"> <label for="materia-prova">Matéria</label> <select id="materia-prova"> <option value="">Selecione...</option> <option value="Matemática">Matemática</option> <option value="Português">Português</option> <option value="Ciências">Ciências</option> </select> </div>
+                            <div class="input-field"> <label for="turma-prova">Turma</label> <select id="turma-prova"> <option value="">Selecione...</option> <option value="Infantil 1">Infantil 1</option> <option value="1º Ano">1º Ano</option> <option value="2º Ano">2º Ano</option> </select> </div>
                         </div>
-                        <div class="input-field">
-                            <label for="titulo-prova">Título da Avaliação</label>
-                            <input type="text" id="titulo-prova" placeholder="Ex: Avaliação Mensal de Ciências">
-                        </div>
-                        <div class="input-field">
-                            <label for="nome-professor">Nome do(a) Professor(a)</label>
-                            <input type="text" id="nome-professor" placeholder="Ex: Prof.ª Ana Maria">
-                        </div>
-                         <div class="input-field">
-                            <label for="materia-prova">Matéria</label>
-                            <select id="materia-prova">
-                                <option value="">Selecione a Matéria</option>
-                                <option value="Matemática">Matemática</option>
-                                <option value="Português">Português</option>
-                                <option value="Ciências">Ciências</option>
-                                <option value="História">História</option>
-                                <option value="Geografia">Geografia</option>
-                                <option value="Artes">Artes</option>
-                            </select>
-                        </div>
-                        <div class="input-field">
-                            <label for="turma-prova">Turma</label>
-                            <select id="turma-prova">
-                                <option value="">Selecione a Turma</option>
-                                <option value="Infantil 1">Infantil 1</option>
-                                <option value="Infantil 2">Infantil 2</option>
-                                <option value="Infantil 3">Infantil 3</option>
-                                <option value="1º Ano - Fundamental">1º Ano - Fundamental</option>
-                                <option value="2º Ano - Fundamental">2º Ano - Fundamental</option>
-                                <option value="3º Ano - Fundamental">3º Ano - Fundamental</option>
-                            </select>
+                         <div class="input-field"> <label for="instrucoes">Instruções Gerais (Opcional)</label> <textarea id="instrucoes" placeholder="Ex: Leia com atenção."></textarea> </div>
+                        <hr>
+                        <h3>Questões da Prova</h3>
+                        <div id="container-questoes"></div>
+                        <div class="action-buttons">
+                            <button id="btn-add-questao" class="btn-secondary"><i class="fa-solid fa-plus"></i> Adicionar Questão</button>
+                            <button id="btn-gerar-preview" class="btn-primary"><i class="fa-solid fa-print"></i> Gerar e Imprimir</button>
                         </div>
                     </div>
-                     <div class="input-field">
-                        <label for="instrucoes">Instruções Gerais (Opcional)</label>
-                        <textarea id="instrucoes" placeholder="Ex: Leia todas as questões com atenção. Use caneta azul ou preta."></textarea>
-                    </div>
+                </section>
 
-                    <hr>
-                    
-                    <h3>Questões da Prova</h3>
-                    <div id="container-questoes"></div>
-                    <div class="action-buttons">
-                        <button id="btn-add-questao" class="btn-secondary"><i class="fa-solid fa-plus"></i> Adicionar Questão</button>
-                        <button id="btn-gerar-preview" class="btn-primary"><i class="fa-solid fa-print"></i> Gerar e Imprimir</button>
-                    </div>
-                </div>
-
-                <div id="preview-section" class="preview-section hidden">
-                    <div id="folha-a4"></div>
-                </div>
+                <section id="secao-materiais" class="content-section">
+                    <div class="materiais-grid" id="materiais-container">
+                        </div>
+                </section>
+                
+                <div id="preview-section" class="preview-section hidden"> <div id="folha-a4"></div> </div>
             </div>
         </main>
     </div>
@@ -276,23 +196,83 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            // --- BANCO DE DADOS DE MATERIAIS (JavaScript) ---
+            const catalogoMateriais = [
+                {
+                    id: 'vogais01',
+                    titulo: 'Atividade das Vogais',
+                    descricao: 'Uma atividade divertida para cobrir os pontilhados das vogais e associá-las a figuras. Ótimo para o início da alfabetização.',
+                    arquivo: 'materiais/atividade_vogais.png' // Caminho para a IMAGEM da atividade
+                },
+                {
+                    id: 'silabas01',
+                    titulo: 'Formando Sílabas com a Letra B',
+                    descricao: 'Junte a consoante B com as vogais para formar as sílabas BA, BE, BI, BO, BU. Inclui figuras para colorir.',
+                    arquivo: 'materiais/atividade_silabas_B.png'
+                }
+            ];
+
+            // --- ELEMENTOS DO DOM ---
             const loginModal = document.getElementById('login-modal');
             const loginForm = document.getElementById('login-form');
-            const loginContainer = document.querySelector('.login-container');
             const appContainer = document.getElementById('app');
-            const logoutBtn = document.getElementById('logout-btn');
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const sidebar = document.querySelector('.sidebar');
-            const btnAddQuestao = document.getElementById('btn-add-questao');
-            const containerQuestoes = document.getElementById('container-questoes');
-            const btnGerarPreview = document.getElementById('btn-gerar-preview');
-            const previewSection = document.getElementById('preview-section');
-            const folhaA4 = document.getElementById('folha-a4');
-            let proximoIdQuestao = 0;
+            const mainTitle = document.getElementById('main-title');
             
+            // Menus e Seções
+            const menuCriarProva = document.getElementById('menu-criar-prova');
+            const menuMateriais = document.getElementById('menu-materiais');
+            const secaoCriarProva = document.getElementById('secao-criar-prova');
+            const secaoMateriais = document.getElementById('secao-materiais');
+
+            // --- LÓGICA DE NAVEGAÇÃO ENTRE ABAS ---
+            function changeTab(activeMenu, activeSection, title) {
+                document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                
+                activeMenu.classList.add('active');
+                activeSection.classList.add('active');
+                mainTitle.textContent = title;
+            }
+
+            menuCriarProva.addEventListener('click', () => changeTab(menuCriarProva, secaoCriarProva, 'Gerador de Atividades'));
+            menuMateriais.addEventListener('click', () => changeTab(menuMateriais, secaoMateriais, 'Materiais Pedagógicos'));
+
+            // --- LÓGICA PARA RENDERIZAR OS MATERIAIS ---
+            const materiaisContainer = document.getElementById('materiais-container');
+            catalogoMateriais.forEach(material => {
+                const card = document.createElement('div');
+                card.className = 'material-card';
+                card.innerHTML = `
+                    <div class="material-thumbnail" style="background-image: url('${material.arquivo}')"></div>
+                    <div class="material-info">
+                        <h4>${material.titulo}</h4>
+                        <p>${material.descricao}</p>
+                        <button class="btn-primary btn-imprimir-material" data-arquivo="${material.arquivo}"><i class="fa-solid fa-print"></i> Imprimir</button>
+                    </div>
+                `;
+                materiaisContainer.appendChild(card);
+            });
+            
+            // --- LÓGICA PARA IMPRIMIR MATERIAL ---
+            materiaisContainer.addEventListener('click', function(e) {
+                if (e.target && e.target.closest('.btn-imprimir-material')) {
+                    const arquivoParaImprimir = e.target.closest('.btn-imprimir-material').getAttribute('data-arquivo');
+                    const printWindow = window.open('', '', 'height=800,width=600');
+                    printWindow.document.write(`
+                        <html><head><title>Imprimir Material</title></head>
+                        <body style="margin:0; text-align:center;">
+                            <img src="${arquivoParaImprimir}" style="max-width: 100%;" onload="window.print(); setTimeout(() => { window.close(); }, 100);">
+                        </body></html>
+                    `);
+                    printWindow.document.close();
+                }
+            });
+
+            // --- RESTANTE DO CÓDIGO (LOGIN, GERADOR DE PROVAS, ETC) ---
             const USUARIO_CORRETO = 'professor';
             const SENHA_CORRETA = 'pro123';
-
+            const logoutBtn = document.getElementById('logout-btn');
+            
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const usernameInput = document.getElementById('username').value.trim().toLowerCase();
@@ -301,39 +281,29 @@
                     loginModal.classList.add('hidden');
                     appContainer.classList.remove('hidden');
                 } else {
-                    loginContainer.classList.add('shake');
-                    setTimeout(() => { loginContainer.classList.remove('shake'); }, 500);
+                    document.querySelector('.login-container').classList.add('shake');
+                    setTimeout(() => { document.querySelector('.login-container').classList.remove('shake'); }, 500);
                 }
             });
 
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginModal.classList.remove('hidden');
-                appContainer.classList.add('hidden');
-                loginForm.reset();
-            });
+            logoutBtn.addEventListener('click', (e) => { e.preventDefault(); loginModal.classList.remove('hidden'); appContainer.classList.add('hidden'); loginForm.reset(); });
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('show'));
 
-            mobileMenuBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('show');
-            });
-            
-            document.addEventListener('click', (e) => {
-                const target = e.target;
-                if (sidebar.classList.contains('show') && !sidebar.contains(target) && !mobileMenuBtn.contains(target)) {
-                     sidebar.classList.remove('show');
-                }
-            });
+            // Lógica do gerador de provas
+            const containerQuestoes = document.getElementById('container-questoes');
+            let proximoIdQuestao = 0;
             
             function adicionarNovaQuestao() {
                 proximoIdQuestao++;
                 const questaoId = `questao-${proximoIdQuestao}`;
                 const questaoDiv = document.createElement('div');
-                questaoDiv.classList.add('questao-card');
+                questaoDiv.className = 'questao-card';
                 questaoDiv.id = questaoId;
                 
+                let numeroAtualQuestao = containerQuestoes.querySelectorAll('.questao-card').length + 1;
                 questaoDiv.innerHTML = `
                     <div class="questao-header">
-                        <label>Questão ${proximoIdQuestao}</label>
+                        <label>Questão ${numeroAtualQuestao}</label>
                         <button class="btn-remover-questao" title="Remover Questão">&times;</button>
                     </div>
                     <textarea placeholder="Digite o enunciado da questão..."></textarea>
@@ -342,16 +312,17 @@
                 containerQuestoes.appendChild(questaoDiv);
                 
                 questaoDiv.querySelector('.btn-remover-questao').addEventListener('click', () => {
-                    const cardParaRemover = document.getElementById(questaoId);
-                    cardParaRemover.style.animation = 'none'; // Previne re-animação
-                    setTimeout(() => cardParaRemover.remove(), 0);
+                    questaoDiv.remove();
+                    const cards = containerQuestoes.querySelectorAll('.questao-card');
+                    cards.forEach((card, index) => {
+                        card.querySelector('label').textContent = `Questão ${index + 1}`;
+                    });
                 });
             }
 
-            btnAddQuestao.addEventListener('click', adicionarNovaQuestao);
-            
-            btnGerarPreview.addEventListener('click', () => {
-                // Coletando todos os novos dados do formulário
+            document.getElementById('btn-add-questao').addEventListener('click', adicionarNovaQuestao);
+
+            document.getElementById('btn-gerar-preview').addEventListener('click', () => {
                 const instituicao = document.getElementById('instituicao').value.trim() || "Nome da Instituição";
                 const titulo = document.getElementById('titulo-prova').value.trim() || "Avaliação";
                 const professor = document.getElementById('nome-professor').value.trim() || "_________________________";
@@ -360,53 +331,31 @@
                 const instrucoes = document.getElementById('instrucoes').value.trim();
                 const questoesTextareas = document.querySelectorAll('.questao-card textarea');
 
-                // Monta o cabeçalho profissional
                 let provaHTML = `
                     <div class="cabecalho-prova">
                         <h2>${instituicao}</h2>
                         <h3>${titulo}</h3>
                         <div class="info-prova">
-                            <div>
-                                <p><strong>Professor(a):</strong> ${professor}</p>
-                                <p><strong>Matéria:</strong> ${materia}</p>
-                            </div>
-                            <div>
-                                <p><strong>Aluno(a):</strong> ___________________________________</p>
-                                <p><strong>Turma:</strong> ${turma} &nbsp;&nbsp;&nbsp; <strong>Data:</strong> ___/___/______</p>
-                            </div>
+                            <div><p><strong>Professor(a):</strong> ${professor}</p><p><strong>Matéria:</strong> ${materia}</p></div>
+                            <div><p><strong>Aluno(a):</strong> ___________________________________</p><p><strong>Turma:</strong> ${turma} &nbsp;&nbsp;&nbsp; <strong>Data:</strong> ___/___/______</p></div>
                         </div>
                     </div>
                 `;
-
-                // Adiciona instruções se existirem
-                if (instrucoes) {
-                    provaHTML += `<div class="instrucoes-prova">${instrucoes.replace(/\n/g, '<br>')}</div>`;
-                }
-
-                // Monta as questões
+                if (instrucoes) { provaHTML += `<div class="instrucoes-prova">${instrucoes.replace(/\n/g, '<br>')}</div>`; }
                 let numeroQuestaoImpressa = 0;
                 questoesTextareas.forEach((textarea) => {
                     const enunciado = textarea.value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
                     if (enunciado.trim() !== '') {
                         numeroQuestaoImpressa++;
-                        provaHTML += `
-                            <div class="questao-impressao">
-                                <p><strong>${numeroQuestaoImpressa})</strong> ${enunciado}</p>
-                                <br><br><br>
-                            </div>
-                        `;
+                        provaHTML += `<div class="questao-impressao"><p><strong>${numeroQuestaoImpressa})</strong> ${enunciado}</p><br><br><br></div>`;
                     }
                 });
 
-                if (numeroQuestaoImpressa === 0) {
-                    alert("Por favor, adicione pelo menos uma questão antes de gerar a prova.");
-                    return;
-                }
-
-                folhaA4.innerHTML = provaHTML;
-                previewSection.classList.remove('hidden');
-                previewSection.scrollIntoView({ behavior: 'smooth' });
-
+                if (numeroQuestaoImpressa === 0) { alert("Adicione pelo menos uma questão."); return; }
+                
+                document.getElementById('folha-a4').innerHTML = provaHTML;
+                document.getElementById('preview-section').classList.remove('hidden');
+                document.getElementById('preview-section').scrollIntoView({ behavior: 'smooth' });
                 setTimeout(() => { window.print(); }, 500);
             });
             
