@@ -1002,3 +1002,19 @@
             if (window.innerWidth <= 768 && sidebar.classList.contains('show') && !sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
                 sidebar.classList.remove('show');
             }
+        });
+
+        function initializeApp() {
+            if (sessionStorage.getItem('flordeMariaLoggedIn') === 'true') {
+                showMainApp();
+            } else {
+                showLoginScreen();
+            }
+            document.body.classList.remove('loading');
+        }
+
+        initializeApp();
+    });
+    </script>
+</body>
+</html>
