@@ -37,6 +37,11 @@
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
         }
+        
+        /* CORREÇÃO: Evita o "flash" da tela de login */
+        body.loading > * {
+            display: none;
+        }
 
         body {
             background-color: var(--background-color);
@@ -107,12 +112,13 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
         }
-        .primary-btn:disabled { 
+        .primary-btn:disabled, select:disabled { 
             background: #555; 
             cursor: not-allowed; 
             transform: none; 
             box-shadow: none; 
             color: #888; 
+            border-color: #444;
         }
 
         #main-app {
@@ -179,7 +185,7 @@
         .header .user-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         .header .user-info span strong { color: var(--heading-color); }
 
-        .main-content { grid-area: content; padding: 30px; overflow-y: auto; }
+        .main-content { grid-area: content; padding: 30px; overflow-y: auto; position: relative; }
         .page-content { display: none; }
         .page-content.active { display: block; animation: fadeIn .5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
@@ -301,9 +307,9 @@
         }
     </style>
 </head>
-<body>
+<body class="loading">
 
-    <div id="login-screen">
+    <div id="login-screen" style="display: none;">
         <div class="login-container">
             <h2 class="logo"><i class="fas fa-spa"></i> Flor de Maria</h2>
             <p>Faça login para gerenciar seu negócio</p>
@@ -321,7 +327,7 @@
         </div>
     </div>
 
-    <div id="main-app">
+    <div id="main-app" style="display: none;">
         <aside class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-spa logo-icon"></i>
@@ -329,7 +335,7 @@
             </div>
             <nav class="sidebar-menu">
                 <ul>
-                    <li><a href="#" class="nav-link active" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="#" class="nav-link" data-target="sales"><i class="fas fa-cash-register"></i> Registrar Venda</a></li>
                     <li><a href="#" class="nav-link" data-target="products"><i class="fas fa-tshirt"></i> Produtos</a></li>
                     <li><a href="#" class="nav-link" data-target="customers"><i class="fas fa-users"></i> Clientes</a></li>
@@ -357,7 +363,7 @@
         </header>
 
         <main class="main-content">
-            <div id="dashboard" class="page-content active">
+            <div id="dashboard" class="page-content">
                 <div class="page-header">
                     <h1>Dashboard</h1>
                     <p>Visão geral e desempenho financeiro do seu negócio.</p>
@@ -395,7 +401,7 @@
                     <h2 style="margin-bottom: 20px; color: var(--heading-color);">2. Carrinho e Finalização</h2>
                     <form id="checkout-form">
                         <div id="current-sale-cart"></div>
-                         <div id="checkout-controls" style="display: none;">
+                        <div id="checkout-controls">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                                 <div class="input-group"><label>Cliente</label><select id="sale-customer" required></select></div>
                                 <div class="input-group"><label>Forma de Pagamento</label><select id="sale-payment-method" required><option value="Dinheiro">Dinheiro</option><option value="Cartão de Crédito">Cartão de Crédito</option><option value="Cartão de Débito">Cartão de Débito</option><option value="Pix">Pix</option><option value="Fiado">Fiado</option></select></div>
@@ -515,13 +521,18 @@
         let db;
         let currentSale = { items: [], total: 0 };
         let chartInstances = {};
-        const mainApp = document.getElementById('main-app');
-        const loginForm = document.getElementById('login-form');
-        const loginScreen = document.getElementById('login-screen');
         
+        const mainApp = document.getElementById('main-app');
+        const loginScreen = document.getElementById('login-screen');
+        const loginForm = document.getElementById('login-form');
         const cartItemCount = document.getElementById('cart-item-count');
         const customerModal = document.getElementById('customer-modal');
         const productModal = document.getElementById('product-modal');
+        const modals = { customer: customerModal, product: productModal };
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page-content');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
 
         Chart.defaults.color = '#b0c4de';
         Chart.defaults.borderColor = '#2a3f50';
@@ -542,11 +553,30 @@
 
         function loadDatabase() {
             const dbJSON = localStorage.getItem('flordeMariaDB');
-            db = dbJSON ? JSON.parse(dbJSON) : { products: [], customers: [], sales: [] };
+            if (dbJSON) {
+                db = JSON.parse(dbJSON);
+            } else {
+                db = {
+                    products: [
+                        {id: Date.now() + 1, name: "Vestido Floral Curto", sku: "VFC-001", price: 189.90, stock: 25},
+                        {id: Date.now() + 2, name: "Blusa de Seda Branca", sku: "BSB-002", price: 119.90, stock: 40},
+                        {id: Date.now() + 3, name: "Saia Midi Plissada", sku: "SMP-003", price: 159.99, stock: 30},
+                        {id: Date.now() + 4, name: "Calça Pantalona Preta", sku: "CPP-004", price: 210.00, stock: 20}
+                    ],
+                    customers: [
+                        {id: Date.now() + 5, name: "Ana Carolina", contact: "11987654321", since: "01/01/2024"},
+                        {id: Date.now() + 6, name: "Beatriz Almeida", contact: "21912345678", since: "15/02/2024"}
+                    ],
+                    sales: []
+                };
+                saveDatabase();
+            }
         }
+
         function saveDatabase() {
             localStorage.setItem('flordeMariaDB', JSON.stringify(db));
         }
+
         function renderAll() {
             renderDashboard();
             renderProductsTable();
@@ -565,7 +595,6 @@
                 <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tags"></i></div><div class="card-info"><h3>${totalSales}</h3><p>Vendas Totais</p></div></div>
                 <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${totalCustomers}</h3><p>Clientes</p></div></div>
                 <div class="card products"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${totalProducts}</h3><p>Produtos</p></div></div>`;
-            
             renderDashboardCharts();
         }
 
@@ -599,14 +628,20 @@
             cartItemCount.innerText = count;
             cartItemCount.classList.toggle('visible', count > 0);
         }
-
+        
+        // MELHORIA: Função para controlar o estado dos controles de finalização
+        function toggleCheckoutControls(enabled) {
+            document.getElementById('sale-customer').disabled = !enabled;
+            document.getElementById('sale-payment-method').disabled = !enabled;
+            document.getElementById('finalize-sale-btn').disabled = !enabled;
+        }
+        
         function renderCurrentSaleCart() {
             const cartContainer = document.getElementById('current-sale-cart');
-            const checkoutControls = document.getElementById('checkout-controls');
-
+            
             if (currentSale.items.length === 0) {
                 cartContainer.innerHTML = '<p style="text-align:center; padding: 20px 0;">Seu carrinho está vazio.</p>';
-                checkoutControls.style.display = 'none';
+                toggleCheckoutControls(false); // Desabilita controles se o carrinho estiver vazio
                 return;
             }
             let tableHTML = `
@@ -616,6 +651,7 @@
             currentSale.total = 0;
             currentSale.items.forEach(item => {
                 const product = db.products.find(p => p.id === item.productId);
+                if (!product) return; // Segurança caso o produto seja deletado
                 const subtotal = item.quantity * product.price;
                 currentSale.total += subtotal;
                 tableHTML += `
@@ -632,7 +668,7 @@
                     <tfoot><tr><td colspan="3">TOTAL</td><td colspan="2">R$ ${currentSale.total.toFixed(2)}</td></tr></tfoot>
                 </table>`;
             cartContainer.innerHTML = tableHTML;
-            checkoutControls.style.display = 'block';
+            toggleCheckoutControls(true); // Habilita controles
         }
 
         document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
@@ -642,27 +678,23 @@
             const productId = parseInt(productSelect.value);
             const quantity = parseInt(quantityInput.value);
 
-            // A verificação `!productId` já previne erros se nada for selecionado.
             if (!productId) { 
                 showNotification('Por favor, selecione um produto.', 'error'); 
                 return; 
             }
-
+            
+            // CORREÇÃO: Verificação do produto movida para cima e mais robusta
             const product = db.products.find(p => p.id === productId);
-
-            // -----> INÍCIO DA CORREÇÃO <-----
-            // Adiciona uma verificação para garantir que o produto foi encontrado no banco de dados.
             if (!product) {
                 showNotification('Erro: Produto não encontrado no sistema.', 'error');
                 return;
             }
-            // -----> FIM DA CORREÇÃO <-----
 
             const existingItem = currentSale.items.find(item => item.productId === productId);
             const totalQuantity = (existingItem ? existingItem.quantity : 0) + quantity;
 
             if (totalQuantity > product.stock) { 
-                showNotification('Quantidade solicitada maior que o estoque!', 'error'); 
+                showNotification(`Estoque insuficiente! Disponível: ${product.stock}`, 'error'); 
                 return; 
             }
             
@@ -674,9 +706,9 @@
             showNotification(`${product.name} adicionado ao carrinho.`, 'info');
             updateCartIcon();
             renderCurrentSaleCart();
-            productSelect.value = ""; // Reseta a seleção do produto
+            productSelect.value = ""; 
             quantityInput.value = 1;
-            document.getElementById('add-to-cart-btn').disabled = true; // Desabilita o botão novamente
+            document.getElementById('add-to-cart-btn').disabled = true;
         });
         
         window.removeFromCart = (productId) => {
@@ -719,7 +751,7 @@
         function renderDebtsPage() {
              const tableBody = document.getElementById('debts-table-body');
             tableBody.innerHTML = '';
-            const pendingSales = db.sales.filter(s => s.status === 'Pendente');
+            const pendingSales = db.sales.filter(s => s.status === 'Pendente').sort((a, b) => new Date(a.date) - new Date(b.date));
             if(pendingSales.length === 0){
                 tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma conta pendente.</td></tr>';
                 return;
@@ -747,7 +779,7 @@
             }
         }
         
-        function destroyCharts() {
+        function destroyAllCharts() {
             Object.values(chartInstances).forEach(chart => {
                 if (chart) chart.destroy();
             });
@@ -755,9 +787,7 @@
         }
 
         function renderDashboardCharts() {
-             if (chartInstances.dashboardRevenue) chartInstances.dashboardRevenue.destroy();
-             if (chartInstances.dashboardTopProducts) chartInstances.dashboardTopProducts.destroy();
-             if (chartInstances.dashboardPayment) chartInstances.dashboardPayment.destroy();
+            destroyAllCharts(); // Garante que todos os gráficos sejam destruídos antes de recriar
 
             const revenueData = {};
             const last12Months = Array.from({length: 12}, (_, i) => {
@@ -791,31 +821,16 @@
         }
 
         function renderReportsPage() {
-            if (chartInstances.reportsRevenue) chartInstances.reportsRevenue.destroy();
-            if (chartInstances.reportsPayment) chartInstances.reportsPayment.destroy();
-            if (chartInstances.reportsTopProducts) chartInstances.reportsTopProducts.destroy();
+            destroyAllCharts();
+            // Simplesmente reutiliza a lógica dos gráficos do dashboard
+            const revenueCtx = document.getElementById('reports-revenue-chart').getContext('2d');
+            chartInstances.reportsRevenue = new Chart(revenueCtx, chartInstances.dashboardRevenue.config);
 
-            const revenueData = {};
-            const last12Months = Array.from({length: 12}, (_, i) => {
-                const d = new Date(); d.setMonth(d.getMonth() - i);
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            }).reverse();
-            last12Months.forEach(month => revenueData[month] = 0);
-            db.sales.filter(s => s.status === 'Pago').forEach(sale => {
-                const saleMonth = sale.date.substring(0, 7);
-                if (revenueData[saleMonth] !== undefined) revenueData[saleMonth] += sale.total;
-            });
-            chartInstances.reportsRevenue = new Chart(document.getElementById('reports-revenue-chart'), {
-                type: 'bar', data: { labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })), datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
-
-            const paymentData = db.sales.reduce((acc, sale) => { acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + 1; return acc; }, {});
-            chartInstances.reportsPayment = new Chart(document.getElementById('reports-payment-method-chart'), {
-                type: 'doughnut', data: { labels: Object.keys(paymentData), datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { labels: { color: '#b0c4de' } } } }
-            });
-
+            const paymentCtx = document.getElementById('reports-payment-method-chart').getContext('2d');
+            chartInstances.reportsPayment = new Chart(paymentCtx, chartInstances.dashboardPayment.config);
+            
             const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
-            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10);
+            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10); // Mostra Top 10 nos relatórios
             const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
             const productQuantities = sortedProducts.map(([,qty]) => qty);
             chartInstances.reportsTopProducts = new Chart(document.getElementById('reports-top-products-chart'), {
@@ -833,7 +848,6 @@
             }
         }
         
-        const modals={customer:customerModal,product:productModal};
         document.getElementById('add-customer-btn').onclick=()=>openEditModal('customer');
         document.getElementById('add-product-btn').onclick=()=>openEditModal('product');
         
@@ -845,6 +859,10 @@
             const title = document.getElementById(`${type}-modal-title`);
             if (id) {
                 const item = db[type + 's'].find(i => i.id === id);
+                if (!item) {
+                    showNotification('Item não encontrado.', 'error');
+                    return;
+                }
                 title.innerText = `Editar ${type === 'customer' ? 'Cliente' : 'Produto'}`;
                 document.getElementById(`${type}-id`).value = id;
                 Object.keys(item).forEach(key => {
@@ -862,12 +880,21 @@
                 btn.closest('.modal').style.display = 'none';
             };
         });
-
-        window.onclick = e => {
+        
+        // MELHORIA: Listener de click para fechar modais e a sidebar
+        window.addEventListener('click', e => {
+            // Fecha modal
             if (e.target.classList.contains('modal')) {
                 e.target.style.display = 'none';
             }
-        };
+            // Fecha sidebar em modo mobile
+            if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
 
         document.getElementById('customer-form').addEventListener('submit',function(e){
             e.preventDefault();
@@ -901,8 +928,6 @@
             }
             saveDatabase();renderAll();this.reset();modals.product.style.display='none';
         });
-
-        const navLinks=document.querySelectorAll('.nav-link'),pages=document.querySelectorAll('.page-content'),menuToggle=document.querySelector('.menu-toggle'),sidebar=document.querySelector('.sidebar');
         
         function initializeSalePage() {
             const productSelect = document.getElementById('sale-product');
@@ -917,85 +942,97 @@
             customerSelect.innerHTML = '<option value="0">Consumidor Final</option>';
             db.customers.forEach(c => { customerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
 
-            // ----> INÍCIO DA MELHORIA <----
-            // Desabilita o botão 'Adicionar' por padrão
             addToCartBtn.disabled = true;
-
-            // Adiciona um listener para habilitar o botão quando um produto for selecionado
             productSelect.addEventListener('change', function() {
-                addToCartBtn.disabled = !this.value; // Desabilita se o valor for "", habilita caso contrário
+                addToCartBtn.disabled = !this.value;
             });
-            // ----> FIM DA MELHORIA <----
-
+            
             renderCurrentSaleCart();
         }
         
-        function showMainApp() {
-            loadDatabase();
-            renderAll();
-            loginScreen.style.opacity = '0';
-            setTimeout(() => {
-                loginScreen.style.display = 'none';
-                mainApp.style.display = 'grid';
-            }, 500);
+        // MELHORIA: Função centralizada para navegação
+        function navigateToPage(targetId) {
+             if (!targetId) return;
+
+             // Lógica específica da página antes de navegar
+            if (targetId === 'sales') initializeSalePage();
+            if (targetId === 'debts') renderDebtsPage();
+            if (targetId === 'reports') renderReportsPage();
+            if (targetId === 'dashboard') renderDashboardCharts();
+            
+            navLinks.forEach(n => n.classList.remove('active'));
+            pages.forEach(p => p.classList.remove('active'));
+
+            const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+            const activePage = document.getElementById(targetId);
+
+            if (activeLink) activeLink.classList.add('active');
+            if (activePage) activePage.classList.add('active');
+            
+            // MELHORIA: Salva a página ativa na sessão
+            sessionStorage.setItem('activePage', targetId);
+            
+            if (window.innerWidth <= 768) sidebar.classList.remove('show');
         }
-        
-        loginForm.addEventListener('submit', e => {
-            e.preventDefault();
-            sessionStorage.setItem('flordeMariaLoggedIn', 'true');
-            showMainApp();
-            showNotification('Login bem-sucedido!', 'success');
-        });
-        
-        document.getElementById('logout-btn').addEventListener('click', e => {
-            e.preventDefault();
-            sessionStorage.removeItem('flordeMariaLoggedIn');
-            destroyCharts();
-            mainApp.style.display = 'none';
-            loginScreen.style.display = 'flex';
-            setTimeout(() => loginScreen.style.opacity = '1', 50);
-        });
-        
+
         navLinks.forEach(link => {
             link.addEventListener('click', e => {
                 e.preventDefault();
-                if(link.id === 'logout-btn') return;
+                if(link.id === 'logout-btn') {
+                    logout();
+                    return;
+                }
                 const targetId = link.getAttribute('data-target');
-                
-                if(targetId === 'sales') initializeSalePage();
-                if(targetId === 'debts') renderDebtsPage();
-                if(targetId === 'reports') renderReportsPage();
-                if(targetId === 'dashboard') renderDashboardCharts();
-                
-                navLinks.forEach(n => n.classList.remove('active'));
-                link.classList.add('active');
-                pages.forEach(p => p.classList.toggle('active', p.id === targetId));
-                if(window.innerWidth <= 768) sidebar.classList.remove('show');
+                navigateToPage(targetId);
             })
         });
         
         menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
 
-        if (sessionStorage.getItem('flordeMariaLoggedIn') === 'true') {
-            showMainApp();
+        function showMainApp() {
+            loadDatabase();
+            renderAll();
+            
+            loginScreen.style.display = 'none';
+            mainApp.style.display = 'grid';
+            
+            // MELHORIA: Carrega a última página visitada ou o dashboard
+            const lastPage = sessionStorage.getItem('activePage') || 'dashboard';
+            navigateToPage(lastPage);
         }
 
-        if (!localStorage.getItem('flordeMariaDB')) {
-            const sampleDB = {
-                products: [
-                    {id: 1, name: "Vestido Floral Curto", sku: "VFC-001", price: 189.90, stock: 25},
-                    {id: 2, name: "Blusa de Seda Branca", sku: "BSB-002", price: 119.90, stock: 40},
-                    {id: 3, name: "Saia Midi Plissada", sku: "SMP-003", price: 159.99, stock: 30},
-                    {id: 4, name: "Calça Pantalona Preta", sku: "CPP-004", price: 210.00, stock: 20}
-                ],
-                customers: [
-                    {id: 1, name: "Ana Carolina", contact: "11987654321", since: "01/01/2024"},
-                    {id: 2, name: "Beatriz Almeida", contact: "21912345678", since: "15/02/2024"}
-                ],
-                sales: []
-            };
-            localStorage.setItem('flordeMariaDB', JSON.stringify(sampleDB));
+        function showLoginScreen() {
+            destroyAllCharts();
+            mainApp.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            setTimeout(() => loginScreen.style.opacity = '1', 50);
         }
+        
+        function logout() {
+             sessionStorage.removeItem('flordeMariaLoggedIn');
+             sessionStorage.removeItem('activePage');
+             showLoginScreen();
+        }
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            // Aqui você pode adicionar uma validação de usuário/senha real se necessário
+            sessionStorage.setItem('flordeMariaLoggedIn', 'true');
+            showMainApp();
+            showNotification('Login bem-sucedido!', 'success');
+        });
+
+        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+        function initializeApp() {
+            if (sessionStorage.getItem('flordeMariaLoggedIn') === 'true') {
+                showMainApp();
+            } else {
+                showLoginScreen();
+            }
+            document.body.classList.remove('loading');
+        }
+
+        initializeApp();
     });
     </script>
 </body>
