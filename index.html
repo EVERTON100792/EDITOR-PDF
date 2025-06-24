@@ -3,998 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flor de Maria - Sistema de Gestão</title>
+    <title>Sistema Integrado | Flor de Maira</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <style>
+        /* --- CONFIGURAÇÕES GERAIS --- */
         :root {
-            --primary-color: #d81b60; /* Rosa Escuro (Flor) */
-            --secondary-color: #c2185b; /* Rosa Mais Escuro */
-            --background-color: #1a1a2e; /* Azul Marinho Escuro */
-            --sidebar-bg: #16213e; /* Azul Escuro */
-            --content-bg: #16213e; /* Mesma cor do sidebar */
-            --text-color: #b0c4de; /* Azul Aço Claro */
-            --heading-color: #ffffff; /* Branco */
-            --border-color: #2a3f50; /* Borda sutil */
-            --sidebar-text: #94a3b8;
-            --sidebar-text-hover: #ffffff;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            --border-radius: 12px;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
+            --primary-color: #d63384;
+            --secondary-color: #fce3ec;
+            --text-color: #333;
+            --bg-color: #f4f7fa;
+            --white-color: #fff;
+            --gray-color: #ddd;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; font-family: 'Poppins', sans-serif; color: var(--text-color); background-color: var(--bg-color); }
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .flex-column { flex-direction: column; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .p-3 { padding: 1.5rem; }
 
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-        
-        #login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            transition: opacity 0.5s ease-out;
-        }
+        /* --- TELA DE LOGIN --- */
+        #login-screen { background: linear-gradient(135deg, var(--secondary-color), #ffc1d6); display: flex; justify-content: center; align-items: center; height: 100%; }
+        .login-box { background-color: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); text-align: center; width: 380px; }
+        .login-box h1 { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 10px; }
+        .login-box .subtitle { color: #666; margin-bottom: 30px; }
+        .input-group { position: relative; margin-bottom: 30px; }
+        .input-group input, .form-group select, .form-group input { width: 100%; padding: 12px; border: 1px solid var(--gray-color); border-radius: 5px; font-size: 1rem; font-family: 'Poppins', sans-serif; }
+        .input-group input { border: none; border-bottom: 2px solid #ccc; background-color: transparent; }
+        .input-group label { position: absolute; left: 0; bottom: 10px; color: #999; pointer-events: none; transition: all 0.3s ease; }
+        .input-group input:focus ~ label, .input-group input:valid ~ label { transform: translateY(-20px); font-size: 0.8rem; color: var(--primary-color); }
+        .btn-login { width: 100%; padding: 12px; border: none; border-radius: 25px; background: linear-gradient(135deg, var(--primary-color), #ff69b4); color: white; font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        .shake-animation { animation: shake 0.5s; }
+        .error-message { color: var(--primary-color); margin-top: 15px; height: 20px; font-size: 0.9rem; font-weight: 500; }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .login-container {
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 40px 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,.2);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            transform: scale(.95);
-            animation: scaleIn .5s forwards;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes scaleIn { to { transform:scale(1) } }
-
-        .login-container h2 { color: #ffffff; margin-bottom: 10px; font-size: 2.2rem; font-weight: 700; }
-        .login-container .logo i { text-shadow: 0 0 10px var(--primary-color); }
-        .login-container p { color: #e0e0e0; margin-bottom: 30px; }
-        
-        .input-group { position: relative; margin-bottom: 25px; text-align: left; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-color); }
-        .input-group input, .input-group select {
-            width: 100%; padding: 15px; padding-left: 45px;
-            border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;
-            transition: border-color .3s, box-shadow .3s;
-            background-color: #2a3f50;
-            color: var(--heading-color);
-        }
-        .input-group select { padding-left: 15px; appearance: none; }
-        .input-group input:focus, .input-group select:focus {
-            outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.4);
-        }
-        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-color); }
-        .login-container .input-group input { background-color: rgba(255,255,255,0.9); color: #333; }
-        
-        .login-btn, .primary-btn {
-            width: 100%; padding: 15px; border: none; border-radius: 8px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: #fff; font-size: 1.1rem; font-weight: 600;
-            cursor: pointer; transition: transform .2s, box-shadow .2s, background-color .2s;
-        }
-        .login-btn:hover, .primary-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(216, 27, 96, 0.5);
-        }
-        .primary-btn:disabled { 
-            background: #555; 
-            cursor: not-allowed; 
-            transform: none; 
-            box-shadow: none; 
-            color: #888; 
-        }
-
-        #main-app {
-            display: none;
-            grid-template-columns: 260px 1fr;
-            grid-template-rows: auto 1fr;
-            min-height: 100vh;
-            grid-template-areas: "sidebar header" "sidebar content";
-            transition: grid-template-columns .3s ease;
-        }
-
-        .sidebar {
-            grid-area: sidebar; background-color: var(--sidebar-bg); color: var(--sidebar-text);
-            padding: 20px; display: flex; flex-direction: column; transition: transform .3s ease;
-            border-right: 1px solid var(--border-color);
-        }
-        .sidebar-header { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
-        .sidebar-header .logo-icon { font-size: 2rem; color: var(--primary-color); }
-        .sidebar-header h2 { font-size: 1.5rem; font-weight: 600; color: var(--heading-color); }
-        .sidebar-menu ul { list-style: none; }
-        .sidebar-menu li a {
-            display: flex; align-items: center; gap: 15px; padding: 15px 10px;
-            border-radius: 8px; color: var(--sidebar-text); text-decoration: none;
-            font-weight: 500; transition: background-color .3s, color .3s;
-        }
-        .sidebar-menu li a:hover, .sidebar-menu li a.active {
-            background-color: rgba(216, 27, 96, 0.15); color: var(--sidebar-text-hover);
-        }
-        .sidebar-menu li a i { width: 20px; text-align: center; }
+        /* --- DASHBOARD --- */
+        #dashboard-screen { display: flex; height: 100%; }
+        .sidebar { width: 260px; background: var(--white-color); box-shadow: 2px 0 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
+        .sidebar-header { text-align: center; margin-bottom: 40px; }
+        .sidebar-header h2 { color: var(--primary-color); }
+        .sidebar-nav ul { list-style: none; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 15px; padding: 15px 20px; color: #555; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: all 0.3s ease; font-weight: 500; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: var(--secondary-color); color: var(--primary-color); }
         .sidebar-footer { margin-top: auto; }
-
-        .header {
-            grid-area: header; display: flex; justify-content: space-between; align-items: center;
-            padding: 20px; background-color: var(--sidebar-bg);
-            border-bottom: 1px solid var(--border-color); z-index: 10;
-        }
-        .header .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; color: var(--text-color); }
+        .logout-btn { display: block; width: 100%; padding: 15px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; }
+        .logout-btn:hover { background: var(--primary-color); color: white; }
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .main-content h1 { font-size: 2.2rem; margin-bottom: 20px; color: var(--text-color); }
         
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-
-        .cart-icon-wrapper {
-            position: relative;
-            color: var(--text-color);
-            font-size: 1.5rem;
-        }
-
-        .cart-badge {
-            position: absolute; top: -8px; right: -10px;
-            background-color: var(--danger-color); color: white;
-            border-radius: 50%; width: 20px; height: 20px;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 0.75rem; font-weight: 600; border: 2px solid var(--sidebar-bg);
-            transition: transform .2s; transform: scale(0);
-        }
-        .cart-badge.visible {
-            transform: scale(1);
-        }
-
-        .header .user-info { display: flex; align-items: center; gap: 15px; }
-        .header .user-info img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .header .user-info span strong { color: var(--heading-color); }
-
-        .main-content { grid-area: content; padding: 30px; overflow-y: auto; }
-        .page-content { display: none; }
-        .page-content.active { display: block; animation: fadeIn .5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
-
-        .page-header { margin-bottom: 30px; }
-        .page-header h1 { font-size: 2rem; font-weight: 600; color: var(--heading-color); }
-        .page-header p { color: var(--text-color); }
-
-        .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
-        .card {
-            background-color: var(--content-bg); padding: 25px; border-radius: var(--border-radius);
-            box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px;
-            transition: transform .3s, box-shadow .3s, border-color .3s;
-            border: 1px solid var(--border-color);
-        }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
-        .card .icon-wrapper { font-size: 2rem; padding: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
-        .card.revenue .icon-wrapper { background-color: rgba(216, 27, 96, 0.1); color: var(--primary-color); }
-        .card.sales .icon-wrapper { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
-        .card.customers .icon-wrapper { background-color: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
-        .card.products .icon-wrapper { background-color: rgba(63, 81, 181, 0.1); color: #3f51b5; }
-
-        .card-info h3 { font-size: 2.2rem; font-weight: 600; color: var(--heading-color); }
-        .card-info p { color: var(--text-color); }
-
-        .content-block { margin-top: 40px; background-color: var(--content-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); border: 1px solid var(--border-color); }
-        .content-block:first-child { margin-top: 0; }
-        .content-block-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .content-block-header h2 { font-size: 1.5rem; color: var(--heading-color); }
-        .primary-btn { width: auto; font-size: 1rem; padding: 10px 20px; }
-        
-        .danger-btn {
-            background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color);
-            padding: 5px 10px; font-size: .8rem; border-radius: 5px; cursor: pointer; transition: all .2s;
-        }
-        .danger-btn:hover { background: var(--danger-color); color: #fff; }
-        
-        table { width: 100%; border-collapse: collapse; color: var(--text-color); }
-        table th, table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        table th { font-weight: 600; color: var(--heading-color); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        table tbody tr:hover { background-color: rgba(42, 63, 80, 0.5); }
-        table tfoot tr { border-top: 2px solid var(--primary-color); font-weight: 700; }
-        table tfoot td { font-size: 1.2rem; color: var(--heading-color); }
-        table .actions i { cursor: pointer; margin-right: 15px; color: #777; transition: color .2s; font-size: 1.1rem; }
-        table .actions i.fa-trash:hover { color: var(--danger-color); }
-        table .actions i.fa-edit:hover { color: var(--primary-color); }
-
-        .status { padding: 5px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600; text-align: center; }
-        .status.paid { background-color: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .status.pending { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
-
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background-color: var(--sidebar-bg); margin: 10% auto; padding: 30px;
-            border-radius: var(--border-radius); width: 90%; max-width: 500px;
-            animation: scaleIn .3s; border: 1px solid var(--border-color);
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h2 { color: var(--heading-color); }
-        .close-btn { color: #aaa; font-size: 28px; font-weight: 700; cursor: pointer; transition: color .2s; }
-        .close-btn:hover { color: var(--heading-color); }
-        .modal-body form .input-group { margin-bottom: 15px; }
-
-        #notification-container {
-            position: fixed; top: 20px; right: 20px; z-index: 9999;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .notification {
-            padding: 15px 20px; border-radius: 8px; color: #fff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: flex; align-items: center; gap: 15px;
-            opacity: 0; transform: translateX(100%);
-            animation: slideInNotification .5s forwards;
-        }
-        @keyframes slideInNotification {
-            to { opacity: 1; transform: translateX(0); }
-        }
-        .notification.success { background-color: var(--success-color); }
-        .notification.error { background-color: var(--danger-color); }
-        .notification.info { background-color: var(--primary-color); }
-
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        .chart-container {
-            background-color: var(--content-bg); padding: 30px; border-radius: var(--border-radius);
-            box-shadow: var(--shadow); border: 1px solid var(--border-color);
-        }
-        .chart-container h2 { font-size: 1.5rem; color: var(--heading-color); margin-bottom: 20px; }
-        .full-width-chart {
-            grid-column: 1 / -1;
-        }
-
-        @media (max-width: 768px) {
-            #main-app {
-                grid-template-columns: 1fr;
-                grid-template-areas: "header" "content";
-            }
-            .sidebar {
-                position: fixed; left: 0; top: 0; height: 100%; z-index: 1000;
-                transform: translateX(-100%);
-            }
-            .sidebar.show {
-                transform: translateX(0);
-                box-shadow: 10px 0 20px rgba(0,0,0,.1);
-            }
-            .header .menu-toggle { display: block; }
-            .main-content { padding: 20px; }
-            .page-header h1 { font-size: 1.8rem; }
-            .content-block, .chart-container { padding: 20px; }
-        }
+        /* --- CARDS, FORMS & TABLES --- */
+        .card { background: var(--white-color); padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-top: 20px; }
+        .card h2 { margin-bottom: 20px; color: var(--primary-color); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
+        .btn, .btn-submit { padding: 12px 25px; border: none; border-radius: 5px; background: var(--primary-color); color: white; font-size: 1rem; cursor: pointer; transition: background 0.3s; }
+        .btn-secondary { background: #6c757d; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; font-weight: 600; }
+        .btn-action { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-weight: 500; }
+        .btn-paid { background-color: #28a745; }
+        .btn-delete { background-color: #dc3545; }
+        .status-pendente { color: #ffc107; font-weight: bold; }
+        .status-pago { color: #28a745; font-weight: bold; }
+        #venda-itens-tabela td, #venda-itens-tabela th { padding: 10px; }
+        #relatorio-container .card { background-color: var(--secondary-color); }
     </style>
 </head>
 <body>
-
     <div id="login-screen">
-        <div class="login-container">
-            <h2 class="logo"><i class="fas fa-spa"></i> Flor de Maria</h2>
-            <p>Faça login para gerenciar seu negócio</p>
-            <form id="login-form">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Usuário" required value="admin">
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Senha" required value="1234">
-                </div>
-                <button type="submit" class="login-btn">Entrar</button>
-            </form>
-        </div>
+        <div class="login-box"><h1>Flor de Maira</h1><p class="subtitle">Acesse seu painel de vendas</p><form id="login-form"><div class="input-group"><input type="text" id="username" required><label for="username">Usuário</label></div><div class="input-group"><input type="password" id="password" required><label for="password">Senha</label></div><button type="submit" class="btn-login">Entrar</button><p id="error-message" class="error-message"></p></form></div>
     </div>
 
-    <div id="main-app">
+    <div id="dashboard-screen" class="hidden">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-spa logo-icon"></i>
-                <h2>Flor de Maria</h2>
-            </div>
-            <nav class="sidebar-menu">
+            <div class="sidebar-header"><h2>Flor de Maira</h2></div>
+            <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="#" class="nav-link active" data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="#" class="nav-link" data-target="sales"><i class="fas fa-cash-register"></i> Registrar Venda</a></li>
-                    <li><a href="#" class="nav-link" data-target="products"><i class="fas fa-tshirt"></i> Produtos</a></li>
-                    <li><a href="#" class="nav-link" data-target="customers"><i class="fas fa-users"></i> Clientes</a></li>
-                    <li><a href="#" class="nav-link" data-target="debts"><i class="fas fa-hand-holding-usd"></i> Contas a Receber</a></li>
-                    <li><a href="#" class="nav-link" data-target="reports"><i class="fas fa-chart-pie"></i> Relatórios</a></li>
+                    <li><a href="#dashboard" class="nav-link active" data-target="dashboard-view"><span>Dashboard</span></a></li>
+                    <li><a href="#vendas" class="nav-link" data-target="vendas-view"><span>Realizar Venda</span></a></li>
+                    <li><a href="#clientes" class="nav-link" data-target="clientes-view"><span>Clientes</span></a></li>
+                    <li><a href="#estoque" class="nav-link" data-target="estoque-view"><span>Estoque</span></a></li>
+                    <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><span>Contas a Receber</span></a></li>
+                    <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><span>Relatórios</span></a></li>
                 </ul>
             </nav>
-            <div class="sidebar-footer">
-                <a href="#" id="logout-btn" class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
-            </div>
+            <div class="sidebar-footer"><button class="logout-btn" id="logout-btn">Sair</button></div>
         </aside>
 
-        <header class="header">
-            <i class="fas fa-bars menu-toggle"></i>
-            <div class="header-actions">
-                <div id="cart-icon-wrapper" class="cart-icon-wrapper">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-item-count" class="cart-badge">0</span>
-                </div>
-                <div class="user-info">
-                    <span>Olá, <strong>Admin</strong></span>
-                    <img src="https://i.pravatar.cc/150?img=32" alt="Foto do Usuário">
-                </div>
-            </div>
-        </header>
-
         <main class="main-content">
-            <div id="dashboard" class="page-content active">
-                <div class="page-header">
-                    <h1>Dashboard</h1>
-                    <p>Visão geral e desempenho financeiro do seu negócio.</p>
-                </div>
-                <div class="cards-container" id="dashboard-cards"></div>
-                <div class="charts-grid">
-                    <div class="chart-container full-width-chart">
-                        <h2>Receita por Mês (Últimos 12 meses)</h2>
-                        <canvas id="dashboard-revenue-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h2>Produtos Mais Vendidos (Top 5)</h2>
-                        <canvas id="dashboard-top-products-chart"></canvas>
-                    </div>
-                     <div class="chart-container">
-                        <h2>Vendas por Forma de Pagamento</h2>
-                        <canvas id="dashboard-payment-method-chart"></canvas>
-                    </div>
-                </div>
-            </div>
+            <section id="dashboard-view" class="content-section active">
+                <h1>Bem-vinda, Maira!</h1>
+                <div class="card"><p>Sistema de gestão integrado. Use o menu para navegar e controlar seu negócio.</p></div>
+            </section>
             
-            <div id="sales" class="page-content">
-                <div class="page-header"><h1>Registrar Nova Venda</h1></div>
-                <div class="content-block">
-                    <h2 style="margin-bottom: 20px; color: var(--heading-color);">1. Adicionar Produto ao Carrinho</h2>
-                    <form id="add-to-cart-form">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; align-items: flex-end;">
-                            <div class="input-group" style="margin:0;"><label>Produto</label><select id="sale-product" required></select></div>
-                            <div class="input-group" style="margin:0;"><label>Qtd.</label><input type="number" id="sale-quantity" value="1" min="1" required></div>
-                            <button type="submit" id="add-to-cart-btn" class="primary-btn">Adicionar</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="content-block">
-                    <h2 style="margin-bottom: 20px; color: var(--heading-color);">2. Carrinho e Finalização</h2>
-                    <form id="checkout-form">
-                        <div id="current-sale-cart"></div>
-                         <div id="checkout-controls" style="display: none;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
-                                <div class="input-group"><label>Cliente</label><select id="sale-customer" required></select></div>
-                                <div class="input-group"><label>Forma de Pagamento</label><select id="sale-payment-method" required><option value="Dinheiro">Dinheiro</option><option value="Cartão de Crédito">Cartão de Crédito</option><option value="Cartão de Débito">Cartão de Débito</option><option value="Pix">Pix</option><option value="Fiado">Fiado</option></select></div>
-                            </div>
-                            <button type="submit" id="finalize-sale-btn" class="primary-btn" style="width: 100%; margin-top: 20px;">Finalizar Venda</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <div id="products" class="page-content">
-                <div class="page-header"><h1>Gestão de Produtos</h1></div>
-                <div class="content-block">
-                    <div class="content-block-header">
-                        <h2>Lista de Produtos</h2>
-                        <button id="add-product-btn" class="primary-btn"><i class="fas fa-plus"></i> Novo Produto</button>
-                    </div>
-                    <table>
-                        <thead><tr><th>SKU</th><th>Produto</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
-                        <tbody id="products-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
+            <section id="clientes-view" class="content-section">
+                <h1>Gestão de Clientes</h1>
+                <div class="card"><h2>Cadastrar Novo Cliente</h2><form id="form-add-cliente" class="flex flex-column gap-2"><div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div><div class="form-group"><label for="contato-cliente">Telefone ou E-mail</label><input type="text" id="contato-cliente"></div><button type="submit" class="btn-submit">Salvar Cliente</button></form></div>
+                <div class="card"><h2>Clientes Cadastrados</h2><div id="tabela-clientes-container"></div></div>
+            </section>
 
-            <div id="customers" class="page-content">
-                <div class="page-header"><h1>Gestão de Clientes</h1></div>
-                <div class="content-block">
-                    <div class="content-block-header">
-                        <h2>Lista de Clientes</h2>
-                        <button id="add-customer-btn" class="primary-btn"><i class="fas fa-plus"></i> Novo Cliente</button>
-                    </div>
-                    <table>
-                        <thead><tr><th>Nome</th><th>Contato</th><th>Desde</th><th>Ações</th></tr></thead>
-                        <tbody id="customers-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div id="debts" class="page-content">
-                <div class="page-header">
-                    <h1>Contas a Receber (Fiado)</h1>
-                    <p>Liste e gerencie as vendas pendentes de pagamento.</p>
-                </div>
-                <div class="content-block">
-                    <div class="content-block-header"><h2>Vendas Pendentes</h2></div>
-                    <table>
-                        <thead><tr><th>Cliente</th><th>Data da Venda</th><th>Total</th><th>Status</th><th>Ação</th></tr></thead>
-                        <tbody id="debts-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
+            <section id="estoque-view" class="content-section">
+                <h1>Gestão de Estoque</h1>
+                <div class="card"><h2>Cadastrar Novo Produto</h2><form id="form-add-produto" class="flex flex-column gap-2"><div class="form-group"><label for="nome-produto">Nome do Produto</label><input type="text" id="nome-produto" required></div><div class="flex gap-2"><div class="form-group flex-1"><label for="qtd-produto">Quantidade Inicial</label><input type="number" id="qtd-produto" required></div><div class="form-group flex-1"><label for="preco-produto">Preço de Venda (R$)</label><input type="number" step="0.01" id="preco-produto" required></div></div><button type="submit" class="btn-submit">Adicionar ao Estoque</button></form></div>
+                <div class="card"><h2>Produtos em Estoque</h2><div id="tabela-produtos-container"></div></div>
+            </section>
 
-            <div id="reports" class="page-content">
-                <div class="page-header">
-                    <h1>Relatórios</h1>
-                    <p>Analise o desempenho do seu negócio com gráficos interativos.</p>
+            <section id="vendas-view" class="content-section">
+                <h1>Realizar Venda</h1>
+                <div class="card">
+                    <h2>Nova Venda</h2>
+                    <div class="form-group"><label for="venda-cliente">Selecione o Cliente</label><select id="venda-cliente" required></select></div>
+                    <div class="card mt-3"><h3 class="mb-2">Adicionar Item à Venda</h3><div class="flex gap-3 align-items-end"><div class="form-group flex-1"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px;"></div><button type="button" id="btn-add-item-venda" class="btn">Adicionar</button></div></div>
+                    <div class="card mt-3"><h3>Itens da Venda</h3><div id="venda-itens-container"></div><h3 class="mt-3" style="text-align: right;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
+                    <div class="card mt-3"><h3>Pagamento</h3><div class="form-group"><label for="venda-pagamento">Método de Pagamento</label><select id="venda-pagamento"><option value="vista">À Vista</option><option value="fiado">Fiado (30 dias)</option><option value="parcelado">Parcelado</option></select></div><div class="form-group hidden" id="venda-parcelas-group"><label for="venda-parcelas">Número de Parcelas</label><select id="venda-parcelas"><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option></select></div><button type="button" id="btn-finalizar-venda" class="btn-submit mt-3" style="width: 100%;">Finalizar Venda</button></div>
                 </div>
-                 <div class="charts-grid">
-                    <div class="chart-container full-width-chart">
-                        <h2>Receita por Mês (Últimos 12 meses)</h2>
-                        <canvas id="reports-revenue-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h2>Vendas por Forma de Pagamento</h2>
-                        <canvas id="reports-payment-method-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h2>Produtos Mais Vendidos</h2>
-                        <canvas id="reports-top-products-chart"></canvas>
-                    </div>
-                </div>
-            </div>
+            </section>
+
+            <section id="contas-a-receber-view" class="content-section">
+                <h1>Contas a Receber</h1>
+                <div class="card"><h2>Registros Pendentes e Pagos</h2><div id="tabela-contas-container"></div></div>
+            </section>
+
+            <section id="relatorios-view" class="content-section">
+                <h1>Relatórios</h1>
+                <div class="card"><h2>Gerar Relatório de Vendas</h2><div class="flex gap-2"><div class="form-group flex-1"><label for="relatorio-inicio">Data Início</label><input type="date" id="relatorio-inicio"></div><div class="form-group flex-1"><label for="relatorio-fim">Data Fim</label><input type="date" id="relatorio-fim"></div><button id="btn-gerar-relatorio" class="btn" style="align-self: flex-end;">Gerar</button></div></div>
+                <div id="relatorio-container" class="mt-3"></div>
+            </section>
         </main>
     </div>
-    
-    <div id="customer-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="customer-modal-title">Novo Cliente</h2>
-                <span class="close-btn">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="customer-form">
-                    <input type="hidden" id="customer-id">
-                    <div class="input-group"><input type="text" id="customer-name" placeholder="Nome completo" required></div>
-                    <div class="input-group"><input type="tel" id="customer-contact" placeholder="Telefone / WhatsApp" required></div>
-                    <button type="submit" class="primary-btn">Salvar Cliente</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div id="product-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="product-modal-title">Novo Produto</h2>
-                <span class="close-btn">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="product-form">
-                    <input type="hidden" id="product-id">
-                    <div class="input-group"><input type="text" id="product-name" placeholder="Nome do Produto" required></div>
-                    <div class="input-group"><input type="text" id="product-sku" placeholder="SKU (Código Único)" required></div>
-                    <div class="input-group"><input type="number" id="product-price" placeholder="Preço (ex: 49.90)" step="0.01" required></div>
-                    <div class="input-group"><input type="number" id="product-stock" placeholder="Quantidade em Estoque" required></div>
-                    <button type="submit" class="primary-btn">Salvar Produto</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    <div id="notification-container"></div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- ELEMENTOS GLOBAIS ---
-        let db;
-        let currentSale = { items: [], total: 0 };
-        let chartInstances = {};
-        const mainApp = document.getElementById('main-app');
-        const loginForm = document.getElementById('login-form');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- SELETORES GERAIS ---
         const loginScreen = document.getElementById('login-screen');
-        
-        const cartItemCount = document.getElementById('cart-item-count');
-        const customerModal = document.getElementById('customer-modal');
-        const productModal = document.getElementById('product-modal');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const notification = document.createElement('div');
+        notification.style.position = 'fixed';
+        notification.style.bottom = '20px';
+        notification.style.right = '20px';
+        notification.style.padding = '15px 25px';
+        notification.style.borderRadius = '5px';
+        notification.style.color = 'white';
+        notification.style.zIndex = '1000';
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s';
+        document.body.appendChild(notification);
 
-        Chart.defaults.color = '#b0c4de';
-        Chart.defaults.borderColor = '#2a3f50';
+        // --- ESTADO DA APLICAÇÃO ---
+        let clientes = [], produtos = [], vendas = [], contasAReceber = [];
+        let carrinhoVenda = [];
 
-        function showNotification(message, type = 'success', duration = 3000) {
-            const container = document.getElementById('notification-container');
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            const icon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
-            notification.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
-            container.appendChild(notification);
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => notification.remove(), 500);
-            }, duration);
-        }
-
-        function loadDatabase() {
-            const dbJSON = localStorage.getItem('flordeMariaDB');
-            db = dbJSON ? JSON.parse(dbJSON) : { products: [], customers: [], sales: [] };
-        }
-        function saveDatabase() {
-            localStorage.setItem('flordeMariaDB', JSON.stringify(db));
-        }
-        function renderAll() {
-            renderDashboard();
-            renderProductsTable();
-            renderCustomersTable();
-        }
-
-        function renderDashboard() {
-            const totalRevenue = db.sales
-                .filter(sale => sale.status === 'Pago')
-                .reduce((sum, sale) => sum + sale.total, 0);
-            const totalSales = db.sales.length;
-            const totalCustomers = db.customers.length;
-            const totalProducts = db.products.length;
-            document.getElementById('dashboard-cards').innerHTML = `
-                <div class="card revenue"><div class="icon-wrapper"><i class="fas fa-dollar-sign"></i></div><div class="card-info"><h3>R$ ${totalRevenue.toFixed(2)}</h3><p>Receita (Pago)</p></div></div>
-                <div class="card sales"><div class="icon-wrapper"><i class="fas fa-tags"></i></div><div class="card-info"><h3>${totalSales}</h3><p>Vendas Totais</p></div></div>
-                <div class="card customers"><div class="icon-wrapper"><i class="fas fa-users"></i></div><div class="card-info"><h3>${totalCustomers}</h3><p>Clientes</p></div></div>
-                <div class="card products"><div class="icon-wrapper"><i class="fas fa-tshirt"></i></div><div class="card-info"><h3>${totalProducts}</h3><p>Produtos</p></div></div>`;
-            
-            renderDashboardCharts();
-        }
-
-        function renderProductsTable() {
-            const tableBody = document.getElementById('products-table-body');
-            tableBody.innerHTML = '';
-            db.products.forEach(p => {
-                tableBody.innerHTML += `<tr>
-                    <td>${p.sku}</td><td>${p.name}</td><td>R$ ${p.price.toFixed(2)}</td><td>${p.stock}</td>
-                    <td class="actions">
-                        <i class="fas fa-edit" onclick="openEditModal('product', ${p.id})"></i>
-                        <i class="fas fa-trash" onclick="deleteEntity('products', ${p.id})"></i>
-                    </td></tr>`;
-            });
-        }
-        function renderCustomersTable() {
-            const tableBody = document.getElementById('customers-table-body');
-            tableBody.innerHTML = '';
-            db.customers.forEach(c => {
-                tableBody.innerHTML += `<tr>
-                    <td>${c.name}</td><td>${c.contact}</td><td>${c.since}</td>
-                    <td class="actions">
-                        <i class="fas fa-edit" onclick="openEditModal('customer', ${c.id})"></i>
-                        <i class="fas fa-trash" onclick="deleteEntity('customers', ${c.id})"></i>
-                    </td></tr>`;
-            });
-        }
-        
-        function updateCartIcon() {
-            const count = currentSale.items.length;
-            cartItemCount.innerText = count;
-            cartItemCount.classList.toggle('visible', count > 0);
-        }
-
-        function renderCurrentSaleCart() {
-            const cartContainer = document.getElementById('current-sale-cart');
-            const checkoutControls = document.getElementById('checkout-controls');
-
-            if (currentSale.items.length === 0) {
-                cartContainer.innerHTML = '<p style="text-align:center; padding: 20px 0;">Seu carrinho está vazio.</p>';
-                checkoutControls.style.display = 'none';
-                return;
-            }
-            let tableHTML = `
-                <table>
-                    <thead><tr><th>Produto</th><th>Qtd.</th><th>Preço Unit.</th><th>Subtotal</th><th>Ação</th></tr></thead>
-                    <tbody>`;
-            currentSale.total = 0;
-            currentSale.items.forEach(item => {
-                const product = db.products.find(p => p.id === item.productId);
-                const subtotal = item.quantity * product.price;
-                currentSale.total += subtotal;
-                tableHTML += `
-                    <tr>
-                        <td>${product.name}</td>
-                        <td>${item.quantity}</td>
-                        <td>R$ ${product.price.toFixed(2)}</td>
-                        <td>R$ ${subtotal.toFixed(2)}</td>
-                        <td><button type="button" class="danger-btn" onclick="removeFromCart(${product.id})">Remover</button></td>
-                    </tr>`;
-            });
-            tableHTML += `
-                    </tbody>
-                    <tfoot><tr><td colspan="3">TOTAL</td><td colspan="2">R$ ${currentSale.total.toFixed(2)}</td></tr></tfoot>
-                </table>`;
-            cartContainer.innerHTML = tableHTML;
-            checkoutControls.style.display = 'block';
-        }
-
-        document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const productSelect = document.getElementById('sale-product');
-            const quantityInput = document.getElementById('sale-quantity');
-            const productId = parseInt(productSelect.value);
-            const quantity = parseInt(quantityInput.value);
-
-            if (!productId) { 
-                showNotification('Por favor, selecione um produto.', 'error'); 
-                return; 
-            }
-
-            const product = db.products.find(p => p.id === productId);
-
-            // -----> INÍCIO DA CORREÇÃO <-----
-            // Adiciona uma verificação para garantir que o produto foi encontrado no banco de dados.
-            if (!product) {
-                showNotification('Erro: Produto não encontrado no sistema.', 'error');
-                return;
-            }
-            // -----> FIM DA CORREÇÃO <-----
-
-            const existingItem = currentSale.items.find(item => item.productId === productId);
-            const totalQuantity = (existingItem ? existingItem.quantity : 0) + quantity;
-
-            if (totalQuantity > product.stock) { 
-                showNotification('Quantidade solicitada maior que o estoque!', 'error'); 
-                return; 
-            }
-            
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                currentSale.items.push({ productId, quantity });
-            }
-            showNotification(`${product.name} adicionado ao carrinho.`, 'info');
-            updateCartIcon();
-            renderCurrentSaleCart();
-            productSelect.value = ""; // Reseta a seleção do produto
-            quantityInput.value = 1;
-            document.getElementById('add-to-cart-btn').disabled = true; // Desabilita o botão novamente
-        });
-        
-        window.removeFromCart = (productId) => {
-            currentSale.items = currentSale.items.filter(item => item.productId !== productId);
-            renderCurrentSaleCart();
-            updateCartIcon();
-        }
-
-        document.getElementById('checkout-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (currentSale.items.length === 0) { showNotification('O carrinho está vazio!', 'error'); return; }
-
-            currentSale.items.forEach(item => {
-                const product = db.products.find(p => p.id === item.productId);
-                if (product) product.stock -= item.quantity;
-            });
-
-            const saleRecord = {
-                id: Date.now(),
-                customerId: parseInt(document.getElementById('sale-customer').value),
-                items: currentSale.items.map(item => {
-                    const product = db.products.find(p => p.id === item.productId);
-                    return {...item, priceAtSale: product ? product.price : 0};
-                }),
-                total: currentSale.total,
-                paymentMethod: document.getElementById('sale-payment-method').value,
-                status: document.getElementById('sale-payment-method').value === 'Fiado' ? 'Pendente' : 'Pago',
-                date: new Date().toISOString()
-            };
-            db.sales.push(saleRecord);
-            saveDatabase();
-            showNotification('Venda registrada com sucesso!', 'success');
-            currentSale = { items: [], total: 0 };
-            updateCartIcon();
-            initializeSalePage();
-            renderAll();
-        });
-
-
-        function renderDebtsPage() {
-             const tableBody = document.getElementById('debts-table-body');
-            tableBody.innerHTML = '';
-            const pendingSales = db.sales.filter(s => s.status === 'Pendente');
-            if(pendingSales.length === 0){
-                tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma conta pendente.</td></tr>';
-                return;
-            }
-            pendingSales.forEach(sale => {
-                const customer = db.customers.find(c => c.id === sale.customerId) || { name: 'Consumidor Final' };
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${customer.name}</td>
-                        <td>${new Date(sale.date).toLocaleDateString('pt-BR')}</td>
-                        <td>R$ ${sale.total.toFixed(2)}</td>
-                        <td><span class="status pending">Pendente</span></td>
-                        <td><button class="primary-btn" onclick="markDebtAsPaid(${sale.id})">Marcar como Pago</button></td>
-                    </tr>`;
-            });
-        }
-        window.markDebtAsPaid = (saleId) => {
-            const sale = db.sales.find(s => s.id === saleId);
-            if(sale){
-                sale.status = 'Pago';
-                saveDatabase();
-                showNotification('Conta marcada como paga com sucesso!', 'success');
-                renderAll();
-                renderDebtsPage();
-            }
-        }
-        
-        function destroyCharts() {
-            Object.values(chartInstances).forEach(chart => {
-                if (chart) chart.destroy();
-            });
-            chartInstances = {};
-        }
-
-        function renderDashboardCharts() {
-             if (chartInstances.dashboardRevenue) chartInstances.dashboardRevenue.destroy();
-             if (chartInstances.dashboardTopProducts) chartInstances.dashboardTopProducts.destroy();
-             if (chartInstances.dashboardPayment) chartInstances.dashboardPayment.destroy();
-
-            const revenueData = {};
-            const last12Months = Array.from({length: 12}, (_, i) => {
-                const d = new Date();
-                d.setMonth(d.getMonth() - i);
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            }).reverse();
-            last12Months.forEach(month => revenueData[month] = 0);
-            db.sales.filter(s => s.status === 'Pago').forEach(sale => {
-                const saleMonth = sale.date.substring(0, 7);
-                if (revenueData[saleMonth] !== undefined) {
-                    revenueData[saleMonth] += sale.total;
-                }
-            });
-            chartInstances.dashboardRevenue = new Chart(document.getElementById('dashboard-revenue-chart'), {
-                type: 'bar', data: { labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })), datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
-
-            const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
-            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 5);
-            const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
-            const productQuantities = sortedProducts.map(([,qty]) => qty);
-            chartInstances.dashboardTopProducts = new Chart(document.getElementById('dashboard-top-products-chart'), {
-                type: 'bar', data: { labels: productLabels, datasets: [{ label: 'Quantidade Vendida', data: productQuantities, backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, indexAxis: 'y' }
-            });
-            
-            const paymentData = db.sales.reduce((acc, sale) => { acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + 1; return acc; }, {});
-            chartInstances.dashboardPayment = new Chart(document.getElementById('dashboard-payment-method-chart'), {
-                type: 'doughnut', data: { labels: Object.keys(paymentData), datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: 'top' } } }
-            });
-        }
-
-        function renderReportsPage() {
-            if (chartInstances.reportsRevenue) chartInstances.reportsRevenue.destroy();
-            if (chartInstances.reportsPayment) chartInstances.reportsPayment.destroy();
-            if (chartInstances.reportsTopProducts) chartInstances.reportsTopProducts.destroy();
-
-            const revenueData = {};
-            const last12Months = Array.from({length: 12}, (_, i) => {
-                const d = new Date(); d.setMonth(d.getMonth() - i);
-                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-            }).reverse();
-            last12Months.forEach(month => revenueData[month] = 0);
-            db.sales.filter(s => s.status === 'Pago').forEach(sale => {
-                const saleMonth = sale.date.substring(0, 7);
-                if (revenueData[saleMonth] !== undefined) revenueData[saleMonth] += sale.total;
-            });
-            chartInstances.reportsRevenue = new Chart(document.getElementById('reports-revenue-chart'), {
-                type: 'bar', data: { labels: last12Months.map(m => new Date(m+'-02').toLocaleString('pt-BR', { month: 'short', year: '2-digit' })), datasets: [{ label: 'Receita (R$)', data: Object.values(revenueData), backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
-
-            const paymentData = db.sales.reduce((acc, sale) => { acc[sale.paymentMethod] = (acc[sale.paymentMethod] || 0) + 1; return acc; }, {});
-            chartInstances.reportsPayment = new Chart(document.getElementById('reports-payment-method-chart'), {
-                type: 'doughnut', data: { labels: Object.keys(paymentData), datasets: [{ data: Object.values(paymentData), backgroundColor: ['#d81b60', '#10b981', '#f59e0b', '#4f46e5', '#ef4444'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { labels: { color: '#b0c4de' } } } }
-            });
-
-            const productSales = db.sales.flatMap(s => s.items).reduce((acc, item) => { acc[item.productId] = (acc[item.productId] || 0) + item.quantity; return acc; }, {});
-            const sortedProducts = Object.entries(productSales).sort(([,a],[,b]) => b-a).slice(0, 10);
-            const productLabels = sortedProducts.map(([id]) => (db.products.find(p => p.id == id) || {name: '?'}).name);
-            const productQuantities = sortedProducts.map(([,qty]) => qty);
-            chartInstances.reportsTopProducts = new Chart(document.getElementById('reports-top-products-chart'), {
-                type: 'bar', data: { labels: productLabels, datasets: [{ label: 'Quantidade Vendida', data: productQuantities, backgroundColor: 'rgba(216, 27, 96, 0.6)', borderColor: 'rgba(216, 27, 96, 1)', borderWidth: 1 }] }, options: { responsive: true, indexAxis: 'y' }
-            });
-        }
-
-
-        window.deleteEntity = (type, id) => {
-            if (confirm(`Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.`)) {
-                db[type] = db[type].filter(item => item.id !== id);
-                saveDatabase();
-                renderAll();
-                showNotification('Item excluído com sucesso.', 'success');
-            }
-        }
-        
-        const modals={customer:customerModal,product:productModal};
-        document.getElementById('add-customer-btn').onclick=()=>openEditModal('customer');
-        document.getElementById('add-product-btn').onclick=()=>openEditModal('product');
-        
-        window.openEditModal = (type, id = null) => {
-            const form = document.getElementById(`${type}-form`);
-            form.reset();
-            document.getElementById(`${type}-id`).value = '';
-            const modal = modals[type];
-            const title = document.getElementById(`${type}-modal-title`);
-            if (id) {
-                const item = db[type + 's'].find(i => i.id === id);
-                title.innerText = `Editar ${type === 'customer' ? 'Cliente' : 'Produto'}`;
-                document.getElementById(`${type}-id`).value = id;
-                Object.keys(item).forEach(key => {
-                    const input = form.querySelector(`#${type}-${key}`);
-                    if (input) input.value = item[key];
-                });
-            } else {
-                 title.innerText = `Novo ${type === 'customer' ? 'Cliente' : 'Produto'}`;
-            }
-            modal.style.display = 'block';
-        }
-        
-        document.querySelectorAll('.modal .close-btn').forEach(btn => {
-            btn.onclick = () => {
-                btn.closest('.modal').style.display = 'none';
-            };
-        });
-
-        window.onclick = e => {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
-            }
+        // --- FUNÇÕES DE DADOS (localStorage) ---
+        const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+        const loadData = (key) => JSON.parse(localStorage.getItem(key)) || [];
+        const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const formatDate = (dateString) => new Date(dateString + 'T00:00:00').toLocaleDateString('pt-BR');
+        const showNotification = (message, isError = false) => {
+            notification.textContent = message;
+            notification.style.backgroundColor = isError ? '#dc3545' : '#28a745';
+            notification.style.opacity = '1';
+            setTimeout(() => { notification.style.opacity = '0'; }, 3000);
         };
 
-        document.getElementById('customer-form').addEventListener('submit',function(e){
-            e.preventDefault();
-            const id = parseInt(document.getElementById('customer-id').value);
-            const customerData = { name: document.getElementById('customer-name').value, contact: document.getElementById('customer-contact').value };
-            if(id) {
-                const index = db.customers.findIndex(c => c.id === id);
-                db.customers[index] = { ...db.customers[index], ...customerData };
-                showNotification('Cliente atualizado com sucesso!', 'success');
-            } else {
-                customerData.id = Date.now();
-                customerData.since = new Date().toLocaleDateString('pt-BR');
-                db.customers.push(customerData);
-                showNotification('Cliente salvo com sucesso!', 'success');
+        // --- FUNÇÕES DE RENDERIZAÇÃO ---
+        const renderTable = (containerId, headers, data, renderRow) => {
+            const container = document.getElementById(containerId);
+            if (data.length === 0) {
+                container.innerHTML = '<p>Nenhum registro encontrado.</p>'; return;
             }
-            saveDatabase();renderAll();this.reset();modals.customer.style.display='none';
-        });
+            const table = document.createElement('table');
+            const thead = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>`;
+            const tbody = `<tbody>${data.map(renderRow).join('')}</tbody>`;
+            table.innerHTML = thead + tbody;
+            container.innerHTML = '';
+            container.appendChild(table);
+        };
 
-        document.getElementById('product-form').addEventListener('submit',function(e){
-            e.preventDefault();
-            const id = parseInt(document.getElementById('product-id').value);
-            const productData = { name: document.getElementById('product-name').value, sku: document.getElementById('product-sku').value, price: parseFloat(document.getElementById('product-price').value), stock: parseInt(document.getElementById('product-stock').value) };
-             if(id) {
-                const index = db.products.findIndex(p => p.id === id);
-                db.products[index] = { ...db.products[index], ...productData };
-                showNotification('Produto atualizado com sucesso!', 'success');
-            } else {
-                productData.id = Date.now();
-                db.products.push(productData);
-                showNotification('Produto salvo com sucesso!', 'success');
-            }
-            saveDatabase();renderAll();this.reset();modals.product.style.display='none';
-        });
+        const renderClientes = () => renderTable('tabela-clientes-container', ['Nome', 'Contato'], clientes, c => `<tr><td>${c.nome}</td><td>${c.contato || 'N/A'}</td></tr>`);
+        const renderProdutos = () => renderTable('tabela-produtos-container', ['Produto', 'Qtd. em Estoque', 'Preço'], produtos, p => `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>${formatCurrency(p.preco)}</td></tr>`);
+        const renderContasAReceber = () => {
+            const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Cliente não encontrado';
+            renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ação'], contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), conta => `
+                <tr>
+                    <td>${getNomeCliente(conta.clienteId)}</td>
+                    <td>${formatCurrency(conta.valor)}</td>
+                    <td>${formatDate(conta.dataVencimento)}</td>
+                    <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
+                    <td>${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : ''}</td>
+                </tr>
+            `);
+        };
 
-        const navLinks=document.querySelectorAll('.nav-link'),pages=document.querySelectorAll('.page-content'),menuToggle=document.querySelector('.menu-toggle'),sidebar=document.querySelector('.sidebar');
-        
-        function initializeSalePage() {
-            const productSelect = document.getElementById('sale-product');
-            const customerSelect = document.getElementById('sale-customer');
-            const addToCartBtn = document.getElementById('add-to-cart-btn');
-
-            productSelect.innerHTML = '<option value="">Selecione um produto...</option>';
-            db.products
-              .filter(p => p.stock > 0)
-              .forEach(p => { productSelect.innerHTML += `<option value="${p.id}">${p.name} (Estoque: ${p.stock})</option>`; });
-            
-            customerSelect.innerHTML = '<option value="0">Consumidor Final</option>';
-            db.customers.forEach(c => { customerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
-
-            // ----> INÍCIO DA MELHORIA <----
-            // Desabilita o botão 'Adicionar' por padrão
-            addToCartBtn.disabled = true;
-
-            // Adiciona um listener para habilitar o botão quando um produto for selecionado
-            productSelect.addEventListener('change', function() {
-                addToCartBtn.disabled = !this.value; // Desabilita se o valor for "", habilita caso contrário
+        // --- LÓGICA DA TELA DE VENDAS ---
+        const popularFormulariosVenda = () => {
+            const clienteSelect = document.getElementById('venda-cliente');
+            const produtoSelect = document.getElementById('venda-produto');
+            clienteSelect.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+            produtoSelect.innerHTML = '<option value="">Selecione...</option>' + produtos.filter(p => p.quantidade > 0).map(p => `<option value="${p.id}">${p.nome} (${p.quantidade} disp.)</option>`).join('');
+        };
+        const renderCarrinho = () => {
+            renderTable('venda-itens-container', ['Produto', 'Qtd', 'Subtotal', 'Ação'], carrinhoVenda, item => `
+                <tr>
+                    <td>${item.nome}</td>
+                    <td>${item.quantidade}</td>
+                    <td>${formatCurrency(item.subtotal)}</td>
+                    <td><button class="btn-action btn-delete" data-id="${item.produtoId}">Remover</button></td>
+                </tr>
+            `);
+            const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
+            document.getElementById('venda-total').textContent = formatCurrency(total);
+        };
+        const addItemAoCarrinho = () => {
+            const produtoId = document.getElementById('venda-produto').value;
+            const quantidade = parseInt(document.getElementById('venda-qtd').value);
+            if (!produtoId || quantidade <= 0) return;
+            const produto = produtos.find(p => p.id == produtoId);
+            if (quantidade > produto.quantidade) { showNotification('Quantidade indisponível em estoque!', true); return; }
+            const itemExistente = carrinhoVenda.find(item => item.produtoId == produtoId);
+            if (itemExistente) { itemExistente.quantidade += quantidade; itemExistente.subtotal = itemExistente.quantidade * produto.preco; }
+            else { carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: quantidade * produto.preco }); }
+            renderCarrinho();
+        };
+        const finalizarVenda = () => {
+            const clienteId = document.getElementById('venda-cliente').value;
+            if (!clienteId || carrinhoVenda.length === 0) { showNotification('Selecione um cliente e adicione itens!', true); return; }
+            const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
+            const novaVenda = { id: Date.now(), clienteId: parseInt(clienteId), itens: carrinhoVenda, total, metodoPagamento: document.getElementById('venda-pagamento').value, data: new Date().toISOString().split('T')[0] };
+            vendas.push(novaVenda);
+            carrinhoVenda.forEach(item => {
+                const produtoEstoque = produtos.find(p => p.id == item.produtoId);
+                produtoEstoque.quantidade -= item.quantidade;
             });
-            // ----> FIM DA MELHORIA <----
+            if (novaVenda.metodoPagamento === 'fiado' || novaVenda.metodoPagamento === 'parcelado') {
+                const parcelas = novaVenda.metodoPagamento === 'fiado' ? 1 : parseInt(document.getElementById('venda-parcelas').value);
+                const valorParcela = total / parcelas;
+                for (let i = 1; i <= parcelas; i++) {
+                    const dataVencimento = new Date();
+                    dataVencimento.setDate(dataVencimento.getDate() + (30 * i));
+                    contasAReceber.push({ id: Date.now() + i, vendaId: novaVenda.id, clienteId: novaVenda.clienteId, valor: valorParcela, dataVencimento: dataVencimento.toISOString().split('T')[0], status: 'Pendente' });
+                }
+            }
+            saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber);
+            showNotification('Venda realizada com sucesso!');
+            carrinhoVenda = []; renderCarrinho(); document.getElementById('venda-itens-container').innerHTML = ''; popularFormulariosVenda();
+        };
 
-            renderCurrentSaleCart();
-        }
-        
-        function showMainApp() {
-            loadDatabase();
-            renderAll();
-            loginScreen.style.opacity = '0';
-            setTimeout(() => {
-                loginScreen.style.display = 'none';
-                mainApp.style.display = 'grid';
-            }, 500);
-        }
-        
-        loginForm.addEventListener('submit', e => {
-            e.preventDefault();
-            sessionStorage.setItem('flordeMariaLoggedIn', 'true');
-            showMainApp();
-            showNotification('Login bem-sucedido!', 'success');
-        });
-        
-        document.getElementById('logout-btn').addEventListener('click', e => {
-            e.preventDefault();
-            sessionStorage.removeItem('flordeMariaLoggedIn');
-            destroyCharts();
-            mainApp.style.display = 'none';
-            loginScreen.style.display = 'flex';
-            setTimeout(() => loginScreen.style.opacity = '1', 50);
-        });
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                if(link.id === 'logout-btn') return;
-                const targetId = link.getAttribute('data-target');
-                
-                if(targetId === 'sales') initializeSalePage();
-                if(targetId === 'debts') renderDebtsPage();
-                if(targetId === 'reports') renderReportsPage();
-                if(targetId === 'dashboard') renderDashboardCharts();
-                
-                navLinks.forEach(n => n.classList.remove('active'));
-                link.classList.add('active');
-                pages.forEach(p => p.classList.toggle('active', p.id === targetId));
-                if(window.innerWidth <= 768) sidebar.classList.remove('show');
-            })
-        });
-        
-        menuToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
+        // --- LÓGICA DE RELATÓRIOS ---
+        const gerarRelatorioVendas = () => {
+            const inicio = document.getElementById('relatorio-inicio').value;
+            const fim = document.getElementById('relatorio-fim').value;
+            const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
+            const vendasFiltradas = vendas.filter(v => {
+                const vendaData = new Date(v.data);
+                const inicioData = inicio ? new Date(inicio + 'T00:00:00') : null;
+                const fimData = fim ? new Date(fim + 'T23:59:59') : null;
+                if (inicioData && vendaData < inicioData) return false;
+                if (fimData && vendaData > fimData) return false;
+                return true;
+            });
+            const container = document.getElementById('relatorio-container');
+            if(vendasFiltradas.length === 0) { container.innerHTML = '<div class="card"><p>Nenhuma venda encontrada no período.</p></div>'; return;}
+            const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
+            let relatorioHTML = `<div class="card"><h2>Relatório do Período</h2><p><strong>Total Vendido:</strong> ${formatCurrency(totalVendido)}</p><p><strong>Número de Vendas:</strong> ${vendasFiltradas.length}</p></div>`;
+            relatorioHTML += `<div class="card mt-3"><h2>Detalhes das Vendas</h2>` + `<table><thead><tr><th>Data</th><th>Cliente</th><th>Total</th><th>Itens</th></tr></thead><tbody>` +
+                vendasFiltradas.map(v => `<tr>
+                    <td>${formatDate(v.data)}</td>
+                    <td>${getNomeCliente(v.clienteId)}</td>
+                    <td>${formatCurrency(v.total)}</td>
+                    <td>${v.itens.map(i => `${i.quantidade}x ${i.nome}`).join('<br>')}</td>
+                </tr>`).join('') + `</tbody></table></div>`;
+            container.innerHTML = relatorioHTML;
+        };
 
-        if (sessionStorage.getItem('flordeMariaLoggedIn') === 'true') {
-            showMainApp();
-        }
+        // --- INICIALIZAÇÃO E EVENTOS ---
+        const initDashboard = () => {
+            clientes = loadData('clientes'); produtos = loadData('produtos'); vendas = loadData('vendas'); contasAReceber = loadData('contasAReceber');
+            renderClientes(); renderProdutos(); renderContasAReceber(); popularFormulariosVenda();
+        };
 
-        if (!localStorage.getItem('flordeMariaDB')) {
-            const sampleDB = {
-                products: [
-                    {id: 1, name: "Vestido Floral Curto", sku: "VFC-001", price: 189.90, stock: 25},
-                    {id: 2, name: "Blusa de Seda Branca", sku: "BSB-002", price: 119.90, stock: 40},
-                    {id: 3, name: "Saia Midi Plissada", sku: "SMP-003", price: 159.99, stock: 30},
-                    {id: 4, name: "Calça Pantalona Preta", sku: "CPP-004", price: 210.00, stock: 20}
-                ],
-                customers: [
-                    {id: 1, name: "Ana Carolina", contact: "11987654321", since: "01/01/2024"},
-                    {id: 2, name: "Beatriz Almeida", contact: "21912345678", since: "15/02/2024"}
-                ],
-                sales: []
-            };
-            localStorage.setItem('flordeMariaDB', JSON.stringify(sampleDB));
-        }
+        loginForm.addEventListener('submit', e => { e.preventDefault(); if(document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') { localStorage.setItem('isLoggedIn', 'true'); loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); initDashboard(); } else { document.getElementById('error-message').textContent = 'Usuário ou senha inválidos.'; document.querySelector('.login-box').classList.add('shake-animation'); setTimeout(() => document.querySelector('.login-box').classList.remove('shake-animation'), 500); } });
+        logoutBtn.addEventListener('click', () => { localStorage.removeItem('isLoggedIn'); dashboardScreen.classList.add('hidden'); loginScreen.classList.remove('hidden'); });
+        navLinks.forEach(link => link.addEventListener('click', e => { e.preventDefault(); const targetId = link.getAttribute('data-target'); navLinks.forEach(l => l.classList.remove('active')); link.classList.add('active'); contentSections.forEach(s => s.classList.toggle('active', s.id === targetId)); if (targetId === 'vendas-view') popularFormulariosVenda(); }));
+        document.getElementById('form-add-cliente').addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); showNotification('Cliente salvo!'); e.target.reset(); });
+        document.getElementById('form-add-produto').addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); showNotification('Produto salvo!'); e.target.reset(); });
+        document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
+        document.getElementById('venda-itens-container').addEventListener('click', e => { if(e.target.classList.contains('btn-delete')) { const id = e.target.getAttribute('data-id'); carrinhoVenda = carrinhoVenda.filter(item => item.produtoId != id); renderCarrinho(); } });
+        document.getElementById('venda-pagamento').addEventListener('change', e => document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado'));
+        document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
+        document.getElementById('tabela-contas-container').addEventListener('click', e => { if(e.target.classList.contains('btn-paid')) { const id = parseInt(e.target.getAttribute('data-id')); const conta = contasAReceber.find(c => c.id === id); conta.status = 'Pago'; saveData('contasAReceber', contasAReceber); renderContasAReceber(); } });
+        document.getElementById('btn-gerar-relatorio').addEventListener('click', gerarRelatorioVendas);
+
+        if (localStorage.getItem('isLoggedIn') === 'true') { loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); initDashboard(); }
     });
     </script>
 </body>
