@@ -531,7 +531,7 @@
                     <h3>Pro</h3>
                     <p>Para professores que querem produtividade máxima.</p>
                     <div class="price">R$19 <span>,90 / mês</span></div>
-                     <ul>
+                    <ul>
                         <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Gerador de Plano de Aula</li>
                         <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Criação de planos **ilimitados**</li>
                         <li><svg class="check"><use xlink:href="#icon-check"></use></svg>Acesso a **todos os modelos** semanais</li>
@@ -606,19 +606,19 @@
     <script>
     // --- BANCO DE DADOS (Simulado) ---
     const usuariosAutorizados = [
-        { usuario: "prof.teste", senha: "222", plano: "pro" }, 
+        { usuario: "prof.teste", senha: "222", plano: "pro" },    
         { usuario: "marcia.lopes", senha: "proativa", plano: "pro" },
-        { usuario: "visitante", senha: "12345", plano: "gratuito" } 
+        { usuario: "visitante", senha: "12345", plano: "gratuito" }    
     ];
     
-    const todasAsAtividades = [ 
-        { id: 1, categoria: "Interpessoal", cor: "#3b82f6", titulo: "Duas Verdades, Uma Mentira", desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", duracao: "10 min", bncc: ["EI03EO04", "EI03EF01"], objetivos: [ "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.", "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.", "Desenvolver a escuta atenta e o respeito pela vez de falar do colega." ], roteiro: { acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.", desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.", expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.", encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros." }, dica_pedagogica: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo." }, 
-        { id: 2, categoria: "Português", cor: "#ef4444", titulo: "Criador de Histórias", desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", duracao: "20 min", bncc: ["EF15LP05", "EF02LP26"], objetivos: [ "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.", "Desenvolver a criatividade e a imaginação.", "Ampliar o vocabulário e a organização do pensamento lógico." ], roteiro: { acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.", desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.", expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.", encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala." }, dica_pedagogica: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!" }, 
-        { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01", "EF01MA08"], objetivos: [ "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.", "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.", "Desenvolver o raciocínio lógico e estratégias de resolução de problemas." ], roteiro: { acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.", desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.", expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.", encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação." }, dica_pedagogica: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!" }, 
-        { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", duracao: "25 min", bncc: ["EF08CI01", "EF69LP13"], objetivos: [ "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.", "Exercitar a escuta ativa e o respeito a opiniões divergentes.", "Diferenciar fatos de opiniões em um texto ou discussão." ], roteiro: { acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).", desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.", expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.", encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico." }, dica_pedagogica: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate." }, 
-        { id: 5, free: true, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08", "EF01LP02"], objetivos: [ "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.", "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.", "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas." ], roteiro: { acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).", desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.", expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.", encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'." }, dica_pedagogica: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes." }, 
-        { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04", "EF15AR05"], objetivos: [ "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.", "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.", "Aprimorar a coordenação motora fina e a percepção tátil." ], roteiro: { acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.", desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.", expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.", encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais." }, dica_pedagogica: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo." }, 
-        { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09", "EF01GE08"], objetivos: [ "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.", "Desenvolver noções de lateralidade, localização e representação espacial.", "Compreender a função de um mapa como forma de representação de um lugar." ], roteiro: { acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.", desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).", expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.", encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido." }, dica_pedagogica: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente." }, 
+    const todasAsAtividades = [    
+        { id: 1, categoria: "Interpessoal", cor: "#3b82f6", titulo: "Duas Verdades, Uma Mentira", desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", duracao: "10 min", bncc: ["EI03EO04", "EI03EF01"], objetivos: [ "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.", "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.", "Desenvolver a escuta atenta e o respeito pela vez de falar do colega." ], roteiro: { acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.", desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.", expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.", encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros." }, dica_pedagogica: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo." },    
+        { id: 2, categoria: "Português", cor: "#ef4444", titulo: "Criador de Histórias", desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", duracao: "20 min", bncc: ["EF15LP05", "EF02LP26"], objetivos: [ "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.", "Desenvolver a criatividade e a imaginação.", "Ampliar o vocabulário e a organização do pensamento lógico." ], roteiro: { acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.", desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.", expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.", encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala." }, dica_pedagogica: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!" },    
+        { id: 3, categoria: "Matemática", cor: "#f59e0b", titulo: "O Problema do Dia", desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", duracao: "10 min", bncc: ["EF01MA01", "EF01MA08"], objetivos: [ "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.", "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.", "Desenvolver o raciocínio lógico e estratégias de resolução de problemas." ], roteiro: { acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.", desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.", expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.", encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação." }, dica_pedagogica: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!" },    
+        { id: 4, categoria: "Ciências", cor: "#10b981", titulo: "Mini-Debate Científico", desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", duracao: "25 min", bncc: ["EF08CI01", "EF69LP13"], objetivos: [ "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.", "Exercitar a escuta ativa e o respeito a opiniões divergentes.", "Diferenciar fatos de opiniões em um texto ou discussão." ], roteiro: { acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).", desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.", expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.", encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico." }, dica_pedagogica: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate." },    
+        { id: 5, free: true, categoria: "Alfabetização", cor: "#8b5cf6", titulo: "Detetive de Sílabas", desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", duracao: "15 min", bncc: ["EF01LP08", "EF01LP02"], objetivos: [ "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.", "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.", "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas." ], roteiro: { acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).", desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.", expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.", encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'." }, dica_pedagogica: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes." },    
+        { id: 6, categoria: "Artes", cor: "#db2777", titulo: "Escultura com Massinha", desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", duracao: "25 min", bncc: ["EF15AR04", "EF15AR05"], objetivos: [ "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.", "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.", "Aprimorar a coordenação motora fina e a percepção tátil." ], roteiro: { acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.", desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.", expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.", encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais." }, dica_pedagogica: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo." },    
+        { id: 7, categoria: "Geografia", cor: "#475569", titulo: "Mapa da Sala de Aula", desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", duracao: "30 min", bncc: ["EF01GE09", "EF01GE08"], objetivos: [ "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.", "Desenvolver noções de lateralidade, localização e representação espacial.", "Compreender a função de um mapa como forma de representação de um lugar." ], roteiro: { acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.", desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).", expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.", encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido." }, dica_pedagogica: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente." },    
         { id: 8, categoria: "História", cor: "#d97706", titulo: "Linha do Tempo Pessoal", desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", duracao: "20 min", bncc: ["EF01HI01", "EF01HI04"], objetivos: [ "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.", "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.", "Valorizar sua própria história e a de seus familiares." ], roteiro: { acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.", desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.", expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).", encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'." }, dica_pedagogica: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade." },
         // Novas Atividades Adicionadas
         { id: 9, categoria: "Língua Portuguesa", cor: "#a21caf", titulo: "Caça-Palavras Temático", desc: "Estimula a leitura, o reconhecimento visual de palavras e a ampliação do vocabulário dentro de um tema específico.", duracao: "15 min", bncc: ["EF01LP09", "EF02LP07"], objetivos: [ "Localizar e identificar palavras em diferentes gêneros textuais (Caça-Palavras).", "Ampliar o vocabulário e o reconhecimento de grafemas.", "Desenvolver a atenção e a concentração." ], roteiro: { acolhida: "Apresente o tema do caça-palavras (ex: 'Animais da Floresta'). Pergunte aos alunos quais animais eles conhecem e escreva os nomes no quadro.", desenvolvimento: "Entregue a folha do caça-palavras. Peça para que leiam as palavras da lista e as encontrem na grade de letras. Eles podem usar lápis de cor para cada palavra.", expansao: "Após terminarem, peça para que escolham 2 ou 3 palavras que encontraram e formem frases com elas.", encerramento: "Corrija o caça-palavras coletivamente, incentivando a participação de todos." }, dica_pedagogica: "Para tornar a atividade mais interativa, crie um 'Caça-Palavras Gigante' no chão da sala com fita crepe e cartões de letras. As crianças param e pulam sobre as letras para formar as palavras." },
@@ -627,11 +627,11 @@
         { id: 12, categoria: "Música", cor: "#d946ef", titulo: "Bandinha Rítmica da Sala", desc: "Explora a musicalidade, ritmo e trabalho em equipe através da criação de uma 'banda' com instrumentos improvisados.", duracao: "20 min", bncc: ["EI03TS03", "EF15AR17"], objetivos: [ "Experimentar e apreciar diferentes formas de expressão musical.", "Reconhecer e reproduzir padrões rítmicos simples.", "Desenvolver a coordenação motora e o senso de coletividade." ], roteiro: { acolhida: "Apresente diferentes sons (bater palmas, estalar os dedos, bater o pé no chão). Pergunte às crianças que outros 'instrumentos' podemos criar com objetos da sala.", desenvolvimento: "Distribua materiais como potes vazios, colheres de pau, chocalhos feitos com garrafas PET e grãos, panelas, etc. Dê um tempo para exploração livre dos sons.", expansao: "Ensine um ritmo simples e peça para que todos tentem reproduzir juntos. Depois, divida a turma em 'seções' (ex: 'percussão com potes', 'chocalhos') e crie uma pequena melodia rítmica em conjunto.", encerramento: "Apresente a 'Bandinha Rítmica da Sala' para outras turmas ou para os pais em um pequeno evento. Celebre o talento musical de todos!" }, dica_pedagogica: "Utilize músicas infantis conhecidas e peça para as crianças criarem os 'acompanhamentos rítmicos'. Grave a performance da bandinha para que as crianças possam se ver e ouvir." }
     ];
 
-    const planosSemanaisProntos = [ 
-        { id: "semanal-infantil-bebes-01", titulo: "Texturas e Sensações", anoEscolar: "Ed. Infantil (Bebês 0-1,6a)", descricao: "Uma semana focada na exploração tátil e sensorial, fundamental para o desenvolvimento dos bebês, com atividades seguras e estimulantes.", objetivosGerais: ["Ampliar o repertório sensorial.", "Desenvolver a coordenação motora.", "Estimular a curiosidade através da exploração de diferentes materiais."], planoDiario: [ { dia: "Segunda-feira", foco: "Mãos e Pés", atividades: [{ type: 'custom', titulo: 'Caminho de Sensações', desc: 'Criar um tapete no chão com diferentes texturas (algodão, E.V.A., plástico bolha, grama sintética) para os bebês engatinharem ou engatinharem sobre ele.' }] }, { dia: "Terça-feira", foco: "Natureza", atividades: [{ type: 'custom', titulo: 'Cesto de Tesouros da Natureza', desc: 'Oferecer um cesto com folhas secas, pinhas, galhos lisos (higienizados e seguros) para exploração livre.' }] }, { dia: "Quarta-feira", foco: "Gelado e Quente", atividades: [{ type: 'custom', titulo: 'Pintura com Gelo Colorido', desc: 'Congelar água com corante alimentício em formas de picolé. Oferecer para que pintem em uma cartolina grande.' }] }, { dia: "Quinta-feira", foco: "Comestível", atividades: [{ type: 'custom', titulo: 'Exploração com Gelatina', desc: 'Preparar uma grande bacia de gelatina (sem açúcar) para que os bebês possam tocar, sentir a textura e experimentar com segurança.' }] }, { dia: "Sexta-feira", foco: "Macio e Fofo", atividades: [{ type: 'custom', titulo: 'Guerra de Pompons', desc: 'Em um ambiente seguro, espalhar pompons de lã coloridos de vários tamanhos para que os bebês possam pegar, sentir e brincar.' }] }, ] }, 
-        { id: "semanal-infantil-pequenos-01", titulo: "O Mundo dos Animais", anoEscolar: "Ed. Infantil (Crianças 1,7-3,11a)", descricao: "Uma imersão no reino animal, explorando sons, movimentos e habitats de diferentes bichos, promovendo a linguagem e a expressão corporal.", objetivosGerais: ["Imitar sons e movimentos de animais.", "Ampliar o vocabulário com nomes de animais.", "Desenvolver o respeito pela natureza e pelos seres vivos."], planoDiario: [ { dia: "Segunda-feira", foco: "Animais da Fazenda", atividades: [{ type: 'custom', titulo: 'Sons da Fazendinha', desc: 'Cantar músicas como "Seu Lobato" e imitar os sons dos animais. Usar fantoches ou miniaturas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando Ovelhinhas'}] }, { dia: "Terça-feira", foco: "Animais da Selva", atividades: [{ type: 'custom', titulo: 'Circuito Motor da Selva', desc: 'Criar um percurso com obstáculos: "pular como o macaco", "rastejar como a cobra", "andar pesado como o elefante".' }] }, { dia: "Quarta-feira", foco: "Animais Aquáticos", atividades: [{ type: 'custom', titulo: 'Pintura com as Mãos: Polvo', desc: 'Pintar a palma da mão da criança com tinta guache e carimbar no papel. Os dedos formam os tentáculos do polvo.' }, { type: 'custom', titulo: 'História: O Peixinho Dourado' }] }, { dia: "Quinta-feira", foco: "Insetos e Bichos de Jardim", atividades: [{ type: 'custom', titulo: 'Observação com Lupa', desc: 'Levar as crianças ao jardim para procurar formigas, joaninhas e outros pequenos seres com lupas.' }] }, { dia: "Sexta-feira", foco: "Festa dos Animais", atividades: [{ type: 'custom', titulo: 'Baile à Fantasia Animal', desc: 'Confeccionar máscaras de animais com pratos de papel e realizar um baile onde cada um imita o seu bicho.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'Criando a História da nossa Festa' }] }, ] }, 
-        { id: "semanal-infantil-01", titulo: "Explorando os Cinco Sentidos", anoEscolar: "Ed. Infantil (Crianças 4-5,11a)", descricao: "Uma semana de descobertas sensoriais para explorar o mundo através da visão, audição, olfato, paladar e tato de forma lúdica e interativa.", objetivosGerais: ["Identificar e nomear os cinco sentidos.", "Desenvolver a percepção sensorial através de atividades práticas.", "Estimular a curiosidade e a capacidade de observação e descrição."], planoDiario: [ { dia: "Segunda-feira", foco: "Visão", atividades: [ { type: 'custom', titulo: 'Roda de Conversa: O que vemos?', desc: 'Apresentar o tema da semana. Perguntar às crianças o que elas conseguem ver na sala, pela janela, etc. Explorar cores e formas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando o que Vemos' }, { type: 'custom', titulo: 'Caça às Cores', desc: 'Pedir que encontrem objetos de uma cor específica (vermelho, azul, etc.) na sala de aula.' } ] }, { dia: "Terça-feira", foco: "Audição", atividades: [ { type: 'custom', titulo: 'Sons Misteriosos', desc: 'Produzir diferentes sons atrás de um pano (sino, chocalho, palmas, papel amassando) e pedir que adivinhem o que é.' }, { type: 'custom', titulo: 'Estátua Musical', desc: 'Dançar livremente com uma música e ficar imóvel quando ela para. Trabalha a atenção auditiva.' } ] }, { dia: "Quarta-feira", foco: "Tato", atividades: [ { type: 'custom', titulo: 'Caixa Surpresa do Tato', desc: 'Colocar diferentes objetos (algodão, lixa, esponja, folha seca) em uma caixa e pedir que as crianças, de olhos vendados, descrevam a textura.' }, { type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando a Sala com as Mãos' } ] }, { dia: "Quinta-feira", foco: "Olfato e Paladar", atividades: [ { type: 'custom', titulo: 'Cheirinhos da Natureza', desc: 'Trazer potinhos com diferentes aromas (café, cravo, hortelã, casca de laranja) para que sintam e tentem identificar.' }, { type: 'custom', titulo: 'Degustação às Cegas', desc: 'Oferecer pequenos pedaços de frutas (banana, maçã, laranja) para que provem de olhos vendados e adivinhem o que é.' } ] }, { dia: "Sexta-feira", foco: "Integração dos Sentidos", atividades: [ { type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História Sensorial' }, { type: 'custom', titulo: 'Circuito Sensorial', desc: 'Montar um caminho no chão com diferentes texturas para andar descalço (tapetes, grama sintética, plástico bolha) enquanto ouvem uma música relaxante.' } ] } ] }, 
-        { id: "semanal-fundamental-01", titulo: "Semana da Consciência Fonológica", anoEscolar: "1º Ano - Fundamental", descricao: "Uma semana intensiva e divertida focada no desenvolvimento das habilidades de consciência fonológica, essenciais para o processo de alfabetização.", objetivosGerais: ["Desenvolver a consciência de sílabas, rimas e aliterações.", "Segmentar palavras em sílabas oralmente.", "Associar fonemas a grafemas em atividades lúdicas."], planoDiario: [ { dia: "Segunda-feira", foco: "Rimas", atividades: [ { type: 'catalog', id: 1, tituloPersonalizado: 'Apresentação com Rimas' }, { type: 'custom', titulo: 'Bingo de Rimas', desc: 'A professora fala uma palavra (ex: PÃO) e os alunos marcam na cartela uma figura que rime (ex: MÃO).' } ] }, { dia: "Terça-feira", foco: "Sílabas", atividades: [ { type: 'catalog', id: 5 }, { type: 'custom', titulo: 'Quantas Sílabas Tem?', desc: 'Mostrar figuras e pedir que batam palmas para cada sílaba, registrando o número no quadro.' } ] }, { dia: "Quarta-feira", foco: "Aliteração (Som Inicial)", atividades: [ { type: 'custom', titulo: 'O Barco Carregado de...', desc: 'Iniciar a brincadeira: "O barco veio carregado de coisas com a letra B...". As crianças devem falar palavras que comecem com o som /b/.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'História com Aliteração' } ] }, { dia: "Quinta-feira", foco: "Formação de Palavras", atividades: [ { type: 'custom', titulo: 'Sopa de Letrinhas', desc: 'Entregar um prato com letras móveis e pedir que formem palavras que a professora ditar ou palavras que conhecem.' } ] }, { dia: "Sexta-feira", foco: "Revisão Lúdica", atividades: [ { type: 'catalog', id: 8, tituloPersonalizado: 'A Linha do Tempo dos Sons' }, { type: 'custom', titulo: 'Gincana Fonológica', desc: 'Dividir a turma em equipes e realizar desafios rápidos envolvendo rimas, sílabas e aliterações.' } ] } ] }, 
+    const planosSemanaisProntos = [    
+        { id: "semanal-infantil-bebes-01", titulo: "Texturas e Sensações", anoEscolar: "Ed. Infantil (Bebês 0-1,6a)", descricao: "Uma semana focada na exploração tátil e sensorial, fundamental para o desenvolvimento dos bebês, com atividades seguras e estimulantes.", objetivosGerais: ["Ampliar o repertório sensorial.", "Desenvolver a coordenação motora.", "Estimular a curiosidade através da exploração de diferentes materiais."], planoDiario: [ { dia: "Segunda-feira", foco: "Mãos e Pés", atividades: [{ type: 'custom', titulo: 'Caminho de Sensações', desc: 'Criar um tapete no chão com diferentes texturas (algodão, E.V.A., plástico bolha, grama sintética) para os bebês engatinharem ou engatinharem sobre ele.' }] }, { dia: "Terça-feira", foco: "Natureza", atividades: [{ type: 'custom', titulo: 'Cesto de Tesouros da Natureza', desc: 'Oferecer um cesto com folhas secas, pinhas, galhos lisos (higienizados e seguros) para exploração livre.' }] }, { dia: "Quarta-feira", foco: "Gelado e Quente", atividades: [{ type: 'custom', titulo: 'Pintura com Gelo Colorido', desc: 'Congelar água com corante alimentício em formas de picolé. Oferecer para que pintem em uma cartolina grande.' }] }, { dia: "Quinta-feira", foco: "Comestível", atividades: [{ type: 'custom', titulo: 'Exploração com Gelatina', desc: 'Preparar uma grande bacia de gelatina (sem açúcar) para que os bebês possam tocar, sentir a textura e experimentar com segurança.' }] }, { dia: "Sexta-feira", foco: "Macio e Fofo", atividades: [{ type: 'custom', titulo: 'Guerra de Pompons', desc: 'Em um ambiente seguro, espalhar pompons de lã coloridos de vários tamanhos para que os bebês possam pegar, sentir e brincar.' }] }, ] },    
+        { id: "semanal-infantil-pequenos-01", titulo: "O Mundo dos Animais", anoEscolar: "Ed. Infantil (Crianças 1,7-3,11a)", descricao: "Uma imersão no reino animal, explorando sons, movimentos e habitats de diferentes bichos, promovendo a linguagem e a expressão corporal.", objetivosGerais: ["Imitar sons e movimentos de animais.", "Ampliar o vocabulário com nomes de animais.", "Desenvolver o respeito pela natureza e pelos seres vivos."], planoDiario: [ { dia: "Segunda-feira", foco: "Animais da Fazenda", atividades: [{ type: 'custom', titulo: 'Sons da Fazendinha', desc: 'Cantar músicas como "Seu Lobato" e imitar os sons dos animais. Usar fantoches ou miniaturas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando Ovelhinhas'}] }, { dia: "Terça-feira", foco: "Animais da Selva", atividades: [{ type: 'custom', titulo: 'Circuito Motor da Selva', desc: 'Criar um percurso com obstáculos: "pular como o macaco", "rastejar como a cobra", "andar pesado como o elefante".' }] }, { dia: "Quarta-feira", foco: "Animais Aquáticos", atividades: [{ type: 'custom', titulo: 'Pintura com as Mãos: Polvo', desc: 'Pintar a palma da mão da criança com tinta guache e carimbar no papel. Os dedos formam os tentáculos do polvo.' }, { type: 'custom', titulo: 'História: O Peixinho Dourado' }] }, { dia: "Quinta-feira", foco: "Insetos e Bichos de Jardim", atividades: [{ type: 'custom', titulo: 'Observação com Lupa', desc: 'Levar as crianças ao jardim para procurar formigas, joaninhas e outros pequenos seres com lupas.' }] }, { dia: "Sexta-feira", foco: "Festa dos Animais", atividades: [{ type: 'custom', titulo: 'Baile à Fantasia Animal', desc: 'Confeccionar máscaras de animais com pratos de papel e realizar um baile onde cada uno imita o seu bicho.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'Criando a História da nossa Festa' }] }, ] },    
+        { id: "semanal-infantil-01", titulo: "Explorando os Cinco Sentidos", anoEscolar: "Ed. Infantil (Crianças 4-5,11a)", descricao: "Uma semana de descobertas sensoriais para explorar o mundo através da visão, audição, olfato, paladar e tato de forma lúdica e interativa.", objetivosGerais: ["Identificar e nomear os cinco sentidos.", "Desenvolver a percepção sensorial através de atividades práticas.", "Estimular a curiosidade e a capacidade de observação e descrição."], planoDiario: [ { dia: "Segunda-feira", foco: "Visão", atividades: [ { type: 'custom', titulo: 'Roda de Conversa: O que vemos?', desc: 'Apresentar o tema da semana. Perguntar às crianças o que elas conseguem ver na sala, pela janela, etc. Explorar cores e formas.' }, { type: 'catalog', id: 6, tituloPersonalizado: 'Modelando o que Vemos' }, { type: 'custom', titulo: 'Caça às Cores', desc: 'Pedir que encontrem objetos de uma cor específica (vermelho, azul, etc.) na sala de aula.' } ] }, { dia: "Terça-feira", foco: "Audição", atividades: [ { type: 'custom', titulo: 'Sons Misteriosos', desc: 'Produzir diferentes sons atrás de um pano (sino, chocalho, palmas, papel amassando) e pedir que adivinhem o que é.' }, { type: 'custom', titulo: 'Estátua Musical', desc: 'Dançar livremente com uma música e ficar imóvel quando ela para. Trabalha a atenção auditiva.' } ] }, { dia: "Quarta-feira", foco: "Tato", atividades: [ { type: 'custom', titulo: 'Caixa Surpresa do Tato', desc: 'Colocar diferentes objetos (algodão, lixa, esponja, folha seca) em uma caixa e pedir que as crianças, de olhos vendados, descrevam a textura.' }, { type: 'catalog', id: 7, tituloPersonalizado: 'Mapeando a Sala com as Mãos' } ] }, { dia: "Quinta-feira", foco: "Olfato e Paladar", atividades: [ { type: 'custom', titulo: 'Cheirinhos da Natureza', desc: 'Trazer potinhos com diferentes aromas (café, cravo, hortelã, casca de laranja) para que sintam e tentem identificar.' }, { type: 'custom', titulo: 'Degustação às Cegas', desc: 'Oferecer pequenos pedaços de frutas (banana, maçã, laranja) para que provem de olhos vendados e adivinhem o que é.' } ] }, { dia: "Sexta-feira", foco: "Integração dos Sentidos", atividades: [ { type: 'catalog', id: 2, tituloPersonalizado: 'Criando uma História Sensorial' }, { type: 'custom', titulo: 'Circuito Sensorial', desc: 'Montar um caminho no chão com diferentes texturas para andar descalço (tapetes, grama sintética, plástico bolha) enquanto ouvem uma música relaxante.' } ] } ] },    
+        { id: "semanal-fundamental-01", titulo: "Semana da Consciência Fonológica", anoEscolar: "1º Ano - Fundamental", descricao: "Uma semana intensiva e divertida focada no desenvolvimento das habilidades de consciência fonológica, essenciais para o processo de alfabetização.", objetivosGerais: ["Desenvolver a consciência de sílabas, rimas e aliterações.", "Segmentar palavras em sílabas oralmente.", "Associar fonemas a grafemas em atividades lúdicas."], planoDiario: [ { dia: "Segunda-feira", foco: "Rimas", atividades: [ { type: 'catalog', id: 1, tituloPersonalizado: 'Apresentação com Rimas' }, { type: 'custom', titulo: 'Bingo de Rimas', desc: 'A professora fala uma palavra (ex: PÃO) e os alunos marcam na cartela uma figura que rime (ex: MÃO).' } ] }, { dia: "Terça-feira", foco: "Sílabas", atividades: [ { type: 'catalog', id: 5 }, { type: 'custom', titulo: 'Quantas Sílabas Tem?', desc: 'Mostrar figuras e pedir que batam palmas para cada sílaba, registrando o número no quadro.' } ] }, { dia: "Quarta-feira", foco: "Aliteração (Som Inicial)", atividades: [ { type: 'custom', titulo: 'O Barco Carregado de...', desc: 'Iniciar a brincadeira: "O barco veio carregado de coisas com a letra B...". As crianças devem falar palavras que comecem com o som /b/.' }, { type: 'catalog', id: 2, tituloPersonalizado: 'História com Aliteração' } ] }, { dia: "Quinta-feira", foco: "Formação de Palavras", atividades: [ { type: 'custom', titulo: 'Sopa de Letrinhas', desc: 'Entregar um prato com letras móveis e pedir que formem palavras que a professora ditar ou palavras que conhecem.' } ] }, { dia: "Sexta-feira", foco: "Revisão Lúdica", atividades: [ { type: 'catalog', id: 8, tituloPersonalizado: 'A Linha do Tempo dos Sons' }, { type: 'custom', titulo: 'Gincana Fonológica', desc: 'Dividir a turma em equipes e realizar desafios rápidos envolvendo rimas, sílabas e aliterações.' } ] } ] },    
         { id: "semanal-fundamental-02", titulo: "Viagem pelo Sistema Monetário", anoEscolar: "2º Ano - Fundamental", descricao: "Uma introdução prática e significativa ao sistema monetário brasileiro, desenvolvendo habilidades de contagem, soma, subtração e educação financeira.", objetivosGerais: ["Reconhecer cédulas e moedas do sistema monetário brasileiro.", "Resolver problemas simples envolvendo compra e venda.", "Compreender o valor do dinheiro e a importância de poupar."], planoDiario: [ { dia: "Segunda-feira", foco: "Conhecendo o Dinheiro", atividades: [{type: 'custom', titulo: 'Explorando as Cédulas e Moedas', desc: 'Apresentar réplicas de dinheiro. Deixar que manipulem, observem os detalhes (animais, tamanhos, cores) e conversem sobre o que sabem.'}]}, { dia: "Terça-feira", foco: "Quanto Custa?", atividades: [{type: 'catalog', id: 3, tituloPersonalizado: 'Problema: As Compras de João'}, {type: 'custom', titulo: 'Mercadinho da Turma', desc: 'Montar um pequeno mercado com embalagens vazias e preços. Em duplas, os alunos recebem uma quantia e devem comprar produtos.'}]}, { dia: "Quarta-feira", foco: "Calculando o Troco", atividades: [{type: 'custom', titulo: 'Simulação de Troco', desc: 'Continuar com o mercadinho, mas agora o foco é em pagar e calcular o troco. A professora atua como caixa.'}]}, { dia: "Quinta-feira", foco: "De Onde Vem o Dinheiro?", atividades: [{type: 'custom', titulo: 'Roda de Conversa: Trabalho e Dinheiro', desc: 'Conversar sobre as profissões dos pais e como o trabalho gera renda para a família.'}, {type: 'catalog', id: 2, tituloPersonalizado: 'História: O Cofrinho Mágico'}]}, { dia: "Sexta-feira", foco: "Dia de Poupar", atividades: [{type: 'custom', titulo: 'Construindo um Cofrinho', desc: 'Usar garrafas PET ou latas para confeccionar um cofrinho. Conversar sobre metas e o que gostariam de comprar se poupassem.'}]}, ] } ,
         // Novos Planos Semanais Adicionados
         { id: "semanal-fundamental-04", titulo: "Descobrindo o Espaço Sideral", anoEscolar: "4º Ano - Fundamental", descricao: "Uma semana para viajar pelo universo, aprendendo sobre planetas, estrelas e fenômenos celestes de forma investigativa e criativa.", objetivosGerais: ["Compreender a composição do sistema solar.", "Identificar planetas e corpos celestes.", "Estimular a curiosidade científica sobre o universo."], planoDiario: [ { dia: "Segunda-feira", foco: "Nosso Sistema Solar", atividades: [{type: 'custom', titulo: 'Roda de Conversa: O que sabemos sobre o espaço?', desc: 'Iniciando com uma discussão sobre o que os alunos já conhecem do espaço. Apresentar um modelo (ou ilustração) do sistema solar.'}, {type: 'catalog', id: 4, tituloPersonalizado: 'Debate: Seria Marte habitável?'}]}, { dia: "Terça-feira", foco: "As Estrelas e Constelações", atividades: [{type: 'custom', titulo: 'Contação de Histórias: Mitos e Lendas das Constelações', desc: 'Narrar lendas sobre constelações (Ursa Maior, Órion) e pedir que os alunos desenhem suas constelações preferidas.'}]}, { dia: "Quarta-feira", foco: "Viagem Espacial (Criação)", atividades: [{type: 'custom', titulo: 'Construindo o Foguete da Sala', desc: 'Usar materiais recicláveis (garrafas PET, rolos de papel) para construir um foguete coletivo.'}, {type: 'catalog', id: 2, tituloPersonalizado: 'Criando a história da nossa viagem espacial'}]}, { dia: "Quinta-feira", foco: "Fenômenos Naturais no Espaço", atividades: [{type: 'custom', titulo: 'Observando as Fases da Lua (simulado)', desc: 'Usar uma bola de isopor e uma lanterna para simular as fases da Lua. Discutir eclipses e outros fenômenos.'}]}, { dia: "Sexta-feira", foco: "Somos Astrônomos!", atividades: [{type: 'custom', titulo: 'Desenho: Como seria minha estação espacial?', desc: 'Pedir que os alunos desenhem e descrevam sua própria estação espacial ou planeta imaginário.'}, {type: 'catalog', id: 6, tituloPersonalizado: 'Esculturas de Alienígenas com Massinha'}]}, ] } ,
@@ -640,58 +640,58 @@
     
     // --- LÓGICA DA APLICAÇÃO ---
     document.addEventListener('DOMContentLoaded', function() {
-        const appState = { 
-            currentView: 'planosSemanais', 
-            searchQuery: '', 
-            activeFilter: 'Todos', 
-            activePlanoFilter: 'Todos', 
-            currentPage: 1, 
-            itemsPerPage: 6, 
-            favorites: JSON.parse(localStorage.getItem('planoMestreFavoritesV1')) || [], 
-            selectedActivitiesForMaker: [], 
-            makerPlanTitle: '', 
-            makerPlanGrade: '', 
-            makerPlanTheme: '', 
-            makerPlanNotes: '' 
+        const appState = {    
+            currentView: 'planosSemanais',    
+            searchQuery: '',    
+            activeFilter: 'Todos',    
+            activePlanoFilter: 'Todos',    
+            currentPage: 1,    
+            itemsPerPage: 6,    
+            favorites: JSON.parse(localStorage.getItem('planoMestreFavoritesV1')) || [],    
+            selectedActivitiesForMaker: [],    
+            makerPlanTitle: '',    
+            makerPlanGrade: '',    
+            makerPlanTheme: '',    
+            makerPlanNotes: ''    
         };
 
         const dom = {
-            loginScreen: document.getElementById('login-screen'), 
-            mainContent: document.getElementById('main-content'), 
-            loginForm: document.getElementById('login-form'), 
-            demoAccessBtn: document.getElementById('demo-access-btn'), 
-            logoutButton: document.getElementById('logout-button'), 
-            welcomeMsg: document.getElementById('welcome-message'), 
-            modal: document.getElementById('modal-container'), 
-            menuToggle: document.getElementById('menu-toggle'), 
-            sidebar: document.getElementById('sidebar'), 
-            sidebarOverlay: document.getElementById('sidebar-overlay'), 
-            catalogView: document.getElementById('catalog-view'), 
-            aulaMakerSection: document.getElementById('aula-maker-section'), 
-            planosSemanaisView: document.getElementById('planos-semanais-view'), 
-            planosSemanaisGrid: document.getElementById('planos-semanais-grid'), 
-            planosSemanaisFilters: document.getElementById('planos-semanais-filters'), 
-            searchInput: document.getElementById('search-input'), 
-            filters: document.getElementById('filters-container'), 
-            grid: document.getElementById('activities-grid-container'), 
-            pagination: document.getElementById('pagination-container'), 
-            resultsInfo: document.getElementById('results-info'), 
-            navAulaMakerBtn: document.getElementById('nav-aula-maker-btn'), 
-            navPlanosSemanaisBtn: document.getElementById('nav-planos-semanais-btn'), 
-            makerTitleInput: document.getElementById('maker-title'), 
-            makerGradeInput: document.getElementById('maker-grade'), 
-            makerThemeInput: document.getElementById('maker-theme'), 
-            makerNotesInput: document.getElementById('maker-notes'), 
-            generatePlanBtn: document.getElementById('generate-plan-btn'), 
-            selectedActivitiesList: document.getElementById('selected-activities-list'), 
-            noActivitiesSelectedMsg: document.getElementById('no-activities-selected'), 
-            clearPlanBtn: document.getElementById('clear-plan-btn'), 
-            addCatalogActivityBtn: document.getElementById('add-catalog-activity-btn'), 
-            addCustomActivityInlineBtn: document.getElementById('add-custom-activity-inline-btn'), 
-            customActivityForm: document.getElementById('custom-activity-form'), 
+            loginScreen: document.getElementById('login-screen'),    
+            mainContent: document.getElementById('main-content'),    
+            loginForm: document.getElementById('login-form'),    
+            demoAccessBtn: document.getElementById('demo-access-btn'),    
+            logoutButton: document.getElementById('logout-button'),    
+            welcomeMsg: document.getElementById('welcome-message'),    
+            modal: document.getElementById('modal-container'),    
+            menuToggle: document.getElementById('menu-toggle'),    
+            sidebar: document.getElementById('sidebar'),    
+            sidebarOverlay: document.getElementById('sidebar-overlay'),    
+            catalogView: document.getElementById('catalog-view'),    
+            aulaMakerSection: document.getElementById('aula-maker-section'),    
+            planosSemanaisView: document.getElementById('planos-semanais-view'),    
+            planosSemanaisGrid: document.getElementById('planos-semanais-grid'),    
+            planosSemanaisFilters: document.getElementById('planos-semanais-filters'),    
+            searchInput: document.getElementById('search-input'),    
+            filters: document.getElementById('filters-container'),    
+            grid: document.getElementById('activities-grid-container'),    
+            pagination: document.getElementById('pagination-container'),    
+            resultsInfo: document.getElementById('results-info'),    
+            navAulaMakerBtn: document.getElementById('nav-aula-maker-btn'),    
+            navPlanosSemanaisBtn: document.getElementById('nav-planos-semanais-btn'),    
+            makerTitleInput: document.getElementById('maker-title'),    
+            makerGradeInput: document.getElementById('maker-grade'),    
+            makerThemeInput: document.getElementById('maker-theme'),    
+            makerNotesInput: document.getElementById('maker-notes'),    
+            generatePlanBtn: document.getElementById('generate-plan-btn'),    
+            selectedActivitiesList: document.getElementById('selected-activities-list'),    
+            noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),    
+            clearPlanBtn: document.getElementById('clear-plan-btn'),    
+            addCatalogActivityBtn: document.getElementById('add-catalog-activity-btn'),    
+            addCustomActivityInlineBtn: document.getElementById('add-custom-activity-inline-btn'),    
+            customActivityForm: document.getElementById('custom-activity-form'),    
             confirmAddCustomBtn: document.getElementById('confirm-add-custom-btn'),
-            customActivityTitleInput: null, // Será inicializado dinamicamente
-            customActivityDescInput: null // Será inicializado dinamicamente
+            customActivityTitleInput: document.getElementById('custom-activity-title'), 
+            customActivityDescInput: document.getElementById('custom-activity-desc')
         };
 
         const isUserPro = () => {
@@ -719,7 +719,7 @@
                 appState.makerPlanNotes = savedState.notes || '';
                 appState.selectedActivitiesForMaker = savedState.activities || [];
                 
-                // Assegura que os inputs existem antes de tentar definir seus valores
+                // Set values only if the elements exist
                 if (dom.makerTitleInput) dom.makerTitleInput.value = appState.makerPlanTitle;
                 if (dom.makerGradeInput) dom.makerGradeInput.value = appState.makerPlanGrade;
                 if (dom.makerThemeInput) dom.makerThemeInput.value = appState.makerPlanTheme;
@@ -764,7 +764,7 @@
                         doc.setFontSize(10); // Redefine o tamanho da fonte após a nova página
                     }
                     doc.text(`• ${obj}`, margin + 10, y, { maxWidth: doc.internal.pageSize.width - 2 * margin - 10, align: 'left' });
-                    y += lineHeight; 
+                    y += lineHeight;    
                 });
                 y += 10;
 
@@ -863,7 +863,15 @@
             dom.mainContent.classList.remove('hidden');
             dom.welcomeMsg.textContent = `Olá, ${user.usuario.charAt(0).toUpperCase() + user.usuario.slice(1)}!`;
             
-            // Inicializa inputs do maker e carrega estado salvo
+            // Set input references AFTER mainContent is visible
+            dom.makerTitleInput = document.getElementById('maker-title');
+            dom.makerGradeInput = document.getElementById('maker-grade');
+            dom.makerThemeInput = document.getElementById('maker-theme');
+            dom.makerNotesInput = document.getElementById('maker-notes');
+            dom.customActivityTitleInput = document.getElementById('custom-activity-title');
+            dom.customActivityDescInput = document.getElementById('custom-activity-desc');
+
+            // Now load the saved state as the inputs exist
             loadMakerPlanState();
 
             setupEventListeners();
@@ -883,23 +891,19 @@
             dom.searchInput.addEventListener('input', () => { appState.searchQuery = dom.searchInput.value.toLowerCase(); appState.currentPage = 1; appState.currentView = 'catalog'; render(); });
             
             dom.addCatalogActivityBtn.addEventListener('click', openSelectActivitiesModal);
-            dom.addCustomActivityInlineBtn.addEventListener('click', () => { 
-                dom.customActivityForm.classList.toggle('hidden'); 
-                // Garante que os campos de atividade personalizada sejam inicializados
-                if (!dom.customActivityTitleInput) {
-                    dom.customActivityTitleInput = document.getElementById('custom-activity-title');
-                    dom.customActivityDescInput = document.getElementById('custom-activity-desc');
-                }
+            dom.addCustomActivityInlineBtn.addEventListener('click', () => {    
+                dom.customActivityForm.classList.toggle('hidden');    
+                // No need to initialize dom.customActivityTitleInput here, it's already done in initializePanel
             });
             dom.confirmAddCustomBtn.addEventListener('click', addCustomActivityToMaker);
             dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdfWithWatermark);
             dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
             
-            // Event listeners para salvar o estado do maker
-            dom.makerTitleInput.addEventListener('input', (e) => { appState.makerPlanTitle = e.target.value; saveMakerPlanState(); });
-            dom.makerGradeInput.addEventListener('input', (e) => { appState.makerPlanGrade = e.target.value; saveMakerPlanState(); });
-            dom.makerThemeInput.addEventListener('input', (e) => { appState.makerPlanTheme = e.target.value; saveMakerPlanState(); });
-            dom.makerNotesInput.addEventListener('input', (e) => { appState.makerPlanNotes = e.target.value; saveMakerPlanState(); });
+            // Event listeners for saving maker state - now assured inputs exist
+            if (dom.makerTitleInput) dom.makerTitleInput.addEventListener('input', (e) => { appState.makerPlanTitle = e.target.value; saveMakerPlanState(); });
+            if (dom.makerGradeInput) dom.makerGradeInput.addEventListener('input', (e) => { appState.makerPlanGrade = e.target.value; saveMakerPlanState(); });
+            if (dom.makerThemeInput) dom.makerThemeInput.addEventListener('input', (e) => { appState.makerPlanTheme = e.target.value; saveMakerPlanState(); });
+            if (dom.makerNotesInput) dom.makerNotesInput.addEventListener('input', (e) => { appState.makerPlanNotes = e.target.value; saveMakerPlanState(); });
         }
 
         function setupMobileMenu() {
@@ -919,18 +923,18 @@
             dom.navAulaMakerBtn.classList.remove('active');
             document.getElementById('catalog-section').style.opacity = '0.6';
 
-            if (appState.currentView === 'aulaMaker') { 
-                dom.aulaMakerSection.classList.remove('hidden'); 
-                dom.navAulaMakerBtn.classList.add('active'); 
+            if (appState.currentView === 'aulaMaker') {    
+                dom.aulaMakerSection.classList.remove('hidden');    
+                dom.navAulaMakerBtn.classList.add('active');    
                 renderAulaMaker();
-            } else if (appState.currentView === 'planosSemanais') { 
-                dom.planosSemanaisView.classList.remove('hidden'); 
-                dom.navPlanosSemanaisBtn.classList.add('active'); 
+            } else if (appState.currentView === 'planosSemanais') {    
+                dom.planosSemanaisView.classList.remove('hidden');    
+                dom.navPlanosSemanaisBtn.classList.add('active');    
                 renderPlanosSemanais();
-            } else { 
-                dom.catalogView.classList.remove('hidden'); 
-                document.getElementById('catalog-section').style.opacity = '1'; 
-                renderCatalog(); 
+            } else {    
+                dom.catalogView.classList.remove('hidden');    
+                document.getElementById('catalog-section').style.opacity = '1';    
+                renderCatalog();    
             }
             renderFilters();
         }
@@ -938,11 +942,11 @@
         function renderCatalog() {
             const filteredActivities = todasAsAtividades.filter(activity => {
                 const matchesSearch = activity.titulo.toLowerCase().includes(appState.searchQuery) ||
-                                      activity.desc.toLowerCase().includes(appState.searchQuery) ||
-                                      activity.categoria.toLowerCase().includes(appState.searchQuery);
-                const matchesFilter = appState.activeFilter === 'Todos' || 
-                                      activity.categoria === appState.activeFilter ||
-                                      (appState.activeFilter === 'Favoritos' && appState.favorites.includes(activity.id));
+                                              activity.desc.toLowerCase().includes(appState.searchQuery) ||
+                                              activity.categoria.toLowerCase().includes(appState.searchQuery);
+                const matchesFilter = appState.activeFilter === 'Todos' ||    
+                                              activity.categoria === appState.activeFilter ||
+                                              (appState.activeFilter === 'Favoritos' && appState.favorites.includes(activity.id));
                 return matchesSearch && matchesFilter;
             });
 
@@ -999,8 +1003,8 @@
                 dom.grid.innerHTML = '<p style="text-align: center; margin-top: 3rem; color: var(--text-color-light);">Nenhuma atividade encontrada com este termo.</p>';
                 return;
             } else if (paginatedActivities.length === 0 && appState.activeFilter === 'Favoritos') {
-                 dom.grid.innerHTML = '<p style="text-align: center; margin-top: 3rem; color: var(--text-color-light);">Você ainda não adicionou atividades aos favoritos.</p>';
-                 return;
+                   dom.grid.innerHTML = '<p style="text-align: center; margin-top: 3rem; color: var(--text-color-light);">Você ainda não adicionou atividades aos favoritos.</p>';
+                   return;
             } else if (paginatedActivities.length === 0) {
                 dom.grid.innerHTML = '<p style="text-align: center; margin-top: 3rem; color: var(--text-color-light);">Nenhuma atividade para exibir.</p>';
                 return;
@@ -1207,7 +1211,7 @@
                 card.classList.add('select-card'); // Adiciona classe para estilização específica do modal
                 // Se a atividade já estiver no plano atual do maker, marca como selecionada visualmente
                 if (appState.selectedActivitiesForMaker.some(a => a.id === activity.id)) {
-                    card.classList.add('selected'); 
+                    card.classList.add('selected');    
                 }
                 card.querySelector('.card-footer').style.display = 'none'; // Esconde o footer
                 card.querySelector('.favorite-icon').style.display = 'none'; // Esconde o botão de favorito
@@ -1231,13 +1235,13 @@
                     const activityToAdd = todasAsAtividades.find(a => a.id === parseInt(activityId)) || appState.selectedActivitiesForMaker.find(a => a.id === activityId && a.type === 'custom');
 
                     if (activityToAdd && !currentMakerActivityIds.has(activityId)) { // Evita adicionar duplicatas
-                             // Cria uma cópia da atividade para o plano maker, garantindo que o ID seja único para a instância
-                            appState.selectedActivitiesForMaker.push({
-                                ...activityToAdd,
-                                // Se for uma atividade do catálogo, dá um novo ID único. Se for custom, mantém o ID original
-                                id: typeof activityId === 'number' ? `catalog-${activityId}-${Date.now()}` : activityId 
-                            });
-                        }
+                                   // Cria uma cópia da atividade para o plano maker, garantindo que o ID seja único para a instância
+                                appState.selectedActivitiesForMaker.push({
+                                    ...activityToAdd,
+                                    // Se for uma atividade do catálogo, dá um novo ID único. Se for custom, mantém o ID original
+                                    id: typeof activityId === 'number' ? `catalog-${activityId}-${Date.now()}` : activityId    
+                                });
+                            }
                 });
                 renderAulaMaker();
                 saveMakerPlanState(); // Salva o novo estado
@@ -1294,12 +1298,12 @@
                         y += 10; // Espaço antes de cada atividade
                         
                         // Estimativa de altura do conteúdo da atividade para quebra de página
-                        const currentContentHeight = (activity.desc ? doc.splitTextToSize(activity.desc, doc.internal.pageSize.width - 2 * margin).length * lineHeight : 0) + 
-                                                    (activity.objetivos.length * lineHeight) + 
-                                                    (activity.bncc.length * lineHeight) + 
-                                                    (Object.keys(activity.roteiro).length * lineHeight * 2) + 
-                                                    (activity.dica_pedagogica ? doc.splitTextToSize(activity.dica_pedagogica, doc.internal.pageSize.width - 2 * margin).length * lineHeight : 0) + 
-                                                    80; // Estimativa para títulos e espaços
+                        const currentContentHeight = (activity.desc ? doc.splitTextToSize(activity.desc, doc.internal.pageSize.width - 2 * margin).length * lineHeight : 0) +    
+                                                     (activity.objetivos.length * lineHeight) +    
+                                                     (activity.bncc.length * lineHeight) +    
+                                                     (Object.keys(activity.roteiro).length * lineHeight * 2) +    
+                                                     (activity.dica_pedagogica ? doc.splitTextToSize(activity.dica_pedagogica, doc.internal.pageSize.width - 2 * margin).length * lineHeight : 0) +    
+                                                     80; // Estimativa para títulos e espaços
 
                         if (y + currentContentHeight > doc.internal.pageSize.height - margin) {
                             doc.addPage();
@@ -1399,7 +1403,7 @@
             planosFiltrados.forEach((plano, index) => {
                 const card = document.createElement('div');
                 // Bloqueia todos, exceto o primeiro, para usuários gratuitos
-                const isLocked = !isUserPro() && index > 0; 
+                const isLocked = !isUserPro() && index > 0;    
                 card.className = `activity-card ${isLocked ? 'locked' : ''}`;
                 card.innerHTML = `
                     <div class="card-header">
@@ -1445,11 +1449,10 @@
             appState.selectedActivitiesForMaker = [];
 
             plano.planoDiario.forEach(dia => {
-                dia.atividades.forEach(act => { // Corrigido de 'actividades' para 'atividades'
+                dia.atividades.forEach(act => {
                     if (act.type === 'catalog') {
                         const originalActivity = todasAsAtividades.find(a => a.id === act.id);
                         if (originalActivity) {
-                            // Cria uma cópia da atividade para o plano maker, permitindo personalização futura sem afetar o original
                             appState.selectedActivitiesForMaker.push({
                                 ...originalActivity,
                                 id: `catalog-${originalActivity.id}-${Date.now()}`, // Garante ID único para a instância no maker
@@ -1472,6 +1475,7 @@
                 });
             });
 
+            // Ensure inputs are correctly referenced before setting their values
             dom.makerTitleInput.value = appState.makerPlanTitle;
             dom.makerGradeInput.value = appState.makerPlanGrade;
             dom.makerThemeInput.value = appState.makerPlanTheme;
