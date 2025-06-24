@@ -6,6 +6,7 @@
     <title>Plataforma de Planos de Aula (IA Avançada)</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.autotable.umd.min.js"></script>
 
     <style>
         /* Importa a fonte do Google Fonts */
@@ -1112,8 +1113,7 @@
                 }
                 alert("✨ FUNÇÃO IA SIMULADA ✨\n\nA IA está analisando os objetivos das atividades no seu plano...\n\nBaseado em 'Detetive de Sílabas' e 'Criador de Histórias', aqui está uma sugestão de avaliação:\n\n1. Qual palavra é formada pela junção das sílabas 'CA' + 'NE' + 'TA'?\n   a) Caneca\n   b) Caneta\n   c) Careta\n\n2. Crie uma pequena frase usando a palavra 'GATO'.\n\n(Numa aplicação real, isso geraria um modal com o texto completo e um botão para imprimir/salvar em PDF).");
             });
-
-            // Ação do botão Super Documento foi movida para a função `generateSuperDocumentPdf`
+            
             dom.generateSuperDocBtn.addEventListener('click', generateSuperDocumentPdf);
         }
 
@@ -1520,8 +1520,13 @@
 
         function checkPdfLibrary() {
             if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
-                alert("Erro ao gerar o PDF. A biblioteca de exportação (jsPDF) não foi encontrada.");
+                alert("Erro: A biblioteca principal (jsPDF) não foi carregada.");
                 return false;
+            }
+            if (typeof window.jspdf.jsPDF.autoTable === 'undefined') {
+                // This check is for the Super Document, but good to have.
+                // The simple plan doesn't use it.
+                console.warn("Aviso: O plugin de tabelas (jsPDF-AutoTable) não foi carregado. A geração de tabelas falhará.");
             }
             return true;
         }
@@ -1840,19 +1845,19 @@
                  pdf.writeText("Use esta tabela para acompanhar o desenvolvimento dos alunos durante as atividades propostas.", 10, 'italic');
                  pdf.yOffset += 20;
                  
-                 // Tabela
-                 const head = [['Aluno', 'Junta sílabas?', 'Cria frases?', 'Participa?']];
-                 const body = [
-                     ['', '', '', ''],
-                     ['', '', '', ''],
-                     ['', '', '', ''],
-                 ];
-                 doc.autoTable({
-                     head: head,
-                     body: body,
-                     startY: pdf.yOffset,
-                     headStyles: { fillColor: varGet('--primary-color') }
-                 });
+                 if (doc.autoTable) {
+                     const head = [['Aluno', 'Junta sílabas?', 'Cria frases?', 'Participa?']];
+                     const body = [ ['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', ''] ];
+                     doc.autoTable({
+                         head: head,
+                         body: body,
+                         startY: pdf.yOffset,
+                         headStyles: { fillColor: varGet('--primary-color') }
+                     });
+                 } else {
+                    console.error("jsPDF-AutoTable plugin not loaded. Skipping table generation.");
+                    pdf.writeText("ERRO: A tabela de checklist não pôde ser gerada pois o plugin 'autoTable' não foi carregado.", 10, 'italic');
+                 }
 
                 // --- FINALIZAÇÃO E DOWNLOAD ---
                 const fileName = `Super-Documento_${(appState.makerPlanTitle || "Plano").replace(/[^a-zA-Z0-9-]/g, '_')}.pdf`;
@@ -1867,11 +1872,6 @@
 
         // --- INICIALIZAÇÃO ---
         (function main() {
-            // Adiciona a função autoTable ao protótipo do jsPDF se ela existir
-            if (window.jspdf.jsPDF.autoTable) {
-                 jsPDF.API.autoTable = window.jspdf.jsPDF.autoTable;
-            }
-            
             setupLoginScreenPreview();
             const savedUser = localStorage.getItem('loggedInUser');
             if (savedUser) {
