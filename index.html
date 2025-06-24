@@ -262,7 +262,7 @@
         .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
         .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
         
-        /* --- ESTILOS DO MODAL SIMPLIFICADO --- */
+        /* --- ESTILOS DO MODAL --- */
         .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 20, 30, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
         .modal-container.show { display: flex; opacity: 1; }
         .modal-content { background-color: white; padding: 0; border-radius: 20px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 750px; position: relative; overflow: hidden; transform: translateY(-30px); opacity: 0; display: flex; flex-direction: column; max-height: 90vh; }
@@ -488,7 +488,8 @@
         }
 
         /* Modal for selecting activities */
-        #select-activities-modal .modal-content {
+        #select-activities-modal .modal-content,
+        #super-doc-selection-modal .modal-content {
             max-width: 900px;
             width: 95%;
         }
@@ -499,6 +500,31 @@
             gap: 1.5rem;
             padding: 1.5rem 2.5rem;
         }
+        
+        /* Estilos para o novo modal de seleção do Super Documento */
+        #super-doc-selection-modal .modal-body { padding: 1.5rem 2.5rem; }
+        #super-doc-selection-modal .activity-selection-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+         #super-doc-selection-modal .activity-selection-item:hover {
+            background-color: #f8fafc;
+         }
+        #super-doc-selection-modal .activity-selection-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            accent-color: var(--primary-color);
+        }
+         #super-doc-selection-modal .activity-selection-item label {
+            font-weight: 500;
+         }
+
 
         #select-activities-modal .activity-card {
             cursor: pointer;
@@ -520,11 +546,12 @@
             display: none; /* Hide footer in selection modal */
         }
 
-        #select-activities-modal .modal-footer {
+        #select-activities-modal .modal-footer,
+        #super-doc-selection-modal .modal-footer {
             text-align: center;
         }
 
-        #confirm-selection-btn {
+        #confirm-selection-btn, #confirm-super-doc-selection-btn {
             background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 0.8rem 2rem;
@@ -537,9 +564,14 @@
             box-shadow: var(--shadow);
         }
 
-        #confirm-selection-btn:hover {
+        #confirm-selection-btn:hover, #confirm-super-doc-selection-btn:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
+        }
+        
+        #confirm-super-doc-selection-btn {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #4a2c05;
         }
 
         /* Responsive adjustments */
@@ -1114,7 +1146,7 @@
                 alert("✨ FUNÇÃO IA SIMULADA ✨\n\nA IA está analisando os objetivos das atividades no seu plano...\n\nBaseado em 'Detetive de Sílabas' e 'Criador de Histórias', aqui está uma sugestão de avaliação:\n\n1. Qual palavra é formada pela junção das sílabas 'CA' + 'NE' + 'TA'?\n   a) Caneca\n   b) Caneta\n   c) Careta\n\n2. Crie uma pequena frase usando a palavra 'GATO'.\n\n(Numa aplicação real, isso geraria um modal com o texto completo e um botão para imprimir/salvar em PDF).");
             });
             
-            dom.generateSuperDocBtn.addEventListener('click', generateSuperDocumentPdf);
+            dom.generateSuperDocBtn.addEventListener('click', openSuperDocModal);
         }
 
         function render() {
@@ -1585,11 +1617,9 @@
                 this.checkNewPage(60);
                 this.doc.setFont('helvetica', 'bold');
                 this.doc.setFontSize(16);
-                // CORREÇÃO: Usar o operador de propagação "..."
                 this.doc.setTextColor(...varGet('--secondary-color'));
                 this.doc.text(text, this.margin, this.yOffset);
                 this.yOffset += 15;
-                 // CORREÇÃO: Usar o operador de propagação "..."
                 this.doc.setDrawColor(...varGet('--primary-color'));
                 this.doc.setLineWidth(1.5);
                 this.doc.line(this.margin, this.yOffset, this.margin + this.maxWidth, this.yOffset);
@@ -1600,7 +1630,6 @@
                 this.checkNewPage(30);
                 this.doc.setFont('helvetica', 'bold');
                 this.doc.setFontSize(12);
-                 // CORREÇÃO: Usar o operador de propagação "..."
                 this.doc.setTextColor(...varGet('--primary-color'));
                 this.doc.text(text, this.margin, this.yOffset);
                 this.yOffset += 20;
@@ -1609,12 +1638,20 @@
             writeText(text, size = 10, style = 'normal', indent = 0) {
                 this.doc.setFontSize(size);
                 this.doc.setFont('helvetica', style);
-                 // CORREÇÃO: Usar o operador de propagação "..."
                 this.doc.setTextColor(...varGet('--text-color'));
-                const lines = this.doc.splitTextToSize(text, this.maxWidth - indent);
-                this.checkNewPage(lines.length * (size * 1.2));
+                const lines = this.doc.splitTextToSize(String(text), this.maxWidth - indent);
+                this.checkNewPage(lines.length * size * 1.2); // Estima altura necessária
                 this.doc.text(lines, this.margin + indent, this.yOffset);
-                this.yOffset += lines.length * (size * 1.2);
+                this.yOffset += lines.length * size * 1.15 + 5; // Ajusta o espaçamento
+            }
+
+            drawActivitySeparator() {
+                this.yOffset += 10;
+                this.checkNewPage(20);
+                this.doc.setDrawColor(...varGet('--border-color'));
+                this.doc.setLineWidth(0.5);
+                this.doc.line(this.margin, this.yOffset, this.margin + this.maxWidth, this.yOffset);
+                this.yOffset += 20;
             }
         }
 
@@ -1634,18 +1671,17 @@
                 // --- PÁGINA DE ROSTO ---
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(28);
-                // CORREÇÃO: Usar o operador de propagação "..."
                 doc.setTextColor(...varGet('--secondary-color'));
                 doc.text("Plano de Aula", pdf.doc.internal.pageSize.width / 2, pdf.yOffset + 20, { align: 'center' });
                 pdf.yOffset += 80;
 
                 doc.setFontSize(16);
+                doc.setTextColor(...varGet('--text-color'));
                 doc.text(appState.makerPlanTitle || "Plano de Aula Sem Título", pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.yOffset += 25;
                 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
-                // CORREÇÃO: Usar o operador de propagação "..."
                 doc.setTextColor(...varGet('--text-color-light'));
                 doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não informado'}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.yOffset += 20;
@@ -1653,11 +1689,14 @@
                 pdf.yOffset += 80;
                 
                 pdf.drawFooter();
-                doc.addPage();
-                pdf.yOffset = pdf.margin;
-                pdf.drawFooter();
                 
                 // --- SEÇÃO DE OBSERVAÇÕES E MATERIAIS ---
+                if (appState.makerPlanNotes || appState.selectedActivitiesForMaker.length > 0) {
+                     doc.addPage();
+                     pdf.yOffset = pdf.margin;
+                     pdf.drawFooter();
+                }
+
                 if (appState.makerPlanNotes) {
                     pdf.drawHeader("Observações e Materiais");
                     pdf.writeText(appState.makerPlanNotes, 11);
@@ -1665,13 +1704,11 @@
                 }
 
                 // --- SEÇÃO DE SEQUÊNCIA DE ATIVIDADES ---
-                pdf.drawHeader("Sequência de Atividades");
-                if (appState.selectedActivitiesForMaker.length === 0) {
-                    pdf.writeText("Nenhuma atividade selecionada para este plano.", 11, 'italic');
-                } else {
-                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                        const isCustom = activity.type === 'custom';
-                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
+                if (appState.selectedActivitiesForMaker.length > 0) {
+                    pdf.drawHeader("Sequência de Atividades");
+                    appState.selectedActivitiesForMaker.forEach((activityRef, index) => {
+                        const isCustom = activityRef.type === 'custom';
+                        const activityData = isCustom ? activityRef : todasAsAtividades.find(a => a.id === activityRef.id);
                         if (!activityData) return;
                         
                         pdf.checkNewPage(80);
@@ -1682,16 +1719,14 @@
                         pdf.yOffset += 15;
 
                         if (!isCustom) {
-                            pdf.writeText("Objetivos de Aprendizagem:", 10, 'bold');
-                            activityData.objetivos.forEach(obj => {
-                                pdf.writeText(`• ${obj}`, 10, 'normal', 10);
-                            });
+                            pdf.writeText("Objetivos:", 10, 'bold');
+                            activityData.objetivos.forEach(obj => pdf.writeText(`• ${obj}`, 10, 'normal', 10));
                             pdf.yOffset += 15;
 
-                            pdf.writeText("Códigos da BNCC:", 10, 'bold');
+                            pdf.writeText("BNCC:", 10, 'bold');
                             pdf.writeText(activityData.bncc.join(', '), 10, 'normal', 10);
-                            pdf.yOffset += 20;
                         }
+                        if(index < appState.selectedActivitiesForMaker.length - 1) pdf.drawActivitySeparator();
                     });
                 }
                 
@@ -1704,180 +1739,196 @@
             }
         }
         
-        function generateSuperDocumentPdf() {
-            if (!checkPdfLibrary()) return;
-             if (appState.selectedActivitiesForMaker.length === 0) {
-                alert("Adicione pelo menos uma atividade ao plano para gerar um Super Documento.");
+        // ===================================================================
+        // NOVA LÓGICA DO SUPER GERADOR
+        // ===================================================================
+        function openSuperDocModal() {
+            if (appState.selectedActivitiesForMaker.length === 0) {
+                alert("Adicione pelo menos uma atividade ao seu plano antes de gerar um Super Documento.");
                 return;
             }
+
+            let selectionHTML = appState.selectedActivitiesForMaker.map(activityRef => {
+                 const activityData = activityRef.type === 'custom' ? activityRef : todasAsAtividades.find(a => a.id === activityRef.id);
+                 if (!activityData) return '';
+                 return `
+                    <div class="activity-selection-item">
+                        <input type="checkbox" id="super-doc-check-${activityData.id}" value="${activityData.id}" checked>
+                        <label for="super-doc-check-${activityData.id}">${activityData.titulo}</label>
+                    </div>
+                 `;
+            }).join('');
+
+            const modalHTML = `
+                <div class="modal-content" id="super-doc-selection-modal">
+                    <div class="modal-header">
+                        <h2>Gerar Super Documento</h2>
+                        <button class="close-button" aria-label="Fechar modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Selecione os Materiais</h3>
+                        <p>Escolha as atividades do seu plano que a IA deve usar para criar o material completo para alunos, com folhas de atividades, gabarito e mais.</p>
+                        <div id="super-doc-activity-list">
+                            ${selectionHTML}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-super-doc-selection-btn">
+                            <svg width="20" height="20" style="margin-right: 8px;"><use xlink:href="#icon-super-doc"></use></svg>
+                            Gerar Material Completo
+                        </button>
+                    </div>
+                </div>`;
             
-            alert("✨ Preparando seu Super Documento... ✨\n\nIsso pode levar um momento. O PDF será baixado automaticamente quando estiver pronto.");
+            dom.modal.innerHTML = modalHTML;
+            dom.modal.classList.add('show');
+            
+            dom.modal.querySelector('.close-button').onclick = closeModal;
+            dom.modal.querySelector('#confirm-super-doc-selection-btn').onclick = () => {
+                const selectedIds = Array.from(dom.modal.querySelectorAll('#super-doc-activity-list input:checked')).map(input => input.value);
+                
+                if (selectedIds.length === 0) {
+                    alert("Por favor, selecione pelo menos uma atividade para gerar o documento.");
+                    return;
+                }
+
+                closeModal();
+                // Atraso para o modal fechar antes do alerta de processamento
+                setTimeout(() => {
+                    generateSuperDocumentPdf(selectedIds);
+                }, 300);
+            };
+        }
+
+        function generateSuperDocumentPdf(selectedIds) {
+            if (!checkPdfLibrary()) return;
+            
+            const selectedActivities = appState.selectedActivitiesForMaker
+                .filter(activityRef => selectedIds.includes(String(activityRef.id)))
+                .map(activityRef => activityRef.type === 'custom' ? activityRef : todasAsAtividades.find(a => a.id === activityRef.id));
+
+            alert(`✨ A IA está gerando seu Super Documento com base nas ${selectedActivities.length} atividades selecionadas... ✨\n\nIsso pode levar um momento. O PDF será baixado automaticamente.`);
             
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ unit: 'pt', format: 'a4' });
                 const pdf = new PdfManager(doc);
 
-                // ==========================================================
-                // 1. CAPA DO SUPER DOCUMENTO
-                // ==========================================================
+                // --- CAPA ---
                 pdf.yOffset = pdf.margin;
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(28);
                 doc.setTextColor(...varGet('--secondary-color'));
                 doc.text("Super Documento do Professor", pdf.doc.internal.pageSize.width / 2, pdf.yOffset + 20, { align: 'center' });
                 pdf.yOffset += 80;
-
                 doc.setFontSize(16);
-                doc.text(appState.makerPlanTitle || "Plano de Aula Sem Título", pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
+                doc.setTextColor(...varGet('--text-color'));
+                doc.text(appState.makerPlanTitle || "Plano de Aula", pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.yOffset += 25;
-                
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(12);
                 doc.setTextColor(...varGet('--text-color-light'));
-                doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não informado'}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
-                pdf.yOffset += 20;
-                doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
-                
+                doc.text(`Ano/Turma: ${appState.makerPlanGrade || 'Não informado'} | Data: ${new Date().toLocaleDateString('pt-BR')}`, pdf.doc.internal.pageSize.width / 2, pdf.yOffset, { align: 'center' });
                 pdf.drawFooter();
 
-                // ==========================================================
-                // 2. PLANO DE AULA DETALHADO
-                // ==========================================================
+                // --- PLANO DE AULA DETALHADO ---
                 doc.addPage();
                 pdf.yOffset = pdf.margin;
                 pdf.drawFooter();
-                pdf.drawHeader("Plano de Aula Detalhado");
-                
-                appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                    const isCustom = activity.type === 'custom';
-                    const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
-                    if (!activityData) return;
-                    
-                    pdf.checkNewPage(120);
-                    pdf.drawSubheader(`${index + 1}. ${activityData.titulo}`);
-                    
-                    if (isCustom) {
-                        pdf.writeText(`Descrição: ${activityData.desc || 'Nenhuma descrição.'}`, 10);
+                pdf.drawHeader("Plano de Aula para o Professor");
+                selectedActivities.forEach((activity, index) => {
+                    pdf.drawSubheader(`${index + 1}. ${activity.titulo}`);
+                    if(activity.type !== 'custom') {
+                        pdf.writeText(`Objetivos: ${activity.objetivos.join(' ')}`, 10, 'italic');
+                        pdf.yOffset += 5;
+                        pdf.writeText(`BNCC: ${activity.bncc.join(', ')}`, 9, 'bold');
+                         pdf.yOffset += 10;
+                        pdf.writeText(`Roteiro: ${activity.roteiro.desenvolvimento}`, 10);
                     } else {
-                        pdf.writeText("Roteiro Sugerido:", 10, 'bold');
-                        const roteiro = activityData.roteiro;
-                        pdf.writeText(`Acolhida: ${roteiro.acolhida}`, 10, 'normal', 10);
-                        pdf.writeText(`Desenvolvimento: ${roteiro.desenvolvimento}`, 10, 'normal', 10);
-                        pdf.writeText(`Expansão: ${roteiro.expansao}`, 10, 'normal', 10);
-                        pdf.writeText(`Encerramento: ${roteiro.encerramento}`, 10, 'normal', 10);
-                        pdf.yOffset += 10;
-                         if (activityData.dica_pedagogica) {
-                             pdf.writeText(`Dica Pedagógica: ${activityData.dica_pedagogica}`, 10, 'italic', 10);
-                         }
+                        pdf.writeText(activity.desc, 10);
                     }
-                     pdf.yOffset += 20;
+                    if(index < selectedActivities.length - 1) pdf.drawActivitySeparator();
                 });
-                
-                // ==========================================================
-                // 3. FOLHAS DE ATIVIDADES (SIMULADO)
-                // ==========================================================
+
+                // --- FOLHAS DE ATIVIDADES PARA ALUNOS (GERAÇÃO DINÂMICA SIMULADA) ---
+                pdf.checkNewPage();
                 doc.addPage();
                 pdf.yOffset = pdf.margin;
                 pdf.drawFooter();
                 pdf.drawHeader("Folhas de Atividades para Alunos");
-                pdf.writeText("Nome: _________________________________________ Data: ___/___/______", 11);
-                pdf.yOffset += 30;
-
-                pdf.drawSubheader("Atividade 1: Detetive de Palavras");
-                pdf.writeText("1. Junte as sílabas para descobrir a palavra secreta e desenhe-a no quadro ao lado.", 11);
-                pdf.yOffset += 20;
-                doc.text("BO + LA = _________", pdf.margin + 10, pdf.yOffset);
-                doc.rect(pdf.margin + 200, pdf.yOffset - 30, 100, 60); // Retângulo para desenho
-                pdf.yOffset += 60;
-                 doc.text("CA + SA = _________", pdf.margin + 10, pdf.yOffset);
-                doc.rect(pdf.margin + 200, pdf.yOffset - 30, 100, 60); // Retângulo para desenho
-                pdf.yOffset += 60;
-
-                pdf.drawSubheader("Atividade 2: Crie sua História");
-                pdf.writeText("2. Escreva uma pequena história usando as três palavras abaixo:", 11);
-                pdf.yOffset += 20;
-                pdf.writeText("MENINO - FLORESTA - BOLA", 11, 'bold', 10);
-                pdf.yOffset += 20;
-                for(let i=0; i<5; i++) {
-                    doc.setDrawColor(200);
-                    doc.setLineWidth(0.5);
-                    doc.line(pdf.margin, pdf.yOffset, pdf.margin + pdf.maxWidth, pdf.yOffset);
-                    pdf.yOffset += 20;
-                }
                 
-                 // ==========================================================
-                // 4. GABARITO (SIMULADO)
-                // ==========================================================
+                selectedActivities.forEach(activity => {
+                    pdf.checkNewPage(pdf.pageHeight / 2); // Garante espaço para cada atividade
+                    pdf.writeText(`Nome: _________________________________________ Data: ___/___/______`, 11);
+                    pdf.yOffset += 20;
+
+                    pdf.drawSubheader(activity.titulo);
+                    if (activity.type !== 'custom') {
+                        pdf.writeText(`Habilidades BNCC: ${activity.bncc.join(', ')}`, 9, 'italic');
+                    }
+                    pdf.yOffset += 15;
+
+                    // SIMULAÇÃO DA IA GERANDO EXERCÍCIOS
+                    if (activity.id === 5) { // Detetive de Sílabas
+                        pdf.writeText("1. Junte as sílabas e escreva a palavra secreta.", 11);
+                        pdf.writeText("BO + LA = _________", 12, 'normal', 20);
+                        pdf.writeText("MA + CA + CO = _________", 12, 'normal', 20);
+                        pdf.writeText("PA + NE + LA = _________", 12, 'normal', 20);
+                    } else if (activity.id === 2) { // Criador de Histórias
+                        pdf.writeText("1. Use os elementos abaixo para criar uma pequena história. Não se esqueça do título!", 11);
+                        pdf.writeText("Personagem: um robô amigo | Lugar: uma cidade na lua | Objeto: uma estrela brilhante", 10, 'bold', 20);
+                        for(let i=0; i<8; i++) {
+                            doc.line(pdf.margin, pdf.yOffset + 20, pdf.margin + pdf.maxWidth, pdf.yOffset + 20);
+                            pdf.yOffset += 20;
+                        }
+                    } else if (activity.id === 3) { // O Problema do Dia
+                         pdf.writeText("1. Resolva o problema abaixo. Você pode desenhar para ajudar!", 11);
+                         pdf.writeText("Ana tinha 5 lápis e ganhou mais 3 de seu amigo. Com quantos lápis Ana ficou no total?", 12, 'normal', 20);
+                         doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 100);
+                         pdf.yOffset += 110;
+                    } else {
+                        pdf.writeText(`1. Siga as instruções do professor para completar a atividade "${activity.titulo}".`, 11);
+                         doc.rect(pdf.margin + 20, pdf.yOffset, pdf.maxWidth - 40, 150);
+                         pdf.yOffset += 160;
+                    }
+                    pdf.drawActivitySeparator();
+                });
+                
+                // --- GABARITO ---
                 doc.addPage();
                 pdf.yOffset = pdf.margin;
                 pdf.drawFooter();
                 pdf.drawHeader("Gabarito para o Professor");
-                pdf.drawSubheader("Atividade 1: Detetive de Palavras");
-                pdf.writeText("1. Respostas: BOLA, CASA. O desenho deve corresponder à palavra.", 11);
-                pdf.yOffset += 20;
-                pdf.drawSubheader("Atividade 2: Crie sua História");
-                pdf.writeText("2. Resposta pessoal. Avaliar a coerência, criatividade e o uso correto das três palavras-chave.", 11);
+                 selectedActivities.forEach(activity => {
+                    pdf.checkNewPage(60);
+                    pdf.drawSubheader(activity.titulo);
+                     if (activity.id === 5) pdf.writeText("Respostas: BOLA, MACACO, PANELA.", 10);
+                     else if (activity.id === 2) pdf.writeText("Resposta pessoal. Avaliar criatividade, coerência e uso dos elementos.", 10);
+                     else if (activity.id === 3) pdf.writeText("Resposta: 5 + 3 = 8. Ana ficou com 8 lápis.", 10);
+                     else pdf.writeText("Resposta conforme a condução da atividade.", 10);
+                 });
 
-                // ==========================================================
-                // 5. DIFERENCIAÇÃO PEDAGÓGICA (SIMULADO)
-                // ==========================================================
-                doc.addPage();
-                pdf.yOffset = pdf.margin;
-                pdf.drawFooter();
-                pdf.drawHeader("Diferenciação Pedagógica");
-                pdf.drawSubheader("Atividades de Apoio (Para alunos com dificuldades)");
-                pdf.writeText("• Para a Atividade 1, ofereça um banco de sílabas móveis para que o aluno possa manipular e formar as palavras antes de escrever.", 11);
-                pdf.yOffset += 10;
-                pdf.writeText("• Para a Atividade 2, comece a história oralmente com o aluno e peça que ele continue, ou sugira que faça a história em formato de desenho sequencial.", 11);
-                pdf.yOffset += 20;
-                pdf.drawSubheader("Atividades de Aprofundamento (Para alunos que terminam rápido)");
-                pdf.writeText("• Peça que criem novas palavras com as sílabas da Atividade 1 (Ex: BOCA, LAMA, SALA).", 11);
-                 pdf.yOffset += 10;
-                pdf.writeText("• Desafie-os a reescrever a história da Atividade 2, trocando um dos personagens ou o local.", 11);
 
-                // ==========================================================
-                // 6. COMUNICADO À FAMÍLIA (SIMULADO)
-                // ==========================================================
-                 doc.addPage();
-                pdf.yOffset = pdf.margin;
-                pdf.drawFooter();
-                pdf.drawHeader("Comunicado para a Família");
-                pdf.writeText(`Querida família,`, 11);
-                pdf.yOffset += 20;
-                pdf.writeText(`Durante esta semana, estamos trabalhando com o tema "${appState.makerPlanTheme || 'temas variados em sala'}". Exploramos atividades de formação de palavras, criatividade e raciocínio lógico.`, 11);
-                pdf.yOffset += 10;
-                pdf.writeText(`Para apoiar o aprendizado em casa, vocês podem brincar de "caça-palavras" com objetos do dia a dia ou ler uma história juntos antes de dormir.`, 11);
-                 pdf.yOffset += 20;
-                 pdf.writeText(`Agradecemos a parceria!`, 11);
-                 pdf.yOffset += 30;
-                 pdf.writeText(`Com carinho,\nProfessor(a) _________________________`, 11);
+                // --- CHECKLIST DE AVALIAÇÃO ---
+                if (doc.autoTable) {
+                    doc.addPage();
+                    pdf.yOffset = pdf.margin;
+                    pdf.drawFooter();
+                    pdf.drawHeader("Checklist de Avaliação Formativa");
+                    
+                    const allObjectives = selectedActivities.flatMap(act => act.type !== 'custom' ? act.objetivos : [`Realizou a atividade "${act.titulo}"`]);
+                    const head = [['Aluno', ...allObjectives.map(o => o.substring(0, 25) + '...')]];
+                    const body = [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']]; // Alunos em branco
 
-                 // ==========================================================
-                // 7. CHECKLIST DE AVALIAÇÃO (SIMULADO)
-                // ==========================================================
-                 doc.addPage();
-                pdf.yOffset = pdf.margin;
-                pdf.drawFooter();
-                pdf.drawHeader("Checklist de Avaliação Formativa");
-                 pdf.writeText("Use esta tabela para acompanhar o desenvolvimento dos alunos durante as atividades propostas.", 10, 'italic');
-                 pdf.yOffset += 20;
-                 
-                 if (doc.autoTable) {
-                     const head = [['Aluno', 'Junta sílabas?', 'Cria frases?', 'Participa?']];
-                     const body = [ ['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', ''] ];
-                     doc.autoTable({
-                         head: head,
-                         body: body,
-                         startY: pdf.yOffset,
-                         headStyles: { fillColor: varGet('--primary-color') }
-                     });
-                 } else {
-                     console.error("jsPDF-AutoTable plugin not loaded. Skipping table generation.");
-                     pdf.writeText("ERRO: A tabela de checklist não pôde ser gerada pois o plugin 'autoTable' não foi carregado.", 10, 'italic');
-                 }
+                    doc.autoTable({
+                        head: head,
+                        body: body,
+                        startY: pdf.yOffset,
+                        headStyles: { fillColor: varGet('--primary-color'), fontSize: 8 },
+                        bodyStyles: { minCellHeight: 25 },
+                    });
+                }
 
-                // --- FINALIZAÇÃO E DOWNLOAD ---
                 const fileName = `Super-Documento_${(appState.makerPlanTitle || "Plano").replace(/[^a-zA-Z0-9-]/g, '_')}.pdf`;
                 doc.save(fileName);
 
