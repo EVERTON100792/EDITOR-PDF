@@ -1246,7 +1246,7 @@
                     <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
                     <td>
                         ${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Recebido'}
-                        <button class="btn-action btn-edit" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
+                        <button class="btn-action btn-info" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
                     </td>
                 </tr>`, currentPage.contasReceber, searchQuery, filterValue);
         };
@@ -1321,7 +1321,7 @@
             }
 
             if (itemExistente) {
-                itemExistente.quantidade += quantity;
+                itemExistente.quantidade += quantidade;
                 itemExistente.subtotal = parseFloat((itemExistente.quantidade * produto.preco).toFixed(2));
             } else {
                 carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: parseFloat((quantidade * produto.preco).toFixed(2)) });
