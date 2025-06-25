@@ -12,45 +12,26 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* --- THEME VARIABLES --- */
+        /* --- PROFESSIONAL BLUE GRADIENT THEME --- */
         :root {
-            /* Light Theme Defaults */
-            --primary-color: #0d9488; /* Teal 600 */
-            --primary-dark-color: #0f766e; /* Teal 700 */
-            --primary-light-color: #f0fdfa; /* Teal 50 */
+            --primary-color: #3b82f6; /* Blue 500 */
+            --primary-dark-color: #2563eb; /* Blue 600 */
+            --primary-light-color: #eff6ff; /* Blue 50 */
+            --primary-gradient-start: #3b82f6; /* Blue 500 */
+            --primary-gradient-end: #2563eb; /* Blue 600 */
             
-            --text-primary: #1e293b; /* Slate 800 */
-            --text-secondary: #64748b; /* Slate 500 */
+            --text-primary: #1f2937; /* Gray 800 */
+            --text-secondary: #6b7280; /* Gray 500 */
             
-            --bg-color: #f8fafc; /* Slate 50 */
+            --bg-color: #f9fafb; /* Gray 50 */
             --surface-color: #ffffff;
-            --border-color: #e2e8f0; /* Slate 200 */
-            --shadow-color: rgba(0,0,0,0.05);
+            --border-color: #e5e7eb; /* Gray 200 */
+            --shadow-color: rgba(0,0,0,0.08); /* Slightly darker shadow for contrast */
 
-            --success-color: #22c55e;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --info-color: #3b82f6;
-        }
-
-        /* Dark Theme */
-        body.dark-theme {
-            --primary-color: #2dd4bf; /* Teal 400 */
-            --primary-dark-color: #14b8a6; /* Teal 500 */
-            --primary-light-color: #134e4a; /* Teal 900 */
-            
-            --text-primary: #e2e8f0; /* Slate 200 */
-            --text-secondary: #94a3b8; /* Slate 400 */
-            
-            --bg-color: #1a202c; /* Darker Slate */
-            --surface-color: #2d3748; /* Even Darker Slate */
-            --border-color: #4a5568; /* Gray 600 */
-            --shadow-color: rgba(0,0,0,0.3);
-
-            --success-color: #4ade80; /* Lighter Green */
-            --danger-color: #f87171; /* Lighter Red */
-            --warning-color: #fbbf24; /* Lighter Orange */
-            --info-color: #60a5fa; /* Lighter Blue */
+            --success-color: #10b981; /* Green 500 */
+            --danger-color: #ef4444; /* Red 500 */
+            --warning-color: #f59e0b; /* Amber 500 */
+            --info-color: #60a5fa; /* Blue 400 (slightly lighter for info) */
         }
 
         /* --- BASE STYLES --- */
@@ -86,7 +67,7 @@
 
         /* --- LOGIN SCREEN --- */
         #login-screen {
-            background: var(--primary-light-color);
+            background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
             display: flex; justify-content: center; align-items: center;
             height: 100%; padding: 1rem;
         }
@@ -96,7 +77,7 @@
             text-align: center; width: 100%; max-width: 400px;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .login-box h1 { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin-bottom: 10px;}
+        .login-box h1 { font-size: 2.5rem; font-weight: 700; color: var(--primary-dark-color); margin-bottom: 10px;}
         .login-box .subtitle { color: var(--text-secondary); margin-bottom: 35px; font-size: 1rem; }
         .input-group { position: relative; margin-bottom: 35px; }
         .input-group input {
@@ -112,10 +93,11 @@
         .btn-login {
             width: 100%; padding: 14px; border: none; border-radius: 8px;
             background: var(--primary-color); color: white; font-size: 1.1rem;
-            font-weight: 600; cursor: pointer; transition: background 0.3s ease, transform 0.2s;
+            font-weight: 600; cursor: pointer; transition: background 0.3s ease, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
         }
-        .btn-login:hover { background: var(--primary-dark-color); transform: translateY(-2px); }
-        .btn-login:active { transform: translateY(0); }
+        .btn-login:hover { background: var(--primary-dark-color); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.5); }
+        .btn-login:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3); }
         .error-message { color: var(--danger-color); margin-top: 15px; height: 20px; font-size: 0.9rem; font-weight: 500; }
 
         /* --- DASHBOARD LAYOUT --- */
@@ -162,55 +144,6 @@
         #menu-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; }
         #menu-toggle .bar { display: block; width: 25px; height: 3px; background-color: var(--text-primary); margin: 5px 0; transition: 0.4s; border-radius: 2px; }
         
-        .theme-toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .theme-toggle {
-            position: relative;
-            display: inline-block;
-            width: 45px;
-            height: 25px;
-        }
-        .theme-toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--text-secondary);
-            transition: .4s;
-            border-radius: 25px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 17px;
-            width: 17px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: var(--primary-color);
-        }
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-        .theme-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
         .main-content h1 { font-size: 2rem; color: var(--text-primary); font-weight: 700; }
 
         /* --- CONTENT SECTIONS --- */
@@ -250,15 +183,18 @@
         /* --- BUTTON STYLES --- */
         .btn, .btn-submit {
             padding: 12px 25px; border: none; border-radius: 8px; background: var(--primary-color);
-            color: white; font-size: 1rem; cursor: pointer; transition: background 0.2s, transform 0.2s; font-weight: 600;
+            color: white; font-size: 1rem; cursor: pointer; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; font-weight: 600;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
         }
-        .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); transform: translateY(-2px); }
-        .btn:active, .btn-submit:active { transform: translateY(0); }
+        .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3); }
+        .btn:active, .btn-submit:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(59, 130, 246, 0.1); }
         .btn-secondary {
             background-color: var(--text-secondary);
+            box-shadow: 0 4px 10px rgba(107, 114, 128, 0.2);
         }
         .btn-secondary:hover {
             background-color: #5a6a7c; /* slightly darker slate */
+            box-shadow: 0 6px 15px rgba(107, 114, 128, 0.3);
         }
         
         /* --- TABLE STYLES --- */
@@ -273,21 +209,16 @@
             font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
             position: sticky; top: 0;
         }
-        body.dark-theme th {
-            background-color: var(--primary-dark-color);
-            color: var(--primary-light-color);
-        }
         td { color: var(--text-primary); font-size: 0.95rem; }
         tr:nth-child(even) { background-color: rgba(0,0,0,0.02); }
-        body.dark-theme tr:nth-child(even) { background-color: rgba(255,255,255,0.03); }
 
         .btn-action { padding: 8px 12px; border-radius: 6px; color: white; font-weight: 500; border: none; cursor: pointer; margin-right: 8px; transition: background-color 0.2s, transform 0.2s;}
         .btn-action:hover { transform: translateY(-1px); }
         .btn-action:active { transform: translateY(0); }
         .btn-paid { background-color: var(--success-color); }
-        .btn-paid:hover { background-color: #1a964f; }
+        .btn-paid:hover { background-color: #0c9b6f; }
         .btn-edit { background-color: var(--info-color); }
-        .btn-edit:hover { background-color: #3174d8; }
+        .btn-edit:hover { background-color: #3b82f6; } /* Matching primary blue for edit */
         .btn-delete { background-color: var(--danger-color); }
         .btn-delete:hover { background-color: #cc3939; }
         .status-pendente { color: var(--warning-color); font-weight: bold; }
@@ -346,6 +277,7 @@
             border-radius: 6px;
             background-color: var(--bg-color);
             color: var(--text-primary);
+            width: 100%;
         }
 
 
@@ -363,8 +295,8 @@
             .sidebar.open { transform: translateX(0); }
             .main-content { padding: 20px; }
             .main-header { justify-content: flex-start; padding: 15px; }
-            .mobile-header { display: flex; }
             .desktop-title { display: none; }
+            .mobile-header { display: flex; }
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
             .flex.gap-2 { flex-direction: column; gap: 0.5rem; } /* Adjust flex for small screens */
             .align-items-end { align-items: stretch; }
@@ -432,14 +364,6 @@
                     <h1 id="mobile-page-title"></h1>
                 </div>
                 <h1 class="desktop-title" id="desktop-page-title"></h1>
-                <div class="theme-toggle-container">
-                    <span class="theme-label">Claro</span>
-                    <label class="theme-toggle">
-                        <input type="checkbox" id="theme-switcher">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="theme-label">Escuro</span>
-                </div>
             </header>
             
             <section id="dashboard-view" class="content-section">
@@ -564,7 +488,7 @@
                 <div class="card" id="venda-form-card">
                     <form id="venda-form">
                         <div class="form-group"><label for="venda-cliente">Selecione o Cliente</label><select id="venda-cliente" required></select></div>
-                        <div class="card mt-3"><h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;">Adicionar Item</h3><div class="flex gap-2 align-items-end"><div class="form-group flex-1"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px;"></div><button type="button" id="btn-add-item-venda" class="btn">Adicionar</button></div></div>
+                        <div class="card mt-3"><h3>Adicionar Item</h3><div class="flex gap-2 align-items-end"><div class="form-group flex-1"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px;"></div><button type="button" id="btn-add-item-venda" class="btn">Adicionar</button></div></div>
                         <div class="card mt-3"><h3>Itens da Venda</h3><div id="venda-itens-container" class="table-responsive-container"></div><h3 style="margin-top:1rem; text-align:right; font-weight:700; font-size:1.125rem;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
                         <div class="card mt-3"><h3>Pagamento</h3><div class="form-group"><label for="venda-pagamento">Método</label><select id="venda-pagamento"><option value="vista">À Vista</option><option value="pix">Pix</option><option value="fiado">Fiado</option><option value="parcelado">Parcelado</option></select></div><div class="form-group hidden" id="venda-parcelas-group"><label for="venda-parcelas">Parcelas</label><select id="venda-parcelas"><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12">12x</option></select></div></div>
                         <button type="button" id="btn-finalizar-venda" class="btn-submit" style="margin-top:1.5rem; width:100%;">Finalizar Venda</button>
@@ -604,18 +528,6 @@
             <section id="configuracoes-view" class="content-section">
                 <div class="settings-grid">
                     <div class="settings-card">
-                        <h3>Configurações de Tema</h3>
-                        <div class="theme-toggle-container justify-center">
-                            <span class="theme-label">Claro</span>
-                            <label class="theme-toggle">
-                                <input type="checkbox" id="theme-switcher-settings">
-                                <span class="slider"></span>
-                            </label>
-                            <span class="theme-label">Escuro</span>
-                        </div>
-                    </div>
-
-                    <div class="settings-card">
                         <h3>Backup e Restauração</h3>
                         <button id="btn-backup-data" class="btn">Fazer Backup</button>
                         <hr class="mt-3 mb-2" style="border-color: var(--border-color);">
@@ -642,8 +554,6 @@
         const menuToggle = document.getElementById('menu-toggle');
         const mobilePageTitle = document.getElementById('mobile-page-title');
         const desktopPageTitle = document.getElementById('desktop-page-title');
-        const themeSwitcherMain = document.getElementById('theme-switcher');
-        const themeSwitcherSettings = document.getElementById('theme-switcher-settings');
 
         // --- ESTADO DA APLICAÇÃO ---
         let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
@@ -672,25 +582,6 @@
             document.body.appendChild(notification);
             setTimeout(() => { notification.style.opacity = '1'; notification.style.transform = 'translateY(0)'; }, 10);
             setTimeout(() => { notification.style.opacity = '0'; notification.style.transform = 'translateY(10px)'; setTimeout(() => notification.remove(), 500); }, 3500);
-        };
-
-        // --- THEME LOGIC ---
-        const applyTheme = (theme) => {
-            document.body.classList.toggle('dark-theme', theme === 'dark');
-            localStorage.setItem('theme', theme);
-            themeSwitcherMain.checked = theme === 'dark';
-            themeSwitcherSettings.checked = theme === 'dark';
-        };
-
-        const loadTheme = () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                applyTheme(savedTheme);
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                applyTheme('dark');
-            } else {
-                applyTheme('light');
-            }
         };
 
         // --- FUNÇÕES DE RENDERIZAÇÃO ---
@@ -942,7 +833,7 @@
             
             if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
                 const clienteNome = clientes.find(c => c.id === novaVenda.clienteId)?.nome || 'Avulso';
-                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total });
+                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Venda (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total });
             } else if (metodoPagamento === 'fiado' || metodoPagamento === 'parcelado') {
                 const parcelas = metodoPagamento === 'fiado' ? 1 : parseInt(document.getElementById('venda-parcelas').value);
                 const valorParcela = total / parcelas;
@@ -1175,7 +1066,7 @@
                 vendas: vendas,
                 contasAReceber: contasAReceber,
                 fluxoCaixa: fluxoCaixa,
-                theme: localStorage.getItem('theme') // Include current theme
+                // Removed theme as it's no longer a user setting
             };
             const jsonString = JSON.stringify(data, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
@@ -1222,10 +1113,6 @@
                     saveData('contasAReceber', contasAReceber);
                     saveData('fluxoCaixa', fluxoCaixa);
 
-                    if (restoredData.theme) {
-                        applyTheme(restoredData.theme);
-                    }
-
                     showNotification('Backup restaurado com sucesso! Recarregando o sistema...');
                     setTimeout(() => {
                         // Reinitialize the app to reflect restored data
@@ -1256,7 +1143,6 @@
 
             const lastPageId = localStorage.getItem('lastActivePage');
             navigateToPage(lastPageId); // Render initial page
-            loadTheme(); // Apply theme on init
         };
         
         // --- EVENT LISTENERS ---
@@ -1303,11 +1189,6 @@
         menuToggle.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.toggle('open'); });
         mainContent.addEventListener('click', () => { if (sidebar.classList.contains('open')) sidebar.classList.remove('open'); });
         
-        // Theme switchers sync
-        themeSwitcherMain.addEventListener('change', () => applyTheme(themeSwitcherMain.checked ? 'dark' : 'light'));
-        themeSwitcherSettings.addEventListener('change', () => applyTheme(themeSwitcherSettings.checked ? 'dark' : 'light'));
-
-
         // CLIENTES CRUD EVENTS
         document.getElementById('form-add-cliente').addEventListener('submit', e => { 
             e.preventDefault(); 
@@ -1485,7 +1366,7 @@
                     if (!confirm(`Confirmar o recebimento de ${formatCurrency(conta.valor)} da conta nº ${id}?`)) return;
                     conta.status = 'Pago';
                     const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
-                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Conta #${conta.vendaId})`, valor: conta.valor });
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Conta #${conta.vendaId})`, valor: conta.valor });
                     saveData('contasAReceber', contasAReceber);
                     saveData('fluxoCaixa', fluxoCaixa);
                     renderContasAReceber();
