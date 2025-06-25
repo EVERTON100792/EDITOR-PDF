@@ -620,8 +620,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     logoutBtn.addEventListener('click', () => {
         if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
-        localStorage.clear();
+        
+        // --- CORREÇÃO APLICADA AQUI ---
+        // Em vez de limpar tudo (o que apagava os dados), removemos apenas o item de login.
+        localStorage.removeItem('isLoggedIn'); 
+        
+        // Limpamos os dados da memória para a sessão atual
         clientes = []; produtos = []; vendas = []; contasAReceber = []; fluxoCaixa = []; carrinhoVenda = [];
+        
+        // Redirecionamos para a tela de login
         dashboardScreen.classList.add('hidden');
         loginScreen.classList.remove('hidden');
     });
