@@ -1236,7 +1236,7 @@
         };
 
         const renderContasAReceber = (searchQuery = '', filterValue = '') => {
-            const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Cliente avulso';
+            const getNomeCliente = id => clientes.find(c => c.id === c.clienteId)?.nome || 'Cliente avulso';
             const sortedData = contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento));
             renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ação'], sortedData, conta => `
                 <tr>
@@ -1246,7 +1246,7 @@
                     <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
                     <td>
                         ${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Recebido'}
-                        <button class="btn-action btn-info" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
+                        <button class="btn-action btn-edit" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
                     </td>
                 </tr>`, currentPage.contasReceber, searchQuery, filterValue);
         };
@@ -1435,27 +1435,35 @@
                     dataArray = clientes;
                     saveDataKey = 'clientes';
                     renderFunction = renderClientes;
-                    if (vendas.some(v => v.clienteId === id) || contasAReceber.some(c => c.clienteId === id)) {
-                        showNotification('Não é possível excluir cliente com vendas ou contas associadas.', true);
+                    // Check for dependencies before deletion
+                    const hasRelatedSales = vendas.some(v => v.clienteId === id);
+                    const hasRelatedReceivables = contasAReceber.some(c => c.clienteId === id);
+
+                    if (hasRelatedSales || hasRelatedReceivables) {
+                        showNotification('Não é possível excluir cliente com vendas ou contas a receber associadas.', true);
                         return;
                     }
+                    clientes = clientes.filter(item => item.id !== id);
                     break;
                 case 'produto':
                     dataArray = produtos;
                     saveDataKey = 'produtos';
                     renderFunction = renderProdutos;
-                    if (vendas.some(v => v.itens.some(item => item.produtoId === id))) {
+                    // Check for dependencies before deletion
+                    const hasRelatedSaleItems = vendas.some(v => v.itens.some(item => item.produtoId === id));
+                    if (hasRelatedSaleItems) {
                         showNotification('Não é possível excluir produto já presente em vendas.', true);
                         return;
                     }
+                    produtos = produtos.filter(item => item.id !== id);
                     break;
                 case 'lancamento':
-                    dataArray = fluxoCaixa;
+                    fluxoCaixa = fluxoCaixa.filter(item => item.id !== id);
                     saveDataKey = 'fluxoCaixa';
                     renderFunction = renderFluxoCaixa;
                     break;
                 case 'conta-pagar':
-                    dataArray = contasAPagar;
+                    contasAPagar = contasAPagar.filter(item => item.id !== id);
                     saveDataKey = 'contasAPagar';
                     renderFunction = renderContasAPagar;
                     break;
@@ -1464,25 +1472,15 @@
                     return;
             }
 
-            const initialLength = dataArray.length;
-            // Generalize filtering based on the array and ID
-            if (type === 'cliente') clientes = clientes.filter(item => item.id !== id);
-            else if (type === 'produto') produtos = produtos.filter(item => item.id !== id);
-            else if (type === 'lancamento') fluxoCaixa = fluxoCaixa.filter(item => item.id !== id);
-            else if (type === 'conta-pagar') contasAPagar = contasAPagar.filter(item => item.id !== id);
-            
-            if (dataArray.length > (type === 'cliente' ? clientes.length : type === 'produto' ? produtos.length : type === 'lancamento' ? fluxoCaixa.length : contasAPagar.length) ) { // Check if an item was actually removed
-                saveData(saveDataKey, type === 'cliente' ? clientes : type === 'produto' ? produtos : type === 'lancamento' ? fluxoCaixa : contasAPagar);
-                showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a) com sucesso!`);
-                renderFunction();
-                // Special updates for product/client related changes
-                if (type === 'produto') { popularFormulariosVenda(); populateUpdateStockProductSelect(); }
-                if (type === 'cliente') { popularFormulariosVenda(); }
-                renderDashboardSummaries(); // Refresh dashboard on relevant changes
-            } else {
-                showNotification(`Não foi possível encontrar o ${type} para exclusão.`, true);
-            }
+            saveData(saveDataKey, (type === 'cliente' ? clientes : type === 'produto' ? produtos : type === 'lancamento' ? fluxoCaixa : contasAPagar));
+            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a) com sucesso!`);
+            renderFunction();
+            // Special updates for product/client related changes
+            if (type === 'produto') { popularFormulariosVenda(); populateUpdateStockProductSelect(); }
+            if (type === 'cliente') { popularFormulariosVenda(); }
+            renderDashboardSummaries(); // Refresh dashboard on relevant changes
         };
+
 
         const editItem = (id, type) => {
             let itemToEdit;
@@ -1984,13 +1982,760 @@
         });
 
 
-        // Initial load check
+        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+        const initializeApp = () => {
+            // Carrega todos os dados do localStorage
+            clientes = loadData('clientes');
+            produtos = loadData('produtos');
+            vendas = loadData('vendas');
+            contasAReceber = loadData('contasAReceber');
+            contasAPagar = loadData('contasAPagar');
+            fluxoCaixa = loadData('fluxoCaixa');
+            
+            // Define o valor inicial para parcelas (se não estiver definido)
+            if (document.getElementById('venda-parcelas') && !document.getElementById('venda-parcelas').value) {
+                document.getElementById('venda-parcelas').value = '2';
+            }
+
+            // Aplica o tema salvo
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            document.getElementById('theme-toggle-switch').checked = (savedTheme === 'dark');
+
+            // Navega para a última página ativa ou dashboard
+            const lastPageId = localStorage.getItem('lastActivePage');
+            navigateToPage(lastPageId); 
+        };
+
+        // Verifica o estado de login ao carregar a página
         if (localStorage.getItem('isLoggedIn') === 'true') {
+            loginScreen.classList.add('hidden');
             dashboardScreen.classList.remove('hidden');
-            init();
+            initializeApp(); // Se logado, inicializa o app e carrega os dados
         } else {
             loginScreen.classList.remove('hidden');
+            dashboardScreen.classList.add('hidden'); // Garante que o dashboard está oculto
             document.getElementById('username').focus();
+        }
+
+        // Lógica do formulário de login
+        loginForm.addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMessageEl = document.getElementById('error-message');
+
+            if (usernameInput.value === 'maira' && passwordInput.value === 'flor123') { 
+                localStorage.setItem('isLoggedIn', 'true'); // Define como logado
+                loginScreen.classList.add('hidden'); 
+                dashboardScreen.classList.remove('hidden'); 
+                initializeApp(); // Inicializa o app e carrega os dados
+                errorMessageEl.textContent = ''; // Limpa mensagem de erro
+            } else { 
+                errorMessageEl.textContent = 'Usuário ou senha inválidos.';
+                showNotification('Falha no login. Verifique suas credenciais.', true);
+                usernameInput.value = ''; 
+                passwordInput.value = '';
+                usernameInput.focus();
+            }
+        });
+        
+        // Lógica do botão de logout
+        logoutBtn.addEventListener('click', () => {
+            if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
+            localStorage.setItem('isLoggedIn', 'false'); // Define como deslogado
+            // Não limpa os dados do localStorage para persistência
+
+            // Opcional: Você pode resetar os arrays no JS para refletir que não há dados "ativos" na sessão,
+            // mas eles ainda estarão no localStorage para a próxima vez que o usuário logar.
+            // clientes = []; produtos = []; vendas = []; contasAReceber = []; contasAPagar = []; fluxoCaixa = []; carrinhoVenda = [];
+
+            document.body.classList.remove('dark-theme'); // Reseta o tema visualmente
+            localStorage.setItem('theme', 'light'); // Salva o tema padrão para a próxima sessão
+            document.getElementById('theme-toggle-switch').checked = false; // Desativa o switch de tema
+
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('username').value = ''; 
+            document.getElementById('password').value = '';
+            document.getElementById('error-message').textContent = '';
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                navigateToPage(link.getAttribute('data-target'));
+                if(window.innerWidth <= 768) sidebar.classList.remove('open');
+            });
+        });
+        
+        menuToggle.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.toggle('open'); });
+        mainContent.addEventListener('click', () => { if (sidebar.classList.contains('open')) sidebar.classList.remove('open'); });
+        
+        // CLIENTES CRUD EVENTS
+        document.getElementById('form-add-cliente').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const id = document.getElementById('cliente-id').value;
+            const nome = document.getElementById('nome-cliente').value;
+            const contato = document.getElementById('contato-cliente').value;
+
+            if (id) { // Editing existing client
+                const index = clientes.findIndex(c => c.id == id);
+                if (index !== -1) {
+                    clientes[index] = { ...clientes[index], nome, contato };
+                    showNotification('Cliente atualizado!');
+                }
+            } else { // Adding new client
+                clientes.push({ id: Date.now(), nome, contato }); 
+                showNotification('Cliente salvo!'); 
+            }
+            saveData('clientes', clientes); 
+            renderClientes(); 
+            popularFormulariosVenda(); 
+        });
+
+        document.getElementById('btn-cancelar-cliente').addEventListener('click', () => resetForm('form-add-cliente', 'cliente'));
+
+        document.getElementById('tabela-clientes-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+            if (target.classList.contains('btn-edit') && type === 'cliente') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'cliente') {
+                deleteItem(id, type);
+            }
+        });
+
+        document.getElementById('search-clientes').addEventListener('input', (e) => goToPage('clientes', 1, e.target.value));
+
+        // PRODUTOS CRUD EVENTS
+        document.getElementById('form-add-produto').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const id = document.getElementById('produto-id').value;
+            const nome = document.getElementById('nome-produto').value;
+            const quantidade = parseInt(document.getElementById('qtd-produto').value);
+            const preco = parseFloat(document.getElementById('preco-produto').value);
+
+            if (isNaN(quantidade) || quantidade < 0) { showNotification('Quantidade deve ser um número não negativo.', true); return; }
+            if (isNaN(preco) || preco <= 0) { showNotification('Preço deve ser um número positivo.', true); return; }
+
+            if (id) { // Editing existing product
+                const index = produtos.findIndex(p => p.id == id);
+                if (index !== -1) {
+                    produtos[index] = { ...produtos[index], nome, quantidade, preco };
+                    showNotification('Produto atualizado!');
+                }
+            } else { // Adding new product
+                produtos.push({ id: Date.now(), nome, quantidade, preco }); 
+                showNotification('Produto salvo!'); 
+            }
+            saveData('produtos', produtos); 
+            renderProdutos(); 
+            popularFormulariosVenda(); // Update product dropdowns
+            populateUpdateStockProductSelect(); // Update stock product dropdown
+        });
+
+        document.getElementById('btn-cancelar-produto').addEventListener('click', () => resetForm('form-add-produto', 'produto'));
+
+        document.getElementById('tabela-produtos-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+            if (target.classList.contains('btn-edit') && type === 'produto') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'produto') {
+                deleteItem(id, type);
+            }
+        });
+
+        document.getElementById('search-produtos').addEventListener('input', (e) => goToPage('produtos', 1, e.target.value, document.getElementById('filter-estoque-qtd').value));
+        document.getElementById('filter-estoque-qtd').addEventListener('change', (e) => goToPage('produtos', 1, document.getElementById('search-produtos').value, e.target.value));
+
+
+        // UPDATE STOCK EVENTS
+        document.getElementById('form-update-stock').addEventListener('submit', e => {
+            e.preventDefault();
+            const productId = parseInt(document.getElementById('update-stock-product').value);
+            const quantity = parseInt(document.getElementById('update-stock-quantity').value);
+            const type = document.getElementById('update-stock-type').value;
+
+            if (!productId || isNaN(quantity) || quantity <= 0) {
+                showNotification('Selecione um produto e insira uma quantidade válida.', true);
+                return;
+            }
+
+            const productIndex = produtos.findIndex(p => p.id === productId);
+            if (productIndex === -1) {
+                showNotification('Produto não encontrado.', true);
+                return;
+            }
+
+            if (type === 'add') {
+                produtos[productIndex].quantidade += quantity;
+                showNotification(`Estoque de ${produtos[productIndex].nome} aumentado em ${quantity}.`);
+            } else if (type === 'remove') {
+                if (produtos[productIndex].quantidade < quantity) {
+                    showNotification(`Não é possível remover ${quantity} unidades. Apenas ${produtos[productIndex].quantidade} em estoque.`, true);
+                    return;
+                }
+                produtos[productIndex].quantidade -= quantity;
+                showNotification(`Estoque de ${produtos[productIndex].nome} diminuído em ${quantity}.`);
+            }
+
+            saveData('produtos', produtos);
+            renderProdutos();
+            popularFormulariosVenda(); // Re-populate to show updated quantities in sales
+            populateUpdateStockProductSelect(); // Re-populate to show updated quantities in stock update
+        });
+
+        // FLUXO DE CAIXA CRUD EVENTS
+        document.getElementById('form-add-lancamento').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const id = document.getElementById('lancamento-id').value;
+            const desc = document.getElementById('desc-lancamento').value; 
+            const valor = parseFloat(document.getElementById('valor-lancamento').value); 
+            const tipo = document.getElementById('tipo-lancamento').value; 
+
+            if(!desc || isNaN(valor) || valor <= 0){ 
+                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true); 
+                return;
+            }
+
+            if (id) { // Editing existing lancamento
+                const index = fluxoCaixa.findIndex(l => l.id == id);
+                if (index !== -1) {
+                    fluxoCaixa[index] = { ...fluxoCaixa[index], descricao: desc, valor, tipo };
+                    showNotification('Lançamento atualizado!');
+                }
+            } else { // Adding new lancamento
+                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo, descricao: desc, valor }); 
+                showNotification('Lançamento realizado!'); 
+            }
+            saveData('fluxoCaixa', fluxoCaixa); 
+            renderFluxoCaixa(); 
+            renderDashboardSummaries(); // Refresh dashboard balance
+        });
+
+        document.getElementById('btn-cancelar-lancamento').addEventListener('click', () => resetForm('form-add-lancamento', 'lancamento'));
+
+        document.getElementById('tabela-caixa-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+            if (target.classList.contains('btn-edit') && type === 'lancamento') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'lancamento') {
+                deleteItem(id, type);
+            }
+        });
+
+        document.getElementById('search-caixa').addEventListener('input', (e) => goToPage('caixa', 1, e.target.value, document.getElementById('filter-caixa-tipo').value));
+        document.getElementById('filter-caixa-tipo').addEventListener('change', (e) => goToPage('caixa', 1, document.getElementById('search-caixa').value, e.target.value));
+
+        // VENDAS EVENTS
+        document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
+        document.getElementById('venda-itens-container').addEventListener('click', e => { 
+            if(e.target.classList.contains('btn-delete') && e.target.getAttribute('data-type') === 'carrinho') { 
+                const id = parseInt(e.target.getAttribute('data-id')); 
+                carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== id); 
+                renderCarrinho(); 
+                showNotification('Item removido do carrinho.');
+            } 
+        });
+        document.getElementById('venda-pagamento').addEventListener('change', e => {
+            document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado');
+        });
+        document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
+        
+        // CONTAS A RECEBER EVENTS
+        document.getElementById('tabela-contas-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+
+            if(target.classList.contains('btn-paid')) {
+                const conta = contasAReceber.find(c => c.id === id);
+                if(conta && conta.status === 'Pendente') {
+                    if (!confirm(`Confirmar o recebimento de ${formatCurrency(conta.valor)} da conta nº ${id}?`)) return;
+                    conta.status = 'Pago';
+                    const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Venda #${conta.vendaId})`, valor: conta.valor });
+                    saveData('contasAReceber', contasAReceber);
+                    saveData('fluxoCaixa', fluxoCaixa);
+                    renderContasAReceber();
+                    renderDashboardSummaries(); // Refresh dashboard totals
+                    showNotification('Baixa realizada e valor lançado no caixa!');
+                } else {
+                    showNotification('Esta conta já foi paga.', true);
+                }
+            } else if (target.classList.contains('btn-edit') && type === 'venda-detalhes') {
+                showVendaDetalhesModal(id);
+            }
+        });
+        document.getElementById('search-contas-receber').addEventListener('input', (e) => goToPage('contas-receber', 1, e.target.value, document.getElementById('filter-contas-receber-status').value));
+        document.getElementById('filter-contas-receber-status').addEventListener('change', (e) => goToPage('contas-receber', 1, document.getElementById('search-contas-receber').value, e.target.value));
+
+
+        // CONTAS A PAGAR CRUD EVENTS
+        document.getElementById('form-add-conta-pagar').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('conta-pagar-id').value;
+            const descricao = document.getElementById('desc-conta-pagar').value;
+            const valor = parseFloat(document.getElementById('valor-conta-pagar').value);
+            const dataVencimento = document.getElementById('vencimento-conta-pagar').value;
+
+            if (!descricao || isNaN(valor) || valor <= 0 || !dataVencimento) {
+                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true);
+                return;
+            }
+
+            if (id) {
+                const index = contasAPagar.findIndex(c => c.id == id);
+                if (index !== -1) {
+                    contasAPagar[index] = { ...contasAPagar[index], descricao, valor, dataVencimento };
+                    showNotification('Conta a Pagar atualizada!');
+                }
+            } else {
+                contasAPagar.push({ id: Date.now(), descricao, valor, dataVencimento, status: 'Pendente' });
+                showNotification('Conta a Pagar registrada!');
+            }
+            saveData('contasAPagar', contasAPagar);
+            renderContasAPagar();
+            renderDashboardSummaries();
+        });
+
+        document.getElementById('btn-cancelar-conta-pagar').addEventListener('click', () => resetForm('form-add-conta-pagar', 'conta-pagar'));
+
+        document.getElementById('tabela-contas-pagar-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+
+            if (target.classList.contains('btn-paid') && type === 'conta-pagar') {
+                const conta = contasAPagar.find(c => c.id === id);
+                if (conta && conta.status === 'Pendente') {
+                    if (!confirm(`Confirmar o pagamento de ${formatCurrency(conta.valor)} da conta: ${conta.descricao}?`)) return;
+                    conta.status = 'Pago';
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Saída', descricao: `Pagamento: ${conta.descricao} (Conta Pagar #${conta.id})`, valor: conta.valor });
+                    saveData('contasAPagar', contasAPagar);
+                    saveData('fluxoCaixa', fluxoCaixa);
+                    renderContasAPagar();
+                    renderDashboardSummaries();
+                    showNotification('Pagamento realizado e valor lançado no caixa!');
+                } else {
+                    showNotification('Esta conta já foi paga.', true);
+                }
+            } else if (target.classList.contains('btn-edit') && type === 'conta-pagar') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'conta-pagar') {
+                deleteItem(id, type);
+            }
+        });
+        document.getElementById('search-contas-pagar').addEventListener('input', (e) => goToPage('contas-pagar', 1, e.target.value, document.getElementById('filter-contas-pagar-status').value));
+        document.getElementById('filter-contas-pagar-status').addEventListener('change', (e) => goToPage('contas-pagar', 1, document.getElementById('search-contas-pagar').value, e.target.value));
+
+
+        // --- BACKUP/RESTORE BUTTONS ---
+        document.getElementById('btn-backup-data').addEventListener('click', backupData);
+        document.getElementById('btn-restore-data').addEventListener('click', () => {
+            document.getElementById('backup-file-input').click(); // Trigger file input click
+        });
+        document.getElementById('backup-file-input').addEventListener('change', restoreData);
+        
+        // THEME TOGGLE EVENT
+        document.getElementById('theme-toggle-switch').addEventListener('change', (e) => {
+            const theme = e.target.checked ? 'dark' : 'light';
+            applyTheme(theme);
+            localStorage.setItem('theme', theme);
+            // Re-render charts or other elements that might be affected by theme for consistency
+            renderDashboardSummaries();
+        });
+
+
+        // --- INICIALIZAÇÃO DA APLICAÇÃO ---
+        // A função de inicialização principal, que carrega os dados e renderiza a tela.
+        // Ela é chamada APENAS se o usuário está logado ou após um login bem-sucedido.
+        const init = () => {
+            clientes = loadData('clientes');
+            produtos = loadData('produtos');
+            vendas = loadData('vendas');
+            contasAReceber = loadData('contasAReceber');
+            contasAPagar = loadData('contasAPagar');
+            fluxoCaixa = loadData('fluxoCaixa');
+            
+            if (document.getElementById('venda-parcelas') && !document.getElementById('venda-parcelas').value) {
+                document.getElementById('venda-parcelas').value = '2';
+            }
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            document.getElementById('theme-toggle-switch').checked = (savedTheme === 'dark');
+
+            const lastPageId = localStorage.getItem('lastActivePage');
+            navigateToPage(lastPageId); 
+        };
+
+        // --- LÓGICA DE CARREGAMENTO INICIAL DA PÁGINA ---
+        // Esta é a primeira coisa que verifica se o usuário deve ver o login ou o dashboard.
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            init(); // Se já estiver logado, inicializa o sistema e exibe o dashboard.
+        } else {
+            loginScreen.classList.remove('hidden');
+            dashboardScreen.classList.add('hidden'); // Garante que o dashboard não seja exibido acidentalmente
+            document.getElementById('username').focus(); // Foca no campo de usuário para login
+        }
+
+        // Lógica do formulário de login (agora só lida com o submit)
+        loginForm.addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMessageEl = document.getElementById('error-message');
+
+            if (usernameInput.value === 'maira' && passwordInput.value === 'flor123') { 
+                localStorage.setItem('isLoggedIn', 'true'); 
+                loginScreen.classList.add('hidden'); 
+                dashboardScreen.classList.remove('hidden'); 
+                init(); // Chama init() APENAS após um login bem-sucedido
+                errorMessageEl.textContent = ''; 
+            } else { 
+                errorMessageEl.textContent = 'Usuário ou senha inválidos.';
+                showNotification('Falha no login. Verifique suas credenciais.', true);
+                usernameInput.value = ''; 
+                passwordInput.value = '';
+                usernameInput.focus();
+            }
+        });
+        
+        // Lógica do botão de logout
+        logoutBtn.addEventListener('click', () => {
+            if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
+            localStorage.setItem('isLoggedIn', 'false'); // Define explicitamente como deslogado
+
+            // IMPORTANTE: Não limpa os arrays de dados no JavaScript aqui,
+            // pois queremos que os dados permaneçam no localStorage.
+            // Para garantir que a interface reflita o "logout", apenas esconde o dashboard
+            // e mostra a tela de login. Os dados serão carregados novamente pelo init()
+            // na próxima vez que o usuário logar.
+
+            document.body.classList.remove('dark-theme'); // Reseta o tema visualmente
+            localStorage.setItem('theme', 'light'); // Salva o tema padrão para a próxima sessão
+            document.getElementById('theme-toggle-switch').checked = false; // Desativa o switch de tema
+
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('username').value = ''; 
+            document.getElementById('password').value = '';
+            document.getElementById('error-message').textContent = '';
+        });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                navigateToPage(link.getAttribute('data-target'));
+                if(window.innerWidth <= 768) sidebar.classList.remove('open');
+            });
+        });
+        
+        menuToggle.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.toggle('open'); });
+        mainContent.addEventListener('click', () => { if (sidebar.classList.contains('open')) sidebar.classList.remove('open'); });
+        
+        // CLIENTES CRUD EVENTS
+        document.getElementById('form-add-cliente').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const id = document.getElementById('cliente-id').value;
+            const nome = document.getElementById('nome-cliente').value;
+            const contato = document.getElementById('contato-cliente').value;
+
+            if (id) { // Editing existing client
+                const index = clientes.findIndex(c => c.id == id);
+                if (index !== -1) {
+                    clientes[index] = { ...clientes[index], nome, contato };
+                    showNotification('Cliente atualizado!');
+                }
+            } else { // Adding new client
+                clientes.push({ id: Date.now(), nome, contato }); 
+                showNotification('Cliente salvo!'); 
+            }
+            saveData('clientes', clientes); 
+            renderClientes(); 
+            popularFormulariosVenda(); 
+        });
+
+        document.getElementById('btn-cancelar-cliente').addEventListener('click', () => resetForm('form-add-cliente', 'cliente'));
+
+        document.getElementById('tabela-clientes-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+            if (target.classList.contains('btn-edit') && type === 'cliente') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'cliente') {
+                deleteItem(id, type);
+            }
+        });
+
+        document.getElementById('search-clientes').addEventListener('input', (e) => goToPage('clientes', 1, e.target.value));
+
+        // PRODUTOS CRUD EVENTS
+        document.getElementById('form-add-produto').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const id = document.getElementById('produto-id').value;
+            const nome = document.getElementById('nome-produto').value;
+            const quantidade = parseInt(document.getElementById('qtd-produto').value);
+            const preco = parseFloat(document.getElementById('preco-produto').value);
+
+            if (isNaN(quantidade) || quantidade < 0) { showNotification('Quantidade deve ser um número não negativo.', true); return; }
+            if (isNaN(preco) || preco <= 0) { showNotification('Preço deve ser um número positivo.', true); return; }
+
+            if (id) { // Editing existing product
+                const index = produtos.findIndex(p => p.id == id);
+                if (index !== -1) {
+                    produtos[index] = { ...produtos[index], nome, quantidade, preco };
+                    showNotification('Produto atualizado!');
+                }
+            } else { // Adding new product
+                produtos.push({ id: Date.now(), nome, quantidade, preco }); 
+                showNotification('Produto salvo!'); 
+            }
+            saveData('produtos', produtos); 
+            renderProdutos(); 
+            popularFormulariosVenda(); // Update product dropdowns
+            populateUpdateStockProductSelect(); // Update stock product dropdown
+        });
+
+        document.getElementById('btn-cancelar-produto').addEventListener('click', () => resetForm('form-add-produto', 'produto'));
+
+        document.getElementById('tabela-produtos-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+            if (target.classList.contains('btn-edit') && type === 'produto') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'produto') {
+                deleteItem(id, type);
+            }
+        });
+
+        document.getElementById('search-produtos').addEventListener('input', (e) => goToPage('produtos', 1, e.target.value, document.getElementById('filter-estoque-qtd').value));
+        document.getElementById('filter-estoque-qtd').addEventListener('change', (e) => goToPage('produtos', 1, document.getElementById('search-produtos').value, e.target.value));
+
+
+        // UPDATE STOCK EVENTS
+        document.getElementById('form-update-stock').addEventListener('submit', e => {
+            e.preventDefault();
+            const productId = parseInt(document.getElementById('update-stock-product').value);
+            const quantity = parseInt(document.getElementById('update-stock-quantity').value);
+            const type = document.getElementById('update-stock-type').value;
+
+            if (!productId || isNaN(quantity) || quantity <= 0) {
+                showNotification('Selecione um produto e insira uma quantidade válida.', true);
+                return;
+            }
+
+            const productIndex = produtos.findIndex(p => p.id === productId);
+            if (productIndex === -1) {
+                showNotification('Produto não encontrado.', true);
+                return;
+            }
+
+            if (type === 'add') {
+                produtos[productIndex].quantidade += quantity;
+                showNotification(`Estoque de ${produtos[productIndex].nome} aumentado em ${quantity}.`);
+            } else if (type === 'remove') {
+                if (produtos[productIndex].quantidade < quantity) {
+                    showNotification(`Não é possível remover ${quantity} unidades. Apenas ${produtos[productIndex].quantidade} em estoque.`, true);
+                    return;
+                }
+                produtos[productIndex].quantidade -= quantity;
+                showNotification(`Estoque de ${produtos[productIndex].nome} diminuído em ${quantity}.`);
+            }
+
+            saveData('produtos', produtos);
+            renderProdutos();
+            popularFormulariosVenda(); // Re-populate to show updated quantities in sales
+            populateUpdateStockProductSelect(); // Re-populate to show updated quantities in stock update
+        });
+
+        // FLUXO DE CAIXA CRUD EVENTS
+        document.getElementById('form-add-lancamento').addEventListener('submit', e => { 
+            e.preventDefault(); 
+            const id = document.getElementById('lancamento-id').value;
+            const desc = document.getElementById('desc-lancamento').value; 
+            const valor = parseFloat(document.getElementById('valor-lancamento').value); 
+            const tipo = document.getElementById('tipo-lancamento').value; 
+
+            if(!desc || isNaN(valor) || valor <= 0){ 
+                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true); 
+                return;
+            }
+
+            if (id) { // Editing existing lancamento
+                const index = fluxoCaixa.findIndex(l => l.id == id);
+                if (index !== -1) {
+                    fluxoCaixa[index] = { ...fluxoCaixa[index], descricao: desc, valor, tipo };
+                    showNotification('Lançamento atualizado!');
+                }
+            } else { // Adding new lancamento
+                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo, descricao: desc, valor }); 
+                showNotification('Lançamento realizado!'); 
+            }
+            saveData('fluxoCaixa', fluxoCaixa); 
+            renderFluxoCaixa(); 
+            renderDashboardSummaries(); // Refresh dashboard balance
+        });
+
+        document.getElementById('btn-cancelar-lancamento').addEventListener('click', () => resetForm('form-add-lancamento', 'lancamento'));
+
+        document.getElementById('tabela-caixa-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+            if (target.classList.contains('btn-edit') && type === 'lancamento') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'lancamento') {
+                deleteItem(id, type);
+            }
+        });
+
+        document.getElementById('search-caixa').addEventListener('input', (e) => goToPage('caixa', 1, e.target.value, document.getElementById('filter-caixa-tipo').value));
+        document.getElementById('filter-caixa-tipo').addEventListener('change', (e) => goToPage('caixa', 1, document.getElementById('search-caixa').value, e.target.value));
+
+        // VENDAS EVENTS
+        document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
+        document.getElementById('venda-itens-container').addEventListener('click', e => { 
+            if(e.target.classList.contains('btn-delete') && e.target.getAttribute('data-type') === 'carrinho') { 
+                const id = parseInt(e.target.getAttribute('data-id')); 
+                carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== id); 
+                renderCarrinho(); 
+                showNotification('Item removido do carrinho.');
+            } 
+        });
+        document.getElementById('venda-pagamento').addEventListener('change', e => {
+            document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado');
+        });
+        document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
+        
+        // CONTAS A RECEBER EVENTS
+        document.getElementById('tabela-contas-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+
+            if(target.classList.contains('btn-paid')) {
+                const conta = contasAReceber.find(c => c.id === id);
+                if(conta && conta.status === 'Pendente') {
+                    if (!confirm(`Confirmar o recebimento de ${formatCurrency(conta.valor)} da conta nº ${id}?`)) return;
+                    conta.status = 'Pago';
+                    const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Venda #${conta.vendaId})`, valor: conta.valor });
+                    saveData('contasAReceber', contasAReceber);
+                    saveData('fluxoCaixa', fluxoCaixa);
+                    renderContasAReceber();
+                    renderDashboardSummaries(); // Refresh dashboard totals
+                    showNotification('Baixa realizada e valor lançado no caixa!');
+                } else {
+                    showNotification('Esta conta já foi paga.', true);
+                }
+            } else if (target.classList.contains('btn-edit') && type === 'venda-detalhes') {
+                showVendaDetalhesModal(id);
+            }
+        });
+        document.getElementById('search-contas-receber').addEventListener('input', (e) => goToPage('contas-receber', 1, e.target.value, document.getElementById('filter-contas-receber-status').value));
+        document.getElementById('filter-contas-receber-status').addEventListener('change', (e) => goToPage('contas-receber', 1, document.getElementById('search-contas-receber').value, e.target.value));
+
+
+        // CONTAS A PAGAR CRUD EVENTS
+        document.getElementById('form-add-conta-pagar').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('conta-pagar-id').value;
+            const descricao = document.getElementById('desc-conta-pagar').value;
+            const valor = parseFloat(document.getElementById('valor-conta-pagar').value);
+            const dataVencimento = document.getElementById('vencimento-conta-pagar').value;
+
+            if (!descricao || isNaN(valor) || valor <= 0 || !dataVencimento) {
+                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true);
+                return;
+            }
+
+            if (id) {
+                const index = contasAPagar.findIndex(c => c.id == id);
+                if (index !== -1) {
+                    contasAPagar[index] = { ...contasAPagar[index], descricao, valor, dataVencimento };
+                    showNotification('Conta a Pagar atualizada!');
+                }
+            } else {
+                contasAPagar.push({ id: Date.now(), descricao, valor, dataVencimento, status: 'Pendente' });
+                showNotification('Conta a Pagar registrada!');
+            }
+            saveData('contasAPagar', contasAPagar);
+            renderContasAPagar();
+            renderDashboardSummaries();
+        });
+
+        document.getElementById('btn-cancelar-conta-pagar').addEventListener('click', () => resetForm('form-add-conta-pagar', 'conta-pagar'));
+
+        document.getElementById('tabela-contas-pagar-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+
+            if (target.classList.contains('btn-paid') && type === 'conta-pagar') {
+                const conta = contasAPagar.find(c => c.id === id);
+                if (conta && conta.status === 'Pendente') {
+                    if (!confirm(`Confirmar o pagamento de ${formatCurrency(conta.valor)} da conta: ${conta.descricao}?`)) return;
+                    conta.status = 'Pago';
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Saída', descricao: `Pagamento: ${conta.descricao} (Conta Pagar #${conta.id})`, valor: conta.valor });
+                    saveData('contasAPagar', contasAPagar);
+                    saveData('fluxoCaixa', fluxoCaixa);
+                    renderContasAPagar();
+                    renderDashboardSummaries();
+                    showNotification('Pagamento realizado e valor lançado no caixa!');
+                } else {
+                    showNotification('Esta conta já foi paga.', true);
+                }
+            } else if (target.classList.contains('btn-edit') && type === 'conta-pagar') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'conta-pagar') {
+                deleteItem(id, type);
+            }
+        });
+        document.getElementById('search-contas-pagar').addEventListener('input', (e) => goToPage('contas-pagar', 1, e.target.value, document.getElementById('filter-contas-pagar-status').value));
+        document.getElementById('filter-contas-pagar-status').addEventListener('change', (e) => goToPage('contas-pagar', 1, document.getElementById('search-contas-pagar').value, e.target.value));
+
+
+        // --- BACKUP/RESTORE BUTTONS ---
+        document.getElementById('btn-backup-data').addEventListener('click', backupData);
+        document.getElementById('btn-restore-data').addEventListener('click', () => {
+            document.getElementById('backup-file-input').click(); // Trigger file input click
+        });
+        document.getElementById('backup-file-input').addEventListener('change', restoreData);
+        
+        // THEME TOGGLE EVENT
+        document.getElementById('theme-toggle-switch').addEventListener('change', (e) => {
+            const theme = e.target.checked ? 'dark' : 'light';
+            applyTheme(theme);
+            localStorage.setItem('theme', theme);
+            // Re-render charts or other elements that might be affected by theme for consistency
+            renderDashboardSummaries();
+        });
+
+
+        // --- LÓGICA DE INICIALIZAÇÃO AO CARREGAR A PÁGINA ---
+        // É importante que essa lógica seja executada diretamente no 'DOMContentLoaded'
+        // para decidir qual tela exibir (login ou dashboard) imediatamente.
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            // Chama a função de inicialização completa do dashboard se já estiver logado
+            init(); 
+        } else {
+            loginScreen.classList.remove('hidden');
+            dashboardScreen.classList.add('hidden'); // Garante que o dashboard está escondido
+            document.getElementById('username').focus(); // Foca no campo de usuário
         }
     });
     </script>
