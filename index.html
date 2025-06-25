@@ -577,7 +577,36 @@
                         <div class="form-group"><label for="venda-cliente"><i class="fas fa-user-tag mr-2"></i> Selecione o Cliente</label><select id="venda-cliente" required></select></div>
                         <div class="card mt-3"><h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;"><i class="fas fa-cart-plus mr-2"></i> Adicionar Item</h3><div class="flex gap-2 items-center"><div class="form-group flex-1" style="margin-bottom:0;"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group" style="margin-bottom:0;"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px; text-align: center;"></div><button type="button" id="btn-add-item-venda" class="btn"><i class="fas fa-plus"></i></button></div></div>
                         <div class="card mt-3"><h3><i class="fas fa-list-ol mr-2"></i> Itens da Venda</h3><div id="venda-itens-container" class="table-responsive-container"></div><h3 style="margin-top:1rem; text-align:right; font-weight:700; font-size:1.25rem;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
-                        <div class="card mt-3"><h3><i class="fas fa-credit-card mr-2"></i> Pagamento</h3><div class="form-group"><label for="venda-pagamento">Método</label><select id="venda-pagamento"><option value="vista">À Vista</option><option value="pix">Pix</option><option value="crediario">Crediário</option></select></div><div class="form-group hidden" id="venda-parcelas-group"><label for="venda-parcelas">Parcelas</label><select id="venda-parcelas"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option></select></div></div>
+                        <div class="card mt-3">
+                            <h3><i class="fas fa-credit-card mr-2"></i> Pagamento</h3>
+                            <div class="form-group">
+                                <label for="venda-pagamento">Método</label>
+                                <select id="venda-pagamento">
+                                    <option value="vista">À Vista</option>
+                                    <option value="pix">Pix</option>
+                                    <option value="crediario">Crediário</option>
+                                    <option value="cartao_credito">Cartão de Crédito</option>
+                                </select>
+                            </div>
+                            <div class="form-group hidden" id="venda-parcelas-crediario-group">
+                                <label for="venda-parcelas-crediario">Parcelas (Crediário)</label>
+                                <select id="venda-parcelas-crediario">
+                                    <option value="1">1x</option>
+                                    <option value="2">2x</option>
+                                    <option value="3">3x</option>
+                                </select>
+                            </div>
+                            <div class="form-group hidden" id="venda-parcelas-cartao-group">
+                                <label for="venda-parcelas-cartao">Parcelas (Cartão)</label>
+                                <select id="venda-parcelas-cartao">
+                                    <option value="2">2x</option>
+                                    <option value="3">3x</option>
+                                    <option value="4">4x</option>
+                                    <option value="5">5x</option>
+                                    <option value="6">6x</option>
+                                </select>
+                            </div>
+                        </div>
                         <button type="button" id="btn-finalizar-venda" class="btn-submit" style="margin-top:1.5rem;"><i class="fas fa-check-double mr-2"></i> Finalizar Venda</button>
                     </form>
                 </div>
@@ -893,13 +922,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const salesSummary = vendas.reduce((acc, venda) => {
             acc[venda.metodoPagamento] = (acc[venda.metodoPagamento] || 0) + venda.total;
             return acc;
-        }, { vista: 0, pix: 0, crediario: 0 });
+        }, { vista: 0, pix: 0, crediario: 0, cartao_credito: 0 });
         const summaryContainer = document.getElementById('sales-summary-container');
         if (summaryContainer) {
             summaryContainer.innerHTML = `
                 <div class="summary-card" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-money-bill-alt mr-2"></i> À Vista</h3><p>${formatCurrency(salesSummary.vista)}</p></div>
                 <div class="summary-card" style="border-left-color: var(--info-color);"><h3 class="items-center"><i class="fas fa-qrcode mr-2"></i> Pix</h3><p>${formatCurrency(salesSummary.pix)}</p></div>
-                <div class="summary-card" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-credit-card mr-2"></i> Crediário</h3><p>${formatCurrency(salesSummary.crediario)}</p></div>`;
+                <div class="summary-card" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-hand-holding-usd mr-2"></i> Crediário</h3><p>${formatCurrency(salesSummary.crediario)}</p></div>
+                <div class="summary-card" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-credit-card mr-2"></i> Cartão de Crédito</h3><p>${formatCurrency(salesSummary.cartao_credito)}</p></div>`;
         }
         renderPaymentChart(salesSummary);
     };
@@ -909,7 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ctx) return;
         if (paymentChartInstance) paymentChartInstance.destroy();
         paymentChartInstance = new Chart(ctx, {
-            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Crediário'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario], backgroundColor: ['#22C55E', '#3B82F6', '#F59E0B'], borderRadius: 4, }] },
+            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], backgroundColor: ['#22C55E', '#3B82F6', '#F59E0B', '#EF4444'], borderRadius: 4, }] },
             options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } }, scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } } }
         });
     };
@@ -961,19 +991,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const clienteId = parseInt(document.getElementById('venda-cliente').value);
         if (!clienteId) { showNotification('Selecione um cliente para continuar!', true); return; }
         if (carrinhoVenda.length === 0) { showNotification('Adicione pelo menos um item à venda!', true); return; }
+        
         const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
         const metodoPagamento = document.getElementById('venda-pagamento').value;
-        const novaVenda = { id: Date.now(), clienteId, itens: [...carrinhoVenda], total, metodoPagamento, data: new Date().toISOString() };
+        let parcelas = 1;
+
+        if (metodoPagamento === 'crediario') {
+            parcelas = parseInt(document.getElementById('venda-parcelas-crediario').value);
+        } else if (metodoPagamento === 'cartao_credito') {
+            parcelas = parseInt(document.getElementById('venda-parcelas-cartao').value);
+        }
+
+        const novaVenda = { id: Date.now(), clienteId, itens: [...carrinhoVenda], total, metodoPagamento, parcelas, data: new Date().toISOString() };
         vendas.push(novaVenda);
+        
         carrinhoVenda.forEach(item => {
             const produtoEstoque = produtos.find(p => p.id == item.produtoId);
             if(produtoEstoque) produtoEstoque.quantidade -= item.quantidade;
         });
+        
         const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
-        if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
-            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
+        
+        if (metodoPagamento === 'vista' || metodoPagamento === 'pix' || metodoPagamento === 'cartao_credito') {
+            const descPagamento = metodoPagamento === 'cartao_credito' ? `Cartão de Crédito (${parcelas}x)` : metodoPagamento;
+            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${descPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
         } else if (metodoPagamento === 'crediario') {
-            const parcelas = parseInt(document.getElementById('venda-parcelas').value);
             const valorParcela = total / parcelas;
             for (let i = 0; i < parcelas; i++) {
                 const dataVencimento = new Date();
@@ -981,12 +1023,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 contasAReceber.push({ id: Date.now() + i, vendaId: novaVenda.id, clienteId, valor: valorParcela, dataVencimento: dataVencimento.toISOString(), status: 'Pendente' });
             }
         }
+
         saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
         showNotification('Venda finalizada! Gerando recibo...', false);
         showReceipt(novaVenda);
+        
         carrinhoVenda = [];
         document.getElementById('venda-form').reset();
-        document.getElementById('venda-parcelas-group').classList.add('hidden');
+        document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
+        document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
         renderAllData();
     };
     
@@ -994,14 +1039,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
         const cliente = clientes.find(c => c.id === venda.clienteId);
-        const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário' };
+        const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
+        
+        let pagamentoDesc = metodoPagamentoMap[venda.metodoPagamento];
+        if (venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') {
+            pagamentoDesc += ` (${venda.parcelas}x)`;
+        }
+
         receiptBody.innerHTML = `
             <div class="receipt-header"><h2><i class="fas fa-store"></i> Flor de Maira</h2><p>Obrigado pela sua compra!</p></div>
             <div class="receipt-details">
                 <div><strong>Cliente:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
                 <div><strong>Data:</strong><span>${formatDate(venda.data, true)}</span></div>
                 <div><strong>Venda ID:</strong><span>#${venda.id}</span></div>
-                <div><strong>Pagamento:</strong><span>${metodoPagamentoMap[venda.metodoPagamento]}</span></div>
+                <div><strong>Pagamento:</strong><span>${pagamentoDesc}</span></div>
             </div>
             <div class="receipt-items"><table><thead><tr><th>Item</th><th class="text-right">Preço Un.</th><th class="text-right">Subtotal</th></tr></thead><tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.precoUnitario)}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody></table></div>
             <div class="receipt-total">Total: ${formatCurrency(venda.total)}</div>
@@ -1219,7 +1270,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listeners de Botões e Ações
     document.querySelectorAll('.btn-cancel').forEach(btn => btn.addEventListener('click', cancelAllEdits));
     document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
-    document.getElementById('venda-pagamento').addEventListener('change', e => document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'crediario'));
+    document.getElementById('venda-pagamento').addEventListener('change', e => {
+        const metodo = e.target.value;
+        document.getElementById('venda-parcelas-crediario-group').classList.toggle('hidden', metodo !== 'crediario');
+        document.getElementById('venda-parcelas-cartao-group').classList.toggle('hidden', metodo !== 'cartao_credito');
+    });
     document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
     document.getElementById('btn-close-receipt').addEventListener('click', () => document.getElementById('receipt-modal').classList.add('hidden'));
     document.getElementById('btn-print-receipt').addEventListener('click', () => printContent('printable-area'));
