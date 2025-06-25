@@ -230,7 +230,17 @@
             </section>
 
             <section id="clientes-view" class="content-section">
-                <div class="card"><h2>Cadastrar Novo Cliente</h2><form id="form-add-cliente"><div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div><div class="form-group"><label for="contato-cliente">Telefone ou E-mail</label><input type="text" id="contato-cliente"></div><button type="submit" class="btn-submit">Salvar Cliente</button></form></div>
+                <div class="card">
+                    <h2>Cadastrar Novo Cliente</h2>
+                    <form id="form-add-cliente">
+                        <div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div>
+                        <div class="form-group">
+                            <label for="contato-cliente">Telefone (para recibo no WhatsApp)</label>
+                            <input type="text" id="contato-cliente" placeholder="(XX) XXXXX-XXXX">
+                        </div>
+                        <button type="submit" class="btn-submit">Salvar Cliente</button>
+                    </form>
+                </div>
                 <div class="card"><h2>Clientes Cadastrados</h2><div id="tabela-clientes-container" class="table-responsive-container"></div></div>
             </section>
 
@@ -465,7 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const cliente = clientes.find(c => c.id === venda.clienteId);
         const nomeMetodo = { vista: 'À Vista', pix: 'Pix', fiado: 'Fiado', parcelado: 'Parcelado' };
 
-        // Constrói a seção de detalhes de pagamento
         let detalhesPagamentoHtml = `
             <div class="section">
                 <h3>Resumo do Pagamento</h3>
@@ -497,7 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Constrói o botão do WhatsApp se houver um telefone válido
         let whatsappBtnHtml = '';
         const telefoneCliente = cliente ? cliente.contato : '';
         const numeroLimpo = telefoneCliente.replace(/\D/g, '');
@@ -513,7 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </a>`;
         }
 
-        // Constrói o HTML final do recibo
         const reciboHtml = `
             <!DOCTYPE html>
             <html lang="pt-BR">
@@ -551,10 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </head>
             <body>
                 <div class="container">
-                    <header class="header">
-                        <h1>Flor de Maira</h1>
-                        <p>Rua das Flores, 123 - Jardim Primavera<br>Tel: (43) 99999-8888 | Email: contato@flordemaira.com</p>
-                    </header>
+                    <header class="header"><h1>Flor de Maira</h1><p>Rua das Flores, 123 - Jardim Primavera<br>Tel: (43) 99999-8888 | Email: contato@flordemaira.com</p></header>
                     <h2>Recibo de Venda</h2>
                     <div class="section info-grid">
                         <div><h3>Detalhes da Venda</h3><p><strong>Nº do Recibo:</strong> ${venda.id}</p><p><strong>Data da Emissão:</strong> ${formatDate(venda.data)}</p></div>
@@ -634,7 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navigateToPage(lastPageId);
     };
     
-    loginForm.addEventListener('submit', e => { e.preventDefault(); if(document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') { localStorage.setItem('isLoggedIn', 'true'); loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); init(); } else { /* ... */ }});
+    loginForm.addEventListener('submit', e => { e.preventDefault(); if(document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') { localStorage.setItem('isLoggedIn', 'true'); loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); init(); } else { document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!'; }});
     
     logoutBtn.addEventListener('click', () => {
         if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
