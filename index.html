@@ -15,26 +15,26 @@
     <style>
         /* --- TEMA NOVO: VERDE SERENO --- */
         :root {
-            --primary-color: #0D9488;       /* Teal 600 */
+            --primary-color: #0D9488;     /* Teal 600 */
             --primary-dark-color: #0F766E; /* Teal 700 */
             --primary-light-color: #F0FDFA;/* Teal 50 */
 
-            --text-primary: #334155;       /* Slate 700 */
+            --text-primary: #334155;     /* Slate 700 */
             --text-secondary: #64748B;     /* Slate 500 */
-            --text-light: #f8fafc;         /* Slate 50 */
+            --text-light: #f8fafc;       /* Slate 50 */
 
-            --bg-color: #F8FAFC;           /* Slate 50 */
+            --bg-color: #F8FAFC;         /* Slate 50 */
             --surface-color: #FFFFFF;
-            --border-color: #E2E8F0;       /* Slate 200 */
+            --border-color: #E2E8F0;     /* Slate 200 */
 
-            --success-color: #22C55E;       /* Green 500 */
-            --danger-color: #EF4444;        /* Red 500 */
-            --warning-color: #F59E0B;       /* Amber 500 */
-            --info-color: #3B82F6;          /* Blue 500 */
+            --success-color: #22C55E;     /* Green 500 */
+            --danger-color: #EF4444;      /* Red 500 */
+            --warning-color: #F59E0B;     /* Amber 500 */
+            --info-color: #3B82F6;        /* Blue 500 */
             --whatsapp-color: #25D366;
 
             --border-radius-sm: 0.375rem; /* 6px */
-            --border-radius-md: 0.5rem;    /* 8px */
+            --border-radius-md: 0.5rem;   /* 8px */
             --border-radius-lg: 0.75rem;  /* 12px */
         }
 
@@ -184,6 +184,38 @@
         .edit-form-container h3 { margin-bottom: 1rem; color: var(--primary-color); font-size: 1.1rem; }
         .edit-form-container .btn-cancel { background-color: var(--text-secondary); color: white; border: none; }
         .edit-form-container .btn-cancel:hover { background-color: var(--text-primary); }
+        
+        /* --- ESTILOS DO RECIBO --- */
+        .receipt-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+            z-index: 2000; padding: 1rem;
+        }
+        .receipt-content {
+            background: #fff; padding: 2rem; border-radius: var(--border-radius-lg); width: 100%;
+            max-width: 500px; max-height: 90vh; overflow-y: auto;
+            animation: fadeIn 0.3s ease; position: relative;
+        }
+        .receipt-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; }
+        .receipt-header h2 { color: var(--primary-color); }
+        .receipt-details { margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .receipt-details div { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .receipt-details span { color: var(--text-secondary); }
+        .receipt-items table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .receipt-items th, .receipt-items td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #eee; }
+        .receipt-items th { color: var(--text-secondary); font-size: 0.8rem; }
+        .receipt-items .text-right { text-align: right; }
+        .receipt-total { text-align: right; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; }
+        .receipt-footer { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 1.5rem; }
+        .receipt-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn-whatsapp { background-color: var(--whatsapp-color); }
+        .btn-whatsapp:hover { background-color: #1EBE57; }
+        .btn-close-receipt {
+            position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+            font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;
+        }
+        .btn-close-receipt:hover { color: var(--text-primary); }
+
 
         /* --- ESTILOS DE RESPONSIVIDADE PARA CELULAR --- */
         @media (max-width: 768px) {
@@ -276,74 +308,31 @@
         }
 
         @media print {
-            body > *:not(#dashboard-screen),
-            #dashboard-screen .sidebar,
-            #dashboard-screen .main-header,
-            #dashboard-screen .card .btn:not(.btn-paid), /* Oculta botões, mas mantém 'Pago' se for usado visualmente na tabela */
-            #dashboard-screen .card .btn-submit,
-            #dashboard-screen .card .form-group,
-            #dashboard-screen .card h2:has(.fa-plus-circle), /* Oculta a seção de lançamento manual */
-            #dashboard-screen #edit-cliente-container,
-            #dashboard-screen #edit-produto-container,
-            #dashboard-screen #edit-lancamento-container,
-            #dashboard-screen #edit-conta-container,
-            #dashboard-screen #venda-form-card,
-            #dashboard-screen #relatorios-view .card:first-of-type, /* Oculta o formulário de geração de relatório de vendas */
-            #dashboard-screen #relatorios-view .card:nth-of-type(2) /* Oculta o formulário de geração de relatório de contas */
+            body > *:not(#printable-area),
+            .receipt-actions,
+            .btn-close-receipt
             {
                 display: none !important;
             }
-
-            #dashboard-screen {
+            
+            #printable-area {
                 display: block !important;
-                height: auto !important;
-                background-color: white !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
             }
-
-            #dashboard-screen .main-content {
-                width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                overflow: visible !important;
-            }
-
-            .content-section.active {
-                display: block !important;
-                animation: none !important;
-            }
-
-            .card {
+            .receipt-content, .card {
                 box-shadow: none !important;
                 border: 1px solid #ccc !important;
-                margin-top: 1rem !important;
-                padding: 1rem !important;
                 border-radius: 0 !important;
+                max-width: 100% !important;
             }
-
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                margin-top: 0.5rem !important;
-            }
-
-            th, td {
-                border: 1px solid #ddd !important;
-                padding: 8px !important;
-                white-space: normal !important;
+            table, th, td {
                 color: black !important;
             }
-
-            th {
-                background-color: #f2f2f2 !important;
-                color: #333 !important;
-            }
-
-            .responsive-table td:before {
-                color: #333 !important;
-            }
-
             .valor-entrada, .valor-saida, .status-pendente, .status-pago {
-                color: inherit !important; /* Remove cores específicas para impressão */
+                color: inherit !important;
                 font-weight: normal !important;
             }
         }
@@ -541,11 +530,11 @@
             <section id="relatorios-view" class="content-section">
                 <div class="card shadow-md">
                     <h2><i class="fas fa-file-alt mr-2"></i> Gerar Relatório de Vendas</h2>
-                    <div class="flex gap-2">
+                    <form id="form-relatorio-vendas" class="flex gap-2 items-center">
                         <div class="form-group flex-1"><label for="relatorio-inicio-vendas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-vendas"></div>
                         <div class="form-group flex-1"><label for="relatorio-fim-vendas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-vendas"></div>
-                        <button id="btn-gerar-relatorio-vendas" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
-                    </div>
+                        <button type="submit" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
+                    </form>
                     <button id="btn-imprimir-relatorio-vendas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
                     <button id="btn-limpar-vendas" class="btn mt-3" style="background-color: var(--danger-color);"><i class="fas fa-trash-alt mr-2"></i> Excluir Todas as Vendas</button>
                 </div>
@@ -553,7 +542,7 @@
 
                 <div class="card shadow-md mt-3">
                     <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Gerar Relatório de Contas a Receber</h2>
-                    <div class="flex gap-2">
+                    <form id="form-relatorio-contas" class="flex gap-2 items-center">
                         <div class="form-group flex-1"><label for="relatorio-status-contas"><i class="fas fa-info-circle mr-2"></i> Status</label>
                             <select id="relatorio-status-contas">
                                 <option value="Todos">Todos</option>
@@ -563,15 +552,29 @@
                         </div>
                         <div class="form-group flex-1"><label for="relatorio-inicio-contas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-contas"></div>
                         <div class="form-group flex-1"><label for="relatorio-fim-contas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-contas"></div>
-                        <button id="btn-gerar-relatorio-contas" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
-                    </div>
+                        <button type="submit" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
+                    </form>
                     <button id="btn-imprimir-relatorio-contas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
                 </div>
                 <div id="relatorio-contas-container" class="mt-3"></div>
-
             </section>
         </main>
     </div>
+
+    <div id="receipt-modal" class="receipt-modal hidden">
+        <div id="printable-area">
+             <div class="receipt-content">
+                <button id="btn-close-receipt" class="btn-close-receipt">&times;</button>
+                <div id="receipt-body">
+                    </div>
+                <div class="receipt-actions">
+                    <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                    <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -612,15 +615,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const editContaContainer = document.getElementById('edit-conta-container');
     const formEditConta = document.getElementById('form-edit-conta');
 
+    // --- SELETORES DE RELATÓRIOS ---
+    const formRelatorioVendas = document.getElementById('form-relatorio-vendas');
+    const formRelatorioContas = document.getElementById('form-relatorio-contas');
+
 
     // --- ESTADO DA APLICAÇÃO ---
     let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
     let carrinhoVenda = [];
     let paymentChartInstance = null;
-    let editingClientId = null;
-    let editingProductId = null;
-    let editingLancamentoId = null;
-    let editingContaId = null; 
     let isMobile = window.innerWidth <= 768;
 
 
@@ -628,13 +631,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
     const loadData = (key) => JSON.parse(localStorage.getItem(key)) || [];
     const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    const formatDate = (dateString) => {
+    const formatDate = (dateString, includeTime = false) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        // Ajuste para evitar problemas de fuso horário ao exibir a data
-        const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-        const adjustedDate = new Date(date.getTime() + userTimezoneOffset);
-        return adjustedDate.toLocaleDateString('pt-BR');
+        const options = {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            timeZone: 'America/Sao_Paulo'
+        };
+        if (includeTime) {
+            options.hour = '2-digit';
+            options.minute = '2-digit';
+        }
+        return new Intl.DateTimeFormat('pt-BR', options).format(date);
     };
 
     const showNotification = (message, isError = false) => {
@@ -672,13 +680,13 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(table);
     };
 
-    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data, true), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowClientes = (c, headers) => `<tr>${[c.nome, c.contato || 'N/A', `<button class="btn-action" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.nome + (p.quantidade === 0 ? ' (Esgotado)' : ''), p.quantidade, formatCurrency(p.preco), `<button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowCarrinho = (item, headers) => `<tr>${[item.nome, item.quantidade, formatCurrency(item.subtotal), `<button class="btn-action" data-action="remove-item" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowContas = (conta, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
-        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, `<button class="btn-action" data-action="edit" data-type="conta" data-id="${conta.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action ${conta.status === 'Pago' ? 'hidden' : ''} btn-paid" data-action="pay" data-id="${conta.id}"><i class="fas fa-check"></i> Pagar</button><button class="btn-action" data-action="delete" data-type="conta" data-id="${conta.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, `<div class="flex items-center">${(conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-action="pay" data-id="${conta.id}" title="Marcar como Pago"><i class="fas fa-check"></i></button>` : '')}<button class="btn-action" data-action="edit" data-type="conta" data-id="${conta.id}" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="conta" data-id="${conta.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
     const renderRowRelatorioVendas = (v, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
@@ -814,8 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editContaClienteSelect.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         editContaClienteSelect.value = conta.clienteId;
         document.getElementById('edit-conta-valor').value = conta.valor;
-        // Formata a data para o input type="date"
-        document.getElementById('edit-conta-vencimento').value = conta.dataVencimento.split('T')[0]; 
+        document.getElementById('edit-conta-vencimento').value = new Date(conta.dataVencimento).toISOString().split('T')[0];
         document.getElementById('edit-conta-status').value = conta.status;
         editContaContainer.classList.remove('hidden');
         editContaContainer.scrollIntoView({ behavior: 'smooth' });
@@ -847,7 +854,8 @@ document.addEventListener('DOMContentLoaded', () => {
             carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: quantidade * produto.preco });
         }
         showNotification(`${quantidade}x ${produto.nome} adicionado(s) ao carrinho.`, false);
-        document.getElementById('venda-qtd').value = 1; // Reseta a quantidade para 1 após adicionar
+        document.getElementById('venda-qtd').value = 1; 
+        document.getElementById('venda-produto').value = '';
         renderCarrinho();
     };
 
@@ -876,12 +884,81 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
-        showNotification('Venda realizada com sucesso!', false);
+        showNotification('Venda finalizada! Gerando recibo...', false);
+        
+        showReceipt(novaVenda);
+
         carrinhoVenda = [];
         document.getElementById('venda-form').reset();
         document.getElementById('venda-parcelas-group').classList.add('hidden');
         popularFormulariosVenda();
-        navigateToPage('dashboard-view');
+        renderCarrinho();
+        renderDashboardSummaries();
+    };
+
+    const showReceipt = (venda) => {
+        const modal = document.getElementById('receipt-modal');
+        const receiptBody = document.getElementById('receipt-body');
+        const cliente = clientes.find(c => c.id === venda.clienteId);
+        
+        const metodoPagamentoMap = {
+            'vista': 'À Vista',
+            'pix': 'Pix',
+            'fiado': 'Fiado (A Prazo)',
+            'parcelado': 'Parcelado'
+        };
+
+        const itemsHtml = venda.itens.map(item => `
+            <tr>
+                <td>${item.quantidade}x ${item.nome}</td>
+                <td class="text-right">${formatCurrency(item.precoUnitario)}</td>
+                <td class="text-right">${formatCurrency(item.subtotal)}</td>
+            </tr>
+        `).join('');
+
+        receiptBody.innerHTML = `
+            <div class="receipt-header">
+                <h2><i class="fas fa-store"></i> Flor de Maira</h2>
+                <p>Obrigado pela sua compra!</p>
+            </div>
+            <div class="receipt-details">
+                <div><strong>Cliente:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
+                <div><strong>Data:</strong><span>${formatDate(venda.data, true)}</span></div>
+                <div><strong>Venda ID:</strong><span>#${venda.id}</span></div>
+                <div><strong>Pagamento:</strong><span>${metodoPagamentoMap[venda.metodoPagamento]}</span></div>
+            </div>
+            <div class="receipt-items">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th class="text-right">Preço Un.</th>
+                            <th class="text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>${itemsHtml}</tbody>
+                </table>
+            </div>
+            <div class="receipt-total">
+                Total: ${formatCurrency(venda.total)}
+            </div>
+            <div class="receipt-footer">
+                Este não é um documento fiscal.
+            </div>
+        `;
+        
+        // Configurar botão WhatsApp
+        const whatsappBtn = document.getElementById('btn-whatsapp-receipt');
+        if (cliente && cliente.contato) {
+            const phone = cliente.contato.replace(/\D/g, ''); // Remove caracteres não numéricos
+            const message = encodeURIComponent(`Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maira. \n\n*Recibo da Venda #${venda.id}* \nTotal: ${formatCurrency(venda.total)} \n\nObrigado e volte sempre!`);
+            whatsappBtn.href = `https://wa.me/55${phone}?text=${message}`;
+            whatsappBtn.classList.remove('hidden');
+        } else {
+            whatsappBtn.classList.add('hidden');
+        }
+
+        modal.classList.remove('hidden');
     };
 
     const handleEdit = (type, id) => {
@@ -903,238 +980,142 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleDelete = (type, id) => {
         if (confirm(`Tem certeza que deseja excluir este ${type}? Esta ação não pode ser desfeita.`)) {
             if (type === 'cliente') {
-                // Excluir vendas do cliente e restaurar estoque
                 const vendasDoCliente = vendas.filter(v => v.clienteId === id);
                 vendasDoCliente.forEach(venda => {
                     venda.itens.forEach(item => {
                         const produtoEstoque = produtos.find(p => p.id === item.produtoId);
-                        if (produtoEstoque) {
-                            produtoEstoque.quantidade += item.quantidade;
-                        }
+                        if (produtoEstoque) produtoEstoque.quantidade += item.quantidade;
                     });
                 });
                 vendas = vendas.filter(v => v.clienteId !== id);
-
-                // Excluir contas a receber do cliente
                 contasAReceber = contasAReceber.filter(c => c.clienteId !== id);
-
-                // Excluir lançamentos de caixa relacionados às vendas do cliente (se tiverem vendaId)
                 const vendaIdsExcluidas = vendasDoCliente.map(v => v.id);
                 fluxoCaixa = fluxoCaixa.filter(l => !(l.vendaId && vendaIdsExcluidas.includes(l.vendaId)));
-
-                // Remover o cliente
                 clientes = clientes.filter(c => c.id !== id);
-
-                saveData('clientes', clientes);
-                saveData('vendas', vendas);
-                saveData('produtos', produtos);
-                saveData('contasAReceber', contasAReceber);
-                saveData('fluxoCaixa', fluxoCaixa);
-
-                renderClientes();
-                popularFormulariosVenda();
-                renderDashboardSummaries(); // Atualiza o dashboard
-                renderContasAReceber(); // Atualiza contas a receber
-                renderFluxoCaixa(); // Atualiza fluxo de caixa
+                saveData('clientes', clientes); saveData('vendas', vendas); saveData('produtos', produtos);
+                saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
+                renderClientes(); popularFormulariosVenda(); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa();
                 showNotification('Cliente e todas as transações relacionadas excluídos!');
 
             } else if (type === 'produto') {
                 produtos = produtos.filter(p => p.id !== id);
-                saveData('produtos', produtos);
-                renderProdutos();
-                popularFormulariosVenda();
+                saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda();
                 showNotification('Produto excluído!');
             } else if (type === 'lancamento') {
                 fluxoCaixa = fluxoCaixa.filter(l => l.id !== id);
-                saveData('fluxoCaixa', fluxoCaixa);
-                renderFluxoCaixa();
-                renderDashboardSummaries(); // Atualiza o dashboard
+                saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries();
                 showNotification('Lançamento excluído!');
             } else if (type === 'conta') {
                 contasAReceber = contasAReceber.filter(c => c.id !== id);
+                fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== id); // Remove o lançamento de pagamento, se houver
                 saveData('contasAReceber', contasAReceber);
-                renderContasAReceber();
-                renderDashboardSummaries(); // Atualiza o dashboard
+                saveData('fluxoCaixa', fluxoCaixa);
+                renderContasAReceber(); renderDashboardSummaries(); renderFluxoCaixa();
                 showNotification('Conta a receber excluída!');
             }
         }
     };
 
-    const saveEditedClient = (e) => {
-        e.preventDefault();
-        const id = parseInt(document.getElementById('edit-cliente-id').value);
-        const index = clientes.findIndex(c => c.id === id);
-        if (index !== -1) {
-            clientes[index].nome = document.getElementById('edit-nome-cliente').value;
-            clientes[index].contato = document.getElementById('edit-contato-cliente').value;
-            saveData('clientes', clientes);
-            renderClientes();
-            showNotification('Cliente atualizado!', false);
-            cancelEditClient();
-            popularFormulariosVenda();
-        }
-    };
-
-    const saveEditedProduct = (e) => {
-        e.preventDefault();
-        const id = parseInt(document.getElementById('edit-produto-id').value);
-        const index = produtos.findIndex(p => p.id === id);
-        if (index !== -1) {
-            produtos[index].nome = document.getElementById('edit-nome-produto').value;
-            produtos[index].quantidade = parseInt(document.getElementById('edit-qtd-produto').value);
-            produtos[index].preco = parseFloat(document.getElementById('edit-preco-produto').value);
-            saveData('produtos', produtos);
-            renderProdutos();
-            showNotification('Produto atualizado!', false);
-            cancelEditProduct();
-            popularFormulariosVenda();
-        }
-    };
-
-    const saveEditedLancamento = (e) => {
-        e.preventDefault();
-        const id = parseInt(document.getElementById('edit-lancamento-id').value);
-        const index = fluxoCaixa.findIndex(l => l.id === id);
-        if (index !== -1) {
-            fluxoCaixa[index].descricao = document.getElementById('edit-desc-lancamento').value;
-            fluxoCaixa[index].valor = parseFloat(document.getElementById('edit-valor-lancamento').value);
-            fluxoCaixa[index].tipo = document.getElementById('edit-tipo-lancamento').value;
-            saveData('fluxoCaixa', fluxoCaixa);
-            renderFluxoCaixa();
-            renderDashboardSummaries(); // Atualiza o dashboard
-            showNotification('Lançamento atualizado!', false);
-            cancelEditLancamento();
-        }
-    };
+    const saveEditedClient = (e) => { e.preventDefault(); const id = parseInt(document.getElementById('edit-cliente-id').value); const index = clientes.findIndex(c => c.id === id); if (index !== -1) { clientes[index].nome = document.getElementById('edit-nome-cliente').value; clientes[index].contato = document.getElementById('edit-contato-cliente').value; saveData('clientes', clientes); renderClientes(); showNotification('Cliente atualizado!', false); cancelEditClient(); popularFormulariosVenda(); } };
+    const saveEditedProduct = (e) => { e.preventDefault(); const id = parseInt(document.getElementById('edit-produto-id').value); const index = produtos.findIndex(p => p.id === id); if (index !== -1) { produtos[index].nome = document.getElementById('edit-nome-produto').value; produtos[index].quantidade = parseInt(document.getElementById('edit-qtd-produto').value); produtos[index].preco = parseFloat(document.getElementById('edit-preco-produto').value); saveData('produtos', produtos); renderProdutos(); showNotification('Produto atualizado!', false); cancelEditProduct(); popularFormulariosVenda(); } };
+    const saveEditedLancamento = (e) => { e.preventDefault(); const id = parseInt(document.getElementById('edit-lancamento-id').value); const index = fluxoCaixa.findIndex(l => l.id === id); if (index !== -1) { fluxoCaixa[index].descricao = document.getElementById('edit-desc-lancamento').value; fluxoCaixa[index].valor = parseFloat(document.getElementById('edit-valor-lancamento').value); fluxoCaixa[index].tipo = document.getElementById('edit-tipo-lancamento').value; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento atualizado!', false); cancelEditLancamento(); } };
 
     const saveEditedConta = (e) => {
         e.preventDefault();
         const id = parseInt(document.getElementById('edit-conta-id').value);
         const index = contasAReceber.findIndex(c => c.id === id);
-        if (index !== -1) {
-            const oldStatus = contasAReceber[index].status;
-            const oldValor = contasAReceber[index].valor;
-            
-            contasAReceber[index].clienteId = parseInt(document.getElementById('edit-conta-cliente').value);
-            contasAReceber[index].valor = parseFloat(document.getElementById('edit-conta-valor').value);
-            contasAReceber[index].dataVencimento = document.getElementById('edit-conta-vencimento').value;
-            contasAReceber[index].status = document.getElementById('edit-conta-status').value;
+        if (index === -1) return;
 
-            // Lógica para ajustar o fluxo de caixa se o status for alterado
-            if (oldStatus === 'Pendente' && contasAReceber[index].status === 'Pago') {
-                // Se pagou, adiciona entrada ao caixa
-                const clienteNome = clientes.find(c => c.id === contasAReceber[index].clienteId)?.nome || 'Avulso';
-                fluxoCaixa.push({
-                    id: Date.now(),
-                    data: new Date().toISOString(),
-                    tipo: 'Entrada',
-                    descricao: `Recebimento de Conta (Editada para Paga) de ${clienteNome} - Venda #${contasAReceber[index].vendaId || 'N/A'}`,
-                    valor: contasAReceber[index].valor
-                });
-            } else if (oldStatus === 'Pago' && contasAReceber[index].status === 'Pendente') {
-                // Se despagou, subtrai do caixa (isso é mais complexo em um cenário real, pois a entrada original pode ter sido de uma venda)
-                // Por simplicidade, essa lógica não será implementada agora para evitar remoções acidentais.
-                // Em um sistema real, cada "recebimento de conta" geraria um lançamento de caixa único e seria desfeito especificamente.
-                showNotification('Valor de conta já paga alterado para Pendente. Ajuste o lançamento correspondente no Fluxo de Caixa manualmente, se necessário.', true);
-            } else if (contasAReceber[index].status === 'Pago' && oldValor !== contasAReceber[index].valor) {
-                 // Se já estava pago e o valor mudou, o lançamento original no caixa não reflete o novo valor.
-                 // Isso exigiria remover o lançamento antigo e adicionar um novo, ou ajustar o existente.
-                 showNotification('Valor de conta já paga alterado. Ajuste o lançamento correspondente no Fluxo de Caixa manualmente, se necessário.', true);
-            }
+        const conta = contasAReceber[index];
+        const oldStatus = conta.status;
+        const newStatus = document.getElementById('edit-conta-status').value;
 
-            saveData('contasAReceber', contasAReceber);
-            saveData('fluxoCaixa', fluxoCaixa); // Salva as mudanças no fluxo de caixa
-            renderContasAReceber();
-            renderDashboardSummaries(); // Atualiza o dashboard
-            renderFluxoCaixa(); // Atualiza a tabela do fluxo de caixa
-            showNotification('Conta a receber atualizada!', false);
-            cancelEditConta();
+        conta.clienteId = parseInt(document.getElementById('edit-conta-cliente').value);
+        conta.valor = parseFloat(document.getElementById('edit-conta-valor').value);
+        const dateInput = document.getElementById('edit-conta-vencimento').value;
+        conta.dataVencimento = new Date(dateInput + 'T00:00:00').toISOString(); // Adiciona hora para evitar problemas de fuso
+        conta.status = newStatus;
+        
+        // Lógica de integração com o caixa
+        if (oldStatus === 'Pendente' && newStatus === 'Pago') {
+            const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
+            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento de Conta de ${clienteNome}`, valor: conta.valor, contaId: conta.id });
+        } else if (oldStatus === 'Pago' && newStatus === 'Pendente') {
+            // Remove o lançamento de caixa correspondente
+            fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== conta.id);
+            showNotification('Status revertido para Pendente. Lançamento de caixa removido.', true);
+        } else if (oldStatus === 'Pago' && newStatus === 'Pago') {
+            // Se já estava pago e o valor mudou, ajusta o lançamento no caixa
+             const lancamentoCaixa = fluxoCaixa.find(l => l.contaId === conta.id);
+             if (lancamentoCaixa) {
+                 lancamentoCaixa.valor = conta.valor;
+                 showNotification('Valor da conta paga atualizado no fluxo de caixa.', false);
+             }
         }
+        
+        saveData('contasAReceber', contasAReceber);
+        saveData('fluxoCaixa', fluxoCaixa);
+        renderContasAReceber();
+        renderDashboardSummaries();
+        renderFluxoCaixa();
+        showNotification('Conta a receber atualizada!', false);
+        cancelEditConta();
     };
 
-    const cancelEditClient = () => {
-        editClienteContainer.classList.add('hidden');
-        formEditCliente.reset();
-        editingClientId = null;
-    };
-
-    const cancelEditProduct = () => {
-        editProdutoContainer.classList.add('hidden');
-        formEditProduto.reset();
-        editingProductId = null;
-    };
-
-    const cancelEditLancamento = () => {
-        editLancamentoContainer.classList.add('hidden');
-        formEditLancamento.reset();
-        editingLancamentoId = null;
-    };
-
-    const cancelEditConta = () => {
-        editContaContainer.classList.add('hidden');
-        formEditConta.reset();
-        editingContaId = null;
-    };
+    const cancelEditClient = () => { editClienteContainer.classList.add('hidden'); formEditCliente.reset(); };
+    const cancelEditProduct = () => { editProdutoContainer.classList.add('hidden'); formEditProduto.reset(); };
+    const cancelEditLancamento = () => { editLancamentoContainer.classList.add('hidden'); formEditLancamento.reset(); };
+    const cancelEditConta = () => { editContaContainer.classList.add('hidden'); formEditConta.reset(); };
 
     const limparTodasVendas = () => {
-        if (confirm("ATENÇÃO: Esta ação EXCLUIRÁ TODAS as vendas, contas a receber geradas por vendas e entradas de caixa relacionadas a vendas. Não é possível desfazer. Deseja continuar?")) {
-            // Restaurar o estoque dos produtos que foram vendidos
+        if (confirm("ATENÇÃO: Esta ação EXCLUIRÁ TODAS as vendas, contas a receber e entradas de caixa relacionadas. Não é possível desfazer. Deseja continuar?")) {
             vendas.forEach(venda => {
                 venda.itens.forEach(itemVendido => {
                     const produtoEstoque = produtos.find(p => p.id === itemVendido.produtoId);
-                    if (produtoEstoque) {
-                        produtoEstoque.quantidade += itemVendido.quantidade;
-                    }
+                    if (produtoEstoque) produtoEstoque.quantidade += itemVendido.quantidade;
                 });
             });
-
             vendas = [];
-            contasAReceber = contasAReceber.filter(c => !c.vendaId); // Mantém contas que não vieram de vendas
-            fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); // Mantém lançamentos que não vieram de vendas
-
-            saveData('vendas', vendas);
-            saveData('contasAReceber', contasAReceber);
-            saveData('fluxoCaixa', fluxoCaixa);
-            saveData('produtos', produtos); // Salva o estoque atualizado
-            
-            // Recarrega todas as exibições impactadas
-            renderDashboardSummaries();
-            renderContasAReceber();
-            renderFluxoCaixa();
-            popularFormulariosVenda(); // Atualiza dropdown de produtos na tela de vendas
-            document.getElementById('relatorio-vendas-container').innerHTML = ''; // Limpa relatório de vendas
-            document.getElementById('btn-imprimir-relatorio-vendas').classList.add('hidden'); // Oculta botão de impressão
-            renderProdutos(); // Atualiza a tabela de produtos para mostrar o estoque restaurado
-
-            showNotification('Todas as vendas e seus registros financeiros relacionados foram excluídos! Estoque restaurado.', false);
+            contasAReceber = contasAReceber.filter(c => !c.vendaId);
+            fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId);
+            saveData('vendas', vendas); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); saveData('produtos', produtos);
+            renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); popularFormulariosVenda();
+            document.getElementById('relatorio-vendas-container').innerHTML = '';
+            document.getElementById('btn-imprimir-relatorio-vendas').classList.add('hidden');
+            renderProdutos();
+            showNotification('Todas as vendas e seus registros relacionados foram excluídos! Estoque restaurado.', false);
         }
     };
 
-    const gerarRelatorioVendas = () => {
-        const dataInicio = document.getElementById('relatorio-inicio-vendas').value;
-        const dataFim = document.getElementById('relatorio-fim-vendas').value;
+    const gerarRelatorioVendas = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-vendas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-vendas').value;
         const container = document.getElementById('relatorio-vendas-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-vendas');
 
-        if (!dataInicio || !dataFim) {
-            showNotification('Selecione as datas de início e fim para o relatório de vendas.', true);
-            container.innerHTML = '';
-            btnImprimir.classList.add('hidden');
-            return;
+        if (!dataInicioStr || !dataFimStr) {
+            showNotification('Selecione as datas de início e fim para o relatório.', true);
+            container.innerHTML = ''; btnImprimir.classList.add('hidden'); return;
         }
+
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+
         const vendasFiltradas = vendas.filter(venda => {
-            const vendaData = venda.data.split('T')[0];
+            const vendaData = new Date(venda.data);
             return vendaData >= dataInicio && vendaData <= dataFim;
         });
+
         if (vendasFiltradas.length === 0) {
             container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma venda no período selecionado.</p></div>';
-            btnImprimir.classList.add('hidden');
-            return;
+            btnImprimir.classList.add('hidden'); return;
         }
+
         const totalVendido = vendasFiltradas.reduce((acc, venda) => acc + venda.total, 0);
         container.innerHTML = `
-            <div class="card">
-                <h2>Relatório de Vendas (${formatDate(dataInicio)} - ${formatDate(dataFim)})</h2>
+            <div class="card" id="printable-report-vendas">
+                <h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
                 <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 1rem;">Total Vendido: ${formatCurrency(totalVendido)}</p>
                 <div id="relatorio-vendas-tabela-container" class="table-responsive-container"></div>
             </div>`;
@@ -1142,22 +1123,24 @@ document.addEventListener('DOMContentLoaded', () => {
         btnImprimir.classList.remove('hidden');
     };
 
-    const gerarRelatorioContas = () => {
+    const gerarRelatorioContas = (e) => {
+        e.preventDefault();
         const status = document.getElementById('relatorio-status-contas').value;
-        const dataInicio = document.getElementById('relatorio-inicio-contas').value;
-        const dataFim = document.getElementById('relatorio-fim-contas').value;
+        const dataInicioStr = document.getElementById('relatorio-inicio-contas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-contas').value;
         const container = document.getElementById('relatorio-contas-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-contas');
 
-        if (!dataInicio || !dataFim) {
-            showNotification('Selecione as datas de início e fim para o relatório de contas a receber.', true);
-            container.innerHTML = '';
-            btnImprimir.classList.add('hidden');
-            return;
+        if (!dataInicioStr || !dataFimStr) {
+            showNotification('Selecione as datas de início e fim para o relatório.', true);
+            container.innerHTML = ''; btnImprimir.classList.add('hidden'); return;
         }
 
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+
         let contasFiltradas = contasAReceber.filter(conta => {
-            const contaData = conta.dataVencimento.split('T')[0]; // Considera a data de vencimento
+            const contaData = new Date(conta.dataVencimento);
             const isInPeriod = contaData >= dataInicio && contaData <= dataFim;
             const matchesStatus = status === 'Todos' || conta.status === status;
             return isInPeriod && matchesStatus;
@@ -1165,15 +1148,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (contasFiltradas.length === 0) {
             container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma conta encontrada para os critérios selecionados.</p></div>';
-            btnImprimir.classList.add('hidden');
-            return;
+            btnImprimir.classList.add('hidden'); return;
         }
 
         const totalContas = contasFiltradas.reduce((acc, conta) => acc + conta.valor, 0);
-
         container.innerHTML = `
-            <div class="card">
-                <h2>Relatório de Contas a Receber (${status === 'Todos' ? 'Todas' : status}) (${formatDate(dataInicio)} - ${formatDate(dataFim)})</h2>
+            <div class="card" id="printable-report-contas">
+                <h2>Relatório de Contas (${status}) (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
                 <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 1rem;">Total: ${formatCurrency(totalContas)}</p>
                 <div id="relatorio-contas-tabela-container" class="table-responsive-container"></div>
             </div>`;
@@ -1181,33 +1162,14 @@ document.addEventListener('DOMContentLoaded', () => {
         btnImprimir.classList.remove('hidden');
     };
 
-    const imprimirRelatorio = (containerId) => {
-        // Encontre o card do relatório específico para impressão
-        const reportCard = document.querySelector(`#${containerId} .card`); // Seleciona o card dentro do container
-        if (!reportCard) {
-            console.error('Container de relatório não encontrado para impressão:', containerId);
-            return;
-        }
-
-        const originalBody = document.body.innerHTML;
-        const printWindow = window.open('', '', 'height=600,width=800');
-        
-        printWindow.document.write('<html><head><title>Relatório Flor de Maira</title>');
-        // Inclui os estilos CSS da página original
-        Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).forEach(node => {
-            printWindow.document.write(node.outerHTML);
-        });
-        printWindow.document.write('</head><body>');
-        printWindow.document.write('<div style="padding: 20px;">'); // Adiciona um padding ao conteúdo impresso
-        printWindow.document.write(reportCard.outerHTML); // Adiciona apenas o card do relatório
-        printWindow.document.write('</div></body></html>');
-        printWindow.document.close();
-        
-        printWindow.onload = () => {
-            printWindow.focus();
-            printWindow.print();
-            printWindow.close();
-        };
+    const printContent = (elementId) => {
+        const printContents = document.getElementById(elementId).innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        // Recarregar os listeners após a restauração do body
+        window.location.reload(); 
     };
 
     const init = () => {
@@ -1227,7 +1189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('isLoggedIn', 'true');
             loginScreen.classList.add('hidden');
             dashboardScreen.classList.remove('hidden');
-            init(); // Inicializa o dashboard e carrega os dados
+            init(); 
         } else {
             document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!';
         }
@@ -1236,7 +1198,6 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', () => {
         if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
         localStorage.removeItem('isLoggedIn');
-        // Ao deslogar, certifique-se de que a tela de login esteja visível e a dashboard oculta
         loginScreen.classList.remove('hidden');
         dashboardScreen.classList.add('hidden');
     });
@@ -1244,45 +1205,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleMenu = (forceClose = false) => {
         if (isMobile) {
             if (forceClose || sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                backdrop.classList.add('hidden');
+                sidebar.classList.remove('open'); backdrop.classList.add('hidden');
             } else {
-                sidebar.classList.add('open');
-                backdrop.classList.remove('hidden');
+                sidebar.classList.add('open'); backdrop.classList.remove('hidden');
             }
         }
     };
     menuToggle.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
     backdrop.addEventListener('click', () => toggleMenu(true));
-
-    window.addEventListener('resize', () => {
-        isMobile = window.innerWidth <= 768;
-        if (!isMobile) toggleMenu(true);
-        const activePage = document.querySelector('.content-section.active');
-        if (activePage) navigateToPage(activePage.id);
-    });
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', e => {
-            e.preventDefault();
-            navigateToPage(link.getAttribute('data-target'));
-            toggleMenu(true);
-        });
-    });
+    window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; if (!isMobile) toggleMenu(true); const activePage = document.querySelector('.content-section.active'); if (activePage) navigateToPage(activePage.id); });
+    navLinks.forEach(link => { link.addEventListener('click', e => { e.preventDefault(); navigateToPage(link.getAttribute('data-target')); toggleMenu(true); }); });
 
     formAddCliente.addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); showNotification('Cliente salvo!'); e.target.reset(); popularFormulariosVenda(); });
     formAddProduto.addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); showNotification('Produto salvo!'); e.target.reset(); popularFormulariosVenda(); });
-    formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos corretamente!', true); }});
+    formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos corretamente!', true); }});
+    
     document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
     document.getElementById('venda-pagamento').addEventListener('change', e => document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado'));
     document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
 
-    document.getElementById('btn-gerar-relatorio-vendas').addEventListener('click', gerarRelatorioVendas);
-    document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => imprimirRelatorio('relatorio-vendas-container'));
-    document.getElementById('btn-limpar-vendas').addEventListener('click', limparTodasVendas); // Novo listener
+    formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
+    document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('printable-report-vendas'));
+    document.getElementById('btn-limpar-vendas').addEventListener('click', limparTodasVendas);
+    formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
+    document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('printable-report-contas'));
 
-    document.getElementById('btn-gerar-relatorio-contas').addEventListener('click', gerarRelatorioContas);
-    document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => imprimirRelatorio('relatorio-contas-container'));
+    // Listeners do Modal de Recibo
+    document.getElementById('btn-close-receipt').addEventListener('click', () => document.getElementById('receipt-modal').classList.add('hidden'));
+    document.getElementById('btn-print-receipt').addEventListener('click', () => printContent('printable-area'));
 
 
     document.body.addEventListener('click', e => {
@@ -1293,18 +1243,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (action === 'edit') handleEdit(type, parsedId);
         else if (action === 'delete') handleDelete(type, parsedId);
         else if (action === 'remove-item') {
-            carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId);
-            renderCarrinho();
+            carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId); renderCarrinho();
         } else if (action === 'pay') {
             const conta = contasAReceber.find(c => c.id === parsedId);
             if (conta && conta.status === 'Pendente') {
                 conta.status = 'Pago';
                 const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
-                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento Parcela (Venda #${conta.vendaId}) de ${clienteNome}`, valor: conta.valor });
-                saveData('contasAReceber', contasAReceber);
-                saveData('fluxoCaixa', fluxoCaixa);
-                renderContasAReceber();
-                renderDashboardSummaries();
+                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento Parcela (Venda #${conta.vendaId}) de ${clienteNome}`, valor: conta.valor, contaId: conta.id });
+                saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
+                renderContasAReceber(); renderDashboardSummaries(); renderFluxoCaixa();
                 showNotification('Baixa realizada com sucesso!');
             }
         }
@@ -1324,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
         loginScreen.classList.add('hidden');
         dashboardScreen.classList.remove('hidden');
-        init(); // Se já estiver logado, inicializa o dashboard
+        init();
     } else {
         loginScreen.classList.remove('hidden');
         dashboardScreen.classList.add('hidden');
