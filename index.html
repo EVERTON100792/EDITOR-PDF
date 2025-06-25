@@ -903,10 +903,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleDelete = (type, id) => {
         if (confirm(`Tem certeza que deseja excluir este ${type}? Esta ação não pode ser desfeita.`)) {
             if (type === 'cliente') {
-                // Excluir vendas do cliente
+                // Excluir vendas do cliente e restaurar estoque
                 const vendasDoCliente = vendas.filter(v => v.clienteId === id);
                 vendasDoCliente.forEach(venda => {
-                    // Restaurar estoque dos produtos da venda
                     venda.itens.forEach(item => {
                         const produtoEstoque = produtos.find(p => p.id === item.produtoId);
                         if (produtoEstoque) {
@@ -1034,10 +1033,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else if (oldStatus === 'Pago' && contasAReceber[index].status === 'Pendente') {
                 // Se despagou, subtrai do caixa (isso é mais complexo em um cenário real, pois a entrada original pode ter sido de uma venda)
-                // Para simplificar, vou remover o *lançamento exato* que corresponde a essa conta se houver, ou ajustar o caixa.
-                // IMPORTANTE: Em um sistema robusto, cada "recebimento de conta" geraria um lançamento de caixa único e seria desfeito especificamente.
-                // Aqui, por simplicidade e para o contexto do localStorage, vamos apenas notificar e não mexer no histórico de caixa se já foi pago.
-                 showNotification('Ao mudar de "Pago" para "Pendente", o lançamento no fluxo de caixa deve ser ajustado manualmente, se necessário.', true);
+                // Por simplicidade, essa lógica não será implementada agora para evitar remoções acidentais.
+                // Em um sistema real, cada "recebimento de conta" geraria um lançamento de caixa único e seria desfeito especificamente.
+                showNotification('Valor de conta já paga alterado para Pendente. Ajuste o lançamento correspondente no Fluxo de Caixa manualmente, se necessário.', true);
             } else if (contasAReceber[index].status === 'Pago' && oldValor !== contasAReceber[index].valor) {
                  // Se já estava pago e o valor mudou, o lançamento original no caixa não reflete o novo valor.
                  // Isso exigiria remover o lançamento antigo e adicionar um novo, ou ajustar o existente.
@@ -1080,19 +1078,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const limparTodasVendas = () => {
         if (confirm("ATENÇÃO: Esta ação EXCLUIRÁ TODAS as vendas, contas a receber geradas por vendas e entradas de caixa relacionadas a vendas. Não é possível desfazer. Deseja continuar?")) {
+            // Restaurar o estoque dos produtos que foram vendidos
+            vendas.forEach(venda => {
+                venda.itens.forEach(itemVendido => {
+                    const produtoEstoque = produtos.find(p => p.id === itemVendido.produtoId);
+                    if (produtoEstoque) {
+                        produtoEstoque.quantidade += itemVendido.quantidade;
+                    }
+                });
+            });
+
             vendas = [];
             contasAReceber = contasAReceber.filter(c => !c.vendaId); // Mantém contas que não vieram de vendas
             fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); // Mantém lançamentos que não vieram de vendas
 
-            // Reajustar estoque: se as vendas forem excluídas, os produtos deveriam ter suas quantidades restauradas.
-            // Para simplificar, vamos assumir que não queremos restaurar o estoque aqui,
-            // ou que o usuário fará o ajuste manual do estoque se necessário,
-            // pois a exclusão de "resumo de vendas" é mais sobre o histórico financeiro.
-            // Se a intenção é "reverter o negócio ao estado inicial do estoque", a lógica seria mais complexa.
-
             saveData('vendas', vendas);
             saveData('contasAReceber', contasAReceber);
             saveData('fluxoCaixa', fluxoCaixa);
+            saveData('produtos', produtos); // Salva o estoque atualizado
             
             // Recarrega todas as exibições impactadas
             renderDashboardSummaries();
@@ -1101,8 +1104,9 @@ document.addEventListener('DOMContentLoaded', () => {
             popularFormulariosVenda(); // Atualiza dropdown de produtos na tela de vendas
             document.getElementById('relatorio-vendas-container').innerHTML = ''; // Limpa relatório de vendas
             document.getElementById('btn-imprimir-relatorio-vendas').classList.add('hidden'); // Oculta botão de impressão
+            renderProdutos(); // Atualiza a tabela de produtos para mostrar o estoque restaurado
 
-            showNotification('Todas as vendas e seus registros financeiros relacionados foram excluídos!', false);
+            showNotification('Todas as vendas e seus registros financeiros relacionados foram excluídos! Estoque restaurado.', false);
         }
     };
 
