@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
 
     <style>
         /* --- PROFESSIONAL BLUE GRADIENT THEME --- */
@@ -847,10 +850,10 @@
                             <label for="relatorio-fim">Data Fim</label>
                             <input type="date" id="relatorio-fim">
                         </div>
-                        <button id="btn-gerar-relatorio" class="btn">Gerar Relatório</button>
+                        <button id="btn-gerar-relatorio-vendas" class="btn">Gerar Relatório de Vendas</button>
                     </div>
                 </div>
-                <div id="relatorio-container" class="card mt-3 hidden">
+                <div id="relatorio-vendas-container" class="card mt-3 hidden">
                     <h2>Resultados do Relatório de Vendas</h2>
                     <p>Período: <span id="relatorio-periodo"></span></p>
                     <p>Total de Vendas: <span id="relatorio-total-vendas">R$ 0,00</span></p>
@@ -859,7 +862,20 @@
                     <ul id="relatorio-metodo-pagamento"></ul>
                     <h3 style="margin-top:1.5rem;">Produtos Mais Vendidos:</h3>
                     <ul id="relatorio-produtos-mais-vendidos"></ul>
-                    <button id="btn-export-relatorio" class="btn" style="margin-top: 20px;">Exportar para CSV</button>
+                    <button id="btn-export-vendas-csv" class="btn" style="margin-top: 20px; margin-right: 10px;">Exportar para CSV</button>
+                    <button id="btn-export-vendas-pdf" class="btn">Exportar para PDF</button>
+                </div>
+
+                <div class="card mt-4">
+                    <h2>Gerar Relatório de Contas a Receber</h2>
+                    <button id="btn-gerar-relatorio-contas-receber" class="btn">Gerar Relatório de Contas a Receber</button>
+                </div>
+                <div id="relatorio-contas-receber-container" class="card mt-3 hidden">
+                    <h2>Resultados do Relatório de Contas a Receber</h2>
+                    <p>Total Geral Pendente: <span id="relatorio-contas-receber-total">R$ 0,00</span></p>
+                    <div id="relatorio-contas-receber-detalhes"></div>
+                    <button id="btn-export-contas-receber-csv" class="btn" style="margin-top: 20px; margin-right: 10px;">Exportar para CSV</button>
+                    <button id="btn-export-contas-receber-pdf" class="btn">Exportar para PDF</button>
                 </div>
             </section>
 
@@ -1100,7 +1116,11 @@
             if (pageId === 'estoque-view') { renderProdutos(); populateUpdateStockProductSelect(); }
             if (pageId === 'contas-a-receber-view') renderContasAReceber();
             if (pageId === 'contas-a-pagar-view') renderContasAPagar();
-            if (pageId === 'relatorios-view') document.getElementById('relatorio-container').classList.add('hidden'); // Hide report results on page load
+            // Relatórios não chamam render diretamente ao navegar, pois dependem de ação do usuário
+            if (pageId === 'relatorios-view') {
+                document.getElementById('relatorio-vendas-container').classList.add('hidden');
+                document.getElementById('relatorio-contas-receber-container').classList.add('hidden');
+            }
         };
         
         const renderDashboardSummaries = () => {
@@ -1226,7 +1246,7 @@
                     <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
                     <td>
                         ${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Recebido'}
-                        <button class="btn-action btn-info" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
+                        <button class="btn-action btn-edit" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
                     </td>
                 </tr>`, currentPage.contasReceber, searchQuery, filterValue);
         };
@@ -1301,7 +1321,7 @@
             }
 
             if (itemExistente) {
-                itemExistente.quantidade += quantidade;
+                itemExistente.quantidade += quantity;
                 itemExistente.subtotal = parseFloat((itemExistente.quantidade * produto.preco).toFixed(2));
             } else {
                 carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: parseFloat((quantidade * produto.preco).toFixed(2)) });
@@ -1529,14 +1549,14 @@
             }
         };
         
-        // --- RELATORIOS ---
-        document.getElementById('btn-gerar-relatorio').addEventListener('click', () => {
+        // --- RELATORIOS DE VENDAS ---
+        document.getElementById('btn-gerar-relatorio-vendas').addEventListener('click', () => {
             const startDateStr = document.getElementById('relatorio-inicio').value;
             const endDateStr = document.getElementById('relatorio-fim').value;
-            const reportContainer = document.getElementById('relatorio-container');
+            const reportContainer = document.getElementById('relatorio-vendas-container');
             
             if (!startDateStr || !endDateStr) {
-                showNotification('Por favor, selecione as datas de início e fim para o relatório.', true);
+                showNotification('Por favor, selecione as datas de início e fim para o relatório de vendas.', true);
                 reportContainer.classList.add('hidden');
                 return;
             }
@@ -1603,10 +1623,10 @@
             }
 
             reportContainer.classList.remove('hidden');
-            showNotification('Relatório gerado com sucesso!');
+            showNotification('Relatório de Vendas gerado com sucesso!');
         });
 
-        document.getElementById('btn-export-relatorio').addEventListener('click', () => {
+        document.getElementById('btn-export-vendas-csv').addEventListener('click', () => {
             const startDateStr = document.getElementById('relatorio-inicio').value;
             const endDateStr = document.getElementById('relatorio-fim').value;
             
@@ -1645,483 +1665,309 @@
             document.body.appendChild(link); // Required for Firefox
             link.click();
             document.body.removeChild(link);
-            showNotification('Relatório CSV exportado com sucesso!');
+            showNotification('Relatório CSV de Vendas exportado com sucesso!');
         });
 
-        // --- BACKUP/RESTORE FUNCTIONS ---
-        const backupData = () => {
-            const data = {
-                clientes: clientes,
-                produtos: produtos,
-                vendas: vendas,
-                contasAReceber: contasAReceber,
-                contasAPagar: contasAPagar, // Include Contas a Pagar
-                fluxoCaixa: fluxoCaixa,
-                // Store theme setting
-                theme: document.body.classList.contains('dark-theme') ? 'dark' : 'light'
-            };
-            const jsonString = JSON.stringify(data, null, 2);
-            const blob = new Blob([jsonString], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `flordemaira_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showNotification('Backup realizado com sucesso!');
-        };
+        document.getElementById('btn-export-vendas-pdf').addEventListener('click', () => {
+            const startDateStr = document.getElementById('relatorio-inicio').value;
+            const endDateStr = document.getElementById('relatorio-fim').value;
 
-        const restoreData = (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                showNotification('Nenhum arquivo selecionado.', true);
+            if (!startDateStr || !endDateStr) {
+                showNotification('Defina o período do relatório antes de exportar.', true);
                 return;
             }
 
-            if (!confirm('Tem certeza que deseja restaurar o backup? Isso substituirá TODOS os dados atuais do sistema!')) {
-                return;
-            }
+            const startDate = new Date(startDateStr + 'T00:00:00');
+            const endDate = new Date(endDateStr + 'T23:59:59');
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const restoredData = JSON.parse(e.target.result);
-                    
-                    // Clear existing data (optional, but safer for full restore)
-                    localStorage.clear();
-
-                    // Restore data to arrays and localStorage
-                    clientes = restoredData.clientes || [];
-                    produtos = restoredData.produtos || [];
-                    vendas = restoredData.vendas || [];
-                    contasAReceber = restoredData.contasAReceber || [];
-                    contasAPagar = restoredData.contasAPagar || []; // Restore Contas a Pagar
-                    fluxoCaixa = restoredData.fluxoCaixa || [];
-                    
-                    saveData('clientes', clientes);
-                    saveData('produtos', produtos);
-                    saveData('vendas', vendas);
-                    saveData('contasAReceber', contasAReceber);
-                    saveData('contasAPagar', contasAPagar);
-                    saveData('fluxoCaixa', fluxoCaixa);
-
-                    // Restore theme preference
-                    const restoredTheme = restoredData.theme || 'light';
-                    localStorage.setItem('theme', restoredTheme);
-                    applyTheme(restoredTheme);
-                    document.getElementById('theme-toggle-switch').checked = (restoredTheme === 'dark');
-
-                    showNotification('Backup restaurado com sucesso! Recarregando o sistema...');
-                    setTimeout(() => {
-                        // Reinitialize the app to reflect restored data
-                        window.location.reload(); 
-                    }, 1000);
-
-                } catch (error) {
-                    console.error('Erro ao restaurar backup:', error);
-                    showNotification('Erro ao processar o arquivo de backup. Verifique se é um JSON válido.', true);
-                }
-            };
-            reader.readAsText(file);
-        };
-
-        // --- THEME TOGGLE ---
-        const applyTheme = (theme) => {
-            document.body.classList.toggle('dark-theme', theme === 'dark');
-        };
-
-        // --- MODAL DETALHES DA VENDA ---
-        const vendaDetalhesModal = document.getElementById('venda-detalhes-modal');
-        const closeModalButton = vendaDetalhesModal.querySelector('.close-button');
-
-        closeModalButton.addEventListener('click', () => {
-            vendaDetalhesModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target == vendaDetalhesModal) {
-                vendaDetalhesModal.style.display = 'none';
-            }
-        });
-
-        const showVendaDetalhesModal = (vendaId) => {
-            const venda = vendas.find(v => v.id === vendaId);
-            if (!venda) {
-                showNotification('Venda não encontrada.', true);
-                return;
-            }
-
-            document.getElementById('modal-venda-id').textContent = venda.id;
-            document.getElementById('modal-venda-cliente').textContent = clientes.find(c => c.id === venda.clienteId)?.nome || 'Cliente avulso';
-            document.getElementById('modal-venda-data').textContent = formatDate(venda.data);
-            
-            let metodoNome = '';
-            switch(venda.metodoPagamento) {
-                case 'vista': metodoNome = 'À Vista'; break;
-                case 'pix': metodoNome = 'Pix'; break;
-                case 'fiado': metodoNome = 'Fiado'; break;
-                case 'parcelado': metodoNome = `Parcelado (${contasAReceber.filter(c => c.vendaId === venda.id).length}x)`; break;
-                default: metodoNome = venda.metodoPagamento;
-            }
-            document.getElementById('modal-venda-metodo-pagamento').textContent = metodoNome;
-            document.getElementById('modal-venda-total').textContent = formatCurrency(venda.total);
-
-            const itensTableBody = vendaDetalhesModal.querySelector('#modal-venda-itens-tabela tbody');
-            itensTableBody.innerHTML = ''; // Clear previous items
-
-            if (venda.itens && venda.itens.length > 0) {
-                venda.itens.forEach(item => {
-                    const row = itensTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${item.nome}</td>
-                        <td>${item.quantidade}</td>
-                        <td>${formatCurrency(item.precoUnitario)}</td>
-                        <td>${formatCurrency(item.subtotal)}</td>
-                    `;
-                });
-            } else {
-                itensTableBody.innerHTML = '<tr><td colspan="4" class="text-center" style="color:var(--text-secondary);">Nenhum item registrado para esta venda.</td></tr>';
-            }
-
-            vendaDetalhesModal.style.display = 'flex'; // Show the modal
-        };
-
-
-        // --- INICIALIZAÇÃO ---
-        const init = () => {
-            clientes = loadData('clientes');
-            produtos = loadData('produtos');
-            vendas = loadData('vendas');
-            contasAReceber = loadData('contasAReceber');
-            contasAPagar = loadData('contasAPagar');
-            fluxoCaixa = loadData('fluxoCaixa');
-            
-            // Set initial value for a/c parcelas to 2x if it doesn't exist
-            if (document.getElementById('venda-parcelas') && !document.getElementById('venda-parcelas').value) {
-                document.getElementById('venda-parcelas').value = '2';
-            }
-
-            // Apply saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            applyTheme(savedTheme);
-            document.getElementById('theme-toggle-switch').checked = (savedTheme === 'dark');
-
-            const lastPageId = localStorage.getItem('lastActivePage');
-            navigateToPage(lastPageId); // Render initial page
-        };
-        
-        // --- EVENT LISTENERS ---
-        loginForm.addEventListener('submit', e => { 
-            e.preventDefault(); 
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const errorMessageEl = document.getElementById('error-message');
-
-            if (usernameInput.value === 'maira' && passwordInput.value === 'flor123') { 
-                localStorage.setItem('isLoggedIn', 'true'); 
-                loginScreen.classList.add('hidden'); 
-                dashboardScreen.classList.remove('hidden'); 
-                init(); 
-                errorMessageEl.textContent = ''; // Clear error message on success
-            } else { 
-                errorMessageEl.textContent = 'Usuário ou senha inválidos.';
-                showNotification('Falha no login. Verifique suas credenciais.', true);
-                usernameInput.value = ''; 
-                passwordInput.value = '';
-                usernameInput.focus();
-            }
-        });
-        
-        logoutBtn.addEventListener('click', () => {
-            if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
-            localStorage.clear(); // Clear all local storage
-            clientes = []; produtos = []; vendas = []; contasAReceber = []; contasAPagar = []; fluxoCaixa = []; carrinhoVenda = []; // Reset data arrays
-            document.body.classList.remove('dark-theme'); // Reset theme
-            dashboardScreen.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-            document.getElementById('username').value = ''; // Clear login fields
-            document.getElementById('password').value = '';
-            document.getElementById('error-message').textContent = '';
-        });
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                navigateToPage(link.getAttribute('data-target'));
-                if(window.innerWidth <= 768) sidebar.classList.remove('open');
+            const filteredSales = vendas.filter(sale => {
+                const saleDate = new Date(sale.data + 'T00:00:00');
+                return saleDate >= startDate && saleDate <= endDate;
             });
-        });
-        
-        menuToggle.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.toggle('open'); });
-        mainContent.addEventListener('click', () => { if (sidebar.classList.contains('open')) sidebar.classList.remove('open'); });
-        
-        // CLIENTES CRUD EVENTS
-        document.getElementById('form-add-cliente').addEventListener('submit', e => { 
-            e.preventDefault(); 
-            const id = document.getElementById('cliente-id').value;
-            const nome = document.getElementById('nome-cliente').value;
-            const contato = document.getElementById('contato-cliente').value;
 
-            if (id) { // Editing existing client
-                const index = clientes.findIndex(c => c.id == id);
-                if (index !== -1) {
-                    clientes[index] = { ...clientes[index], nome, contato };
-                    showNotification('Cliente atualizado!');
-                }
-            } else { // Adding new client
-                clientes.push({ id: Date.now(), nome, contato }); 
-                showNotification('Cliente salvo!'); 
-            }
-            saveData('clientes', clientes); 
-            renderClientes(); 
-            popularFormulariosVenda(); 
-        });
-
-        document.getElementById('btn-cancelar-cliente').addEventListener('click', () => resetForm('form-add-cliente', 'cliente'));
-
-        document.getElementById('tabela-clientes-container').addEventListener('click', e => {
-            const target = e.target;
-            const id = parseInt(target.getAttribute('data-id'));
-            const type = target.getAttribute('data-type');
-            if (target.classList.contains('btn-edit') && type === 'cliente') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'cliente') {
-                deleteItem(id, type);
-            }
-        });
-
-        document.getElementById('search-clientes').addEventListener('input', (e) => goToPage('clientes', 1, e.target.value));
-
-        // PRODUTOS CRUD EVENTS
-        document.getElementById('form-add-produto').addEventListener('submit', e => { 
-            e.preventDefault(); 
-            const id = document.getElementById('produto-id').value;
-            const nome = document.getElementById('nome-produto').value;
-            const quantidade = parseInt(document.getElementById('qtd-produto').value);
-            const preco = parseFloat(document.getElementById('preco-produto').value);
-
-            if (isNaN(quantidade) || quantidade < 0) { showNotification('Quantidade deve ser um número não negativo.', true); return; }
-            if (isNaN(preco) || preco <= 0) { showNotification('Preço deve ser um número positivo.', true); return; }
-
-            if (id) { // Editing existing product
-                const index = produtos.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    produtos[index] = { ...produtos[index], nome, quantidade, preco };
-                    showNotification('Produto atualizado!');
-                }
-            } else { // Adding new product
-                produtos.push({ id: Date.now(), nome, quantidade, preco }); 
-                showNotification('Produto salvo!'); 
-            }
-            saveData('produtos', produtos); 
-            renderProdutos(); 
-            popularFormulariosVenda(); // Update product dropdowns
-            populateUpdateStockProductSelect(); // Update stock product dropdown
-        });
-
-        document.getElementById('btn-cancelar-produto').addEventListener('click', () => resetForm('form-add-produto', 'produto'));
-
-        document.getElementById('tabela-produtos-container').addEventListener('click', e => {
-            const target = e.target;
-            const id = parseInt(target.getAttribute('data-id'));
-            const type = target.getAttribute('data-type');
-            if (target.classList.contains('btn-edit') && type === 'produto') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'produto') {
-                deleteItem(id, type);
-            }
-        });
-
-        document.getElementById('search-produtos').addEventListener('input', (e) => goToPage('produtos', 1, e.target.value, document.getElementById('filter-estoque-qtd').value));
-        document.getElementById('filter-estoque-qtd').addEventListener('change', (e) => goToPage('produtos', 1, document.getElementById('search-produtos').value, e.target.value));
-
-
-        // UPDATE STOCK EVENTS
-        document.getElementById('form-update-stock').addEventListener('submit', e => {
-            e.preventDefault();
-            const productId = parseInt(document.getElementById('update-stock-product').value);
-            const quantity = parseInt(document.getElementById('update-stock-quantity').value);
-            const type = document.getElementById('update-stock-type').value;
-
-            if (!productId || isNaN(quantity) || quantity <= 0) {
-                showNotification('Selecione um produto e insira uma quantidade válida.', true);
+            if (filteredSales.length === 0) {
+                showNotification('Nenhum dado para exportar neste período.', true);
                 return;
             }
 
-            const productIndex = produtos.findIndex(p => p.id === productId);
-            if (productIndex === -1) {
-                showNotification('Produto não encontrado.', true);
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(18);
+            doc.text("Relatório de Vendas", 14, 22);
+
+            doc.setFontSize(12);
+            doc.text(`Período: ${formatDate(startDateStr)} a ${formatDate(endDateStr)}`, 14, 30);
+            doc.text(`Total de Vendas: ${document.getElementById('relatorio-total-vendas').textContent}`, 14, 38);
+            doc.text(`Total de Itens Vendidos: ${document.getElementById('relatorio-total-itens').textContent}`, 14, 46);
+
+            let finalY = 56;
+
+            // Vendas por Método de Pagamento
+            doc.setFontSize(14);
+            doc.text("Vendas por Método de Pagamento:", 14, finalY);
+            finalY += 8;
+            const paymentMethodData = [];
+            document.querySelectorAll('#relatorio-metodo-pagamento li').forEach(li => {
+                paymentMethodData.push([li.textContent.split(': ')[0], li.textContent.split(': ')[1]]);
+            });
+            doc.autoTable({
+                startY: finalY,
+                head: [['Método', 'Valor']],
+                body: paymentMethodData,
+                theme: 'striped',
+                styles: { fontSize: 10, cellPadding: 3 },
+                headStyles: { fillColor: [59, 130, 246], textColor: [255, 255, 255] },
+                margin: { left: 14, right: 14 }
+            });
+            finalY = doc.autoTable.previous.finalY + 10;
+
+            // Produtos Mais Vendidos
+            doc.setFontSize(14);
+            doc.text("Produtos Mais Vendidos:", 14, finalY);
+            finalY += 8;
+            const productsSoldData = [];
+            document.querySelectorAll('#relatorio-produtos-mais-vendidos li').forEach(li => {
+                productsSoldData.push([li.textContent.split(': ')[0], li.textContent.split(': ')[1]]);
+            });
+            doc.autoTable({
+                startY: finalY,
+                head: [['Produto', 'Quantidade']],
+                body: productsSoldData,
+                theme: 'striped',
+                styles: { fontSize: 10, cellPadding: 3 },
+                headStyles: { fillColor: [59, 130, 246], textColor: [255, 255, 255] },
+                margin: { left: 14, right: 14 }
+            });
+
+            doc.save(`relatorio_vendas_${startDateStr}_${endDateStr}.pdf`);
+            showNotification('Relatório PDF de Vendas exportado com sucesso!');
+        });
+
+        // --- RELATORIOS DE CONTAS A RECEBER ---
+        document.getElementById('btn-gerar-relatorio-contas-receber').addEventListener('click', () => {
+            const reportContainer = document.getElementById('relatorio-contas-receber-container');
+            const detalhesContainer = document.getElementById('relatorio-contas-receber-detalhes');
+            detalhesContainer.innerHTML = ''; // Clear previous content
+
+            const contasPendentes = contasAReceber.filter(c => c.status === 'Pendente');
+            
+            if (contasPendentes.length === 0) {
+                detalhesContainer.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhuma conta a receber pendente.</p>';
+                document.getElementById('relatorio-contas-receber-total').textContent = formatCurrency(0);
+                reportContainer.classList.remove('hidden');
+                showNotification('Nenhuma conta a receber pendente.');
                 return;
             }
 
-            if (type === 'add') {
-                produtos[productIndex].quantidade += quantity;
-                showNotification(`Estoque de ${produtos[productIndex].nome} aumentado em ${quantity}.`);
-            } else if (type === 'remove') {
-                if (produtos[productIndex].quantidade < quantity) {
-                    showNotification(`Não é possível remover ${quantity} unidades. Apenas ${produtos[productIndex].quantidade} em estoque.`, true);
-                    return;
+            let totalGeralPendente = 0;
+            const clientesComDivida = {};
+
+            contasPendentes.forEach(conta => {
+                const cliente = clientes.find(c => c.id === conta.clienteId);
+                const clienteNome = cliente ? cliente.nome : 'Cliente Desconhecido';
+                
+                if (!clientesComDivida[clienteNome]) {
+                    clientesComDivida[clienteNome] = {
+                        totalDivida: 0,
+                        vendas: []
+                    };
                 }
-                produtos[productIndex].quantidade -= quantity;
-                showNotification(`Estoque de ${produtos[productIndex].nome} diminuído em ${quantity}.`);
-            }
 
-            saveData('produtos', produtos);
-            renderProdutos();
-            popularFormulariosVenda(); // Re-populate to show updated quantities in sales
-            populateUpdateStockProductSelect(); // Re-populate to show updated quantities in stock update
-        });
+                const vendaAssociada = vendas.find(v => v.id === conta.vendaId);
+                let vendaDetalhes = {
+                    dataVenda: vendaAssociada ? formatDate(vendaAssociada.data) : 'N/A',
+                    metodoPagamento: vendaAssociada ? vendaAssociada.metodoPagamento : 'N/A',
+                    itens: vendaAssociada ? vendaAssociada.itens.map(item => ({
+                        nome: item.nome,
+                        quantidade: item.quantidade,
+                        precoUnitario: item.precoUnitario,
+                        subtotal: item.subtotal
+                    })) : [],
+                    parcela: `${formatCurrency(conta.valor)} (Vencimento: ${formatDate(conta.dataVencimento)})`
+                };
 
-        // FLUXO DE CAIXA CRUD EVENTS
-        document.getElementById('form-add-lancamento').addEventListener('submit', e => { 
-            e.preventDefault(); 
-            const id = document.getElementById('lancamento-id').value;
-            const desc = document.getElementById('desc-lancamento').value; 
-            const valor = parseFloat(document.getElementById('valor-lancamento').value); 
-            const tipo = document.getElementById('tipo-lancamento').value; 
-
-            if(!desc || isNaN(valor) || valor <= 0){ 
-                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true); 
-                return;
-            }
-
-            if (id) { // Editing existing lancamento
-                const index = fluxoCaixa.findIndex(l => l.id == id);
-                if (index !== -1) {
-                    fluxoCaixa[index] = { ...fluxoCaixa[index], descricao: desc, valor, tipo };
-                    showNotification('Lançamento atualizado!');
-                }
-            } else { // Adding new lancamento
-                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo, descricao: desc, valor }); 
-                showNotification('Lançamento realizado!'); 
-            }
-            saveData('fluxoCaixa', fluxoCaixa); 
-            renderFluxoCaixa(); 
-            renderDashboardSummaries(); // Refresh dashboard balance
-        });
-
-        document.getElementById('btn-cancelar-lancamento').addEventListener('click', () => resetForm('form-add-lancamento', 'lancamento'));
-
-        document.getElementById('tabela-caixa-container').addEventListener('click', e => {
-            const target = e.target;
-            const id = parseInt(target.getAttribute('data-id'));
-            const type = target.getAttribute('data-type');
-            if (target.classList.contains('btn-edit') && type === 'lancamento') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'lancamento') {
-                deleteItem(id, type);
-            }
-        });
-
-        document.getElementById('search-caixa').addEventListener('input', (e) => goToPage('caixa', 1, e.target.value, document.getElementById('filter-caixa-tipo').value));
-        document.getElementById('filter-caixa-tipo').addEventListener('change', (e) => goToPage('caixa', 1, document.getElementById('search-caixa').value, e.target.value));
-
-        // VENDAS EVENTS
-        document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
-        document.getElementById('venda-itens-container').addEventListener('click', e => { 
-            if(e.target.classList.contains('btn-delete') && e.target.getAttribute('data-type') === 'carrinho') { 
-                const id = parseInt(e.target.getAttribute('data-id')); 
-                carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== id); 
-                renderCarrinho(); 
-                showNotification('Item removido do carrinho.');
-            } 
-        });
-        document.getElementById('venda-pagamento').addEventListener('change', e => {
-            document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado');
-        });
-        document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
-        
-        // CONTAS A RECEBER EVENTS
-        document.getElementById('tabela-contas-container').addEventListener('click', e => {
-            const target = e.target;
-            const id = parseInt(target.getAttribute('data-id'));
-            const type = target.getAttribute('data-type');
-
-            if(target.classList.contains('btn-paid')) {
-                const conta = contasAReceber.find(c => c.id === id);
-                if(conta && conta.status === 'Pendente') {
-                    if (!confirm(`Confirmar o recebimento de ${formatCurrency(conta.valor)} da conta nº ${id}?`)) return;
-                    conta.status = 'Pago';
-                    const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
-                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Venda #${conta.vendaId})`, valor: conta.valor });
-                    saveData('contasAReceber', contasAReceber);
-                    saveData('fluxoCaixa', fluxoCaixa);
-                    renderContasAReceber();
-                    renderDashboardSummaries(); // Refresh dashboard totals
-                    showNotification('Baixa realizada e valor lançado no caixa!');
+                // Agrupar parcelas da mesma venda
+                const existingVendaEntry = clientesComDivida[clienteNome].vendas.find(v => v.id === conta.vendaId);
+                if (existingVendaEntry) {
+                    existingVendaEntry.parcelas.push(vendaDetalhes.parcela);
                 } else {
-                    showNotification('Esta conta já foi paga.', true);
+                    clientesComDivida[clienteNome].vendas.push({
+                        id: conta.vendaId,
+                        dataVenda: vendaDetalhes.dataVenda,
+                        metodoPagamento: vendaDetalhes.metodoPagamento,
+                        itens: vendaDetalhes.itens,
+                        parcelas: [vendaDetalhes.parcela]
+                    });
                 }
-            } else if (target.classList.contains('btn-info') && type === 'venda-detalhes') {
-                showVendaDetalhesModal(id);
-            }
+                
+                clientesComDivida[clienteNome].totalDivida += conta.valor;
+                totalGeralPendente += conta.valor;
+            });
+
+            // Ordenar clientes por nome
+            const sortedClientes = Object.keys(clientesComDivida).sort();
+
+            sortedClientes.forEach(clienteNome => {
+                const clienteData = clientesComDivida[clienteNome];
+                const clientSection = document.createElement('div');
+                clientSection.classList.add('client-debt-section');
+                clientSection.innerHTML = `
+                    <h3 style="margin-top:20px; margin-bottom:10px; color:var(--primary-dark-color);">${clienteNome} - Total Pendente: ${formatCurrency(clienteData.totalDivida)}</h3>
+                `;
+                
+                clienteData.vendas.forEach(venda => {
+                    const vendaCard = document.createElement('div');
+                    vendaCard.classList.add('card', 'mt-2'); // Reusing card style
+                    vendaCard.style.padding = '15px';
+                    vendaCard.style.border = '1px dashed var(--border-color)';
+                    vendaCard.innerHTML = `
+                        <p><strong>Venda ID:</strong> ${venda.id}</p>
+                        <p><strong>Data da Compra:</strong> ${venda.dataVenda}</p>
+                        <p><strong>Forma de Pagamento:</strong> ${venda.metodoPagamento === 'fiado' ? 'Fiado' : (venda.metodoPagamento === 'parcelado' ? 'Parcelado' : venda.metodoPagamento)}</p>
+                        <h4 style="margin-top:10px; margin-bottom:5px;">Itens Comprados:</h4>
+                        <ul style="list-style:inside; margin-left: 20px;">
+                            ${venda.itens.map(item => `<li>${item.nome} (Qtd: ${item.quantidade}) - ${formatCurrency(item.precoUnitario)} cada = ${formatCurrency(item.subtotal)}</li>`).join('')}
+                        </ul>
+                        <h4 style="margin-top:10px; margin-bottom:5px;">Parcelas Pendentes:</h4>
+                        <ul style="list-style:inside; margin-left: 20px;">
+                            ${venda.parcelas.map(parcela => `<li>${parcela}</li>`).join('')}
+                        </ul>
+                    `;
+                    clientSection.appendChild(vendaCard);
+                });
+                detalhesContainer.appendChild(clientSection);
+            });
+
+            document.getElementById('relatorio-contas-receber-total').textContent = formatCurrency(totalGeralPendente);
+            reportContainer.classList.remove('hidden');
+            showNotification('Relatório de Contas a Receber gerado com sucesso!');
         });
-        document.getElementById('search-contas-receber').addEventListener('input', (e) => goToPage('contas-receber', 1, e.target.value, document.getElementById('filter-contas-receber-status').value));
-        document.getElementById('filter-contas-receber-status').addEventListener('change', (e) => goToPage('contas-receber', 1, document.getElementById('search-contas-receber').value, e.target.value));
 
+        document.getElementById('btn-export-contas-receber-csv').addEventListener('click', () => {
+            const contasPendentes = contasAReceber.filter(c => c.status === 'Pendente');
 
-        // CONTAS A PAGAR CRUD EVENTS
-        document.getElementById('form-add-conta-pagar').addEventListener('submit', e => {
-            e.preventDefault();
-            const id = document.getElementById('conta-pagar-id').value;
-            const descricao = document.getElementById('desc-conta-pagar').value;
-            const valor = parseFloat(document.getElementById('valor-conta-pagar').value);
-            const dataVencimento = document.getElementById('vencimento-conta-pagar').value;
-
-            if (!descricao || isNaN(valor) || valor <= 0 || !dataVencimento) {
-                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true);
+            if (contasPendentes.length === 0) {
+                showNotification('Nenhum dado para exportar neste relatório.', true);
                 return;
             }
 
-            if (id) {
-                const index = contasAPagar.findIndex(c => c.id == id);
-                if (index !== -1) {
-                    contasAPagar[index] = { ...contasAPagar[index], descricao, valor, dataVencimento };
-                    showNotification('Conta a Pagar atualizada!');
-                }
-            } else {
-                contasAPagar.push({ id: Date.now(), descricao, valor, dataVencimento, status: 'Pendente' });
-                showNotification('Conta a Pagar registrada!');
-            }
-            saveData('contasAPagar', contasAPagar);
-            renderContasAPagar();
-            renderDashboardSummaries();
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Cliente,Valor Pendente,Vencimento,ID Venda,Data Venda Original,Metodo Pagamento Original,Itens da Venda\n";
+
+            contasPendentes.forEach(conta => {
+                const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Cliente Desconhecido';
+                const vendaAssociada = vendas.find(v => v.id === conta.vendaId);
+                const dataVendaOriginal = vendaAssociada ? formatDate(vendaAssociada.data) : 'N/A';
+                const metodoPagamentoOriginal = vendaAssociada ? vendaAssociada.metodoPagamento : 'N/A';
+                const itensVenda = vendaAssociada ? vendaAssociada.itens.map(item => `${item.nome} (${item.quantidade}x)`).join('; ') : 'N/A';
+
+                csvContent += `"${clienteNome}",${conta.valor.toFixed(2)},${formatDate(conta.dataVencimento)},${conta.vendaId},${dataVendaOriginal},${metodoPagamentoOriginal},"${itensVenda}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `relatorio_contas_a_receber_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showNotification('Relatório CSV de Contas a Receber exportado com sucesso!');
         });
 
-        document.getElementById('btn-cancelar-conta-pagar').addEventListener('click', () => resetForm('form-add-conta-pagar', 'conta-pagar'));
+        document.getElementById('btn-export-contas-receber-pdf').addEventListener('click', () => {
+            const contasPendentes = contasAReceber.filter(c => c.status === 'Pendente');
 
-        document.getElementById('tabela-contas-pagar-container').addEventListener('click', e => {
-            const target = e.target;
-            const id = parseInt(target.getAttribute('data-id'));
-            const type = target.getAttribute('data-type');
+            if (contasPendentes.length === 0) {
+                showNotification('Nenhum dado para exportar neste relatório.', true);
+                return;
+            }
 
-            if (target.classList.contains('btn-paid') && type === 'conta-pagar') {
-                const conta = contasAPagar.find(c => c.id === id);
-                if (conta && conta.status === 'Pendente') {
-                    if (!confirm(`Confirmar o pagamento de ${formatCurrency(conta.valor)} da conta: ${conta.descricao}?`)) return;
-                    conta.status = 'Pago';
-                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Saída', descricao: `Pagamento: ${conta.descricao} (Conta Pagar #${conta.id})`, valor: conta.valor });
-                    saveData('contasAPagar', contasAPagar);
-                    saveData('fluxoCaixa', fluxoCaixa);
-                    renderContasAPagar();
-                    renderDashboardSummaries();
-                    showNotification('Pagamento realizado e valor lançado no caixa!');
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(18);
+            doc.text("Relatório de Contas a Receber", 14, 22);
+
+            let totalGeralPendente = contasPendentes.reduce((sum, c) => sum + c.valor, 0);
+            doc.setFontSize(12);
+            doc.text(`Total Geral Pendente: ${formatCurrency(totalGeralPendente)}`, 14, 30);
+
+            let finalY = 40;
+            const clientesComDivida = {};
+
+            contasPendentes.forEach(conta => {
+                const cliente = clientes.find(c => c.id === conta.clienteId);
+                const clienteNome = cliente ? cliente.nome : 'Cliente Desconhecido';
+                
+                if (!clientesComDivida[clienteNome]) {
+                    clientesComDivida[clienteNome] = {
+                        totalDivida: 0,
+                        vendas: []
+                    };
+                }
+
+                const vendaAssociada = vendas.find(v => v.id === conta.vendaId);
+                let vendaDetalhes = {
+                    dataVenda: vendaAssociada ? formatDate(vendaAssociada.data) : 'N/A',
+                    metodoPagamento: vendaAssociada ? vendaAssociada.metodoPagamento : 'N/A',
+                    itens: vendaAssociada ? vendaAssociada.itens.map(item => `${item.nome} (${item.quantidade}x)`) : [],
+                    parcela: `${formatCurrency(conta.valor)} (Vencimento: ${formatDate(conta.dataVencimento)})`
+                };
+
+                const existingVendaEntry = clientesComDivida[clienteNome].vendas.find(v => v.id === conta.vendaId);
+                if (existingVendaEntry) {
+                    existingVendaEntry.parcelas.push(vendaDetalhes.parcela);
                 } else {
-                    showNotification('Esta conta já foi paga.', true);
+                    clientesComDivida[clienteNome].vendas.push({
+                        id: conta.vendaId,
+                        dataVenda: vendaDetalhes.dataVenda,
+                        metodoPagamento: vendaDetalhes.metodoPagamento,
+                        itens: vendaDetalhes.itens,
+                        parcelas: [vendaDetalhes.parcela]
+                    });
                 }
-            } else if (target.classList.contains('btn-edit') && type === 'conta-pagar') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'conta-pagar') {
-                deleteItem(id, type);
-            }
+                clientesComDivida[clienteNome].totalDivida += conta.valor;
+            });
+
+            const sortedClientsKeys = Object.keys(clientesComDivida).sort();
+
+            sortedClientsKeys.forEach(clienteNome => {
+                const clienteData = clientesComDivida[clienteNome];
+                doc.setFontSize(14);
+                doc.text(`${clienteNome} - Total Pendente: ${formatCurrency(clienteData.totalDivida)}`, 14, finalY);
+                finalY += 8;
+
+                clienteData.vendas.forEach(venda => {
+                    doc.setFontSize(10);
+                    doc.text(`  Venda ID: ${venda.id}`, 18, finalY);
+                    finalY += 5;
+                    doc.text(`  Data da Compra: ${venda.dataVenda}`, 18, finalY);
+                    finalY += 5;
+                    doc.text(`  Forma de Pagamento: ${venda.metodoPagamento}`, 18, finalY);
+                    finalY += 5;
+                    doc.text(`  Itens: ${venda.itens.join(', ')}`, 18, finalY);
+                    finalY += 5;
+                    doc.text(`  Parcelas: ${venda.parcelas.join(', ')}`, 18, finalY);
+                    finalY += 8;
+                    if (finalY > doc.internal.pageSize.height - 30) { // Check if new page is needed
+                        doc.addPage();
+                        finalY = 20; // Reset Y for new page
+                    }
+                });
+                finalY += 5; // Add some space between clients
+                if (finalY > doc.internal.pageSize.height - 30) {
+                        doc.addPage();
+                        finalY = 20;
+                    }
+            });
+
+            doc.save(`relatorio_contas_a_receber_${new Date().toISOString().split('T')[0]}.pdf`);
+            showNotification('Relatório PDF de Contas a Receber exportado com sucesso!');
         });
-        document.getElementById('search-contas-pagar').addEventListener('input', (e) => goToPage('contas-pagar', 1, e.target.value, document.getElementById('filter-contas-pagar-status').value));
-        document.getElementById('filter-contas-pagar-status').addEventListener('change', (e) => goToPage('contas-pagar', 1, document.getElementById('search-contas-pagar').value, e.target.value));
 
 
-        // BACKUP/RESTORE BUTTONS
+        // --- BACKUP/RESTORE BUTTONS ---
         document.getElementById('btn-backup-data').addEventListener('click', backupData);
         document.getElementById('btn-restore-data').addEventListener('click', () => {
             document.getElementById('backup-file-input').click(); // Trigger file input click
