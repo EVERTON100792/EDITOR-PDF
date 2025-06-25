@@ -274,6 +274,75 @@
                 border-bottom: 0;
             }
         }
+
+        @media print {
+            body > *:not(#dashboard-screen),
+            #dashboard-screen .sidebar,
+            #dashboard-screen .main-header,
+            #dashboard-screen .card .btn,
+            #dashboard-screen .card .form-group,
+            #dashboard-screen .card h2:has(.fa-plus-circle), /* Oculta a seção de lançamento manual */
+            #dashboard-screen #edit-cliente-container,
+            #dashboard-screen #edit-produto-container,
+            #dashboard-screen #venda-form-card,
+            #dashboard-screen #relatorios-view .card:first-of-type /* Oculta o formulário de geração de relatório */
+            {
+                display: none !important;
+            }
+
+            #dashboard-screen {
+                display: block !important;
+                height: auto !important;
+                background-color: white !important;
+            }
+
+            #dashboard-screen .main-content {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+
+            .content-section.active {
+                display: block !important;
+                animation: none !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                margin-top: 1rem !important;
+                padding: 1rem !important;
+                border-radius: 0 !important;
+            }
+
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-top: 0.5rem !important;
+            }
+
+            th, td {
+                border: 1px solid #ddd !important;
+                padding: 8px !important;
+                white-space: normal !important;
+                color: black !important;
+            }
+
+            th {
+                background-color: #f2f2f2 !important;
+                color: #333 !important;
+            }
+
+            .responsive-table td:before {
+                color: #333 !important;
+            }
+
+            .valor-entrada, .valor-saida, .status-pendente, .status-pago {
+                color: inherit !important; /* Remove cores específicas para impressão */
+                font-weight: normal !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -344,6 +413,19 @@
 
             <section id="caixa-view" class="content-section">
                 <div class="card shadow-md"><h2>Saldo Atual: <span id="saldo-caixa-detalhe" style="color: var(--primary-color);">R$ 0,00</span></h2></div>
+                <div id="edit-lancamento-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-edit mr-2"></i> Editar Lançamento</h3>
+                    <form id="form-edit-lancamento">
+                        <input type="hidden" id="edit-lancamento-id">
+                        <div class="form-group"><label for="edit-desc-lancamento">Descrição</label><input type="text" id="edit-desc-lancamento" required></div>
+                        <div class="form-group"><label for="edit-valor-lancamento">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-lancamento" required></div>
+                        <div class="form-group"><label for="edit-tipo-lancamento">Tipo</label><select id="edit-tipo-lancamento"><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                            <button type="button" class="btn btn-cancel" id="cancel-edit-lancamento"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
                 <div class="card shadow-md">
                     <h2><i class="fas fa-plus-circle mr-2"></i> Lançamento Manual</h2>
                     <form id="form-add-lancamento">
@@ -442,12 +524,32 @@
                 <div class="card shadow-md">
                     <h2><i class="fas fa-file-alt mr-2"></i> Gerar Relatório de Vendas</h2>
                     <div class="flex gap-2">
-                        <div class="form-group flex-1"><label for="relatorio-inicio"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio"></div>
-                        <div class="form-group flex-1"><label for="relatorio-fim"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim"></div>
-                        <button id="btn-gerar-relatorio" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
+                        <div class="form-group flex-1"><label for="relatorio-inicio-vendas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-vendas"></div>
+                        <div class="form-group flex-1"><label for="relatorio-fim-vendas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-vendas"></div>
+                        <button id="btn-gerar-relatorio-vendas" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
                     </div>
+                    <button id="btn-imprimir-relatorio-vendas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
                 </div>
-                <div id="relatorio-container" class="mt-3"></div>
+                <div id="relatorio-vendas-container" class="mt-3"></div>
+
+                <div class="card shadow-md mt-3">
+                    <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Gerar Relatório de Contas a Receber</h2>
+                    <div class="flex gap-2">
+                        <div class="form-group flex-1"><label for="relatorio-status-contas"><i class="fas fa-info-circle mr-2"></i> Status</label>
+                            <select id="relatorio-status-contas">
+                                <option value="Todos">Todos</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Pago">Pago</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-1"><label for="relatorio-inicio-contas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-contas"></div>
+                        <div class="form-group flex-1"><label for="relatorio-fim-contas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-contas"></div>
+                        <button id="btn-gerar-relatorio-contas" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
+                    </div>
+                    <button id="btn-imprimir-relatorio-contas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                </div>
+                <div id="relatorio-contas-container" class="mt-3"></div>
+
             </section>
         </main>
     </div>
@@ -480,12 +582,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const editProdutoContainer = document.getElementById('edit-produto-container');
     const formEditProduto = document.getElementById('form-edit-produto');
 
+    // --- SELETORES DE CAIXA ---
+    const caixaContainer = document.getElementById('tabela-caixa-container');
+    const formAddLancamento = document.getElementById('form-add-lancamento');
+    const editLancamentoContainer = document.getElementById('edit-lancamento-container');
+    const formEditLancamento = document.getElementById('form-edit-lancamento');
+
+
     // --- ESTADO DA APLICAÇÃO ---
     let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
     let carrinhoVenda = [];
     let paymentChartInstance = null;
     let editingClientId = null;
     let editingProductId = null;
+    let editingLancamentoId = null; // Novo para edição de lançamento
     let isMobile = window.innerWidth <= 768;
 
 
@@ -496,7 +606,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        return new Date(date.getTime() + date.getTimezoneOffset() * 60000).toLocaleDateString('pt-BR');
+        // Ajuste para evitar problemas de fuso horário ao exibir a data
+        const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+        const adjustedDate = new Date(date.getTime() + userTimezoneOffset);
+        return adjustedDate.toLocaleDateString('pt-BR');
     };
 
     const showNotification = (message, isError = false) => {
@@ -534,7 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(table);
     };
 
-    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowClientes = (c, headers) => `<tr>${[c.nome, c.contato || 'N/A', `<button class="btn-action" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.nome + (p.quantidade === 0 ? ' (Esgotado)' : ''), p.quantidade, formatCurrency(p.preco), `<button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowCarrinho = (item, headers) => `<tr>${[item.nome, item.quantidade, formatCurrency(item.subtotal), `<button class="btn-action" data-action="remove-item" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
@@ -542,9 +655,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
         return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-action="pay" data-id="${conta.id}"><i class="fas fa-check"></i> Pagar</button>` : 'Recebido'].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
-    const renderRowRelatorio = (v, headers) => {
+    const renderRowRelatorioVendas = (v, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
         return `<tr>${[formatDate(v.data), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join(', '), v.metodoPagamento, formatCurrency(v.total)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    };
+    const renderRowRelatorioContas = (conta, headers) => {
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
+        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
 
     // --- FUNÇÕES DE NAVEGAÇÃO E ATUALIZAÇÃO ---
@@ -567,6 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cancelEditClient();
         cancelEditProduct();
+        cancelEditLancamento(); // Cancela edição de lançamento ao mudar de aba
 
         if (pageId === 'dashboard-view') renderDashboardSummaries();
         if (pageId === 'caixa-view') renderFluxoCaixa();
@@ -625,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const saldoEl = document.getElementById('saldo-caixa-detalhe');
         if (!saldoEl) return;
         saldoEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
-        renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor'], fluxoCaixa.sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
+        renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], fluxoCaixa.sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
     };
 
     const renderClientes = () => renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], clientes, renderRowClientes);
@@ -653,6 +771,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('edit-preco-produto').value = produto.preco;
         editProdutoContainer.classList.remove('hidden');
         editProdutoContainer.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const populateEditLancamentoForm = (lancamento) => {
+        document.getElementById('edit-lancamento-id').value = lancamento.id;
+        document.getElementById('edit-desc-lancamento').value = lancamento.descricao;
+        document.getElementById('edit-valor-lancamento').value = lancamento.valor;
+        document.getElementById('edit-tipo-lancamento').value = lancamento.tipo;
+        editLancamentoContainer.classList.remove('hidden');
+        editLancamentoContainer.scrollIntoView({ behavior: 'smooth' });
     };
 
     const popularFormulariosVenda = () => {
@@ -698,7 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
             const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
-            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total });
+            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
         } else if (metodoPagamento === 'fiado' || metodoPagamento === 'parcelado') {
             const parcelas = metodoPagamento === 'fiado' ? 1 : parseInt(document.getElementById('venda-parcelas').value);
             const valorParcela = total / parcelas;
@@ -724,23 +851,63 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === 'produto') {
             const produtoToEdit = produtos.find(p => p.id === id);
             if (produtoToEdit) populateEditProdutoForm(produtoToEdit);
+        } else if (type === 'lancamento') {
+            const lancamentoToEdit = fluxoCaixa.find(l => l.id === id);
+            if (lancamentoToEdit) populateEditLancamentoForm(lancamentoToEdit);
         }
     };
 
     const handleDelete = (type, id) => {
         if (confirm(`Tem certeza que deseja excluir este ${type}? Esta ação não pode ser desfeita.`)) {
             if (type === 'cliente') {
+                // Excluir vendas do cliente
+                const vendasDoCliente = vendas.filter(v => v.clienteId === id);
+                vendasDoCliente.forEach(venda => {
+                    // Restaurar estoque dos produtos da venda
+                    venda.itens.forEach(item => {
+                        const produtoEstoque = produtos.find(p => p.id === item.produtoId);
+                        if (produtoEstoque) {
+                            produtoEstoque.quantidade += item.quantidade;
+                        }
+                    });
+                });
+                vendas = vendas.filter(v => v.clienteId !== id);
+
+                // Excluir contas a receber do cliente
+                contasAReceber = contasAReceber.filter(c => c.clienteId !== id);
+
+                // Excluir lançamentos de caixa relacionados às vendas do cliente
+                const vendaIdsExcluidas = vendasDoCliente.map(v => v.id);
+                fluxoCaixa = fluxoCaixa.filter(l => !(l.vendaId && vendaIdsExcluidas.includes(l.vendaId)));
+
+                // Remover o cliente
                 clientes = clientes.filter(c => c.id !== id);
+
                 saveData('clientes', clientes);
+                saveData('vendas', vendas);
+                saveData('produtos', produtos);
+                saveData('contasAReceber', contasAReceber);
+                saveData('fluxoCaixa', fluxoCaixa);
+
                 renderClientes();
                 popularFormulariosVenda();
-                showNotification('Cliente excluído!');
+                renderDashboardSummaries(); // Atualiza o dashboard
+                renderContasAReceber(); // Atualiza contas a receber
+                renderFluxoCaixa(); // Atualiza fluxo de caixa
+                showNotification('Cliente e todas as transações relacionadas excluídos!');
+
             } else if (type === 'produto') {
                 produtos = produtos.filter(p => p.id !== id);
                 saveData('produtos', produtos);
                 renderProdutos();
                 popularFormulariosVenda();
                 showNotification('Produto excluído!');
+            } else if (type === 'lancamento') {
+                fluxoCaixa = fluxoCaixa.filter(l => l.id !== id);
+                saveData('fluxoCaixa', fluxoCaixa);
+                renderFluxoCaixa();
+                renderDashboardSummaries(); // Atualiza o dashboard
+                showNotification('Lançamento excluído!');
             }
         }
     };
@@ -776,6 +943,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const saveEditedLancamento = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-lancamento-id').value);
+        const index = fluxoCaixa.findIndex(l => l.id === id);
+        if (index !== -1) {
+            fluxoCaixa[index].descricao = document.getElementById('edit-desc-lancamento').value;
+            fluxoCaixa[index].valor = parseFloat(document.getElementById('edit-valor-lancamento').value);
+            fluxoCaixa[index].tipo = document.getElementById('edit-tipo-lancamento').value;
+            saveData('fluxoCaixa', fluxoCaixa);
+            renderFluxoCaixa();
+            renderDashboardSummaries(); // Atualiza o dashboard
+            showNotification('Lançamento atualizado!', false);
+            cancelEditLancamento();
+        }
+    };
+
     const cancelEditClient = () => {
         editClienteContainer.classList.add('hidden');
         formEditCliente.reset();
@@ -788,12 +971,23 @@ document.addEventListener('DOMContentLoaded', () => {
         editingProductId = null;
     };
 
+    const cancelEditLancamento = () => {
+        editLancamentoContainer.classList.add('hidden');
+        formEditLancamento.reset();
+        editingLancamentoId = null;
+    };
+
+
     const gerarRelatorioVendas = () => {
-        const dataInicio = document.getElementById('relatorio-inicio').value;
-        const dataFim = document.getElementById('relatorio-fim').value;
-        const container = document.getElementById('relatorio-container');
+        const dataInicio = document.getElementById('relatorio-inicio-vendas').value;
+        const dataFim = document.getElementById('relatorio-fim-vendas').value;
+        const container = document.getElementById('relatorio-vendas-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-vendas');
+
         if (!dataInicio || !dataFim) {
-            showNotification('Selecione as datas de início e fim.', true);
+            showNotification('Selecione as datas de início e fim para o relatório de vendas.', true);
+            container.innerHTML = '';
+            btnImprimir.classList.add('hidden');
             return;
         }
         const vendasFiltradas = vendas.filter(venda => {
@@ -801,18 +995,75 @@ document.addEventListener('DOMContentLoaded', () => {
             return vendaData >= dataInicio && vendaData <= dataFim;
         });
         if (vendasFiltradas.length === 0) {
-            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma venda no período.</p></div>';
+            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma venda no período selecionado.</p></div>';
+            btnImprimir.classList.add('hidden');
             return;
         }
         const totalVendido = vendasFiltradas.reduce((acc, venda) => acc + venda.total, 0);
         container.innerHTML = `
             <div class="card">
-                <h2>Relatório (${formatDate(dataInicio)} - ${formatDate(dataFim)})</h2>
+                <h2>Relatório de Vendas (${formatDate(dataInicio)} - ${formatDate(dataFim)})</h2>
                 <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 1rem;">Total Vendido: ${formatCurrency(totalVendido)}</p>
-                <div id="relatorio-tabela-container" class="table-responsive-container"></div>
+                <div id="relatorio-vendas-tabela-container" class="table-responsive-container"></div>
             </div>`;
-        renderTable('relatorio-tabela-container', ['Data', 'Cliente', 'Itens', 'Pagamento', 'Total'], vendasFiltradas.sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorio);
+        renderTable('relatorio-vendas-tabela-container', ['Data', 'Cliente', 'Itens', 'Pagamento', 'Total'], vendasFiltradas.sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
+        btnImprimir.classList.remove('hidden');
     };
+
+    const gerarRelatorioContas = () => {
+        const status = document.getElementById('relatorio-status-contas').value;
+        const dataInicio = document.getElementById('relatorio-inicio-contas').value;
+        const dataFim = document.getElementById('relatorio-fim-contas').value;
+        const container = document.getElementById('relatorio-contas-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-contas');
+
+        if (!dataInicio || !dataFim) {
+            showNotification('Selecione as datas de início e fim para o relatório de contas a receber.', true);
+            container.innerHTML = '';
+            btnImprimir.classList.add('hidden');
+            return;
+        }
+
+        let contasFiltradas = contasAReceber.filter(conta => {
+            const contaData = conta.dataVencimento.split('T')[0]; // Considera a data de vencimento
+            const isInPeriod = contaData >= dataInicio && contaData <= dataFim;
+            const matchesStatus = status === 'Todos' || conta.status === status;
+            return isInPeriod && matchesStatus;
+        });
+
+        if (contasFiltradas.length === 0) {
+            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma conta encontrada para os critérios selecionados.</p></div>';
+            btnImprimir.classList.add('hidden');
+            return;
+        }
+
+        const totalContas = contasFiltradas.reduce((acc, conta) => acc + conta.valor, 0);
+
+        container.innerHTML = `
+            <div class="card">
+                <h2>Relatório de Contas a Receber (${status === 'Todos' ? 'Todas' : status}) (${formatDate(dataInicio)} - ${formatDate(dataFim)})</h2>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 1rem;">Total: ${formatCurrency(totalContas)}</p>
+                <div id="relatorio-contas-tabela-container" class="table-responsive-container"></div>
+            </div>`;
+        renderTable('relatorio-contas-tabela-container', ['Cliente', 'Valor', 'Vencimento', 'Status'], contasFiltradas.sort((a,b) => new Date(b.dataVencimento) - new Date(a.dataVencimento)), renderRowRelatorioContas);
+        btnImprimir.classList.remove('hidden');
+    };
+
+    const imprimirRelatorio = (sectionId) => {
+        const originalContent = document.body.innerHTML;
+        const printContent = document.getElementById(sectionId).outerHTML;
+
+        // Temporariamente esconde tudo exceto o conteúdo a ser impresso
+        document.body.innerHTML = printContent;
+        
+        window.print();
+
+        // Restaura o conteúdo original da página após a impressão
+        document.body.innerHTML = originalContent;
+        // Precisa recarregar os listeners de eventos após restaurar o DOM
+        location.reload(); 
+    };
+
 
     const init = () => {
         clientes = loadData('clientes');
@@ -876,11 +1127,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     formAddCliente.addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); showNotification('Cliente salvo!'); e.target.reset(); popularFormulariosVenda(); });
     formAddProduto.addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); showNotification('Produto salvo!'); e.target.reset(); popularFormulariosVenda(); });
-    document.getElementById('form-add-lancamento').addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos corretamente!', true); }});
+    formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos corretamente!', true); }});
     document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
     document.getElementById('venda-pagamento').addEventListener('change', e => document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado'));
     document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
-    document.getElementById('btn-gerar-relatorio').addEventListener('click', gerarRelatorioVendas);
+
+    document.getElementById('btn-gerar-relatorio-vendas').addEventListener('click', gerarRelatorioVendas);
+    document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => imprimirRelatorio('relatorio-vendas-container'));
+
+    document.getElementById('btn-gerar-relatorio-contas').addEventListener('click', gerarRelatorioContas);
+    document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => imprimirRelatorio('relatorio-contas-container'));
+
 
     document.body.addEventListener('click', e => {
         const target = e.target.closest('[data-action]');
@@ -911,6 +1168,9 @@ document.addEventListener('DOMContentLoaded', () => {
     editClienteContainer.querySelector('.btn-cancel').addEventListener('click', cancelEditClient);
     formEditProduto.addEventListener('submit', saveEditedProduct);
     editProdutoContainer.querySelector('.btn-cancel').addEventListener('click', cancelEditProduct);
+    formEditLancamento.addEventListener('submit', saveEditedLancamento);
+    document.getElementById('cancel-edit-lancamento').addEventListener('click', cancelEditLancamento);
+
 
     // Lógica para decidir qual tela mostrar ao carregar a página
     if (localStorage.getItem('isLoggedIn') === 'true') {
