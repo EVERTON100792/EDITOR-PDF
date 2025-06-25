@@ -7,36 +7,38 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* --- TEMA MODERNO --- */
+        /* --- TEMA MODERNO REFINADO --- */
         :root {
-            --primary-color: #645bff; /* Indigo 500 */
-            --primary-dark-color: #4a3bff; /* Indigo 600 */
-            --primary-light-color: #e0e7ff; /* Indigo 100 */
+            --primary-color: #3B82F6; /* Blue 500 */
+            --primary-dark-color: #2563EB; /* Blue 600 */
+            --primary-light-color: #E0F2FE; /* Blue 100 */
+            --accent-color: #FACC15; /* Yellow 400 */
 
-            --text-primary: #171717; /* Gray 900 */
-            --text-secondary: #525252; /* Gray 600 */
+            --text-primary: #1E293B; /* Gray 800 */
+            --text-secondary: #4B5563; /* Gray 600 */
 
-            --bg-color: #f4f4f5; /* Gray 100 */
-            --surface-color: #ffffff;
-            --border-color: #d4d4d8; /* Gray 300 */
+            --bg-color: #F9FAFB; /* Gray 50 */
+            --surface-color: #FFFFFF;
+            --border-color: #D1D5DB; /* Gray 300 */
 
-            --success-color: #22c55e; /* Green 500 */
-            --danger-color: #ef4444; /* Red 500 */
-            --warning-color: #f59e0b; /* Amber 500 */
-            --info-color: #3b82f6; /* Blue 500 */
-            --whatsapp-color: #25d366;
+            --success-color: #10B981; /* Green 500 */
+            --danger-color: #EF4444; /* Red 500 */
+            --warning-color: #F59E0B; /* Yellow 400 */
+            --info-color: #0EA5E9; /* Sky 500 */
+            --whatsapp-color: #25D366;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
             height: 100%;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Nunito', sans-serif;
             color: var(--text-primary);
             background-color: var(--bg-color);
             -webkit-font-smoothing: antialiased;
@@ -46,114 +48,118 @@
         .hidden { display: none !important; }
         .flex { display: flex; }
         .gap-2 { gap: 0.75rem; }
-        .align-items-end { align-items: flex-end; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-end { justify-content: flex-end; }
         .flex-1 { flex: 1; }
+        .rounded-md { border-radius: 0.5rem; }
+        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); }
 
         /* --- LOGIN SCREEN --- */
         #login-screen {
-            background: linear-gradient(135deg, var(--primary-light-color), #dbeafe);
+            background: linear-gradient(135deg, var(--primary-light-color), #D1FAE5); /* Teal-ish gradient */
             display: flex; justify-content: center; align-items: center;
             height: 100%; padding: 1.5rem;
         }
         .login-box {
-            background-color: var(--surface-color); padding: 3rem; border-radius: 1rem;
+            background-color: var(--surface-color); padding: 2.5rem; border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-            text-align: center; width: 100%; max-width: 420px;
+            text-align: center; width: 100%; max-width: 400px;
         }
-        .login-box h1 { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;}
-        .login-box .subtitle { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem; }
-        .input-group { position: relative; margin-bottom: 2rem; }
+        .login-box h1 { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;}
+        .login-box .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+        .input-group { position: relative; margin-bottom: 1.5rem; }
         .input-group input {
-            width: 100%; padding: 1rem; border: 1px solid var(--border-color);
-            border-radius: 0.5rem; background-color: var(--surface-color); font-size: 1rem;
+            width: 100%; padding: 0.8rem 0.75rem; border: 1px solid var(--border-color);
+            border-radius: 0.375rem; background-color: var(--surface-color); font-size: 0.9rem;
             transition: border-color 0.3s ease;
         }
-        .input-group label { position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary); pointer-events: none; transition: all 0.3s ease; }
-        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0.5rem rgba(99, 102, 241, 0.25); }
+        .input-group label { position: absolute; left: 0.75rem; top: 0.75rem; color: var(--text-secondary); pointer-events: none; transition: all 0.3s ease; }
+        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0.25rem rgba(59, 130, 246, 0.25); }
         .input-group input:focus ~ label, .input-group input:valid ~ label {
-            transform: translateY(-1.5rem) scale(0.8); font-size: 0.9rem; color: var(--primary-color);
+            transform: translateY(-1rem) scale(0.8); font-size: 0.8rem; color: var(--primary-color);
         }
         .btn-login {
-            width: 100%; padding: 1rem; border: none; border-radius: 0.5rem;
-            background: var(--primary-color); color: white; font-size: 1.1rem;
+            width: 100%; padding: 0.8rem; border: none; border-radius: 0.375rem;
+            background: var(--primary-color); color: white; font-size: 1rem;
             font-weight: 500; cursor: pointer; transition: background 0.3s ease;
             box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
         }
         .btn-login:hover { background: var(--primary-dark-color); }
-        .error-message { color: var(--danger-color); margin-top: 1rem; height: 20px; font-size: 0.9rem; font-weight: 500; }
+        .error-message { color: var(--danger-color); margin-top: 1rem; height: 20px; font-size: 0.8rem; font-weight: 500; }
 
         /* --- DASHBOARD SCREEN --- */
         #dashboard-screen { display: flex; height: 100vh; background-color: var(--bg-color); }
 
         .sidebar {
-            width: 280px; background: var(--surface-color); border-right: 1px solid var(--border-color);
-            display: flex; flex-direction: column; padding: 1.5rem 1rem;
+            width: 260px; background: var(--surface-color); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; padding: 1rem;
             flex-shrink: 0; transition: transform 0.3s ease-in-out; z-index: 1000;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
         }
-        .sidebar-header { text-align: center; margin-bottom: 2rem; }
-        .sidebar-header h2 { color: var(--primary-color); font-weight: 600; font-size: 1.75rem; margin-bottom: 0.25rem; }
-        .sidebar-header p { color: var(--text-secondary); font-size: 0.9rem; }
+        .sidebar-header { text-align: center; margin-bottom: 1.5rem; }
+        .sidebar-header h2 { color: var(--primary-color); font-weight: 600; font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .sidebar-header p { color: var(--text-secondary); font-size: 0.8rem; }
         .sidebar-nav ul { list-style: none; padding: 0; }
         .sidebar-nav li a {
-            display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
-            color: var(--text-secondary); text-decoration: none; border-radius: 0.5rem;
-            margin-bottom: 0.5rem; transition: all 0.2s ease; font-weight: 500; font-size: 1rem;
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
+            color: var(--text-secondary); text-decoration: none; border-radius: 0.375rem;
+            margin-bottom: 0.375rem; transition: all 0.2s ease; font-weight: 500; font-size: 0.9rem;
         }
-        .sidebar-nav li a .icon { width: 22px; height: 22px; stroke-width: 2; }
+        .sidebar-nav li a .icon { width: 20px; height: 20px; }
         .sidebar-nav li a:hover { background-color: var(--primary-light-color); color: var(--primary-color); }
         .sidebar-nav li a.active { background-color: var(--primary-color); color: white; }
 
-        .sidebar-footer { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+        .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); }
         .logout-btn {
             display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
-            background: transparent; color: var(--text-secondary); border-radius: 0.5rem;
-            cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.2s ease;
+            width: 100%; padding: 0.6rem; border: 1px solid var(--border-color);
+            background: transparent; color: var(--text-secondary); border-radius: 0.375rem;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s ease;
         }
         .logout-btn:hover { background-color: var(--danger-color); color: white; border-color: var(--danger-color); }
 
-        .main-content { flex-grow: 1; padding: 2rem; overflow-y: auto; }
-        .main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .main-content { flex-grow: 1; padding: 1.5rem; overflow-y: auto; }
+        .main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
         .mobile-header { display: none; align-items: center; gap: 0.5rem; }
         #menu-toggle { background: none; border: none; cursor: pointer; padding: 0.25rem; }
-        #menu-toggle .bar { display: block; width: 24px; height: 2px; background-color: var(--text-primary); margin: 6px 0; transition: 0.4s; }
-        .main-content h1 { font-size: 2rem; color: var(--text-primary); font-weight: 600; }
+        #menu-toggle .bar { display: block; width: 20px; height: 2px; background-color: var(--text-primary); margin: 4px 0; transition: 0.4s; }
+        .main-content h1 { font-size: 1.75rem; color: var(--text-primary); font-weight: 600; }
 
         .content-section { display: none; }
         .content-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { background: var(--surface-color); padding: 1.5rem; border-radius: 0.75rem; margin-top: 1.25rem; border: 1px solid var(--border-color); box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); }
-        .card h2 { margin-bottom: 1rem; color: var(--text-primary); font-weight: 500; font-size: 1.5rem; }
-        .card h3 { font-weight: 500; color: var(--text-primary); font-size: 1.125rem; }
+        .card { background: var(--surface-color); padding: 1.25rem; border-radius: 0.5rem; margin-top: 1rem; border: 1px solid var(--border-color); box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
+        .card h2 { margin-bottom: 1rem; color: var(--text-primary); font-weight: 500; font-size: 1.3rem; }
+        .card h3 { font-weight: 500; color: var(--text-primary); font-size: 1rem; }
 
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); font-size: 0.9rem; }
+        .form-group { margin-bottom: 0.75rem; }
+        .form-group label { display: block; margin-bottom: 0.375rem; font-weight: 500; color: var(--text-secondary); font-size: 0.8rem; }
         .form-group input, .form-group select {
-            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color);
-            border-radius: 0.5rem; font-size: 1rem; font-family: 'Poppins', sans-serif;
+            width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--border-color);
+            border-radius: 0.375rem; font-size: 0.9rem; font-family: 'Nunito', sans-serif;
             background-color: var(--surface-color); transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-group input:focus, .form-group select:focus {
             outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem var(--primary-light-color);
+            box-shadow: 0 0 0 0.2rem var(--primary-light-color);
         }
 
         .btn, .btn-submit {
-            padding: 0.6rem 1.2rem; border: none; border-radius: 0.5rem; background: var(--primary-color);
-            color: white; font-size: 1rem; cursor: pointer; transition: background 0.2s; font-weight: 500;
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+            padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; background: var(--primary-color);
+            color: white; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; font-weight: 500;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
         .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); }
 
         .table-responsive-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background-color: var(--bg-color); font-weight: 500; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05rem;}
-        td { color: var(--text-primary); font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+        th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background-color: var(--bg-color); font-weight: 500; color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05rem;}
+        td { color: var(--text-primary); font-size: 0.8rem; }
 
-        .btn-action { padding: 0.4rem 0.6rem; border-radius: 0.3rem; color: white; font-weight: 400; border: none; cursor: pointer; font-size: 0.8rem;}
+        .btn-action { padding: 0.3rem 0.5rem; border-radius: 0.25rem; color: white; font-weight: 400; border: none; cursor: pointer; font-size: 0.7rem;}
         .btn-paid { background-color: var(--success-color); }
         .btn-delete { background-color: var(--danger-color); }
         .status-pendente { color: var(--warning-color); font-weight: bold; }
@@ -161,78 +167,70 @@
         .valor-entrada { color: var(--success-color); font-weight: 500; }
         .valor-saida { color: var(--danger-color); font-weight: 500; }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-        .summary-card { padding: 1.25rem; background-color: var(--surface-color); border-radius: 0.75rem; border: 1px solid var(--border-color); box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); }
-        .summary-card h3 { font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 400; color: var(--text-secondary); }
-        .summary-card p { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; }
+        .summary-card { padding: 1rem; background-color: var(--surface-color); border-radius: 0.5rem; border: 1px solid var(--border-color); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .summary-card h3 { font-size: 0.8rem; margin-bottom: 0.375rem; font-weight: 400; color: var(--text-secondary); }
+        .summary-card p { font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
 
-        .dashboard-main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-top: 1rem; }
-        #sales-summary-container .summary-card { padding: 1rem; border-left-width: 4px; border-left-style: solid; margin-bottom: 0.75rem; }
+        .dashboard-main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+        #sales-summary-container .summary-card { padding: 0.75rem; border-left: 4px solid; margin-bottom: 0.5rem; }
+        #sales-summary-container .summary-card:nth-child(1) { border-left-color: var(--success-color); }
+        #sales-summary-container .summary-card:nth-child(2) { border-left-color: var(--info-color); }
+        #sales-summary-container .summary-card:nth-child(3) { border-left-color: var(--warning-color); }
+        #sales-summary-container .summary-card:nth-child(4) { border-left-color: var(--danger-color); }
 
-        .edit-form-container { margin-top: 1.5rem; padding: 1.5rem; background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 0.5rem; }
-        .edit-form-container h3 { margin-bottom: 1rem; color: var(--primary-color); font-size: 1.25rem; }
-        .edit-form-container .form-group { margin-bottom: 0.75rem; }
+        .edit-form-container { margin-top: 1rem; padding: 1rem; background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 0.375rem; }
+        .edit-form-container h3 { margin-bottom: 0.75rem; color: var(--primary-color); font-size: 1.1rem; }
+        .edit-form-container .form-group { margin-bottom: 0.6rem; }
         .edit-form-container .btn-cancel { background-color: var(--danger-color); }
-        .edit-form-container .btn-cancel:hover { background-color: #e02424; }
+        .edit-form-container .btn-cancel:hover { background-color: #DC2626; }
 
-        @media (max-width: 1024px) {
-            .dashboard-main-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 768px) {
-            .sidebar { position: fixed; height: 100%; transform: translateX(-100%); box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); border-right: none;}
-            .sidebar.open { transform: translateX(0); }
-            .main-content { padding: 1rem; }
-            .main-header { justify-content: flex-start; }
-            .mobile-header { display: flex; }
-            .desktop-title { display: none; }
-            .dashboard-grid { grid-template-columns: 1fr 1fr; }
-            .flex { flex-direction: column; gap: 0; }
-            .align-items-end { align-items: stretch; }
-            .align-items-end .btn { margin-top: 0.75rem; }
-        }
-        @media (max-width: 480px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-        }
+        /* Icon Styles */
+        .sidebar-nav li a .icon { color: var(--text-secondary); }
+        .sidebar-nav li a:hover .icon { color: var(--primary-color); }
+        .sidebar-nav li a.active .icon { color: white; }
+        .logout-btn .icon { color: var(--text-secondary); }
+        .logout-btn:hover .icon { color: white; }
     </style>
 </head>
 <body>
     <div id="login-screen" class="hidden">
-        <div class="login-box">
-            <h1>Flor de Maira</h1>
+        <div class="login-box shadow-md">
+            <h1><i class="fas fa-store" style="color: var(--primary-color);"></i> Flor de Maira</h1>
             <p class="subtitle">Acesse seu painel de gestão</p>
             <form id="login-form">
                 <div class="input-group">
                     <input type="text" id="username" required>
-                    <label for="username">Usuário</label>
+                    <label for="username"><i class="fas fa-user"></i> Usuário</label>
                 </div>
                 <div class="input-group">
                     <input type="password" id="password" required>
-                    <label for="password">Senha</label>
+                    <label for="password"><i class="fas fa-lock"></i> Senha</label>
                 </div>
-                <button type="submit" class="btn-login">Entrar</button>
+                <button type="submit" class="btn-login">Entrar <i class="fas fa-sign-in-alt"></i></button>
                 <p id="error-message" class="error-message"></p>
             </form>
         </div>
     </div>
 
     <div id="dashboard-screen" class="hidden">
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar shadow-md">
             <div class="sidebar-header">
-                <h2>Flor de Maira</h2>
+                <h2><i class="fas fa-store" style="color: var(--primary-color);"></i> Flor de Maira</h2>
                 <p>Painel Administrativo</p>
             </div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#dashboard" class="nav-link active" data-target="dashboard-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg><span>Dashboard</span></a></li>
-                    <li><a href="#caixa" class="nav-link" data-target="caixa-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Fluxo de Caixa</span></a></li>
-                    <li><a href="#vendas" class="nav-link" data-target="vendas-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Realizar Venda</span></a></li>
-                    <li><a href="#clientes" class="nav-link" data-target="clientes-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Clientes</span></a></li>
-                    <li><a href="#estoque" class="nav-link" data-target="estoque-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg><span>Estoque</span></a></li>
-                    <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1h4a2 2 0 012 2v11a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h4z"></path></svg><span>Contas a Receber</span></a></li>
-                    <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span>Relatórios</span></a></li>
+                    <li><a href="#caixa" class="nav-link" data-target="caixa-view"><i class="fas fa-cash-register icon"></i><span>Fluxo de Caixa</span></a></li>
+                    <li><a href="#vendas" class="nav-link" data-target="vendas-view"><i class="fas fa-shopping-cart icon"></i><span>Realizar Venda</span></a></li>
+                    <li><a href="#clientes" class="nav-link" data-target="clientes-view"><i class="fas fa-users icon"></i><span>Clientes</span></a></li>
+                    <li><a href="#estoque" class="nav-link" data-target="estoque-view"><i class="fas fa-boxes icon"></i><span>Estoque</span></a></li>
+                    <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><i class="fas fa-file-invoice-dollar icon"></i><span>Contas a Receber</span></a></li>
+                    <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><i class="fas fa-chart-bar icon"></i><span>Relatórios</span></a></li>
                 </ul>
             </nav>
-            <div class="sidebar-footer"><button class="logout-btn" id="logout-btn"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg><span>Sair</span></button></div>
+            <div class="sidebar-footer"><button class="logout-btn"><i class="fas fa-sign-out-alt icon"></i><span>Sair</span></button></div>
         </aside>
 
         <main class="main-content" id="main-content">
@@ -246,40 +244,40 @@
 
             <section id="dashboard-view" class="content-section">
                 <div class="dashboard-grid">
-                    <div class="summary-card"><h3 style="color:var(--success-color);">Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
-                    <div class="summary-card"><h3 style="color:var(--warning-color);">Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
+                    <div class="summary-card shadow-md"><h3 style="color:var(--success-color);"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
+                    <div class="summary-card shadow-md"><h3 style="color:var(--warning-color);"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
                 </div>
                 <div class="dashboard-main-grid">
-                    <div class="card"><h2>Vendas por Método de Pagamento</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
-                    <div class="card"><h2>Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
+                    <div class="card shadow-md"><h2><i class="fas fa-chart-pie mr-2"></i> Vendas por Método de Pagamento</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
+                    <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
                 </div>
             </section>
 
             <section id="caixa-view" class="content-section">
-                    <div class="card"><h2>Saldo Atual: <span id="saldo-caixa-detalhe" style="color: var(--primary-color);">R$ 0,00</span></h2></div>
-                <div class="card"><h2>Adicionar Lançamento Manual</h2><form id="form-add-lancamento"><div class="flex gap-2"><div class="form-group flex-1"><label for="desc-lancamento">Descrição</label><input type="text" id="desc-lancamento" required></div><div class="form-group"><label for="valor-lancamento">Valor (R$)</label><input type="number" step="0.01" id="valor-lancamento" required></div><div class="form-group"><label for="tipo-lancamento">Tipo</label><select id="tipo-lancamento"><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div></div><button type="submit" class="btn-submit">Lançar</button></form></div>
-                <div class="card"><h2>Histórico de Movimentações</h2><div id="tabela-caixa-container" class="table-responsive-container"></div></div>
+                    <div class="card shadow-md"><h2>Saldo Atual: <span id="saldo-caixa-detalhe" style="color: var(--primary-color);">R$ 0,00</span></h2></div>
+                <div class="card shadow-md"><h2><i class="fas fa-plus-circle mr-2"></i> Adicionar Lançamento Manual</h2><form id="form-add-lancamento"><div class="flex gap-2"><div class="form-group flex-1"><label for="desc-lancamento">Descrição</label><input type="text" id="desc-lancamento" required></div><div class="form-group"><label for="valor-lancamento">Valor (R$)</label><input type="number" step="0.01" id="valor-lancamento" required></div><div class="form-group"><label for="tipo-lancamento">Tipo</label><select id="tipo-lancamento"><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div></div><button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar</button></form></div>
+                <div class="card shadow-md"><h2><i class="fas fa-history mr-2"></i> Histórico de Movimentações</h2><div id="tabela-caixa-container" class="table-responsive-container"></div></div>
             </section>
 
             <section id="clientes-view" class="content-section">
-                <div class="card">
-                    <h2>Cadastrar Novo Cliente</h2>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-user-plus mr-2"></i> Cadastrar Novo Cliente</h2>
                     <form id="form-add-cliente">
                         <div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div>
                         <div class="form-group">
                             <label for="contato-cliente">Telefone (para recibo no WhatsApp)</label>
                             <input type="text" id="contato-cliente" placeholder="(XX) XXXXX-XXXX">
                         </div>
-                        <button type="submit" class="btn-submit">Salvar Cliente</button>
+                        <button type="submit" class="btn-submit"><i class="fas fa-save mr-2"></i> Salvar Cliente</button>
                     </form>
                 </div>
-                <div class="card">
-                    <h2>Clientes Cadastrados</h2>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-users mr-2"></i> Clientes Cadastrados</h2>
                     <div id="tabela-clientes-container" class="table-responsive-container"></div>
                 </div>
 
-                <div id="edit-cliente-container" class="edit-form-container hidden">
-                    <h3>Editar Cliente</h3>
+                <div id="edit-cliente-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-user-edit mr-2"></i> Editar Cliente</h3>
                     <form id="form-edit-cliente">
                         <input type="hidden" id="edit-cliente-id">
                         <div class="form-group"><label for="edit-nome-cliente">Nome</label><input type="text" id="edit-nome-cliente" required></div>
@@ -287,50 +285,50 @@
                             <label for="edit-contato-cliente">Telefone (para recibo no WhatsApp)</label>
                             <input type="text" id="edit-contato-cliente" placeholder="(XX) XXXXX-XXXX">
                         </div>
-                        <button type="submit" class="btn-submit">Salvar Alterações</button>
-                        <button type="button" class="btn btn-cancel" id="btn-cancel-edit-cliente">Cancelar</button>
+                        <button type="submit" class="btn-submit"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                        <button type="button" class="btn btn-cancel"><i class="fas fa-times mr-2"></i> Cancelar</button>
                     </form>
                 </div>
             </section>
 
              <section id="estoque-view" class="content-section">
-                <div class="card"><h2>Cadastrar Novo Produto</h2><form id="form-add-produto"><div class="flex gap-2"><div class="form-group flex-1"><label for="nome-produto">Nome do Produto</label><input type="text" id="nome-produto" required></div><div class="form-group"><label for="qtd-produto">Quantidade</label><input type="number" id="qtd-produto" required></div><div class="form-group flex-1"><label for="preco-produto">Preço (R$)</label><input type="number" step="0.01" id="preco-produto" required></div></div><button type="submit" class="btn-submit">Adicionar ao Estoque</button></form></div>
-                <div class="card">
-                    <h2>Produtos em Estoque</h2>
+                <div class="card shadow-md"><h2><i class="fas fa-plus-square mr-2"></i> Cadastrar Novo Produto</h2><form id="form-add-produto"><div class="flex gap-2"><div class="form-group flex-1"><label for="nome-produto">Nome do Produto</label><input type="text" id="nome-produto" required></div><div class="form-group"><label for="qtd-produto">Quantidade</label><input type="number" id="qtd-produto" required></div><div class="form-group flex-1"><label for="preco-produto">Preço (R$)</label><input type="number" step="0.01" id="preco-produto" required></div></div><button type="submit" class="btn-submit"><i class="fas fa-plus mr-2"></i> Adicionar ao Estoque</button></form></div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-boxes mr-2"></i> Produtos em Estoque</h2>
                     <div id="tabela-produtos-container" class="table-responsive-container"></div>
                 </div>
 
-                <div id="edit-produto-container" class="edit-form-container hidden">
-                    <h3>Editar Produto</h3>
+                <div id="edit-produto-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-edit mr-2"></i> Editar Produto</h3>
                     <form id="form-edit-produto">
                         <input type="hidden" id="edit-produto-id">
                         <div class="form-group"><label for="edit-nome-produto">Nome do Produto</label><input type="text" id="edit-nome-produto" required></div>
                         <div class="form-group"><label for="edit-qtd-produto">Quantidade</label><input type="number" id="edit-qtd-produto" required></div>
                         <div class="form-group"><label for="edit-preco-produto">Preço (R$)</label><input type="number" step="0.01" id="edit-preco-produto" required></div>
-                        <button type="submit" class="btn-submit">Salvar Alterações</button>
-                        <button type="button" class="btn btn-cancel" id="btn-cancel-edit-produto">Cancelar</button>
+                        <button type="submit" class="btn-submit"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                        <button type="button" class="btn btn-cancel"><i class="fas fa-times mr-2"></i> Cancelar</button>
                     </form>
                 </div>
             </section>
 
             <section id="vendas-view" class="content-section">
-                <div class="card" id="venda-form-card">
+                <div class="card shadow-md" id="venda-form-card">
                     <form id="venda-form">
-                        <div class="form-group"><label for="venda-cliente">Selecione o Cliente</label><select id="venda-cliente" required></select></div>
-                        <div class="card mt-3"><h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;">Adicionar Item</h3><div class="flex gap-2 align-items-end"><div class="form-group flex-1"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px;"></div><button type="button" id="btn-add-item-venda" class="btn">Adicionar</button></div></div>
-                        <div class="card mt-3"><h3>Itens da Venda</h3><div id="venda-itens-container" class="table-responsive-container"></div><h3 style="margin-top:1rem; text-align:right; font-weight:700; font-size:1.125rem;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
-                        <div class="card mt-3"><h3>Pagamento</h3><div class="form-group"><label for="venda-pagamento">Método</label><select id="venda-pagamento"><option value="vista">À Vista</option><option value="pix">Pix</option><option value="fiado">Fiado (30 dias)</option><option value="parcelado">Parcelado</option></select></div><div class="form-group hidden" id="venda-parcelas-group"><label for="venda-parcelas">Parcelas</label><select id="venda-parcelas"><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option></select></div></div>
-                        <button type="button" id="btn-finalizar-venda" class="btn-submit" style="margin-top:1.5rem; width:100%;">Finalizar Venda</button>
+                        <div class="form-group"><label for="venda-cliente"><i class="fas fa-user-tag mr-2"></i> Selecione o Cliente</label><select id="venda-cliente" required></select></div>
+                        <div class="card mt-3 shadow-md"><h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;"><i class="fas fa-cart-plus mr-2"></i> Adicionar Item</h3><div class="flex gap-2 items-center justify-end"><div class="form-group flex-1"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div><div class="form-group"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px; text-align: center;"></div><button type="button" id="btn-add-item-venda" class="btn"><i class="fas fa-plus mr-2"></i> Adicionar</button></div></div>
+                        <div class="card mt-3 shadow-md"><h3><i class="fas fa-list-ol mr-2"></i> Itens da Venda</h3><div id="venda-itens-container" class="table-responsive-container"></div><h3 style="margin-top:1rem; text-align:right; font-weight:700; font-size:1.125rem;">Total: <span id="venda-total">R$ 0,00</span></h3></div>
+                        <div class="card mt-3 shadow-md"><h3><i class="fas fa-credit-card mr-2"></i> Pagamento</h3><div class="form-group"><label for="venda-pagamento">Método</label><select id="venda-pagamento"><option value="vista">À Vista</option><option value="pix">Pix</option><option value="fiado">Fiado (30 dias)</option><option value="parcelado">Parcelado</option></select></div><div class="form-group hidden" id="venda-parcelas-group"><label for="venda-parcelas">Parcelas</label><select id="venda-parcelas"><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option></select></div></div>
+                        <button type="button" id="btn-finalizar-venda" class="btn-submit" style="margin-top:1.5rem; width:100%;"><i class="fas fa-check-double mr-2"></i> Finalizar Venda</button>
                     </form>
                 </div>
             </section>
 
             <section id="contas-a-receber-view" class="content-section">
-                <div class="card"><h2>Contas a Receber</h2><div id="tabela-contas-container" class="table-responsive-container"></div></div>
+                <div class="card shadow-md"><h2><i class="fas fa-file-invoice-dollar mr-2"></i> Contas a Receber</h2><div id="tabela-contas-container" class="table-responsive-container"></div></div>
             </section>
 
             <section id="relatorios-view" class="content-section">
-                <div class="card"><h2>Gerar Relatório de Vendas</h2><div class="flex gap-2 align-items-end"><div class="form-group flex-1"><label for="relatorio-inicio">Data Início</label><input type="date" id="relatorio-inicio"></div><div class="form-group flex-1"><label for="relatorio-fim">Data Fim</label><input type="date" id="relatorio-fim"></div><button id="btn-gerar-relatorio" class="btn">Gerar</button></div></div>
+                <div class="card shadow-md"><h2><i class="fas fa-file-alt mr-2"></i> Gerar Relatório de Vendas</h2><div class="flex gap-2 items-center justify-end"><div class="form-group flex-1"><label for="relatorio-inicio"><i class="fas fa-calendar-alt mr-2"></i> Data Início</label><input type="date" id="relatorio-inicio"></div><div class="form-group flex-1"><label for="relatorio-fim"><i class="fas fa-calendar-alt mr-2"></i> Data Fim</label><input type="date" id="relatorio-fim"></div><button id="btn-gerar-relatorio" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button></div></div>
                 <div id="relatorio-container" class="mt-3"></div>
             </section>
         </main>
@@ -381,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showNotification = (message, isError = false) => {
         const notification = document.createElement('div');
         Object.assign(notification.style, {
-            position: 'fixed', bottom: '20px', right: '20px', padding: '15px 25px', borderRadius: '8px',
+            position: 'fixed', bottom: '20px', right: '20px', padding: '15px 25px', borderRadius: '0.5rem',
             color: 'white', zIndex: '2000', opacity: '0', transition: 'all 0.4s ease',
             transform: 'translateY(10px)', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
             backgroundColor: isError ? 'var(--danger-color)' : 'var(--success-color)', fontWeight: '500'
@@ -399,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = data.length === 0 ? '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhum registro encontrado.</p>' : '';
         if (data.length > 0) {
             const table = document.createElement('table');
+            table.classList.add('shadow-md', 'rounded-md');
             table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${data.map(renderRow).join('')}</tbody>`;
             container.appendChild(table);
         }
@@ -452,10 +451,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const summaryContainer = document.getElementById('sales-summary-container');
         if (summaryContainer) {
             summaryContainer.innerHTML = `
-                <div class="summary-card" style="border-left: 4px solid var(--success-color); margin-bottom: 0.75rem;"><h3 style="font-weight:400; color:var(--text-secondary);">À Vista</h3><p>${formatCurrency(salesSummary.vista)}</p></div>
-                <div class="summary-card" style="border-left: 4px solid var(--info-color); margin-bottom: 0.75rem;"><h3 style="font-weight:400; color:var(--text-secondary);">Pix</h3><p>${formatCurrency(salesSummary.pix)}</p></div>
-                <div class="summary-card" style="border-left: 4px solid var(--warning-color); margin-bottom: 0.75rem;"><h3 style="font-weight:400; color:var(--text-secondary);">Fiado</h3><p>${formatCurrency(salesSummary.fiado)}</p></div>
-                <div class="summary-card" style="border-left: 4px solid var(--danger-color);"><h3 style="font-weight:400; color:var(--text-secondary);">Parcelado</h3><p>${formatCurrency(salesSummary.parcelado)}</p></div>
+                <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-money-bill-alt mr-2"></i> À Vista</h3><p>${formatCurrency(salesSummary.vista)}</p></div>
+                <div class="summary-card shadow-md" style="border-left-color: var(--info-color);"><h3 class="items-center"><i class="fab fa-pix mr-2"></i> Pix</h3><p>${formatCurrency(salesSummary.pix)}</p></div>
+                <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-hand-holding-usd mr-2"></i> Fiado</h3><p>${formatCurrency(salesSummary.fiado)}</p></div>
+                <div class="summary-card shadow-md" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-calendar-plus mr-2"></i> Parcelado</h3><p>${formatCurrency(salesSummary.parcelado)}</p></div>
             `;
         }
         renderPaymentChart(salesSummary);
@@ -502,8 +501,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${c.nome}</td>
                 <td>${c.contato || 'N/A'}</td>
                 <td>
-                    <button class="btn-action" data-action="edit" data-type="cliente" data-id="${c.id}">Editar</button>
-                    <button class="btn-action btn-delete" data-action="delete" data-type="cliente" data-id="${c.id}">Excluir</button>
+                    <button class="btn-action" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i> Editar</button>
+                    <button class="btn-action btn-delete" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i> Excluir</button>
                 </td>
             </tr>`
         );
@@ -522,8 +521,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${p.quantidade}</td>
                 <td>${formatCurrency(p.preco)}</td>
                 <td>
-                    <button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}">Editar</button>
-                    <button class="btn-action btn-delete" data-action="delete" data-type="produto" data-id="${p.id}">Excluir</button>
+                    <button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i> Editar</button>
+                    <button class="btn-action btn-delete" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i> Excluir</button>
                 </td>
             </tr>`
         );
@@ -539,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderContasAReceber = () => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Cliente avulso';
         renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ação'], contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), conta => `
-            <tr><td>${getNomeCliente(conta.clienteId)}</td><td>${formatCurrency(conta.valor)}</td><td>${new Date(conta.dataVencimento + 'T00:00:00').toLocaleDateString('pt-BR')}</td><td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td><td>${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Recebido'}</td></tr>`);
+            <tr><td>${getNomeCliente(conta.clienteId)}</td><td>${formatCurrency(conta.valor)}</td><td>${new Date(conta.dataVencimento + 'T00:00:00').toLocaleDateString('pt-BR')}</td><td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td><td>${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}"><i class="fas fa-check"></i> Dar Baixa</button>` : 'Recebido'}</td></tr>`);
     };
 
     const popularFormulariosVenda = () => {
@@ -554,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalEl = document.getElementById('venda-total');
         if (!totalEl) return;
         renderTable('venda-itens-container', ['Produto', 'Qtd', 'Subtotal', 'Ação'], carrinhoVenda, item => `
-            <tr><td>${item.nome}</td><td>${item.quantidade}</td><td>${formatCurrency(item.subtotal)}</td><td><button class="btn-action btn-delete" data-id="${item.produtoId}">Remover</button></td></tr>`);
+            <tr><td>${item.nome}</td><td>${item.quantidade}</td><td>${formatCurrency(item.subtotal)}</td><td><button class="btn-action btn-delete" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i> Remover</button></td></tr>`);
         totalEl.textContent = formatCurrency(carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0));
     };
 
@@ -641,8 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const urlWhatsapp = `https://wa.me/${numeroWhatsapp}?text=${textoCodificado}`;
 
             whatsappBtnHtml = `<a href="${urlWhatsapp}" target="_blank" id="btn-whatsapp">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
-                Enviar via WhatsApp
+                <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
             </a>`;
         }
 
@@ -652,32 +650,32 @@ document.addEventListener('DOMContentLoaded', () => {
             <head>
                 <meta charset="UTF-8">
                 <title>Recibo - Venda #${venda.id}</title>
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
                 <style>
-                    body { font-family: 'Inter', sans-serif; margin: 0; padding: 25px; background-color: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
-                    .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-                    .header { text-align: center; border-bottom: 2px solid #0d9488; padding-bottom: 20px; margin-bottom: 20px; }
-                    .header h1 { color: #0d9488; margin: 0; font-size: 2.5rem; }
-                    .header p { color: #64748b; margin: 5px 0 0; }
-                    h2 { text-align: center; color: #0f766e; font-size: 1.5rem; margin-bottom: 25px; }
-                    .section { margin-bottom: 25px; }
-                    .section h3 { border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; font-size: 1.1rem; color: #1e293b; }
-                    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                    body { font-family: 'Nunito', sans-serif; margin: 0; padding: 25px; background-color: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
+                    .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 0.5rem; box-shadow: 0 2px 4px -1px rgba(0,0,0,0.1); }
+                    .header { text-align: center; border-bottom: 2px solid #3B82F6; padding-bottom: 20px; margin-bottom: 20px; }
+                    .header h1 { color: #3B82F6; margin: 0; font-size: 2rem; }
+                    .header p { color: #4B5563; margin: 5px 0 0; }
+                    h2 { text-align: center; color: #2563EB; font-size: 1.3rem; margin-bottom: 20px; }
+                    .section { margin-bottom: 20px; }
+                    .section h3 { border-bottom: 1px solid #D1D5DB; padding-bottom: 8px; margin-bottom: 12px; font-size: 1rem; color: #1E293B; }
+                    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
                     .info-grid p { margin: 0 0 5px 0; }
-                    strong { font-weight: 600; color: #334155; }
-                    table { width: 100%; border-collapse: collapse; }
-                    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
-                    th { background-color: #f8fafc; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-                    tfoot td { font-weight: 700; font-size: 1.2rem; }
+                    strong { font-weight: 500; color: #374151; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 10px; border-radius: 0.375rem; overflow: hidden; }
+                    th, td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #D1D5DB; }
+                    th { background-color: #F3F4F6; font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05rem; }
+                    tfoot td { font-weight: 600; font-size: 1rem; }
                     .total-cell { text-align: right; }
-                    .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed #cbd5e1; }
-                    .footer p { color: #64748b; margin-bottom: 20px;}
-                    .footer-buttons { display: flex; justify-content: center; gap: 15px; }
-                    #btn-print, #btn-whatsapp { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; margin-top: 0; padding: 12px 25px; border: none; border-radius: 6px; color: white; font-size: 1rem; cursor: pointer; transition: background 0.2s; font-weight: 600; }
+                    .footer { text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px dashed #9CA3AF; }
+                    .footer p { color: #4B5563; margin-bottom: 15px;}
+                    .footer-buttons { display: flex; justify-content: center; gap: 10px; }
+                    #btn-print, #btn-whatsapp { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; margin-top: 0; padding: 0.6rem 1.2rem; border: none; border-radius: 0.375rem; color: white; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; font-weight: 500; }
                     #btn-print { background: var(--primary-color); }
                     #btn-print:hover { background: var(--primary-dark-color); }
                     #btn-whatsapp { background: var(--whatsapp-color); }
-                    #btn-whatsapp:hover { background: #128c7e; }
+                    #btn-whatsapp:hover { background: #128C7E; }
                     @media print { .footer-buttons { display: none; } body { padding: 0; background-color: #fff; } .container { box-shadow: none; border-radius: 0; } }
                 </style>
             </head>
@@ -701,7 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <footer class="footer">
                         <p>Agradecemos a sua preferência!</p>
                         <div class="footer-buttons">
-                            <button id="btn-print" onclick="window.print()">Imprimir Recibo</button>
+                            <button id="btn-print" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Recibo</button>
                             ${whatsappBtnHtml}
                         </div>
                     </footer>
@@ -892,9 +890,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     formEditCliente.addEventListener('submit', saveEditedClient);
     btnCancelEditCliente.addEventListener('click', cancelEditClient);
+    document.querySelector('#edit-cliente-container .btn-cancel').addEventListener('click', cancelEditClient);
 
     formEditProduto.addEventListener('submit', saveEditedProduct);
     btnCancelEditProduto.addEventListener('click', cancelEditProduct);
+    document.querySelector('#edit-produto-container .btn-cancel').addEventListener('click', cancelEditProduct);
+
 
     document.getElementById('tabela-contas-container').addEventListener('click', e => {
         if(e.target.classList.contains('btn-paid')) {
