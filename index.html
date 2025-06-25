@@ -1013,7 +1013,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
         
         if (metodoPagamento === 'vista' || metodoPagamento === 'pix' || metodoPagamento === 'cartao_credito') {
-            const descPagamento = metodoPagamento === 'cartao_credito' ? `Cartão de Crédito (${parcelas}x)` : metodoPagamento;
+            let descPagamento = metodoPagamentoMap[metodoPagamento];
+            if (metodoPagamento === 'cartao_credito') {
+                descPagamento = `Cartão de Crédito (${parcelas}x)`;
+            }
             fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${descPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
         } else if (metodoPagamento === 'crediario') {
             const valorParcela = total / parcelas;
@@ -1025,21 +1028,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
+        
+        // --- CORREÇÃO APLICADA AQUI ---
+        // 1. Redesenha todas as telas com os novos dados.
+        renderAllData(); 
+        
+        // 2. Mostra a notificação e o recibo.
         showNotification('Venda finalizada! Gerando recibo...', false);
         showReceipt(novaVenda);
         
+        // 3. Limpa o formulário para a próxima venda.
         carrinhoVenda = [];
         document.getElementById('venda-form').reset();
         document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
         document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
-        renderAllData();
     };
     
+    const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
+
     const showReceipt = (venda) => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
         const cliente = clientes.find(c => c.id === venda.clienteId);
-        const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
         
         let pagamentoDesc = metodoPagamentoMap[venda.metodoPagamento];
         if (venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') {
