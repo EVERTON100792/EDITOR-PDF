@@ -333,7 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem('lastActivePage', pageId);
 
-        // Chama a função de renderização específica para a página ativada
         if (pageId === 'dashboard-view') renderDashboardSummaries();
         if (pageId === 'caixa-view') renderFluxoCaixa();
         if (pageId === 'vendas-view') { popularFormulariosVenda(); renderCarrinho(); }
@@ -466,14 +465,44 @@ document.addEventListener('DOMContentLoaded', () => {
         const cliente = clientes.find(c => c.id === venda.clienteId);
         const nomeMetodo = { vista: 'À Vista', pix: 'Pix', fiado: 'Fiado', parcelado: 'Parcelado' };
 
-        let detalhesPagamentoHtml = `...`; // O restante do código do recibo HTML
-        
+        // Constrói a seção de detalhes de pagamento
+        let detalhesPagamentoHtml = `
+            <div class="section">
+                <h3>Resumo do Pagamento</h3>
+                <p><strong>Método:</strong> ${nomeMetodo[venda.metodoPagamento]}</p>
+                <p><strong>Valor Total:</strong> ${formatCurrency(venda.total)}</p>
+            </div>
+        `;
+        if (venda.metodoPagamento === 'fiado' || venda.metodoPagamento === 'parcelado') {
+            const parcelas = contasAReceber.filter(c => c.vendaId === venda.id);
+            if (parcelas.length > 0) {
+                detalhesPagamentoHtml += `
+                    <div class="section">
+                        <h3>Detalhamento das Parcelas</h3>
+                        <table>
+                            <thead><tr><th>Parcela</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead>
+                            <tbody>
+                                ${parcelas.map((p, index) => `
+                                    <tr>
+                                        <td>${index + 1}/${parcelas.length}</td>
+                                        <td>${formatDate(p.dataVencimento)}</td>
+                                        <td>${formatCurrency(p.valor)}</td>
+                                        <td>${p.status}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
+
+        // Constrói o botão do WhatsApp se houver um telefone válido
         let whatsappBtnHtml = '';
         const telefoneCliente = cliente ? cliente.contato : '';
         const numeroLimpo = telefoneCliente.replace(/\D/g, '');
-
-        if (numeroLimpo.length >= 10) { // Validação simples de um número de telefone
-            const numeroWhatsapp = '55' + numeroLimpo; // Adiciona o DDI do Brasil
+        if (numeroLimpo.length >= 10) {
+            const numeroWhatsapp = '55' + numeroLimpo;
             const textoRecibo = gerarTextoRecibo(venda, cliente);
             const textoCodificado = encodeURIComponent(textoRecibo);
             const urlWhatsapp = `https://wa.me/${numeroWhatsapp}?text=${textoCodificado}`;
@@ -484,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </a>`;
         }
 
-
+        // Constrói o HTML final do recibo
         const reciboHtml = `
             <!DOCTYPE html>
             <html lang="pt-BR">
@@ -522,15 +551,31 @@ document.addEventListener('DOMContentLoaded', () => {
             </head>
             <body>
                 <div class="container">
-                    <header class="header"><h1>Flor de Maira</h1><p>Rua das Flores, 123 - Jardim Primavera<br>Tel: (43) 99999-8888 | Email: contato@flordemaira.com</p></header>
+                    <header class="header">
+                        <h1>Flor de Maira</h1>
+                        <p>Rua das Flores, 123 - Jardim Primavera<br>Tel: (43) 99999-8888 | Email: contato@flordemaira.com</p>
+                    </header>
                     <h2>Recibo de Venda</h2>
                     <div class="section info-grid">
                         <div><h3>Detalhes da Venda</h3><p><strong>Nº do Recibo:</strong> ${venda.id}</p><p><strong>Data da Emissão:</strong> ${formatDate(venda.data)}</p></div>
                         <div><h3>Informações do Cliente</h3><p><strong>Nome:</strong> ${cliente ? cliente.nome : 'N/A'}</p><p><strong>Contato:</strong> ${cliente ? cliente.contato : 'N/A'}</p></div>
                     </div>
-                    <div class="section"><h3>Itens da Compra</h3><table>...</table></div>
-                    ${detalhesPagamentoHtml.replace('<table>...</table>', `<table><thead><tr><th>Produto</th><th>Qtd.</th><th>Preço Unit.</th><th class="total-cell">Subtotal</th></tr></thead><tbody>${venda.itens.map(item => `<tr><td>${item.nome}</td><td>${item.quantidade}</td><td>${formatCurrency(item.precoUnitario)}</td><td class="total-cell">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="3"><strong>Total Geral</strong></td><td class="total-cell"><strong>${formatCurrency(venda.total)}</strong></td></tr></tfoot></table>`)}
-                    <footer class="footer"><p>Agradecemos a sua preferência!</p><div class="footer-buttons"><button id="btn-print" onclick="window.print()">Imprimir Recibo</button>${whatsappBtnHtml}</div></footer>
+                    <div class="section">
+                        <h3>Itens da Compra</h3>
+                        <table>
+                            <thead><tr><th>Produto</th><th>Qtd.</th><th>Preço Unit.</th><th class="total-cell">Subtotal</th></tr></thead>
+                            <tbody>${venda.itens.map(item => `<tr><td>${item.nome}</td><td>${item.quantidade}</td><td>${formatCurrency(item.precoUnitario)}</td><td class="total-cell">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody>
+                            <tfoot><tr><td colspan="3"><strong>Total Geral</strong></td><td class="total-cell"><strong>${formatCurrency(venda.total)}</strong></td></tr></tfoot>
+                        </table>
+                    </div>
+                    ${detalhesPagamentoHtml}
+                    <footer class="footer">
+                        <p>Agradecemos a sua preferência!</p>
+                        <div class="footer-buttons">
+                            <button id="btn-print" onclick="window.print()">Imprimir Recibo</button>
+                            ${whatsappBtnHtml}
+                        </div>
+                    </footer>
                 </div>
             </body>
             </html>
@@ -540,7 +585,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reciboWindow.document.write(reciboHtml);
         reciboWindow.document.close();
     };
-
 
     const finalizarVenda = () => {
         const clienteId = document.getElementById('venda-cliente').value;
