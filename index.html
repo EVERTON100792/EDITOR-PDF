@@ -15,22 +15,22 @@
     <style>
         /* --- TEMA NOVO: VERDE SERENO --- */
         :root {
-            --primary-color: #0D9488;     /* Teal 600 */
+            --primary-color: #0D9488;      /* Teal 600 */
             --primary-dark-color: #0F766E; /* Teal 700 */
             --primary-light-color: #F0FDFA;/* Teal 50 */
 
-            --text-primary: #334155;     /* Slate 700 */
-            --text-secondary: #64748B;     /* Slate 500 */
-            --text-light: #f8fafc;       /* Slate 50 */
+            --text-primary: #334155;      /* Slate 700 */
+            --text-secondary: #64748B;      /* Slate 500 */
+            --text-light: #f8fafc;        /* Slate 50 */
 
-            --bg-color: #F8FAFC;         /* Slate 50 */
+            --bg-color: #F8FAFC;          /* Slate 50 */
             --surface-color: #FFFFFF;
-            --border-color: #E2E8F0;     /* Slate 200 */
+            --border-color: #E2E8F0;      /* Slate 200 */
 
-            --success-color: #22C55E;     /* Green 500 */
-            --danger-color: #EF4444;     /* Red 500 */
-            --warning-color: #F59E0B;     /* Amber 500 */
-            --info-color: #3B82F6;       /* Blue 500 */
+            --success-color: #22C55E;      /* Green 500 */
+            --danger-color: #EF4444;       /* Red 500 */
+            --warning-color: #F59E0B;      /* Amber 500 */
+            --info-color: #3B82F6;        /* Blue 500 */
             --whatsapp-color: #25D366;
 
             --border-radius-sm: 0.375rem; /* 6px */
@@ -191,12 +191,18 @@
             background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
             z-index: 2000; padding: 1rem;
         }
+        /* CORREÇÃO DO MODAL */
         .receipt-content {
-            background: #fff; padding: 2rem; border-radius: var(--border-radius-lg); width: 100%;
-            max-width: 500px; max-height: 90vh; overflow-y: auto;
+            background: #fff; padding: 1.5rem; border-radius: var(--border-radius-lg); width: 100%;
+            max-width: 480px; max-height: 90vh; 
             animation: fadeIn 0.3s ease; position: relative;
+            display: flex; flex-direction: column; /* Adicionado */
         }
-        .receipt-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; }
+        #receipt-body {
+            overflow-y: auto; /* Adicionado para rolagem interna */
+            flex-grow: 1; /* Adicionado para ocupar espaço */
+        }
+        .receipt-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; flex-shrink: 0; }
         .receipt-header h2 { color: var(--primary-color); }
         .receipt-details { margin-bottom: 1.5rem; font-size: 0.9rem; }
         .receipt-details div { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
@@ -207,7 +213,7 @@
         .receipt-items .text-right { text-align: right; }
         .receipt-total { text-align: right; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; }
         .receipt-footer { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 1.5rem; }
-        .receipt-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .receipt-actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-shrink: 0; }
         .btn-whatsapp { background-color: var(--whatsapp-color); }
         .btn-whatsapp:hover { background-color: #1EBE57; }
         .btn-close-receipt {
@@ -472,12 +478,12 @@
 
             <section id="dashboard-view" class="content-section">
                  <div class="dashboard-grid">
-                     <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
-                     <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
+                      <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
+                      <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
                  </div>
                  <div class="dashboard-main-grid">
-                     <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
-                     <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
+                      <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
+                      <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
                  </div>
             </section>
 
@@ -628,18 +634,18 @@
 
             <section id="contas-a-receber-view" class="content-section">
                  <div id="edit-conta-container" class="edit-form-container shadow-md hidden">
-                     <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
-                     <form id="form-edit-conta">
-                         <input type="hidden" id="edit-conta-id">
-                         <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
-                         <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
-                         <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
-                         <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
-                         <div class="flex gap-2">
-                             <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                             <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
-                         </div>
-                     </form>
+                      <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
+                      <form id="form-edit-conta">
+                           <input type="hidden" id="edit-conta-id">
+                           <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
+                           <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
+                           <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
+                           <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
+                           <div class="flex gap-2">
+                                <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                                <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                           </div>
+                      </form>
                  </div>
                 <div class="card shadow-md">
                     <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Contas a Receber</h2>
@@ -712,24 +718,24 @@
                 </div>
                 
                  <div id="estoque-report-tab" class="report-tab-content">
-                     <div class="card shadow-md">
-                         <div class="no-print">
-                             <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
-                             <form id="form-relatorio-estoque" class="report-form">
-                                 <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                     <select id="relatorio_status_estoque">
-                                         <option value="todos">Todos</option>
-                                         <option value="disponivel">Disponível</option>
-                                         <option value="baixo">Estoque Baixo (<= 5)</option>
-                                         <option value="esgotado">Esgotado</option>
-                                     </select>
-                                 </div>
-                                 <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
-                             </form>
-                             <button id="btn-imprimir-relatorio-estoque" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
-                         </div>
-                         <div id="relatorio-estoque-container" class="mt-3"></div>
-                     </div>
+                      <div class="card shadow-md">
+                           <div class="no-print">
+                                <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                                <form id="form-relatorio-estoque" class="report-form">
+                                     <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                          <select id="relatorio_status_estoque">
+                                               <option value="todos">Todos</option>
+                                               <option value="disponivel">Disponível</option>
+                                               <option value="baixo">Estoque Baixo (<= 5)</option>
+                                               <option value="esgotado">Esgotado</option>
+                                          </select>
+                                     </div>
+                                     <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                                </form>
+                                <button id="btn-imprimir-relatorio-estoque" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                           </div>
+                           <div id="relatorio-estoque-container" class="mt-3"></div>
+                      </div>
                  </div>
 
                 <div id="caixa-report-tab" class="report-tab-content">
@@ -892,13 +898,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderRowRelatorioProdutos = (p, headers) => `<tr>${[p.rank, p.nome, p.quantidadeVendida, formatCurrency(p.totalVendido)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowRelatorioEstoque = (p, headers) => `<tr>${[p.nome, p.quantidade, formatCurrency(p.preco), `<span style="font-weight: 600; color: ${p.quantidade === 0 ? 'var(--danger-color)' : p.quantidade <= 5 ? 'var(--warning-color)' : 'var(--success-color)'};">${p.quantidade === 0 ? 'Esgotado' : p.quantidade <= 5 ? 'Estoque Baixo' : 'Disponível'}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
-    const renderAllData = () => {
-        renderDashboardSummaries();
-        renderFluxoCaixa();
-        renderClientes();
-        renderProdutos();
-        renderContasAReceber();
-        popularFormulariosVenda();
+    // **CORREÇÃO: Esta função agora apenas redesenha as tabelas, sem mexer nos formulários.**
+    const rerenderCurrentPageTables = () => {
+        const currentPageId = document.querySelector('.content-section.active')?.id;
+        if (!currentPageId) return;
+
+        const tableRenderMap = {
+            'dashboard-view': renderDashboardSummaries,
+            'caixa-view': renderFluxoCaixa,
+            'vendas-view': renderCarrinho, // Apenas o carrinho, não o formulário todo
+            'clientes-view': renderClientes,
+            'estoque-view': renderProdutos,
+            'contas-a-receber-view': renderContasAReceber,
+        };
+        tableRenderMap[currentPageId]?.();
     };
     
     // --- NAVEGAÇÃO E LÓGICA DE UI ---
@@ -973,8 +986,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const clienteSelect = document.getElementById('venda-cliente');
         const produtoSelect = document.getElementById('venda-produto');
         if (!clienteSelect || !produtoSelect) return;
+
+        // Guarda o valor selecionado para restaurá-lo depois
+        const selectedCliente = clienteSelect.value;
+
         clienteSelect.innerHTML = '<option value="">Selecione...</option>' + [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtos].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.nome} (${p.quantidade} disp.)</option>`).join('');
+
+        // Restaura a seleção anterior se ainda for válida
+        if (selectedCliente) {
+            clienteSelect.value = selectedCliente;
+        }
     };
     
     const cancelAllEdits = () => document.querySelectorAll('.edit-form-container').forEach(c => c.classList.add('hidden'));
@@ -1051,9 +1073,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
         document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
         
-        // --- CORREÇÃO APLICADA AQUI ---
-        // Redesenha tudo DEPOIS de limpar o formulário, garantindo que as atualizações (ex: estoque) fiquem visíveis.
-        renderAllData(); 
+        // Redesenha os dados relevantes após a venda, incluindo o formulário de vendas para atualizar o estoque visível
+        popularFormulariosVenda();
+        renderCarrinho();
+        renderDashboardSummaries();
     };
     
     const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
@@ -1270,7 +1293,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     menuToggle.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
     backdrop.addEventListener('click', () => toggleMenu(true));
-    window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; if (!isMobile) toggleMenu(true); renderAllData(); });
+    
+    // **CORREÇÃO: O event listener foi alterado para não recarregar os formulários.**
+    window.addEventListener('resize', () => {
+        const wasMobile = isMobile;
+        isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+            toggleMenu(true);
+        }
+
+        // Apenas redesenha as tabelas se houver mudança no breakpoint (mobile/desktop)
+        if (wasMobile !== isMobile) {
+            rerenderCurrentPageTables();
+        }
+    });
+
     navLinks.forEach(link => { link.addEventListener('click', e => { e.preventDefault(); navigateToPage(link.getAttribute('data-target')); toggleMenu(true); }); });
 
     // Listeners de Forms
@@ -1286,7 +1324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         c.clienteId = parseInt(document.getElementById('edit-conta-cliente').value); c.valor = parseFloat(document.getElementById('edit-conta-valor').value); c.dataVencimento = new Date(document.getElementById('edit-conta-vencimento').value + 'T00:00:00').toISOString(); c.status = newStatus;
         if(oldStatus === 'Pendente' && newStatus === 'Pago'){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento Conta de ${clientes.find(cl=>cl.id===c.clienteId)?.nome||''}`, valor: c.valor, contaId: c.id }); }
         else if(oldStatus === 'Pago' && newStatus === 'Pendente'){ fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== c.id); }
-        saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderAllData(); cancelAllEdits(); showNotification('Conta atualizada!');
+        saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); cancelAllEdits(); showNotification('Conta atualizada!');
     });
     
     // Listeners de Botões e Ações
@@ -1305,7 +1343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listeners Relatórios
     formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
     document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('relatorio-vendas-container'));
-    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros relacionados. Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderAllData(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
+    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros relacionados. Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
     formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
     document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('relatorio-contas-container'));
     formRelatorioProdutos.addEventListener('submit', gerarRelatorioProdutos);
@@ -1328,14 +1366,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(type==='produto' && vendas.some(v=>v.itens.some(i=>i.produtoId===parsedId))){showNotification('Exclua as vendas do produto primeiro.',true);return;}
                 let dataMap = {cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber};
                 const updatedData = dataMap[type].filter(item => item.id !== parsedId);
-                if(type==='cliente') clientes = updatedData; if(type==='produto') produtos = updatedData; if(type==='lancamento') fluxoCaixa = updatedData; if(type==='conta') contasAReceber = updatedData;
-                saveData(type+'s', updatedData); renderAllData(); showNotification(`${type} excluído!`);
+                if(type==='cliente') { clientes = updatedData; saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); }
+                if(type==='produto') { produtos = updatedData; saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); }
+                if(type==='lancamento') { fluxoCaixa = updatedData; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); }
+                if(type==='conta') { contasAReceber = updatedData; saveData('contasAReceber', contasAReceber); renderContasAReceber(); renderDashboardSummaries(); }
+                showNotification(`${type} excluído!`);
             }
         }
         else if (action === 'remove-item') { carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId); renderCarrinho(); }
         else if (action === 'pay') {
             const conta = contasAReceber.find(c => c.id === parsedId);
-            if(conta && conta.status==='Pendente'){ conta.status = 'Pago'; fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Parcela de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderAllData(); showNotification('Baixa realizada!'); }
+            if(conta && conta.status==='Pendente'){ conta.status = 'Pago'; fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Parcela de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); showNotification('Baixa realizada!'); }
         }
     });
 
