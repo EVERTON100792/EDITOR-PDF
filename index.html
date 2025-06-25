@@ -10,15 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        /* --- PROFESSIONAL BLUE GRADIENT THEME --- */
+        /* --- PROFESSIONAL EMERALD/TEAL GRADIENT THEME --- */
         :root {
-            --primary-color: #3b82f6; /* Blue 500 */
-            --primary-dark-color: #2563eb; /* Blue 600 */
-            --primary-light-color: #eff6ff; /* Blue 50 */
-            --primary-gradient-start: #3b82f6; /* Blue 500 */
-            --primary-gradient-end: #2563eb; /* Blue 600 */
+            --primary-color: #10b981; /* Emerald 500 */
+            --primary-dark-color: #059669; /* Emerald 600 */
+            --primary-light-color: #ecfdf5; /* Emerald 50 */
+            --primary-gradient-start: #14b8a6; /* Teal 500 */
+            --primary-gradient-end: #059669; /* Emerald 600 */
             
             --text-primary: #1f2937; /* Gray 800 */
             --text-secondary: #6b7280; /* Gray 500 */
@@ -26,21 +28,21 @@
             --bg-color: #f9fafb; /* Gray 50 */
             --surface-color: #ffffff;
             --border-color: #e5e7eb; /* Gray 200 */
-            --shadow-color: rgba(0,0,0,0.08); /* Slightly darker shadow for contrast */
+            --shadow-color: rgba(0,0,0,0.08);
 
-            --success-color: #10b981; /* Green 500 */
+            --success-color: #22c55e; /* Green 500 */
             --danger-color: #ef4444; /* Red 500 */
             --warning-color: #f59e0b; /* Amber 500 */
-            --info-color: #60a5fa; /* Blue 400 (slightly lighter for info) */
+            --info-color: #3b82f6; /* Blue 500 */
         }
 
         /* --- Dark Theme --- */
         body.dark-theme {
-            --primary-color: #60a5fa; /* Lighter blue for contrast */
-            --primary-dark-color: #3b82f6; /* Original primary blue */
-            --primary-light-color: #1e3a8a; /* Darker blue background for highlight */
-            --primary-gradient-start: #1e3a8a;
-            --primary-gradient-end: #172554;
+            --primary-color: #34d399; /* Emerald 400 */
+            --primary-dark-color: #10b981; /* Emerald 500 */
+            --primary-light-color: #064e3b; /* Emerald 900 */
+            --primary-gradient-start: #047857; /* Emerald 700 */
+            --primary-gradient-end: #115e59; /* Teal 800 */
             
             --text-primary: #f8fafc; /* Lighter text */
             --text-secondary: #94a3b8; /* Lighter gray text */
@@ -48,9 +50,7 @@
             --bg-color: #1f2937; /* Darker background */
             --surface-color: #374151; /* Darker card/surface background */
             --border-color: #4b5563; /* Darker borders */
-            --shadow-color: rgba(0,0,0,0.3); /* More prominent shadow in dark theme */
-
-            /* Keep success, danger, warning, info colors similar for consistency */
+            --shadow-color: rgba(0,0,0,0.3);
         }
 
         /* --- BASE STYLES --- */
@@ -113,10 +113,10 @@
             width: 100%; padding: 14px; border: none; border-radius: 8px;
             background: var(--primary-color); color: white; font-size: 1.1rem;
             font-weight: 600; cursor: pointer; transition: background 0.3s ease, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
         }
-        .btn-login:hover { background: var(--primary-dark-color); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.5); }
-        .btn-login:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3); }
+        .btn-login:hover { background: var(--primary-dark-color); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(5, 150, 105, 0.5); }
+        .btn-login:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3); }
         .error-message { color: var(--danger-color); margin-top: 15px; height: 20px; font-size: 0.9rem; font-weight: 500; }
 
         /* --- DASHBOARD LAYOUT --- */
@@ -203,10 +203,10 @@
         .btn, .btn-submit {
             padding: 12px 25px; border: none; border-radius: 8px; background: var(--primary-color);
             color: white; font-size: 1rem; cursor: pointer; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; font-weight: 600;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
         }
-        .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3); }
-        .btn:active, .btn-submit:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(59, 130, 246, 0.1); }
+        .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(5, 150, 105, 0.3); }
+        .btn:active, .btn-submit:active { transform: translateY(0); box-shadow: 0 2px 5px rgba(16, 185, 129, 0.1); }
         .btn-secondary {
             background-color: var(--text-secondary);
             box-shadow: 0 4px 10px rgba(107, 114, 128, 0.2);
@@ -250,9 +250,9 @@
         .btn-action:hover { transform: translateY(-1px); }
         .btn-action:active { transform: translateY(0); }
         .btn-paid { background-color: var(--success-color); }
-        .btn-paid:hover { background-color: #0c9b6f; }
+        .btn-paid:hover { background-color: #16a34a; } /* Darker green */
         .btn-edit { background-color: var(--info-color); }
-        .btn-edit:hover { background-color: #3b82f6; } /* Matching primary blue for edit */
+        .btn-edit:hover { background-color: #2563eb; }
         .btn-delete { background-color: var(--danger-color); }
         .btn-delete:hover { background-color: #cc3939; }
         .status-pendente { color: var(--warning-color); font-weight: bold; }
@@ -336,13 +336,22 @@
             margin-top: 15px;
         }
         #backup-file-input {
-            margin-top: 10px;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            width: 100%;
+            display: none; /* Hide the default file input */
+        }
+        #restore-label {
+            display: block;
+            padding: 12px 25px;
+            border-radius: 8px;
+            background: var(--text-secondary);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+            text-align: center;
+        }
+        #restore-label:hover {
+            background-color: #5a6a7c;
         }
         .theme-toggle-container {
             display: flex;
@@ -535,8 +544,8 @@
              .btn-action { padding: 6px 10px; margin-right: 3px;}
              .settings-grid { grid-template-columns: 1fr; }
              .modal-content {
-                width: 95%;
-                padding: 20px;
+                 width: 95%;
+                 padding: 20px;
              }
         }
 
@@ -850,7 +859,7 @@
                         <button id="btn-gerar-relatorio" class="btn">Gerar Relatório</button>
                     </div>
                 </div>
-                <div id="relatorio-container" class="card mt-3 hidden">
+                <div id="relatorio-vendas-container" class="card mt-3 hidden">
                     <h2>Resultados do Relatório de Vendas</h2>
                     <p>Período: <span id="relatorio-periodo"></span></p>
                     <p>Total de Vendas: <span id="relatorio-total-vendas">R$ 0,00</span></p>
@@ -859,7 +868,22 @@
                     <ul id="relatorio-metodo-pagamento"></ul>
                     <h3 style="margin-top:1.5rem;">Produtos Mais Vendidos:</h3>
                     <ul id="relatorio-produtos-mais-vendidos"></ul>
-                    <button id="btn-export-relatorio" class="btn" style="margin-top: 20px;">Exportar para CSV</button>
+                    <div class="form-actions">
+                        <button id="btn-export-vendas-csv" class="btn btn-secondary">Exportar para CSV</button>
+                        <button id="btn-export-vendas-pdf" class="btn">Exportar para PDF</button>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <h2>Gerar Relatório de Clientes Devedores</h2>
+                     <button id="btn-gerar-relatorio-devedores" class="btn">Gerar Relatório de Devedores</button>
+                </div>
+                <div id="relatorio-devedores-container" class="card mt-3 hidden">
+                    <h2>Resultados do Relatório de Clientes Devedores</h2>
+                    <div id="tabela-devedores-container" class="table-responsive-container"></div>
+                    <div class="form-actions">
+                        <button id="btn-export-devedores-pdf" class="btn">Exportar para PDF</button>
+                    </div>
                 </div>
             </section>
 
@@ -867,11 +891,11 @@
                 <div class="settings-grid">
                     <div class="settings-card">
                         <h3>Backup e Restauração</h3>
-                        <button id="btn-backup-data" class="btn">Fazer Backup</button>
+                        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:1rem;">Faça um backup de segurança de todos os seus dados ou restaure a partir de um arquivo salvo.</p>
+                        <button id="btn-backup-data" class="btn">Fazer Backup dos Dados</button>
                         <hr class="mt-3 mb-2" style="border-color: var(--border-color);">
-                        <label for="backup-file-input" class="form-group">Restaurar de Backup:</label>
+                        <label for="backup-file-input" id="restore-label">Restaurar de um Backup</label>
                         <input type="file" id="backup-file-input" accept=".json">
-                        <button id="btn-restore-data" class="btn btn-secondary mt-3">Restaurar Backup</button>
                     </div>
                     <div class="settings-card">
                         <h3>Tema da Interface</h3>
@@ -909,7 +933,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
             <p class="modal-total">Total da Venda: <span id="modal-venda-total">R$ 0,00</span></p>
@@ -952,7 +976,6 @@
         const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const formatDate = (dateString) => {
             if (!dateString) return 'N/A';
-            // Ensure date is treated consistently (e.g., as UTC or start of day in local timezone)
             const date = new Date(dateString + 'T00:00:00'); 
             return date.toLocaleDateString('pt-BR');
         };
@@ -976,10 +999,8 @@
             const container = document.getElementById(containerId);
             if (!container) return;
             
-            // Apply filters first
-            let filteredData = [...data]; // Create a shallow copy to avoid modifying original array
+            let filteredData = [...data];
             
-            // Common search for description/name
             if (searchQuery) {
                 const searchLower = searchQuery.toLowerCase();
                 if (['tabela-caixa-container', 'tabela-contas-pagar-container'].includes(containerId)) {
@@ -999,11 +1020,8 @@
                 }
             }
 
-            // Specific filters
             if (containerId === 'tabela-caixa-container' && filterValue) {
                 filteredData = filteredData.filter(item => item.tipo === filterValue);
-            } else if (containerId === 'tabela-clientes-container' && filterValue) {
-                // No specific filter for clientes beyond search
             } else if (containerId === 'tabela-produtos-container' && filterValue) {
                 if (filterValue === 'low') {
                     filteredData = filteredData.filter(item => item.quantidade > 0 && item.quantidade < 10);
@@ -1014,13 +1032,12 @@
                 filteredData = filteredData.filter(item => item.status === filterValue);
             }
 
-            // Pagination logic
             const totalPages = Math.ceil(filteredData.length / itemsPerPage);
             const start = (page - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const paginatedData = filteredData.slice(start, end);
 
-            container.innerHTML = ''; // Clear previous content
+            container.innerHTML = '';
             if (paginatedData.length === 0) {
                 container.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhum registro encontrado.</p>';
             } else {
@@ -1029,18 +1046,19 @@
                 container.appendChild(table);
             }
             
-            renderPagination(containerId.replace('tabela-', 'pagination-'), totalPages, page, searchQuery, filterValue);
+            const paginationContainerId = containerId.includes('devedores') ? null : containerId.replace('tabela-', 'pagination-');
+            if (paginationContainerId) {
+                renderPagination(paginationContainerId, totalPages, page, searchQuery, filterValue);
+            }
         };
 
         const renderPagination = (paginationContainerId, totalPages, currentPage, searchQuery, filterValue) => {
             const paginationContainer = document.getElementById(paginationContainerId);
             if (!paginationContainer) return;
 
-            paginationContainer.innerHTML = ''; // Clear previous content
+            paginationContainer.innerHTML = ''; 
 
-            if (totalPages <= 1) {
-                return; // No pagination needed for 1 or less pages
-            }
+            if (totalPages <= 1) return;
 
             const prevButton = document.createElement('button');
             prevButton.textContent = 'Anterior';
@@ -1065,7 +1083,6 @@
 
         const goToPage = (sectionId, pageNumber, searchQuery = '', filterValue = '') => {
             currentPage[sectionId] = pageNumber;
-            // Re-render the specific section
             if (sectionId === 'caixa') renderFluxoCaixa(searchQuery, filterValue);
             else if (sectionId === 'clientes') renderClientes(searchQuery);
             else if (sectionId === 'produtos') renderProdutos(searchQuery, filterValue);
@@ -1075,7 +1092,7 @@
 
         const navigateToPage = (pageId) => {
             if (!pageId || !document.getElementById(pageId)) {
-                pageId = 'dashboard-view'; // Default to dashboard
+                pageId = 'dashboard-view';
             }
             
             contentSections.forEach(s => s.classList.remove('active'));
@@ -1092,7 +1109,6 @@
 
             localStorage.setItem('lastActivePage', pageId);
 
-            // Calls the specific rendering function for the activated page
             if (pageId === 'dashboard-view') renderDashboardSummaries();
             if (pageId === 'caixa-view') renderFluxoCaixa();
             if (pageId === 'vendas-view') { popularFormulariosVenda(); renderCarrinho(); }
@@ -1100,7 +1116,10 @@
             if (pageId === 'estoque-view') { renderProdutos(); populateUpdateStockProductSelect(); }
             if (pageId === 'contas-a-receber-view') renderContasAReceber();
             if (pageId === 'contas-a-pagar-view') renderContasAPagar();
-            if (pageId === 'relatorios-view') document.getElementById('relatorio-container').classList.add('hidden'); // Hide report results on page load
+            if (pageId === 'relatorios-view') {
+                 document.getElementById('relatorio-vendas-container').classList.add('hidden');
+                 document.getElementById('relatorio-devedores-container').classList.add('hidden');
+            }
         };
         
         const renderDashboardSummaries = () => {
@@ -1120,9 +1139,9 @@
             const summaryContainer = document.getElementById('sales-summary-container');
             if (summaryContainer) {
                 summaryContainer.innerHTML = `
-                    <div class="summary-card" style="border-left: 4px solid var(--success-color); margin-bottom: 1rem;"><h3 style="font-weight:500; color:var(--text-secondary);">À Vista</h3><p>${formatCurrency(salesSummary.vista)}</p></div>
-                    <div class="summary-card" style="border-left: 4px solid var(--info-color); margin-bottom: 1rem;"><h3 style="font-weight:500; color:var(--text-secondary);">Pix</h3><p>${formatCurrency(salesSummary.pix)}</p></div>
-                    <div class="summary-card" style="border-left: 4px solid var(--warning-color); margin-bottom: 1rem;"><h3 style="font-weight:500; color:var(--text-secondary);">Fiado</h3><p>${formatCurrency(salesSummary.fiado)}</p></div>
+                    <div class="summary-card" style="border-left: 4px solid var(--success-color);"><h3 style="font-weight:500; color:var(--text-secondary);">À Vista</h3><p>${formatCurrency(salesSummary.vista)}</p></div>
+                    <div class="summary-card" style="border-left: 4px solid var(--info-color);"><h3 style="font-weight:500; color:var(--text-secondary);">Pix</h3><p>${formatCurrency(salesSummary.pix)}</p></div>
+                    <div class="summary-card" style="border-left: 4px solid var(--warning-color);"><h3 style="font-weight:500; color:var(--text-secondary);">Fiado</h3><p>${formatCurrency(salesSummary.fiado)}</p></div>
                     <div class="summary-card" style="border-left: 4px solid var(--danger-color);"><h3 style="font-weight:500; color:var(--text-secondary);">Parcelado</h3><p>${formatCurrency(salesSummary.parcelado)}</p></div>
                 `;
             }
@@ -1154,12 +1173,12 @@
                     scales: { 
                         x: { 
                             beginAtZero: true, 
-                            grid: { color: 'rgba(0,0,0,0.05)' },
-                            ticks: { color: 'var(--text-secondary)' }
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border-color') },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') }
                         }, 
                         y: { 
                             grid: { display: false },
-                            ticks: { color: 'var(--text-secondary)' }
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') }
                         } 
                     }
                 }
@@ -1365,175 +1384,129 @@
             document.getElementById('venda-parcelas-group').classList.add('hidden');
             renderCarrinho();
             popularFormulariosVenda();
-            populateUpdateStockProductSelect(); // Update stock view after sale
-            renderDashboardSummaries(); // Update dashboard after sale
+            populateUpdateStockProductSelect();
+            renderDashboardSummaries();
         };
 
         // --- CRUD HELPER FUNCTIONS ---
         const resetForm = (formId, type) => {
-            document.getElementById(formId).reset();
-            let idField, submitBtn, cancelBtn;
+            const form = document.getElementById(formId);
+            if (!form) return;
+            form.reset();
 
-            if (type === 'cliente') {
-                idField = document.getElementById('cliente-id');
-                submitBtn = document.getElementById('btn-salvar-cliente');
-                cancelBtn = document.getElementById('btn-cancelar-cliente');
-            } else if (type === 'produto') {
-                idField = document.getElementById('produto-id');
-                submitBtn = document.getElementById('btn-salvar-produto');
-                cancelBtn = document.getElementById('btn-cancelar-produto');
-            } else if (type === 'lancamento') {
-                idField = document.getElementById('lancamento-id');
-                submitBtn = document.getElementById('btn-salvar-lancamento');
-                cancelBtn = document.getElementById('btn-cancelar-lancamento');
-            } else if (type === 'conta-pagar') {
-                idField = document.getElementById('conta-pagar-id');
-                submitBtn = document.getElementById('btn-salvar-conta-pagar');
-                cancelBtn = document.getElementById('btn-cancelar-conta-pagar');
-            }
+            const idField = form.querySelector('input[type="hidden"]');
+            const submitBtn = form.querySelector('.btn-submit');
+            const cancelBtn = form.querySelector('.btn-secondary');
 
             if (idField) idField.value = '';
             if (submitBtn) {
-                 if (type === 'cliente') submitBtn.textContent = 'Salvar Cliente';
-                 else if (type === 'produto') submitBtn.textContent = 'Adicionar/Atualizar Produto';
-                 else if (type === 'lancamento') submitBtn.textContent = 'Lançar';
-                 else if (type === 'conta-pagar') submitBtn.textContent = 'Registrar';
+                if (type === 'cliente') submitBtn.textContent = 'Salvar Cliente';
+                else if (type === 'produto') submitBtn.textContent = 'Adicionar/Atualizar Produto';
+                else if (type === 'lancamento') submitBtn.textContent = 'Lançar';
+                else if (type === 'conta-pagar') submitBtn.textContent = 'Registrar';
             }
             if (cancelBtn) cancelBtn.style.display = 'none';
         };
 
 
         const deleteItem = (id, type) => {
-            if (!confirm(`Tem certeza que deseja excluir este ${type}?`)) return;
+            if (!confirm(`Tem certeza que deseja excluir este ${type}? A ação não pode ser desfeita.`)) return;
 
-            let dataArray;
-            let saveDataKey;
-            let renderFunction;
-
+            let dataArray, saveDataKey, renderFunction;
+            
             switch (type) {
                 case 'cliente':
-                    dataArray = clientes;
-                    saveDataKey = 'clientes';
-                    renderFunction = renderClientes;
                     if (vendas.some(v => v.clienteId === id) || contasAReceber.some(c => c.clienteId === id)) {
                         showNotification('Não é possível excluir cliente com vendas ou contas associadas.', true);
                         return;
                     }
+                    clientes = clientes.filter(item => item.id !== id);
+                    saveDataKey = 'clientes'; renderFunction = renderClientes;
                     break;
                 case 'produto':
-                    dataArray = produtos;
-                    saveDataKey = 'produtos';
-                    renderFunction = renderProdutos;
                     if (vendas.some(v => v.itens.some(item => item.produtoId === id))) {
                         showNotification('Não é possível excluir produto já presente em vendas.', true);
                         return;
                     }
+                    produtos = produtos.filter(item => item.id !== id);
+                    saveDataKey = 'produtos'; renderFunction = renderProdutos;
                     break;
                 case 'lancamento':
-                    dataArray = fluxoCaixa;
-                    saveDataKey = 'fluxoCaixa';
-                    renderFunction = renderFluxoCaixa;
+                    fluxoCaixa = fluxoCaixa.filter(item => item.id !== id);
+                    saveDataKey = 'fluxoCaixa'; renderFunction = renderFluxoCaixa;
                     break;
                 case 'conta-pagar':
-                    dataArray = contasAPagar;
-                    saveDataKey = 'contasAPagar';
-                    renderFunction = renderContasAPagar;
+                    contasAPagar = contasAPagar.filter(item => item.id !== id);
+                    saveDataKey = 'contasAPagar'; renderFunction = renderContasAPagar;
                     break;
                 default:
                     showNotification('Tipo de item desconhecido para exclusão.', true);
                     return;
             }
 
-            const initialLength = dataArray.length;
-            // Generalize filtering based on the array and ID
-            if (type === 'cliente') clientes = clientes.filter(item => item.id !== id);
-            else if (type === 'produto') produtos = produtos.filter(item => item.id !== id);
-            else if (type === 'lancamento') fluxoCaixa = fluxoCaixa.filter(item => item.id !== id);
-            else if (type === 'conta-pagar') contasAPagar = contasAPagar.filter(item => item.id !== id);
+            const dataToSave = { clientes, produtos, fluxoCaixa, contasAPagar }[saveDataKey];
+            saveData(saveDataKey, dataToSave);
+            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a) com sucesso!`);
+            renderFunction();
             
-            if (dataArray.length > (type === 'cliente' ? clientes.length : type === 'produto' ? produtos.length : type === 'lancamento' ? fluxoCaixa.length : contasAPagar.length) ) { // Check if an item was actually removed
-                saveData(saveDataKey, type === 'cliente' ? clientes : type === 'produto' ? produtos : type === 'lancamento' ? fluxoCaixa : contasAPagar);
-                showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a) com sucesso!`);
-                renderFunction();
-                // Special updates for product/client related changes
-                if (type === 'produto') { popularFormulariosVenda(); populateUpdateStockProductSelect(); }
-                if (type === 'cliente') { popularFormulariosVenda(); }
-                renderDashboardSummaries(); // Refresh dashboard on relevant changes
-            } else {
-                showNotification(`Não foi possível encontrar o ${type} para exclusão.`, true);
-            }
+            if (type === 'produto') { popularFormulariosVenda(); populateUpdateStockProductSelect(); }
+            if (type === 'cliente') { popularFormulariosVenda(); }
+            renderDashboardSummaries();
         };
 
         const editItem = (id, type) => {
             let itemToEdit;
-            let idField, submitBtn, cancelBtn;
+            const formId = `form-add-${type}`;
+            const form = document.getElementById(formId);
+            if (!form) return;
 
-            if (type === 'cliente') {
-                itemToEdit = clientes.find(c => c.id === id);
-                idField = document.getElementById('cliente-id');
-                submitBtn = document.getElementById('btn-salvar-cliente');
-                cancelBtn = document.getElementById('btn-cancelar-cliente');
-                if (itemToEdit) {
-                    idField.value = itemToEdit.id;
-                    document.getElementById('nome-cliente').value = itemToEdit.nome;
-                    document.getElementById('contato-cliente').value = itemToEdit.contato;
-                    submitBtn.textContent = 'Atualizar Cliente';
-                    cancelBtn.style.display = 'inline-block';
-                    showNotification('Formulário preenchido para edição de cliente.');
-                }
-            } else if (type === 'produto') {
-                itemToEdit = produtos.find(p => p.id === id);
-                idField = document.getElementById('produto-id');
-                submitBtn = document.getElementById('btn-salvar-produto');
-                cancelBtn = document.getElementById('btn-cancelar-produto');
-                if (itemToEdit) {
-                    idField.value = itemToEdit.id;
-                    document.getElementById('nome-produto').value = itemToEdit.nome;
-                    document.getElementById('qtd-produto').value = itemToEdit.quantidade;
-                    document.getElementById('preco-produto').value = itemToEdit.preco;
-                    submitBtn.textContent = 'Atualizar Produto';
-                    cancelBtn.style.display = 'inline-block';
-                    showNotification('Formulário preenchido para edição de produto.');
-                }
-            } else if (type === 'lancamento') {
-                itemToEdit = fluxoCaixa.find(l => l.id === id);
-                idField = document.getElementById('lancamento-id');
-                submitBtn = document.getElementById('btn-salvar-lancamento');
-                cancelBtn = document.getElementById('btn-cancelar-lancamento');
-                if (itemToEdit) {
-                    idField.value = itemToEdit.id;
-                    document.getElementById('desc-lancamento').value = itemToEdit.descricao;
-                    document.getElementById('valor-lancamento').value = itemToEdit.valor;
-                    document.getElementById('tipo-lancamento').value = itemToEdit.tipo;
-                    submitBtn.textContent = 'Atualizar Lançamento';
-                    cancelBtn.style.display = 'inline-block';
-                    showNotification('Formulário preenchido para edição de lançamento.');
-                }
-            } else if (type === 'conta-pagar') {
-                itemToEdit = contasAPagar.find(l => l.id === id);
-                idField = document.getElementById('conta-pagar-id');
-                submitBtn = document.getElementById('btn-salvar-conta-pagar');
-                cancelBtn = document.getElementById('btn-cancelar-conta-pagar');
-                if (itemToEdit) {
-                    idField.value = itemToEdit.id;
-                    document.getElementById('desc-conta-pagar').value = itemToEdit.descricao;
-                    document.getElementById('valor-conta-pagar').value = itemToEdit.valor;
-                    document.getElementById('vencimento-conta-pagar').value = itemToEdit.dataVencimento;
-                    submitBtn.textContent = 'Atualizar Conta a Pagar';
-                    cancelBtn.style.display = 'inline-block';
-                    showNotification('Formulário preenchido para edição de conta a pagar.');
-                }
+            form.scrollIntoView({ behavior: 'smooth' });
+
+            switch(type) {
+                case 'cliente': itemToEdit = clientes.find(c => c.id === id); break;
+                case 'produto': itemToEdit = produtos.find(p => p.id === id); break;
+                case 'lancamento': itemToEdit = fluxoCaixa.find(l => l.id === id); break;
+                case 'conta-pagar': itemToEdit = contasAPagar.find(c => c.id === id); break;
             }
+            
             if (!itemToEdit) {
                 showNotification(`Não foi possível encontrar o ${type} para edição.`, true);
+                return;
             }
+
+            const idField = form.querySelector('input[type="hidden"]');
+            const submitBtn = form.querySelector('.btn-submit');
+            const cancelBtn = form.querySelector('.btn-secondary');
+
+            idField.value = itemToEdit.id;
+            if (type === 'cliente') {
+                document.getElementById('nome-cliente').value = itemToEdit.nome;
+                document.getElementById('contato-cliente').value = itemToEdit.contato;
+                submitBtn.textContent = 'Atualizar Cliente';
+            } else if (type === 'produto') {
+                document.getElementById('nome-produto').value = itemToEdit.nome;
+                document.getElementById('qtd-produto').value = itemToEdit.quantidade;
+                document.getElementById('preco-produto').value = itemToEdit.preco;
+                submitBtn.textContent = 'Atualizar Produto';
+            } else if (type === 'lancamento') {
+                document.getElementById('desc-lancamento').value = itemToEdit.descricao;
+                document.getElementById('valor-lancamento').value = itemToEdit.valor;
+                document.getElementById('tipo-lancamento').value = itemToEdit.tipo;
+                submitBtn.textContent = 'Atualizar Lançamento';
+            } else if (type === 'conta-pagar') {
+                document.getElementById('desc-conta-pagar').value = itemToEdit.descricao;
+                document.getElementById('valor-conta-pagar').value = itemToEdit.valor;
+                document.getElementById('vencimento-conta-pagar').value = itemToEdit.dataVencimento;
+                submitBtn.textContent = 'Atualizar Conta';
+            }
+            cancelBtn.style.display = 'inline-block';
         };
         
         // --- RELATORIOS ---
         document.getElementById('btn-gerar-relatorio').addEventListener('click', () => {
             const startDateStr = document.getElementById('relatorio-inicio').value;
             const endDateStr = document.getElementById('relatorio-fim').value;
-            const reportContainer = document.getElementById('relatorio-container');
+            const reportContainer = document.getElementById('relatorio-vendas-container');
             
             if (!startDateStr || !endDateStr) {
                 showNotification('Por favor, selecione as datas de início e fim para o relatório.', true);
@@ -1542,7 +1515,7 @@
             }
 
             const startDate = new Date(startDateStr + 'T00:00:00');
-            const endDate = new Date(endDateStr + 'T23:59:59'); // Include full end day
+            const endDate = new Date(endDateStr + 'T23:59:59');
 
             if (startDate > endDate) {
                 showNotification('A data de início não pode ser posterior à data de fim.', true);
@@ -1555,10 +1528,8 @@
                 return saleDate >= startDate && saleDate <= endDate;
             });
 
-            let totalSalesAmount = 0;
-            let totalItemsSold = 0;
-            const salesByPaymentMethod = {};
-            const productsSoldQuantities = {};
+            let totalSalesAmount = 0, totalItemsSold = 0;
+            const salesByPaymentMethod = {}, productsSoldQuantities = {};
 
             filteredSales.forEach(sale => {
                 totalSalesAmount += sale.total;
@@ -1576,14 +1547,7 @@
             const paymentMethodList = document.getElementById('relatorio-metodo-pagamento');
             paymentMethodList.innerHTML = '';
             for (const method in salesByPaymentMethod) {
-                let methodName = '';
-                switch(method) {
-                    case 'vista': methodName = 'À Vista'; break;
-                    case 'pix': methodName = 'Pix'; break;
-                    case 'fiado': methodName = 'Fiado'; break;
-                    case 'parcelado': methodName = 'Parcelado'; break;
-                    default: methodName = method;
-                }
+                let methodName = method.charAt(0).toUpperCase() + method.slice(1);
                 const listItem = document.createElement('li');
                 listItem.textContent = `${methodName}: ${formatCurrency(salesByPaymentMethod[method])}`;
                 paymentMethodList.appendChild(listItem);
@@ -1603,10 +1567,10 @@
             }
 
             reportContainer.classList.remove('hidden');
-            showNotification('Relatório gerado com sucesso!');
+            showNotification('Relatório de vendas gerado com sucesso!');
         });
 
-        document.getElementById('btn-export-relatorio').addEventListener('click', () => {
+        document.getElementById('btn-export-vendas-csv').addEventListener('click', () => {
             const startDateStr = document.getElementById('relatorio-inicio').value;
             const endDateStr = document.getElementById('relatorio-fim').value;
             
@@ -1642,22 +1606,114 @@
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", `relatorio_vendas_${startDateStr}_${endDateStr}.csv`);
-            document.body.appendChild(link); // Required for Firefox
+            document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             showNotification('Relatório CSV exportado com sucesso!');
         });
 
+        document.getElementById('btn-gerar-relatorio-devedores').addEventListener('click', () => {
+            const contasPendentes = contasAReceber.filter(c => c.status === 'Pendente');
+            const reportContainer = document.getElementById('relatorio-devedores-container');
+            const tableContainer = document.getElementById('tabela-devedores-container');
+
+            if (contasPendentes.length === 0) {
+                tableContainer.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhum cliente com contas pendentes.</p>';
+                reportContainer.classList.remove('hidden');
+                return;
+            }
+
+            const devedores = contasPendentes.reduce((acc, conta) => {
+                if (!acc[conta.clienteId]) {
+                    acc[conta.clienteId] = {
+                        nome: clientes.find(c => c.id === conta.clienteId)?.nome || 'Cliente Avulso',
+                        totalDevido: 0,
+                        contas: []
+                    };
+                }
+                acc[conta.clienteId].totalDevido += conta.valor;
+                acc[conta.clienteId].contas.push(conta);
+                return acc;
+            }, {});
+
+            const devedoresArray = Object.values(devedores).sort((a,b) => b.totalDevido - a.totalDevido);
+
+            const headers = ['Cliente', 'Total Devido', 'Detalhes da Dívida'];
+            const renderRow = devedor => `
+                <tr>
+                    <td>${devedor.nome}</td>
+                    <td>${formatCurrency(devedor.totalDevido)}</td>
+                    <td>
+                        ${devedor.contas.map(conta => 
+                            `Venda #${conta.vendaId} (${formatCurrency(conta.valor)}) em ${formatDate(conta.dataVencimento)}`
+                        ).join('<br>')}
+                    </td>
+                </tr>
+            `;
+
+            const table = document.createElement('table');
+            table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${devedoresArray.map(renderRow).join('')}</tbody>`;
+            tableContainer.innerHTML = '';
+            tableContainer.appendChild(table);
+            
+            reportContainer.classList.remove('hidden');
+            showNotification('Relatório de devedores gerado!');
+        });
+
+        const exportToPDF = (elementIdToCapture, fileName) => {
+            const element = document.getElementById(elementIdToCapture);
+            if (!element || element.classList.contains('hidden')) {
+                showNotification('Gere um relatório antes de exportar para PDF.', true);
+                return;
+            }
+
+            showNotification('Gerando PDF... Aguarde.');
+
+            const { jsPDF } = window.jspdf;
+            html2canvas(element, {
+                scale: 2, // Aumenta a resolução da imagem
+                useCORS: true,
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--surface-color').trim(),
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                const ratio = canvasWidth / canvasHeight;
+                const imgWidth = pdfWidth - 20; // com margem
+                const imgHeight = imgWidth / ratio;
+                
+                let heightLeft = imgHeight;
+                let position = 10; // margem superior
+
+                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                heightLeft -= (pdfHeight - 20);
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight; 
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= (pdfHeight - 20);
+                }
+                
+                pdf.save(fileName);
+                showNotification('PDF exportado com sucesso!');
+            }).catch(err => {
+                console.error("Erro ao gerar PDF:", err);
+                showNotification('Ocorreu um erro ao gerar o PDF.', true);
+            });
+        };
+        
+        document.getElementById('btn-export-vendas-pdf').addEventListener('click', () => exportToPDF('relatorio-vendas-container', 'relatorio_vendas.pdf'));
+        document.getElementById('btn-export-devedores-pdf').addEventListener('click', () => exportToPDF('relatorio-devedores-container', 'relatorio_devedores.pdf'));
+
+
         // --- BACKUP/RESTORE FUNCTIONS ---
         const backupData = () => {
             const data = {
-                clientes: clientes,
-                produtos: produtos,
-                vendas: vendas,
-                contasAReceber: contasAReceber,
-                contasAPagar: contasAPagar, // Include Contas a Pagar
-                fluxoCaixa: fluxoCaixa,
-                // Store theme setting
+                clientes, produtos, vendas, contasAReceber, contasAPagar, fluxoCaixa,
                 theme: document.body.classList.contains('dark-theme') ? 'dark' : 'light'
             };
             const jsonString = JSON.stringify(data, null, 2);
@@ -1681,6 +1737,7 @@
             }
 
             if (!confirm('Tem certeza que deseja restaurar o backup? Isso substituirá TODOS os dados atuais do sistema!')) {
+                event.target.value = null; // Limpa o input
                 return;
             }
 
@@ -1689,39 +1746,27 @@
                 try {
                     const restoredData = JSON.parse(e.target.result);
                     
-                    // Clear existing data (optional, but safer for full restore)
-                    localStorage.clear();
+                    // Valida se o backup parece correto
+                    if (!restoredData.clientes || !restoredData.produtos) {
+                        throw new Error("Arquivo de backup inválido.");
+                    }
 
-                    // Restore data to arrays and localStorage
-                    clientes = restoredData.clientes || [];
-                    produtos = restoredData.produtos || [];
-                    vendas = restoredData.vendas || [];
-                    contasAReceber = restoredData.contasAReceber || [];
-                    contasAPagar = restoredData.contasAPagar || []; // Restore Contas a Pagar
-                    fluxoCaixa = restoredData.fluxoCaixa || [];
+                    saveData('clientes', restoredData.clientes || []);
+                    saveData('produtos', restoredData.produtos || []);
+                    saveData('vendas', restoredData.vendas || []);
+                    saveData('contasAReceber', restoredData.contasAReceber || []);
+                    saveData('contasAPagar', restoredData.contasAPagar || []);
+                    saveData('fluxoCaixa', restoredData.fluxoCaixa || []);
+                    saveData('theme', restoredData.theme || 'light');
                     
-                    saveData('clientes', clientes);
-                    saveData('produtos', produtos);
-                    saveData('vendas', vendas);
-                    saveData('contasAReceber', contasAReceber);
-                    saveData('contasAPagar', contasAPagar);
-                    saveData('fluxoCaixa', fluxoCaixa);
-
-                    // Restore theme preference
-                    const restoredTheme = restoredData.theme || 'light';
-                    localStorage.setItem('theme', restoredTheme);
-                    applyTheme(restoredTheme);
-                    document.getElementById('theme-toggle-switch').checked = (restoredTheme === 'dark');
-
-                    showNotification('Backup restaurado com sucesso! Recarregando o sistema...');
-                    setTimeout(() => {
-                        // Reinitialize the app to reflect restored data
-                        window.location.reload(); 
-                    }, 1000);
+                    showNotification('Backup restaurado com sucesso! O sistema será recarregado.');
+                    setTimeout(() => window.location.reload(), 1500);
 
                 } catch (error) {
                     console.error('Erro ao restaurar backup:', error);
-                    showNotification('Erro ao processar o arquivo de backup. Verifique se é um JSON válido.', true);
+                    showNotification('Erro ao processar o arquivo de backup. Verifique se é um arquivo válido.', true);
+                } finally {
+                    event.target.value = null; // Limpa o input de qualquer forma
                 }
             };
             reader.readAsText(file);
@@ -1730,21 +1775,17 @@
         // --- THEME TOGGLE ---
         const applyTheme = (theme) => {
             document.body.classList.toggle('dark-theme', theme === 'dark');
+            if(paymentChartInstance) { // Re-render chart with new theme colors
+                setTimeout(renderDashboardSummaries, 300); // Delay to allow CSS transition
+            }
         };
 
         // --- MODAL DETALHES DA VENDA ---
         const vendaDetalhesModal = document.getElementById('venda-detalhes-modal');
         const closeModalButton = vendaDetalhesModal.querySelector('.close-button');
 
-        closeModalButton.addEventListener('click', () => {
-            vendaDetalhesModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target == vendaDetalhesModal) {
-                vendaDetalhesModal.style.display = 'none';
-            }
-        });
+        closeModalButton.addEventListener('click', () => vendaDetalhesModal.style.display = 'none');
+        window.addEventListener('click', (event) => { if (event.target == vendaDetalhesModal) vendaDetalhesModal.style.display = 'none'; });
 
         const showVendaDetalhesModal = (vendaId) => {
             const venda = vendas.find(v => v.id === vendaId);
@@ -1757,35 +1798,26 @@
             document.getElementById('modal-venda-cliente').textContent = clientes.find(c => c.id === venda.clienteId)?.nome || 'Cliente avulso';
             document.getElementById('modal-venda-data').textContent = formatDate(venda.data);
             
-            let metodoNome = '';
-            switch(venda.metodoPagamento) {
-                case 'vista': metodoNome = 'À Vista'; break;
-                case 'pix': metodoNome = 'Pix'; break;
-                case 'fiado': metodoNome = 'Fiado'; break;
-                case 'parcelado': metodoNome = `Parcelado (${contasAReceber.filter(c => c.vendaId === venda.id).length}x)`; break;
-                default: metodoNome = venda.metodoPagamento;
+            let metodoNome = venda.metodoPagamento;
+            if (venda.metodoPagamento === 'parcelado') {
+                metodoNome = `Parcelado (${contasAReceber.filter(c => c.vendaId === venda.id).length}x)`;
             }
-            document.getElementById('modal-venda-metodo-pagamento').textContent = metodoNome;
+            document.getElementById('modal-venda-metodo-pagamento').textContent = metodoNome.charAt(0).toUpperCase() + metodoNome.slice(1);
             document.getElementById('modal-venda-total').textContent = formatCurrency(venda.total);
 
             const itensTableBody = vendaDetalhesModal.querySelector('#modal-venda-itens-tabela tbody');
-            itensTableBody.innerHTML = ''; // Clear previous items
+            itensTableBody.innerHTML = ''; 
 
             if (venda.itens && venda.itens.length > 0) {
                 venda.itens.forEach(item => {
                     const row = itensTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${item.nome}</td>
-                        <td>${item.quantidade}</td>
-                        <td>${formatCurrency(item.precoUnitario)}</td>
-                        <td>${formatCurrency(item.subtotal)}</td>
-                    `;
+                    row.innerHTML = `<td>${item.nome}</td><td>${item.quantidade}</td><td>${formatCurrency(item.precoUnitario)}</td><td>${formatCurrency(item.subtotal)}</td>`;
                 });
             } else {
-                itensTableBody.innerHTML = '<tr><td colspan="4" class="text-center" style="color:var(--text-secondary);">Nenhum item registrado para esta venda.</td></tr>';
+                itensTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum item registrado.</td></tr>';
             }
 
-            vendaDetalhesModal.style.display = 'flex'; // Show the modal
+            vendaDetalhesModal.style.display = 'flex';
         };
 
 
@@ -1798,18 +1830,13 @@
             contasAPagar = loadData('contasAPagar');
             fluxoCaixa = loadData('fluxoCaixa');
             
-            // Set initial value for a/c parcelas to 2x if it doesn't exist
-            if (document.getElementById('venda-parcelas') && !document.getElementById('venda-parcelas').value) {
-                document.getElementById('venda-parcelas').value = '2';
-            }
-
             // Apply saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
             document.getElementById('theme-toggle-switch').checked = (savedTheme === 'dark');
 
             const lastPageId = localStorage.getItem('lastActivePage');
-            navigateToPage(lastPageId); // Render initial page
+            navigateToPage(lastPageId || 'dashboard-view');
         };
         
         // --- EVENT LISTENERS ---
@@ -1819,16 +1846,16 @@
             const passwordInput = document.getElementById('password');
             const errorMessageEl = document.getElementById('error-message');
 
+            // Credenciais simples
             if (usernameInput.value === 'maira' && passwordInput.value === 'flor123') { 
                 localStorage.setItem('isLoggedIn', 'true'); 
                 loginScreen.classList.add('hidden'); 
                 dashboardScreen.classList.remove('hidden'); 
                 init(); 
-                errorMessageEl.textContent = ''; // Clear error message on success
+                errorMessageEl.textContent = '';
             } else { 
                 errorMessageEl.textContent = 'Usuário ou senha inválidos.';
                 showNotification('Falha no login. Verifique suas credenciais.', true);
-                usernameInput.value = ''; 
                 passwordInput.value = '';
                 usernameInput.focus();
             }
@@ -1836,12 +1863,15 @@
         
         logoutBtn.addEventListener('click', () => {
             if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
-            localStorage.clear(); // Clear all local storage
-            clientes = []; produtos = []; vendas = []; contasAReceber = []; contasAPagar = []; fluxoCaixa = []; carrinhoVenda = []; // Reset data arrays
-            document.body.classList.remove('dark-theme'); // Reset theme
+            // CORREÇÃO CRÍTICA: Não apagar todos os dados, apenas o status de login.
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('lastActivePage');
+
+            // Não é mais necessário resetar os arrays de dados aqui.
+            
             dashboardScreen.classList.add('hidden');
             loginScreen.classList.remove('hidden');
-            document.getElementById('username').value = ''; // Clear login fields
+            document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             document.getElementById('error-message').textContent = '';
         });
@@ -1864,13 +1894,13 @@
             const nome = document.getElementById('nome-cliente').value;
             const contato = document.getElementById('contato-cliente').value;
 
-            if (id) { // Editing existing client
+            if (id) {
                 const index = clientes.findIndex(c => c.id == id);
                 if (index !== -1) {
                     clientes[index] = { ...clientes[index], nome, contato };
                     showNotification('Cliente atualizado!');
                 }
-            } else { // Adding new client
+            } else {
                 clientes.push({ id: Date.now(), nome, contato }); 
                 showNotification('Cliente salvo!'); 
             }
@@ -1878,20 +1908,15 @@
             renderClientes(); 
             popularFormulariosVenda(); 
         });
-
         document.getElementById('btn-cancelar-cliente').addEventListener('click', () => resetForm('form-add-cliente', 'cliente'));
-
         document.getElementById('tabela-clientes-container').addEventListener('click', e => {
-            const target = e.target;
+            const target = e.target.closest('.btn-action');
+            if (!target) return;
             const id = parseInt(target.getAttribute('data-id'));
             const type = target.getAttribute('data-type');
-            if (target.classList.contains('btn-edit') && type === 'cliente') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'cliente') {
-                deleteItem(id, type);
-            }
+            if (target.classList.contains('btn-edit') && type === 'cliente') editItem(id, type);
+            if (target.classList.contains('btn-delete') && type === 'cliente') deleteItem(id, type);
         });
-
         document.getElementById('search-clientes').addEventListener('input', (e) => goToPage('clientes', 1, e.target.value));
 
         // PRODUTOS CRUD EVENTS
@@ -1905,38 +1930,32 @@
             if (isNaN(quantidade) || quantidade < 0) { showNotification('Quantidade deve ser um número não negativo.', true); return; }
             if (isNaN(preco) || preco <= 0) { showNotification('Preço deve ser um número positivo.', true); return; }
 
-            if (id) { // Editing existing product
+            if (id) {
                 const index = produtos.findIndex(p => p.id == id);
                 if (index !== -1) {
                     produtos[index] = { ...produtos[index], nome, quantidade, preco };
                     showNotification('Produto atualizado!');
                 }
-            } else { // Adding new product
+            } else {
                 produtos.push({ id: Date.now(), nome, quantidade, preco }); 
                 showNotification('Produto salvo!'); 
             }
             saveData('produtos', produtos); 
             renderProdutos(); 
-            popularFormulariosVenda(); // Update product dropdowns
-            populateUpdateStockProductSelect(); // Update stock product dropdown
+            popularFormulariosVenda();
+            populateUpdateStockProductSelect();
         });
-
         document.getElementById('btn-cancelar-produto').addEventListener('click', () => resetForm('form-add-produto', 'produto'));
-
         document.getElementById('tabela-produtos-container').addEventListener('click', e => {
-            const target = e.target;
+            const target = e.target.closest('.btn-action');
+            if (!target) return;
             const id = parseInt(target.getAttribute('data-id'));
             const type = target.getAttribute('data-type');
-            if (target.classList.contains('btn-edit') && type === 'produto') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'produto') {
-                deleteItem(id, type);
-            }
+            if (target.classList.contains('btn-edit') && type === 'produto') editItem(id, type);
+            if (target.classList.contains('btn-delete') && type === 'produto') deleteItem(id, type);
         });
-
         document.getElementById('search-produtos').addEventListener('input', (e) => goToPage('produtos', 1, e.target.value, document.getElementById('filter-estoque-qtd').value));
         document.getElementById('filter-estoque-qtd').addEventListener('change', (e) => goToPage('produtos', 1, document.getElementById('search-produtos').value, e.target.value));
-
 
         // UPDATE STOCK EVENTS
         document.getElementById('form-update-stock').addEventListener('submit', e => {
@@ -1949,12 +1968,8 @@
                 showNotification('Selecione um produto e insira uma quantidade válida.', true);
                 return;
             }
-
             const productIndex = produtos.findIndex(p => p.id === productId);
-            if (productIndex === -1) {
-                showNotification('Produto não encontrado.', true);
-                return;
-            }
+            if (productIndex === -1) { showNotification('Produto não encontrado.', true); return; }
 
             if (type === 'add') {
                 produtos[productIndex].quantidade += quantity;
@@ -1967,11 +1982,10 @@
                 produtos[productIndex].quantidade -= quantity;
                 showNotification(`Estoque de ${produtos[productIndex].nome} diminuído em ${quantity}.`);
             }
-
             saveData('produtos', produtos);
             renderProdutos();
-            popularFormulariosVenda(); // Re-populate to show updated quantities in sales
-            populateUpdateStockProductSelect(); // Re-populate to show updated quantities in stock update
+            popularFormulariosVenda();
+            populateUpdateStockProductSelect();
         });
 
         // FLUXO DE CAIXA CRUD EVENTS
@@ -1986,43 +2000,38 @@
                 showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true); 
                 return;
             }
-
-            if (id) { // Editing existing lancamento
+            if (id) {
                 const index = fluxoCaixa.findIndex(l => l.id == id);
                 if (index !== -1) {
                     fluxoCaixa[index] = { ...fluxoCaixa[index], descricao: desc, valor, tipo };
                     showNotification('Lançamento atualizado!');
                 }
-            } else { // Adding new lancamento
+            } else {
                 fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo, descricao: desc, valor }); 
                 showNotification('Lançamento realizado!'); 
             }
             saveData('fluxoCaixa', fluxoCaixa); 
             renderFluxoCaixa(); 
-            renderDashboardSummaries(); // Refresh dashboard balance
+            renderDashboardSummaries();
         });
-
         document.getElementById('btn-cancelar-lancamento').addEventListener('click', () => resetForm('form-add-lancamento', 'lancamento'));
-
         document.getElementById('tabela-caixa-container').addEventListener('click', e => {
-            const target = e.target;
+            const target = e.target.closest('.btn-action');
+            if (!target) return;
             const id = parseInt(target.getAttribute('data-id'));
             const type = target.getAttribute('data-type');
-            if (target.classList.contains('btn-edit') && type === 'lancamento') {
-                editItem(id, type);
-            } else if (target.classList.contains('btn-delete') && type === 'lancamento') {
-                deleteItem(id, type);
-            }
+            if (target.classList.contains('btn-edit') && type === 'lancamento') editItem(id, type);
+            if (target.classList.contains('btn-delete') && type === 'lancamento') deleteItem(id, type);
         });
-
         document.getElementById('search-caixa').addEventListener('input', (e) => goToPage('caixa', 1, e.target.value, document.getElementById('filter-caixa-tipo').value));
         document.getElementById('filter-caixa-tipo').addEventListener('change', (e) => goToPage('caixa', 1, document.getElementById('search-caixa').value, e.target.value));
 
         // VENDAS EVENTS
         document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
         document.getElementById('venda-itens-container').addEventListener('click', e => { 
-            if(e.target.classList.contains('btn-delete') && e.target.getAttribute('data-type') === 'carrinho') { 
-                const id = parseInt(e.target.getAttribute('data-id')); 
+            const target = e.target.closest('.btn-action');
+            if(target && target.classList.contains('btn-delete') && target.getAttribute('data-type') === 'carrinho') { 
+                const id = parseInt(target.getAttribute('data-id')); 
                 carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== id); 
                 renderCarrinho(); 
                 showNotification('Item removido do carrinho.');
@@ -2035,7 +2044,8 @@
         
         // CONTAS A RECEBER EVENTS
         document.getElementById('tabela-contas-container').addEventListener('click', e => {
-            const target = e.target;
+            const target = e.target.closest('.btn-action');
+            if (!target) return;
             const id = parseInt(target.getAttribute('data-id'));
             const type = target.getAttribute('data-type');
 
@@ -2049,10 +2059,8 @@
                     saveData('contasAReceber', contasAReceber);
                     saveData('fluxoCaixa', fluxoCaixa);
                     renderContasAReceber();
-                    renderDashboardSummaries(); // Refresh dashboard totals
+                    renderDashboardSummaries();
                     showNotification('Baixa realizada e valor lançado no caixa!');
-                } else {
-                    showNotification('Esta conta já foi paga.', true);
                 }
             } else if (target.classList.contains('btn-info') && type === 'venda-detalhes') {
                 showVendaDetalhesModal(id);
@@ -2060,7 +2068,6 @@
         });
         document.getElementById('search-contas-receber').addEventListener('input', (e) => goToPage('contas-receber', 1, e.target.value, document.getElementById('filter-contas-receber-status').value));
         document.getElementById('filter-contas-receber-status').addEventListener('change', (e) => goToPage('contas-receber', 1, document.getElementById('search-contas-receber').value, e.target.value));
-
 
         // CONTAS A PAGAR CRUD EVENTS
         document.getElementById('form-add-conta-pagar').addEventListener('submit', e => {
@@ -2074,7 +2081,6 @@
                 showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true);
                 return;
             }
-
             if (id) {
                 const index = contasAPagar.findIndex(c => c.id == id);
                 if (index !== -1) {
@@ -2089,11 +2095,10 @@
             renderContasAPagar();
             renderDashboardSummaries();
         });
-
         document.getElementById('btn-cancelar-conta-pagar').addEventListener('click', () => resetForm('form-add-conta-pagar', 'conta-pagar'));
-
         document.getElementById('tabela-contas-pagar-container').addEventListener('click', e => {
-            const target = e.target;
+            const target = e.target.closest('.btn-action');
+            if (!target) return;
             const id = parseInt(target.getAttribute('data-id'));
             const type = target.getAttribute('data-type');
 
@@ -2102,14 +2107,12 @@
                 if (conta && conta.status === 'Pendente') {
                     if (!confirm(`Confirmar o pagamento de ${formatCurrency(conta.valor)} da conta: ${conta.descricao}?`)) return;
                     conta.status = 'Pago';
-                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Saída', descricao: `Pagamento: ${conta.descricao} (Conta Pagar #${conta.id})`, valor: conta.valor });
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Saída', descricao: `Pagamento: ${conta.descricao}`, valor: conta.valor });
                     saveData('contasAPagar', contasAPagar);
                     saveData('fluxoCaixa', fluxoCaixa);
                     renderContasAPagar();
                     renderDashboardSummaries();
                     showNotification('Pagamento realizado e valor lançado no caixa!');
-                } else {
-                    showNotification('Esta conta já foi paga.', true);
                 }
             } else if (target.classList.contains('btn-edit') && type === 'conta-pagar') {
                 editItem(id, type);
@@ -2120,12 +2123,8 @@
         document.getElementById('search-contas-pagar').addEventListener('input', (e) => goToPage('contas-pagar', 1, e.target.value, document.getElementById('filter-contas-pagar-status').value));
         document.getElementById('filter-contas-pagar-status').addEventListener('change', (e) => goToPage('contas-pagar', 1, document.getElementById('search-contas-pagar').value, e.target.value));
 
-
         // BACKUP/RESTORE BUTTONS
         document.getElementById('btn-backup-data').addEventListener('click', backupData);
-        document.getElementById('btn-restore-data').addEventListener('click', () => {
-            document.getElementById('backup-file-input').click(); // Trigger file input click
-        });
         document.getElementById('backup-file-input').addEventListener('change', restoreData);
         
         // THEME TOGGLE EVENT
@@ -2133,10 +2132,7 @@
             const theme = e.target.checked ? 'dark' : 'light';
             applyTheme(theme);
             localStorage.setItem('theme', theme);
-            // Re-render charts or other elements that might be affected by theme for consistency
-            renderDashboardSummaries();
         });
-
 
         // Initial load check
         if (localStorage.getItem('isLoggedIn') === 'true') {
