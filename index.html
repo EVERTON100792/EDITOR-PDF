@@ -181,7 +181,7 @@
     </style>
 </head>
 <body>
-    <div id="login-screen">
+    <div id="login-screen" class="hidden">
         <div class="login-box"><h1>Flor de Maira</h1><p class="subtitle">Acesse seu painel de gestão</p><form id="login-form"><div class="input-group"><input type="text" id="username" required><label for="username">Usuário</label></div><div class="input-group"><input type="password" id="password" required><label for="password">Senha</label></div><button type="submit" class="btn-login">Entrar</button><p id="error-message" class="error-message"></p></form></div>
     </div>
 
@@ -314,32 +314,31 @@
         };
 
         const navigateToPage = (pageId) => {
-            if (!pageId) pageId = 'dashboard-view';
+            if (!pageId || !document.getElementById(pageId)) {
+                pageId = 'dashboard-view';
+            }
             
             contentSections.forEach(s => s.classList.remove('active'));
             navLinks.forEach(l => l.classList.remove('active'));
 
-            const targetSection = document.getElementById(pageId);
+            document.getElementById(pageId).classList.add('active');
             const targetLink = document.querySelector(`.nav-link[data-target="${pageId}"]`);
-
-            if (targetSection && targetLink) {
-                targetSection.classList.add('active');
+            if (targetLink) {
                 targetLink.classList.add('active');
-                
                 const pageName = targetLink.querySelector('span').textContent;
                 desktopPageTitle.textContent = pageName;
                 mobilePageTitle.textContent = pageName;
-                localStorage.setItem('lastActivePage', pageId);
             }
 
-            switch (pageId) {
-                case 'dashboard-view': renderDashboardSummaries(); break;
-                case 'caixa-view': renderFluxoCaixa(); break;
-                case 'vendas-view': popularFormulariosVenda(); renderCarrinho(); break;
-                case 'clientes-view': renderClientes(); break;
-                case 'estoque-view': renderProdutos(); break;
-                case 'contas-a-receber-view': renderContasAReceber(); break;
-            }
+            localStorage.setItem('lastActivePage', pageId);
+
+            // Chama a função de renderização específica para a página ativada
+            if (pageId === 'dashboard-view') renderDashboardSummaries();
+            if (pageId === 'caixa-view') renderFluxoCaixa();
+            if (pageId === 'vendas-view') { popularFormulariosVenda(); renderCarrinho(); }
+            if (pageId === 'clientes-view') renderClientes();
+            if (pageId === 'estoque-view') renderProdutos();
+            if (pageId === 'contas-a-receber-view') renderContasAReceber();
         };
         
         const renderDashboardSummaries = () => {
@@ -472,7 +471,7 @@
             document.getElementById('venda-form').reset();
             document.getElementById('venda-parcelas-group').classList.add('hidden');
             renderCarrinho();
-            renderProdutos();
+            popularFormulariosVenda();
         };
 
         const init = () => {
@@ -481,11 +480,10 @@
             vendas = loadData('vendas');
             contasAReceber = loadData('contasAReceber');
             fluxoCaixa = loadData('fluxoCaixa');
-            const lastPageId = localStorage.getItem('lastActivePage') || 'dashboard-view';
+            const lastPageId = localStorage.getItem('lastActivePage');
             navigateToPage(lastPageId);
         };
         
-        // --- ATRIBUIÇÃO DE EVENTOS ---
         loginForm.addEventListener('submit', e => { e.preventDefault(); if(document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') { localStorage.setItem('isLoggedIn', 'true'); loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden'); init(); } else { /* ... */ }});
         
         logoutBtn.addEventListener('click', () => {
