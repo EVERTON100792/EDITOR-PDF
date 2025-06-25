@@ -279,13 +279,17 @@
             body > *:not(#dashboard-screen),
             #dashboard-screen .sidebar,
             #dashboard-screen .main-header,
-            #dashboard-screen .card .btn,
+            #dashboard-screen .card .btn:not(.btn-paid), /* Oculta botões, mas mantém 'Pago' se for usado visualmente na tabela */
+            #dashboard-screen .card .btn-submit,
             #dashboard-screen .card .form-group,
             #dashboard-screen .card h2:has(.fa-plus-circle), /* Oculta a seção de lançamento manual */
             #dashboard-screen #edit-cliente-container,
             #dashboard-screen #edit-produto-container,
+            #dashboard-screen #edit-lancamento-container,
+            #dashboard-screen #edit-conta-container,
             #dashboard-screen #venda-form-card,
-            #dashboard-screen #relatorios-view .card:first-of-type /* Oculta o formulário de geração de relatório */
+            #dashboard-screen #relatorios-view .card:first-of-type, /* Oculta o formulário de geração de relatório de vendas */
+            #dashboard-screen #relatorios-view .card:nth-of-type(2) /* Oculta o formulário de geração de relatório de contas */
             {
                 display: none !important;
             }
@@ -514,6 +518,20 @@
             </section>
 
             <section id="contas-a-receber-view" class="content-section">
+                <div id="edit-conta-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
+                    <form id="form-edit-conta">
+                        <input type="hidden" id="edit-conta-id">
+                        <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
+                        <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
+                        <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
+                        <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                            <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
                 <div class="card shadow-md">
                     <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Contas a Receber</h2>
                     <div id="tabela-contas-container" class="table-responsive-container"></div>
@@ -588,6 +606,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const editLancamentoContainer = document.getElementById('edit-lancamento-container');
     const formEditLancamento = document.getElementById('form-edit-lancamento');
 
+    // --- SELETORES DE CONTAS A RECEBER ---
+    const contasContainer = document.getElementById('tabela-contas-container');
+    const editContaContainer = document.getElementById('edit-conta-container');
+    const formEditConta = document.getElementById('form-edit-conta');
+
 
     // --- ESTADO DA APLICAÇÃO ---
     let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
@@ -595,7 +618,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let paymentChartInstance = null;
     let editingClientId = null;
     let editingProductId = null;
-    let editingLancamentoId = null; // Novo para edição de lançamento
+    let editingLancamentoId = null;
+    let editingContaId = null; // Novo para edição de contas a receber
     let isMobile = window.innerWidth <= 768;
 
 
@@ -653,7 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderRowCarrinho = (item, headers) => `<tr>${[item.nome, item.quantidade, formatCurrency(item.subtotal), `<button class="btn-action" data-action="remove-item" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowContas = (conta, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
-        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-action="pay" data-id="${conta.id}"><i class="fas fa-check"></i> Pagar</button>` : 'Recebido'].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, `<button class="btn-action" data-action="edit" data-type="conta" data-id="${conta.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action ${conta.status === 'Pago' ? 'hidden' : ''} btn-paid" data-action="pay" data-id="${conta.id}"><i class="fas fa-check"></i> Pagar</button><button class="btn-action" data-action="delete" data-type="conta" data-id="${conta.id}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
     const renderRowRelatorioVendas = (v, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
@@ -684,7 +708,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cancelEditClient();
         cancelEditProduct();
-        cancelEditLancamento(); // Cancela edição de lançamento ao mudar de aba
+        cancelEditLancamento();
+        cancelEditConta(); // Cancela edição de conta ao mudar de aba
 
         if (pageId === 'dashboard-view') renderDashboardSummaries();
         if (pageId === 'caixa-view') renderFluxoCaixa();
@@ -748,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderClientes = () => renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], clientes, renderRowClientes);
     const renderProdutos = () => renderTable('tabela-produtos-container', ['Produto', 'Em Estoque', 'Preço', 'Ações'], produtos.sort((a, b) => a.nome.localeCompare(b.nome)), renderRowProdutos);
-    const renderContasAReceber = () => renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ação'], contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowContas);
+    const renderContasAReceber = () => renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ações'], contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowContas);
     const renderCarrinho = () => {
         const totalEl = document.getElementById('venda-total');
         if (!totalEl) return;
@@ -780,6 +805,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('edit-tipo-lancamento').value = lancamento.tipo;
         editLancamentoContainer.classList.remove('hidden');
         editLancamentoContainer.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const populateEditContaForm = (conta) => {
+        document.getElementById('edit-conta-id').value = conta.id;
+        const editContaClienteSelect = document.getElementById('edit-conta-cliente');
+        editContaClienteSelect.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        editContaClienteSelect.value = conta.clienteId;
+        document.getElementById('edit-conta-valor').value = conta.valor;
+        // Formata a data para o input type="date"
+        document.getElementById('edit-conta-vencimento').value = conta.dataVencimento.split('T')[0]; 
+        document.getElementById('edit-conta-status').value = conta.status;
+        editContaContainer.classList.remove('hidden');
+        editContaContainer.scrollIntoView({ behavior: 'smooth' });
     };
 
     const popularFormulariosVenda = () => {
@@ -854,6 +892,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === 'lancamento') {
             const lancamentoToEdit = fluxoCaixa.find(l => l.id === id);
             if (lancamentoToEdit) populateEditLancamentoForm(lancamentoToEdit);
+        } else if (type === 'conta') {
+            const contaToEdit = contasAReceber.find(c => c.id === id);
+            if (contaToEdit) populateEditContaForm(contaToEdit);
         }
     };
 
@@ -908,6 +949,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderFluxoCaixa();
                 renderDashboardSummaries(); // Atualiza o dashboard
                 showNotification('Lançamento excluído!');
+            } else if (type === 'conta') {
+                contasAReceber = contasAReceber.filter(c => c.id !== id);
+                saveData('contasAReceber', contasAReceber);
+                renderContasAReceber();
+                renderDashboardSummaries(); // Atualiza o dashboard
+                showNotification('Conta a receber excluída!');
             }
         }
     };
@@ -959,6 +1006,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const saveEditedConta = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-conta-id').value);
+        const index = contasAReceber.findIndex(c => c.id === id);
+        if (index !== -1) {
+            const oldStatus = contasAReceber[index].status;
+            contasAReceber[index].clienteId = parseInt(document.getElementById('edit-conta-cliente').value);
+            contasAReceber[index].valor = parseFloat(document.getElementById('edit-conta-valor').value);
+            contasAReceber[index].dataVencimento = document.getElementById('edit-conta-vencimento').value;
+            contasAReceber[index].status = document.getElementById('edit-conta-status').value;
+
+            // Se o status mudou de Pendente para Pago, adicionar ao fluxo de caixa
+            if (oldStatus === 'Pendente' && contasAReceber[index].status === 'Pago') {
+                const clienteNome = clientes.find(c => c.id === contasAReceber[index].clienteId)?.nome || 'Avulso';
+                fluxoCaixa.push({
+                    id: Date.now(),
+                    data: new Date().toISOString(),
+                    tipo: 'Entrada',
+                    descricao: `Recebimento de Conta (Editada) de ${clienteNome} - Venda #${contasAReceber[index].vendaId || 'N/A'}`,
+                    valor: contasAReceber[index].valor
+                });
+                saveData('fluxoCaixa', fluxoCaixa);
+            }
+            // Se o status mudou de Pago para Pendente, remover do fluxo de caixa (isso pode ser mais complexo se houver outros lançamentos com a mesma descrição)
+            // Por simplicidade, essa lógica não será implementada agora para evitar remoções acidentais.
+            // Em um sistema real, cada lançamento de caixa teria um link claro com a conta a receber.
+
+            saveData('contasAReceber', contasAReceber);
+            renderContasAReceber();
+            renderDashboardSummaries(); // Atualiza o dashboard
+            showNotification('Conta a receber atualizada!', false);
+            cancelEditConta();
+        }
+    };
+
     const cancelEditClient = () => {
         editClienteContainer.classList.add('hidden');
         formEditCliente.reset();
@@ -975,6 +1057,12 @@ document.addEventListener('DOMContentLoaded', () => {
         editLancamentoContainer.classList.add('hidden');
         formEditLancamento.reset();
         editingLancamentoId = null;
+    };
+
+    const cancelEditConta = () => {
+        editContaContainer.classList.add('hidden');
+        formEditConta.reset();
+        editingContaId = null;
     };
 
 
@@ -1049,21 +1137,34 @@ document.addEventListener('DOMContentLoaded', () => {
         btnImprimir.classList.remove('hidden');
     };
 
-    const imprimirRelatorio = (sectionId) => {
-        const originalContent = document.body.innerHTML;
-        const printContent = document.getElementById(sectionId).outerHTML;
+    const imprimirRelatorio = (containerId) => {
+        // Encontre o card do relatório específico para impressão
+        const reportCard = document.getElementById(containerId).closest('.card');
+        if (!reportCard) {
+            console.error('Container de relatório não encontrado para impressão:', containerId);
+            return;
+        }
 
-        // Temporariamente esconde tudo exceto o conteúdo a ser impresso
-        document.body.innerHTML = printContent;
+        const originalBody = document.body.innerHTML;
+        const printWindow = window.open('', '', 'height=600,width=800');
         
-        window.print();
-
-        // Restaura o conteúdo original da página após a impressão
-        document.body.innerHTML = originalContent;
-        // Precisa recarregar os listeners de eventos após restaurar o DOM
-        location.reload(); 
+        printWindow.document.write('<html><head><title>Relatório Flor de Maira</title>');
+        // Inclui os estilos CSS da página original
+        Array.from(document.querySelectorAll('link[rel="stylesheet"], style')).forEach(node => {
+            printWindow.document.write(node.outerHTML);
+        });
+        printWindow.document.write('</head><body>');
+        printWindow.document.write('<div style="padding: 20px;">'); // Adiciona um padding ao conteúdo impresso
+        printWindow.document.write(reportCard.outerHTML); // Adiciona apenas o card do relatório
+        printWindow.document.write('</div></body></html>');
+        printWindow.document.close();
+        
+        printWindow.onload = () => {
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        };
     };
-
 
     const init = () => {
         clientes = loadData('clientes');
@@ -1170,6 +1271,8 @@ document.addEventListener('DOMContentLoaded', () => {
     editProdutoContainer.querySelector('.btn-cancel').addEventListener('click', cancelEditProduct);
     formEditLancamento.addEventListener('submit', saveEditedLancamento);
     document.getElementById('cancel-edit-lancamento').addEventListener('click', cancelEditLancamento);
+    formEditConta.addEventListener('submit', saveEditedConta);
+    document.getElementById('cancel-edit-conta').addEventListener('click', cancelEditConta);
 
 
     // Lógica para decidir qual tela mostrar ao carregar a página
