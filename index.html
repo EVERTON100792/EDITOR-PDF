@@ -547,6 +547,7 @@
                         <button id="btn-gerar-relatorio-vendas" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
                     </div>
                     <button id="btn-imprimir-relatorio-vendas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                    <button id="btn-limpar-vendas" class="btn mt-3" style="background-color: var(--danger-color);"><i class="fas fa-trash-alt mr-2"></i> Excluir Todas as Vendas</button>
                 </div>
                 <div id="relatorio-vendas-container" class="mt-3"></div>
 
@@ -619,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let editingClientId = null;
     let editingProductId = null;
     let editingLancamentoId = null;
-    let editingContaId = null; // Novo para edição de contas a receber
+    let editingContaId = null; 
     let isMobile = window.innerWidth <= 768;
 
 
@@ -709,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cancelEditClient();
         cancelEditProduct();
         cancelEditLancamento();
-        cancelEditConta(); // Cancela edição de conta ao mudar de aba
+        cancelEditConta();
 
         if (pageId === 'dashboard-view') renderDashboardSummaries();
         if (pageId === 'caixa-view') renderFluxoCaixa();
@@ -846,6 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
             carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: quantidade * produto.preco });
         }
         showNotification(`${quantidade}x ${produto.nome} adicionado(s) ao carrinho.`, false);
+        document.getElementById('venda-qtd').value = 1; // Reseta a quantidade para 1 após adicionar
         renderCarrinho();
     };
 
@@ -917,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Excluir contas a receber do cliente
                 contasAReceber = contasAReceber.filter(c => c.clienteId !== id);
 
-                // Excluir lançamentos de caixa relacionados às vendas do cliente
+                // Excluir lançamentos de caixa relacionados às vendas do cliente (se tiverem vendaId)
                 const vendaIdsExcluidas = vendasDoCliente.map(v => v.id);
                 fluxoCaixa = fluxoCaixa.filter(l => !(l.vendaId && vendaIdsExcluidas.includes(l.vendaId)));
 
@@ -1012,30 +1014,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const index = contasAReceber.findIndex(c => c.id === id);
         if (index !== -1) {
             const oldStatus = contasAReceber[index].status;
+            const oldValor = contasAReceber[index].valor;
+            
             contasAReceber[index].clienteId = parseInt(document.getElementById('edit-conta-cliente').value);
             contasAReceber[index].valor = parseFloat(document.getElementById('edit-conta-valor').value);
             contasAReceber[index].dataVencimento = document.getElementById('edit-conta-vencimento').value;
             contasAReceber[index].status = document.getElementById('edit-conta-status').value;
 
-            // Se o status mudou de Pendente para Pago, adicionar ao fluxo de caixa
+            // Lógica para ajustar o fluxo de caixa se o status for alterado
             if (oldStatus === 'Pendente' && contasAReceber[index].status === 'Pago') {
+                // Se pagou, adiciona entrada ao caixa
                 const clienteNome = clientes.find(c => c.id === contasAReceber[index].clienteId)?.nome || 'Avulso';
                 fluxoCaixa.push({
                     id: Date.now(),
                     data: new Date().toISOString(),
                     tipo: 'Entrada',
-                    descricao: `Recebimento de Conta (Editada) de ${clienteNome} - Venda #${contasAReceber[index].vendaId || 'N/A'}`,
+                    descricao: `Recebimento de Conta (Editada para Paga) de ${clienteNome} - Venda #${contasAReceber[index].vendaId || 'N/A'}`,
                     valor: contasAReceber[index].valor
                 });
-                saveData('fluxoCaixa', fluxoCaixa);
+            } else if (oldStatus === 'Pago' && contasAReceber[index].status === 'Pendente') {
+                // Se despagou, subtrai do caixa (isso é mais complexo em um cenário real, pois a entrada original pode ter sido de uma venda)
+                // Para simplificar, vou remover o *lançamento exato* que corresponde a essa conta se houver, ou ajustar o caixa.
+                // IMPORTANTE: Em um sistema robusto, cada "recebimento de conta" geraria um lançamento de caixa único e seria desfeito especificamente.
+                // Aqui, por simplicidade e para o contexto do localStorage, vamos apenas notificar e não mexer no histórico de caixa se já foi pago.
+                 showNotification('Ao mudar de "Pago" para "Pendente", o lançamento no fluxo de caixa deve ser ajustado manualmente, se necessário.', true);
+            } else if (contasAReceber[index].status === 'Pago' && oldValor !== contasAReceber[index].valor) {
+                 // Se já estava pago e o valor mudou, o lançamento original no caixa não reflete o novo valor.
+                 // Isso exigiria remover o lançamento antigo e adicionar um novo, ou ajustar o existente.
+                 showNotification('Valor de conta já paga alterado. Ajuste o lançamento correspondente no Fluxo de Caixa manualmente, se necessário.', true);
             }
-            // Se o status mudou de Pago para Pendente, remover do fluxo de caixa (isso pode ser mais complexo se houver outros lançamentos com a mesma descrição)
-            // Por simplicidade, essa lógica não será implementada agora para evitar remoções acidentais.
-            // Em um sistema real, cada lançamento de caixa teria um link claro com a conta a receber.
 
             saveData('contasAReceber', contasAReceber);
+            saveData('fluxoCaixa', fluxoCaixa); // Salva as mudanças no fluxo de caixa
             renderContasAReceber();
             renderDashboardSummaries(); // Atualiza o dashboard
+            renderFluxoCaixa(); // Atualiza a tabela do fluxo de caixa
             showNotification('Conta a receber atualizada!', false);
             cancelEditConta();
         }
@@ -1065,6 +1078,33 @@ document.addEventListener('DOMContentLoaded', () => {
         editingContaId = null;
     };
 
+    const limparTodasVendas = () => {
+        if (confirm("ATENÇÃO: Esta ação EXCLUIRÁ TODAS as vendas, contas a receber geradas por vendas e entradas de caixa relacionadas a vendas. Não é possível desfazer. Deseja continuar?")) {
+            vendas = [];
+            contasAReceber = contasAReceber.filter(c => !c.vendaId); // Mantém contas que não vieram de vendas
+            fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); // Mantém lançamentos que não vieram de vendas
+
+            // Reajustar estoque: se as vendas forem excluídas, os produtos deveriam ter suas quantidades restauradas.
+            // Para simplificar, vamos assumir que não queremos restaurar o estoque aqui,
+            // ou que o usuário fará o ajuste manual do estoque se necessário,
+            // pois a exclusão de "resumo de vendas" é mais sobre o histórico financeiro.
+            // Se a intenção é "reverter o negócio ao estado inicial do estoque", a lógica seria mais complexa.
+
+            saveData('vendas', vendas);
+            saveData('contasAReceber', contasAReceber);
+            saveData('fluxoCaixa', fluxoCaixa);
+            
+            // Recarrega todas as exibições impactadas
+            renderDashboardSummaries();
+            renderContasAReceber();
+            renderFluxoCaixa();
+            popularFormulariosVenda(); // Atualiza dropdown de produtos na tela de vendas
+            document.getElementById('relatorio-vendas-container').innerHTML = ''; // Limpa relatório de vendas
+            document.getElementById('btn-imprimir-relatorio-vendas').classList.add('hidden'); // Oculta botão de impressão
+
+            showNotification('Todas as vendas e seus registros financeiros relacionados foram excluídos!', false);
+        }
+    };
 
     const gerarRelatorioVendas = () => {
         const dataInicio = document.getElementById('relatorio-inicio-vendas').value;
@@ -1139,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const imprimirRelatorio = (containerId) => {
         // Encontre o card do relatório específico para impressão
-        const reportCard = document.getElementById(containerId).closest('.card');
+        const reportCard = document.querySelector(`#${containerId} .card`); // Seleciona o card dentro do container
         if (!reportCard) {
             console.error('Container de relatório não encontrado para impressão:', containerId);
             return;
@@ -1235,6 +1275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-gerar-relatorio-vendas').addEventListener('click', gerarRelatorioVendas);
     document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => imprimirRelatorio('relatorio-vendas-container'));
+    document.getElementById('btn-limpar-vendas').addEventListener('click', limparTodasVendas); // Novo listener
 
     document.getElementById('btn-gerar-relatorio-contas').addEventListener('click', gerarRelatorioContas);
     document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => imprimirRelatorio('relatorio-contas-container'));
