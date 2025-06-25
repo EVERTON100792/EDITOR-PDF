@@ -34,6 +34,25 @@
             --info-color: #60a5fa; /* Blue 400 (slightly lighter for info) */
         }
 
+        /* --- Dark Theme --- */
+        body.dark-theme {
+            --primary-color: #60a5fa; /* Lighter blue for contrast */
+            --primary-dark-color: #3b82f6; /* Original primary blue */
+            --primary-light-color: #1e3a8a; /* Darker blue background for highlight */
+            --primary-gradient-start: #1e3a8a;
+            --primary-gradient-end: #172554;
+            
+            --text-primary: #f8fafc; /* Lighter text */
+            --text-secondary: #94a3b8; /* Lighter gray text */
+            
+            --bg-color: #1f2937; /* Darker background */
+            --surface-color: #374151; /* Darker card/surface background */
+            --border-color: #4b5563; /* Darker borders */
+            --shadow-color: rgba(0,0,0,0.3); /* More prominent shadow in dark theme */
+
+            /* Keep success, danger, warning, info colors similar for consistency */
+        }
+
         /* --- BASE STYLES --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -198,6 +217,21 @@
         }
         
         /* --- TABLE STYLES --- */
+        .table-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .table-controls .form-group {
+            margin-bottom: 0;
+        }
+        .table-controls input, .table-controls select {
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+
         .table-responsive-container { overflow-x: auto; margin-top: 20px;}
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
         th, td { 
@@ -223,9 +257,40 @@
         .btn-delete:hover { background-color: #cc3939; }
         .status-pendente { color: var(--warning-color); font-weight: bold; }
         .status-pago { color: var(--success-color); font-weight: bold; }
+        .status-aberta { color: var(--warning-color); font-weight: bold; }
+        .status-paga { color: var(--success-color); font-weight: bold; }
         .valor-entrada { color: var(--success-color); font-weight: 600; }
         .valor-saida { color: var(--danger-color); font-weight: 600; }
         
+        /* Pagination */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination-controls button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: var(--primary-dark-color);
+        }
+        .pagination-controls button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+        }
+        .pagination-controls span {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
         /* --- DASHBOARD SPECIFIC --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .summary-card { 
@@ -279,11 +344,165 @@
             color: var(--text-primary);
             width: 100%;
         }
+        .theme-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
 
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+            animation: fadeInModal 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: slideInTop 0.3s ease-out;
+        }
+
+        .close-button {
+            color: var(--text-secondary);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--danger-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInTop {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Specific modal content styling */
+        #modal-venda-detalhes h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #modal-venda-detalhes p {
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        #modal-venda-detalhes p strong {
+            color: var(--primary-dark-color);
+        }
+        #modal-venda-detalhes .table-responsive-container {
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden; /* For rounded corners on table */
+        }
+        #modal-venda-detalhes table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #modal-venda-detalhes th, #modal-venda-detalhes td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        #modal-venda-detalhes th {
+            background-color: var(--primary-light-color);
+            color: var(--primary-dark-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        #modal-venda-detalhes tr:last-child td {
+            border-bottom: none;
+        }
+        #modal-venda-detalhes .modal-total {
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 20px;
+        }
 
         /* --- MEDIA QUERIES --- */
         @media (max-width: 1024px) {
             .dashboard-main-grid { grid-template-columns: 1fr; }
+            .table-controls { flex-direction: column; align-items: stretch;}
+            .table-controls .form-group { width: 100%;}
+            .table-controls button { width: 100%; margin-top: 0.5rem;}
         }
         @media (max-width: 768px) {
             .sidebar { 
@@ -315,6 +534,10 @@
              th, td { padding: 10px 12px; font-size: 0.9rem; }
              .btn-action { padding: 6px 10px; margin-right: 3px;}
              .settings-grid { grid-template-columns: 1fr; }
+             .modal-content {
+                width: 95%;
+                padding: 20px;
+             }
         }
 
     </style>
@@ -350,6 +573,7 @@
                     <li><a href="#clientes" class="nav-link" data-target="clientes-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span>Clientes</span></a></li>
                     <li><a href="#estoque" class="nav-link" data-target="estoque-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg><span>Estoque</span></a></li>
                     <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1h4a2 2 0 012 2v11a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2h4z"></path></svg><span>Contas a Receber</span></a></li>
+                    <li><a href="#contas-a-pagar" class="nav-link" data-target="contas-a-pagar-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m-6 6l6-6M9 20v-1a3 3 0 013-3h2a3 3 0 013 3v1M21 12h-4v-.01M3 12h4v-.01M12 6V3M6 18H4a2 2 0 01-2-2V7a2 2 0 012-2h4M18 18h2a2 2 0 002-2V7a2 2 0 00-2-2h-4"></path></svg><span>Contas a Pagar</span></a></li>
                     <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span>Relatórios</span></a></li>
                     <li><a href="#configuracoes" class="nav-link" data-target="configuracoes-view"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.294.542 2.573-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span>Configurações</span></a></li>
                 </ul>
@@ -370,6 +594,7 @@
                 <div class="dashboard-grid">
                     <div class="summary-card"><h3 style="color:var(--success-color);">Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
                     <div class="summary-card"><h3 style="color:var(--warning-color);">Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
+                    <div class="summary-card"><h3 style="color:var(--danger-color);">Total a Pagar</h3><p id="total-a-pagar-dashboard">R$ 0,00</p></div>
                 </div>
                 <div class="dashboard-main-grid">
                     <div class="card"><h2>Vendas por Método de Pagamento</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
@@ -406,7 +631,25 @@
                         </div>
                     </form>
                 </div>
-                <div class="card"><h2>Histórico de Movimentações</h2><div id="tabela-caixa-container" class="table-responsive-container"></div></div>
+                <div class="card">
+                    <h2>Histórico de Movimentações</h2>
+                    <div class="table-controls">
+                        <div class="form-group flex-1">
+                            <label for="search-caixa">Buscar</label>
+                            <input type="text" id="search-caixa" placeholder="Buscar por descrição...">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-caixa-tipo">Tipo</label>
+                            <select id="filter-caixa-tipo">
+                                <option value="">Todos</option>
+                                <option value="Entrada">Entrada</option>
+                                <option value="Saída">Saída</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tabela-caixa-container" class="table-responsive-container"></div>
+                    <div id="pagination-caixa" class="pagination-controls"></div>
+                </div>
             </section>
 
             <section id="clientes-view" class="content-section">
@@ -428,7 +671,17 @@
                         </div>
                     </form>
                 </div>
-                <div class="card"><h2>Clientes Cadastrados</h2><div id="tabela-clientes-container" class="table-responsive-container"></div></div>
+                <div class="card">
+                    <h2>Clientes Cadastrados</h2>
+                    <div class="table-controls">
+                        <div class="form-group flex-1">
+                            <label for="search-clientes">Buscar</label>
+                            <input type="text" id="search-clientes" placeholder="Buscar por nome ou contato...">
+                        </div>
+                    </div>
+                    <div id="tabela-clientes-container" class="table-responsive-container"></div>
+                    <div id="pagination-clientes" class="pagination-controls"></div>
+                </div>
             </section>
 
             <section id="estoque-view" class="content-section">
@@ -481,7 +734,25 @@
                         </div>
                     </form>
                 </div>
-                <div class="card"><h2>Produtos em Estoque</h2><div id="tabela-produtos-container" class="table-responsive-container"></div></div>
+                <div class="card">
+                    <h2>Produtos em Estoque</h2>
+                     <div class="table-controls">
+                        <div class="form-group flex-1">
+                            <label for="search-produtos">Buscar</label>
+                            <input type="text" id="search-produtos" placeholder="Buscar por nome...">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-estoque-qtd">Estoque</label>
+                            <select id="filter-estoque-qtd">
+                                <option value="">Todos</option>
+                                <option value="low">Baixo (&lt; 10)</option>
+                                <option value="empty">Esgotado (0)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tabela-produtos-container" class="table-responsive-container"></div>
+                    <div id="pagination-produtos" class="pagination-controls"></div>
+                </div>
             </section>
 
             <section id="vendas-view" class="content-section">
@@ -497,7 +768,71 @@
             </section>
             
             <section id="contas-a-receber-view" class="content-section">
-                <div class="card"><h2>Contas a Receber</h2><div id="tabela-contas-container" class="table-responsive-container"></div></div>
+                <div class="card">
+                    <h2>Contas a Receber</h2>
+                    <div class="table-controls">
+                        <div class="form-group flex-1">
+                            <label for="search-contas-receber">Buscar</label>
+                            <input type="text" id="search-contas-receber" placeholder="Buscar por cliente...">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-contas-receber-status">Status</label>
+                            <select id="filter-contas-receber-status">
+                                <option value="">Todos</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Pago">Pago</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tabela-contas-container" class="table-responsive-container"></div>
+                    <div id="pagination-contas-receber" class="pagination-controls"></div>
+                </div>
+            </section>
+
+            <section id="contas-a-pagar-view" class="content-section">
+                <div class="card">
+                    <h2>Registrar/Editar Conta a Pagar</h2>
+                    <form id="form-add-conta-pagar">
+                        <input type="hidden" id="conta-pagar-id">
+                        <div class="flex gap-2">
+                            <div class="form-group flex-1">
+                                <label for="desc-conta-pagar">Descrição</label>
+                                <input type="text" id="desc-conta-pagar" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="valor-conta-pagar">Valor (R$)</label>
+                                <input type="number" step="0.01" id="valor-conta-pagar" required min="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="vencimento-conta-pagar">Data de Vencimento</label>
+                                <input type="date" id="vencimento-conta-pagar" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit" id="btn-salvar-conta-pagar">Registrar</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancelar-conta-pagar" style="display:none;">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h2>Contas a Pagar</h2>
+                    <div class="table-controls">
+                        <div class="form-group flex-1">
+                            <label for="search-contas-pagar">Buscar</label>
+                            <input type="text" id="search-contas-pagar" placeholder="Buscar por descrição...">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-contas-pagar-status">Status</label>
+                            <select id="filter-contas-pagar-status">
+                                <option value="">Todos</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Pago">Pago</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tabela-contas-pagar-container" class="table-responsive-container"></div>
+                    <div id="pagination-contas-pagar" class="pagination-controls"></div>
+                </div>
             </section>
             
             <section id="relatorios-view" class="content-section">
@@ -516,12 +851,15 @@
                     </div>
                 </div>
                 <div id="relatorio-container" class="card mt-3 hidden">
-                    <h2>Resultados do Relatório</h2>
+                    <h2>Resultados do Relatório de Vendas</h2>
                     <p>Período: <span id="relatorio-periodo"></span></p>
                     <p>Total de Vendas: <span id="relatorio-total-vendas">R$ 0,00</span></p>
                     <p>Total de Itens Vendidos: <span id="relatorio-total-itens">0</span></p>
                     <h3 style="margin-top:1.5rem;">Vendas por Método de Pagamento:</h3>
                     <ul id="relatorio-metodo-pagamento"></ul>
+                    <h3 style="margin-top:1.5rem;">Produtos Mais Vendidos:</h3>
+                    <ul id="relatorio-produtos-mais-vendidos"></ul>
+                    <button id="btn-export-relatorio" class="btn" style="margin-top: 20px;">Exportar para CSV</button>
                 </div>
             </section>
 
@@ -535,9 +873,47 @@
                         <input type="file" id="backup-file-input" accept=".json">
                         <button id="btn-restore-data" class="btn btn-secondary mt-3">Restaurar Backup</button>
                     </div>
+                    <div class="settings-card">
+                        <h3>Tema da Interface</h3>
+                        <div class="theme-toggle-container">
+                            <span>Modo Escuro</span>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="theme-toggle-switch">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
+    </div>
+
+    <div id="venda-detalhes-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Detalhes da Venda</h2>
+            <p><strong>ID da Venda:</strong> <span id="modal-venda-id"></span></p>
+            <p><strong>Cliente:</strong> <span id="modal-venda-cliente"></span></p>
+            <p><strong>Data da Venda:</strong> <span id="modal-venda-data"></span></p>
+            <p><strong>Método de Pagamento:</strong> <span id="modal-venda-metodo-pagamento"></span></p>
+            
+            <h3 style="margin-top: 20px; margin-bottom: 10px;">Itens da Venda:</h3>
+            <div class="table-responsive-container">
+                <table id="modal-venda-itens-tabela">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Preço Unit.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+            <p class="modal-total">Total da Venda: <span id="modal-venda-total">R$ 0,00</span></p>
+        </div>
     </div>
 
     <script>
@@ -556,9 +932,19 @@
         const desktopPageTitle = document.getElementById('desktop-page-title');
 
         // --- ESTADO DA APLICAÇÃO ---
-        let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
+        let clientes = [], produtos = [], vendas = [], contasAReceber = [], contasAPagar = [], fluxoCaixa = [];
         let carrinhoVenda = [];
         let paymentChartInstance = null;
+
+        // Paginação
+        const itemsPerPage = 10;
+        let currentPage = {
+            caixa: 1,
+            clientes: 1,
+            produtos: 1,
+            contasReceber: 1,
+            contasPagar: 1
+        };
 
         // --- FUNÇÕES DE DADOS E UTILITÁRIAS ---
         const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
@@ -566,7 +952,8 @@
         const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         const formatDate = (dateString) => {
             if (!dateString) return 'N/A';
-            const date = new Date(dateString + 'T00:00:00'); // Ensure UTC to avoid timezone issues
+            // Ensure date is treated consistently (e.g., as UTC or start of day in local timezone)
+            const date = new Date(dateString + 'T00:00:00'); 
             return date.toLocaleDateString('pt-BR');
         };
         
@@ -584,18 +971,106 @@
             setTimeout(() => { notification.style.opacity = '0'; notification.style.transform = 'translateY(10px)'; setTimeout(() => notification.remove(), 500); }, 3500);
         };
 
-        // --- FUNÇÕES DE RENDERIZAÇÃO ---
-        const renderTable = (containerId, headers, data, renderRow) => {
+        // --- FUNÇÕES DE RENDERIZAÇÃO DE TABELAS COM PAGINAÇÃO E FILTROS ---
+        const renderTable = (containerId, headers, data, renderRow, page = 1, searchQuery = '', filterValue = '') => {
             const container = document.getElementById(containerId);
             if (!container) return;
+            
+            // Apply filters first
+            let filteredData = [...data]; // Create a shallow copy to avoid modifying original array
+            
+            // Common search for description/name
+            if (searchQuery) {
+                const searchLower = searchQuery.toLowerCase();
+                if (['tabela-caixa-container', 'tabela-contas-pagar-container'].includes(containerId)) {
+                    filteredData = filteredData.filter(item => item.descricao.toLowerCase().includes(searchLower));
+                } else if (containerId === 'tabela-clientes-container') {
+                    filteredData = filteredData.filter(item => 
+                        item.nome.toLowerCase().includes(searchLower) || 
+                        (item.contato && item.contato.toLowerCase().includes(searchLower))
+                    );
+                } else if (containerId === 'tabela-produtos-container') {
+                    filteredData = filteredData.filter(item => item.nome.toLowerCase().includes(searchLower));
+                } else if (containerId === 'tabela-contas-container') {
+                    filteredData = filteredData.filter(item => {
+                        const clienteNome = clientes.find(c => c.id === item.clienteId)?.nome || 'Cliente avulso';
+                        return clienteNome.toLowerCase().includes(searchLower);
+                    });
+                }
+            }
+
+            // Specific filters
+            if (containerId === 'tabela-caixa-container' && filterValue) {
+                filteredData = filteredData.filter(item => item.tipo === filterValue);
+            } else if (containerId === 'tabela-clientes-container' && filterValue) {
+                // No specific filter for clientes beyond search
+            } else if (containerId === 'tabela-produtos-container' && filterValue) {
+                if (filterValue === 'low') {
+                    filteredData = filteredData.filter(item => item.quantidade > 0 && item.quantidade < 10);
+                } else if (filterValue === 'empty') {
+                    filteredData = filteredData.filter(item => item.quantidade === 0);
+                }
+            } else if (['tabela-contas-container', 'tabela-contas-pagar-container'].includes(containerId) && filterValue) {
+                filteredData = filteredData.filter(item => item.status === filterValue);
+            }
+
+            // Pagination logic
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedData = filteredData.slice(start, end);
+
             container.innerHTML = ''; // Clear previous content
-            if (data.length === 0) {
+            if (paginatedData.length === 0) {
                 container.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhum registro encontrado.</p>';
             } else {
                 const table = document.createElement('table');
-                table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${data.map(renderRow).join('')}</tbody>`;
+                table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${paginatedData.map(renderRow).join('')}</tbody>`;
                 container.appendChild(table);
             }
+            
+            renderPagination(containerId.replace('tabela-', 'pagination-'), totalPages, page, searchQuery, filterValue);
+        };
+
+        const renderPagination = (paginationContainerId, totalPages, currentPage, searchQuery, filterValue) => {
+            const paginationContainer = document.getElementById(paginationContainerId);
+            if (!paginationContainer) return;
+
+            paginationContainer.innerHTML = ''; // Clear previous content
+
+            if (totalPages <= 1) {
+                return; // No pagination needed for 1 or less pages
+            }
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Anterior';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                goToPage(paginationContainerId.replace('pagination-', ''), currentPage - 1, searchQuery, filterValue);
+            });
+            paginationContainer.appendChild(prevButton);
+
+            const pageInfo = document.createElement('span');
+            pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+            paginationContainer.appendChild(pageInfo);
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Próxima';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                goToPage(paginationContainerId.replace('pagination-', ''), currentPage + 1, searchQuery, filterValue);
+            });
+            paginationContainer.appendChild(nextButton);
+        };
+
+        const goToPage = (sectionId, pageNumber, searchQuery = '', filterValue = '') => {
+            currentPage[sectionId] = pageNumber;
+            // Re-render the specific section
+            if (sectionId === 'caixa') renderFluxoCaixa(searchQuery, filterValue);
+            else if (sectionId === 'clientes') renderClientes(searchQuery);
+            else if (sectionId === 'produtos') renderProdutos(searchQuery, filterValue);
+            else if (sectionId === 'contas-receber') renderContasAReceber(searchQuery, filterValue);
+            else if (sectionId === 'contas-pagar') renderContasAPagar(searchQuery, filterValue);
         };
 
         const navigateToPage = (pageId) => {
@@ -624,6 +1099,7 @@
             if (pageId === 'clientes-view') renderClientes();
             if (pageId === 'estoque-view') { renderProdutos(); populateUpdateStockProductSelect(); }
             if (pageId === 'contas-a-receber-view') renderContasAReceber();
+            if (pageId === 'contas-a-pagar-view') renderContasAPagar();
             if (pageId === 'relatorios-view') document.getElementById('relatorio-container').classList.add('hidden'); // Hide report results on page load
         };
         
@@ -633,6 +1109,8 @@
 
             saldoCaixaEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
             document.getElementById('total-a-receber-dashboard').textContent = formatCurrency(contasAReceber.filter(c => c.status === 'Pendente').reduce((acc, c) => acc + c.valor, 0));
+            document.getElementById('total-a-pagar-dashboard').textContent = formatCurrency(contasAPagar.filter(c => c.status === 'Pendente').reduce((acc, c) => acc + c.valor, 0));
+
 
             const salesSummary = vendas.reduce((acc, venda) => {
                 acc[venda.metodoPagamento] = (acc[venda.metodoPagamento] || 0) + venda.total;
@@ -688,11 +1166,13 @@
             });
         };
 
-        const renderFluxoCaixa = () => {
+        const renderFluxoCaixa = (searchQuery = '', filterValue = '') => {
             const saldoEl = document.getElementById('saldo-caixa-detalhe');
             if (!saldoEl) return;
             saldoEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
-            renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], fluxoCaixa.sort((a,b) => new Date(b.data) - new Date(a.data)), item => `
+            
+            const sortedData = fluxoCaixa.sort((a,b) => new Date(b.data) - new Date(a.data));
+            renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], sortedData, item => `
                 <tr>
                     <td>${formatDate(item.data)}</td>
                     <td>${item.descricao}</td>
@@ -702,12 +1182,13 @@
                         <button class="btn-action btn-edit" data-id="${item.id}" data-type="lancamento">Editar</button>
                         <button class="btn-action btn-delete" data-id="${item.id}" data-type="lancamento">Excluir</button>
                     </td>
-                </tr>`);
+                </tr>`, currentPage.caixa, searchQuery, filterValue);
                 resetForm('form-add-lancamento', 'lancamento');
         };
 
-        const renderClientes = () => {
-            renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], clientes, c => `
+        const renderClientes = (searchQuery = '') => {
+            const sortedData = clientes.sort((a,b) => a.nome.localeCompare(b.nome));
+            renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], sortedData, c => `
                 <tr>
                     <td>${c.nome}</td>
                     <td>${c.contato || 'N/A'}</td>
@@ -715,12 +1196,13 @@
                         <button class="btn-action btn-edit" data-id="${c.id}" data-type="cliente">Editar</button>
                         <button class="btn-action btn-delete" data-id="${c.id}" data-type="cliente">Excluir</button>
                     </td>
-                </tr>`);
+                </tr>`, currentPage.clientes, searchQuery);
             resetForm('form-add-cliente', 'cliente');
         }
 
-        const renderProdutos = () => {
-            renderTable('tabela-produtos-container', ['Produto', 'Qtd. em Estoque', 'Preço', 'Ações'], produtos, p => `
+        const renderProdutos = (searchQuery = '', filterValue = '') => {
+            const sortedData = produtos.sort((a,b) => a.nome.localeCompare(b.nome));
+            renderTable('tabela-produtos-container', ['Produto', 'Qtd. em Estoque', 'Preço', 'Ações'], sortedData, p => `
                 <tr>
                     <td>${p.nome}</td>
                     <td>${p.quantidade}</td>
@@ -729,20 +1211,41 @@
                         <button class="btn-action btn-edit" data-id="${p.id}" data-type="produto">Editar</button>
                         <button class="btn-action btn-delete" data-id="${p.id}" data-type="produto">Excluir</button>
                     </td>
-                </tr>`);
+                </tr>`, currentPage.produtos, searchQuery, filterValue);
             resetForm('form-add-produto', 'produto');
         };
 
-        const renderContasAReceber = () => {
+        const renderContasAReceber = (searchQuery = '', filterValue = '') => {
             const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Cliente avulso';
-            renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ação'], contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), conta => `
+            const sortedData = contasAReceber.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento));
+            renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ação'], sortedData, conta => `
                 <tr>
                     <td>${getNomeCliente(conta.clienteId)}</td>
                     <td>${formatCurrency(conta.valor)}</td>
                     <td>${formatDate(conta.dataVencimento)}</td>
                     <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
-                    <td>${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Recebido'}</td>
-                </tr>`);
+                    <td>
+                        ${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}">Dar Baixa</button>` : 'Recebido'}
+                        <button class="btn-action btn-info" data-id="${conta.vendaId}" data-type="venda-detalhes">Ver Venda</button>
+                    </td>
+                </tr>`, currentPage.contasReceber, searchQuery, filterValue);
+        };
+
+        const renderContasAPagar = (searchQuery = '', filterValue = '') => {
+            const sortedData = contasAPagar.sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento));
+            renderTable('tabela-contas-pagar-container', ['Descrição', 'Valor', 'Vencimento', 'Status', 'Ação'], sortedData, conta => `
+                <tr>
+                    <td>${conta.descricao}</td>
+                    <td>${formatCurrency(conta.valor)}</td>
+                    <td>${formatDate(conta.dataVencimento)}</td>
+                    <td><span class="status-${conta.status.toLowerCase()}">${conta.status}</span></td>
+                    <td>
+                        ${conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-id="${conta.id}" data-type="conta-pagar">Dar Baixa</button>` : 'Pago'}
+                        <button class="btn-action btn-edit" data-id="${conta.id}" data-type="conta-pagar">Editar</button>
+                        <button class="btn-action btn-delete" data-id="${conta.id}" data-type="conta-pagar">Excluir</button>
+                    </td>
+                </tr>`, currentPage.contasPagar, searchQuery, filterValue);
+                resetForm('form-add-conta-pagar', 'conta-pagar');
         };
 
         const popularFormulariosVenda = () => {
@@ -772,7 +1275,7 @@
                     <td>${item.nome}</td>
                     <td>${item.quantidade}</td>
                     <td>${formatCurrency(item.subtotal)}</td>
-                    <td><button class="btn-action btn-delete" data-id="${item.produtoId}">Remover</button></td>
+                    <td><button class="btn-action btn-delete" data-id="${item.produtoId}" data-type="carrinho">Remover</button></td>
                 </tr>`);
             totalEl.textContent = formatCurrency(carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0));
         };
@@ -799,9 +1302,9 @@
 
             if (itemExistente) {
                 itemExistente.quantidade += quantidade;
-                itemExistente.subtotal = itemExistente.quantidade * produto.preco;
+                itemExistente.subtotal = parseFloat((itemExistente.quantidade * produto.preco).toFixed(2));
             } else {
-                carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: quantidade * produto.preco });
+                carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: parseFloat((quantidade * produto.preco).toFixed(2)) });
             }
             renderCarrinho();
             showNotification('Item adicionado ao carrinho.');
@@ -812,7 +1315,7 @@
             const clienteId = document.getElementById('venda-cliente').value;
             if (!clienteId || carrinhoVenda.length === 0) { showNotification('Selecione um cliente e adicione itens!', true); return; }
             
-            const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
+            const total = parseFloat(carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0).toFixed(2));
             const metodoPagamento = document.getElementById('venda-pagamento').value;
             
             const novaVenda = { 
@@ -833,10 +1336,10 @@
             
             if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
                 const clienteNome = clientes.find(c => c.id === novaVenda.clienteId)?.nome || 'Avulso';
-                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Venda (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total });
+                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Venda (${metodoPagamento}) para ${clienteNome} (Venda #${novaVenda.id})`, valor: novaVenda.total });
             } else if (metodoPagamento === 'fiado' || metodoPagamento === 'parcelado') {
                 const parcelas = metodoPagamento === 'fiado' ? 1 : parseInt(document.getElementById('venda-parcelas').value);
-                const valorParcela = total / parcelas;
+                const valorParcela = parseFloat((total / parcelas).toFixed(2));
                 for (let i = 1; i <= parcelas; i++) {
                     const dataVencimento = new Date();
                     dataVencimento.setMonth(dataVencimento.getMonth() + i);
@@ -863,6 +1366,7 @@
             renderCarrinho();
             popularFormulariosVenda();
             populateUpdateStockProductSelect(); // Update stock view after sale
+            renderDashboardSummaries(); // Update dashboard after sale
         };
 
         // --- CRUD HELPER FUNCTIONS ---
@@ -882,10 +1386,19 @@
                 idField = document.getElementById('lancamento-id');
                 submitBtn = document.getElementById('btn-salvar-lancamento');
                 cancelBtn = document.getElementById('btn-cancelar-lancamento');
+            } else if (type === 'conta-pagar') {
+                idField = document.getElementById('conta-pagar-id');
+                submitBtn = document.getElementById('btn-salvar-conta-pagar');
+                cancelBtn = document.getElementById('btn-cancelar-conta-pagar');
             }
 
             if (idField) idField.value = '';
-            if (submitBtn) submitBtn.textContent = (type === 'cliente' ? 'Salvar Cliente' : type === 'produto' ? 'Adicionar/Atualizar Produto' : 'Lançar');
+            if (submitBtn) {
+                 if (type === 'cliente') submitBtn.textContent = 'Salvar Cliente';
+                 else if (type === 'produto') submitBtn.textContent = 'Adicionar/Atualizar Produto';
+                 else if (type === 'lancamento') submitBtn.textContent = 'Lançar';
+                 else if (type === 'conta-pagar') submitBtn.textContent = 'Registrar';
+            }
             if (cancelBtn) cancelBtn.style.display = 'none';
         };
 
@@ -895,11 +1408,13 @@
 
             let dataArray;
             let saveDataKey;
+            let renderFunction;
 
             switch (type) {
                 case 'cliente':
                     dataArray = clientes;
                     saveDataKey = 'clientes';
+                    renderFunction = renderClientes;
                     if (vendas.some(v => v.clienteId === id) || contasAReceber.some(c => c.clienteId === id)) {
                         showNotification('Não é possível excluir cliente com vendas ou contas associadas.', true);
                         return;
@@ -908,6 +1423,7 @@
                 case 'produto':
                     dataArray = produtos;
                     saveDataKey = 'produtos';
+                    renderFunction = renderProdutos;
                     if (vendas.some(v => v.itens.some(item => item.produtoId === id))) {
                         showNotification('Não é possível excluir produto já presente em vendas.', true);
                         return;
@@ -916,6 +1432,12 @@
                 case 'lancamento':
                     dataArray = fluxoCaixa;
                     saveDataKey = 'fluxoCaixa';
+                    renderFunction = renderFluxoCaixa;
+                    break;
+                case 'conta-pagar':
+                    dataArray = contasAPagar;
+                    saveDataKey = 'contasAPagar';
+                    renderFunction = renderContasAPagar;
                     break;
                 default:
                     showNotification('Tipo de item desconhecido para exclusão.', true);
@@ -923,17 +1445,19 @@
             }
 
             const initialLength = dataArray.length;
+            // Generalize filtering based on the array and ID
             if (type === 'cliente') clientes = clientes.filter(item => item.id !== id);
             else if (type === 'produto') produtos = produtos.filter(item => item.id !== id);
             else if (type === 'lancamento') fluxoCaixa = fluxoCaixa.filter(item => item.id !== id);
+            else if (type === 'conta-pagar') contasAPagar = contasAPagar.filter(item => item.id !== id);
             
-            if (dataArray.length < initialLength) { // Check if an item was actually removed
-                saveData(saveDataKey, type === 'cliente' ? clientes : type === 'produto' ? produtos : fluxoCaixa);
+            if (dataArray.length > (type === 'cliente' ? clientes.length : type === 'produto' ? produtos.length : type === 'lancamento' ? fluxoCaixa.length : contasAPagar.length) ) { // Check if an item was actually removed
+                saveData(saveDataKey, type === 'cliente' ? clientes : type === 'produto' ? produtos : type === 'lancamento' ? fluxoCaixa : contasAPagar);
                 showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a) com sucesso!`);
-                // Re-render relevant tables after deletion
-                if (type === 'cliente') renderClientes();
-                if (type === 'produto') { renderProdutos(); popularFormulariosVenda(); populateUpdateStockProductSelect(); }
-                if (type === 'lancamento') renderFluxoCaixa();
+                renderFunction();
+                // Special updates for product/client related changes
+                if (type === 'produto') { popularFormulariosVenda(); populateUpdateStockProductSelect(); }
+                if (type === 'cliente') { popularFormulariosVenda(); }
                 renderDashboardSummaries(); // Refresh dashboard on relevant changes
             } else {
                 showNotification(`Não foi possível encontrar o ${type} para exclusão.`, true);
@@ -942,11 +1466,10 @@
 
         const editItem = (id, type) => {
             let itemToEdit;
-            let formId, idField, submitBtn, cancelBtn;
+            let idField, submitBtn, cancelBtn;
 
             if (type === 'cliente') {
                 itemToEdit = clientes.find(c => c.id === id);
-                formId = 'form-add-cliente';
                 idField = document.getElementById('cliente-id');
                 submitBtn = document.getElementById('btn-salvar-cliente');
                 cancelBtn = document.getElementById('btn-cancelar-cliente');
@@ -960,7 +1483,6 @@
                 }
             } else if (type === 'produto') {
                 itemToEdit = produtos.find(p => p.id === id);
-                formId = 'form-add-produto';
                 idField = document.getElementById('produto-id');
                 submitBtn = document.getElementById('btn-salvar-produto');
                 cancelBtn = document.getElementById('btn-cancelar-produto');
@@ -975,7 +1497,6 @@
                 }
             } else if (type === 'lancamento') {
                 itemToEdit = fluxoCaixa.find(l => l.id === id);
-                formId = 'form-add-lancamento';
                 idField = document.getElementById('lancamento-id');
                 submitBtn = document.getElementById('btn-salvar-lancamento');
                 cancelBtn = document.getElementById('btn-cancelar-lancamento');
@@ -988,9 +1509,20 @@
                     cancelBtn.style.display = 'inline-block';
                     showNotification('Formulário preenchido para edição de lançamento.');
                 }
-            } else {
-                showNotification('Tipo de item desconhecido para edição.', true);
-                return;
+            } else if (type === 'conta-pagar') {
+                itemToEdit = contasAPagar.find(l => l.id === id);
+                idField = document.getElementById('conta-pagar-id');
+                submitBtn = document.getElementById('btn-salvar-conta-pagar');
+                cancelBtn = document.getElementById('btn-cancelar-conta-pagar');
+                if (itemToEdit) {
+                    idField.value = itemToEdit.id;
+                    document.getElementById('desc-conta-pagar').value = itemToEdit.descricao;
+                    document.getElementById('valor-conta-pagar').value = itemToEdit.valor;
+                    document.getElementById('vencimento-conta-pagar').value = itemToEdit.dataVencimento;
+                    submitBtn.textContent = 'Atualizar Conta a Pagar';
+                    cancelBtn.style.display = 'inline-block';
+                    showNotification('Formulário preenchido para edição de conta a pagar.');
+                }
             }
             if (!itemToEdit) {
                 showNotification(`Não foi possível encontrar o ${type} para edição.`, true);
@@ -1026,11 +1558,13 @@
             let totalSalesAmount = 0;
             let totalItemsSold = 0;
             const salesByPaymentMethod = {};
+            const productsSoldQuantities = {};
 
             filteredSales.forEach(sale => {
                 totalSalesAmount += sale.total;
                 sale.itens.forEach(item => {
                     totalItemsSold += item.quantidade;
+                    productsSoldQuantities[item.nome] = (productsSoldQuantities[item.nome] || 0) + item.quantidade;
                 });
                 salesByPaymentMethod[sale.metodoPagamento] = (salesByPaymentMethod[sale.metodoPagamento] || 0) + sale.total;
             });
@@ -1054,8 +1588,64 @@
                 listItem.textContent = `${methodName}: ${formatCurrency(salesByPaymentMethod[method])}`;
                 paymentMethodList.appendChild(listItem);
             }
+
+            const productsSoldList = document.getElementById('relatorio-produtos-mais-vendidos');
+            productsSoldList.innerHTML = '';
+            const sortedProducts = Object.entries(productsSoldQuantities).sort(([, a], [, b]) => b - a);
+            if (sortedProducts.length === 0) {
+                productsSoldList.innerHTML = '<li>Nenhum produto vendido neste período.</li>';
+            } else {
+                sortedProducts.forEach(([productName, quantity]) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${productName}: ${quantity} unidades`;
+                    productsSoldList.appendChild(listItem);
+                });
+            }
+
             reportContainer.classList.remove('hidden');
             showNotification('Relatório gerado com sucesso!');
+        });
+
+        document.getElementById('btn-export-relatorio').addEventListener('click', () => {
+            const startDateStr = document.getElementById('relatorio-inicio').value;
+            const endDateStr = document.getElementById('relatorio-fim').value;
+            
+            if (!startDateStr || !endDateStr) {
+                showNotification('Defina o período do relatório antes de exportar.', true);
+                return;
+            }
+
+            const startDate = new Date(startDateStr + 'T00:00:00');
+            const endDate = new Date(endDateStr + 'T23:59:59');
+
+            const filteredSales = vendas.filter(sale => {
+                const saleDate = new Date(sale.data + 'T00:00:00');
+                return saleDate >= startDate && saleDate <= endDate;
+            });
+
+            if (filteredSales.length === 0) {
+                showNotification('Nenhum dado para exportar neste período.', true);
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID Venda,Cliente,Data,Total,Metodo Pagamento,Produto,Quantidade,Preco Unitario,Subtotal\n";
+
+            filteredSales.forEach(sale => {
+                const clientName = clientes.find(c => c.id === sale.clienteId)?.nome || 'Avulso';
+                sale.itens.forEach(item => {
+                    csvContent += `${sale.id},"${clientName}",${formatDate(sale.data)},${sale.total.toFixed(2)},${sale.metodoPagamento},"${item.nome}",${item.quantidade},${item.precoUnitario.toFixed(2)},${item.subtotal.toFixed(2)}\n`;
+                });
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `relatorio_vendas_${startDateStr}_${endDateStr}.csv`);
+            document.body.appendChild(link); // Required for Firefox
+            link.click();
+            document.body.removeChild(link);
+            showNotification('Relatório CSV exportado com sucesso!');
         });
 
         // --- BACKUP/RESTORE FUNCTIONS ---
@@ -1065,8 +1655,10 @@
                 produtos: produtos,
                 vendas: vendas,
                 contasAReceber: contasAReceber,
+                contasAPagar: contasAPagar, // Include Contas a Pagar
                 fluxoCaixa: fluxoCaixa,
-                // Removed theme as it's no longer a user setting
+                // Store theme setting
+                theme: document.body.classList.contains('dark-theme') ? 'dark' : 'light'
             };
             const jsonString = JSON.stringify(data, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
@@ -1088,7 +1680,7 @@
                 return;
             }
 
-            if (!confirm('Tem certeza que deseja restaurar o backup? Isso substituirá todos os dados atuais do sistema!')) {
+            if (!confirm('Tem certeza que deseja restaurar o backup? Isso substituirá TODOS os dados atuais do sistema!')) {
                 return;
             }
 
@@ -1105,13 +1697,21 @@
                     produtos = restoredData.produtos || [];
                     vendas = restoredData.vendas || [];
                     contasAReceber = restoredData.contasAReceber || [];
+                    contasAPagar = restoredData.contasAPagar || []; // Restore Contas a Pagar
                     fluxoCaixa = restoredData.fluxoCaixa || [];
                     
                     saveData('clientes', clientes);
                     saveData('produtos', produtos);
                     saveData('vendas', vendas);
                     saveData('contasAReceber', contasAReceber);
+                    saveData('contasAPagar', contasAPagar);
                     saveData('fluxoCaixa', fluxoCaixa);
+
+                    // Restore theme preference
+                    const restoredTheme = restoredData.theme || 'light';
+                    localStorage.setItem('theme', restoredTheme);
+                    applyTheme(restoredTheme);
+                    document.getElementById('theme-toggle-switch').checked = (restoredTheme === 'dark');
 
                     showNotification('Backup restaurado com sucesso! Recarregando o sistema...');
                     setTimeout(() => {
@@ -1127,6 +1727,67 @@
             reader.readAsText(file);
         };
 
+        // --- THEME TOGGLE ---
+        const applyTheme = (theme) => {
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        };
+
+        // --- MODAL DETALHES DA VENDA ---
+        const vendaDetalhesModal = document.getElementById('venda-detalhes-modal');
+        const closeModalButton = vendaDetalhesModal.querySelector('.close-button');
+
+        closeModalButton.addEventListener('click', () => {
+            vendaDetalhesModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == vendaDetalhesModal) {
+                vendaDetalhesModal.style.display = 'none';
+            }
+        });
+
+        const showVendaDetalhesModal = (vendaId) => {
+            const venda = vendas.find(v => v.id === vendaId);
+            if (!venda) {
+                showNotification('Venda não encontrada.', true);
+                return;
+            }
+
+            document.getElementById('modal-venda-id').textContent = venda.id;
+            document.getElementById('modal-venda-cliente').textContent = clientes.find(c => c.id === venda.clienteId)?.nome || 'Cliente avulso';
+            document.getElementById('modal-venda-data').textContent = formatDate(venda.data);
+            
+            let metodoNome = '';
+            switch(venda.metodoPagamento) {
+                case 'vista': metodoNome = 'À Vista'; break;
+                case 'pix': metodoNome = 'Pix'; break;
+                case 'fiado': metodoNome = 'Fiado'; break;
+                case 'parcelado': metodoNome = `Parcelado (${contasAReceber.filter(c => c.vendaId === venda.id).length}x)`; break;
+                default: metodoNome = venda.metodoPagamento;
+            }
+            document.getElementById('modal-venda-metodo-pagamento').textContent = metodoNome;
+            document.getElementById('modal-venda-total').textContent = formatCurrency(venda.total);
+
+            const itensTableBody = vendaDetalhesModal.querySelector('#modal-venda-itens-tabela tbody');
+            itensTableBody.innerHTML = ''; // Clear previous items
+
+            if (venda.itens && venda.itens.length > 0) {
+                venda.itens.forEach(item => {
+                    const row = itensTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${item.nome}</td>
+                        <td>${item.quantidade}</td>
+                        <td>${formatCurrency(item.precoUnitario)}</td>
+                        <td>${formatCurrency(item.subtotal)}</td>
+                    `;
+                });
+            } else {
+                itensTableBody.innerHTML = '<tr><td colspan="4" class="text-center" style="color:var(--text-secondary);">Nenhum item registrado para esta venda.</td></tr>';
+            }
+
+            vendaDetalhesModal.style.display = 'flex'; // Show the modal
+        };
+
 
         // --- INICIALIZAÇÃO ---
         const init = () => {
@@ -1134,12 +1795,18 @@
             produtos = loadData('produtos');
             vendas = loadData('vendas');
             contasAReceber = loadData('contasAReceber');
+            contasAPagar = loadData('contasAPagar');
             fluxoCaixa = loadData('fluxoCaixa');
             
             // Set initial value for a/c parcelas to 2x if it doesn't exist
-            if (!document.getElementById('venda-parcelas').value) {
+            if (document.getElementById('venda-parcelas') && !document.getElementById('venda-parcelas').value) {
                 document.getElementById('venda-parcelas').value = '2';
             }
+
+            // Apply saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+            document.getElementById('theme-toggle-switch').checked = (savedTheme === 'dark');
 
             const lastPageId = localStorage.getItem('lastActivePage');
             navigateToPage(lastPageId); // Render initial page
@@ -1170,7 +1837,8 @@
         logoutBtn.addEventListener('click', () => {
             if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
             localStorage.clear(); // Clear all local storage
-            clientes = []; produtos = []; vendas = []; contasAReceber = []; fluxoCaixa = []; carrinhoVenda = []; // Reset data arrays
+            clientes = []; produtos = []; vendas = []; contasAReceber = []; contasAPagar = []; fluxoCaixa = []; carrinhoVenda = []; // Reset data arrays
+            document.body.classList.remove('dark-theme'); // Reset theme
             dashboardScreen.classList.add('hidden');
             loginScreen.classList.remove('hidden');
             document.getElementById('username').value = ''; // Clear login fields
@@ -1224,6 +1892,8 @@
             }
         });
 
+        document.getElementById('search-clientes').addEventListener('input', (e) => goToPage('clientes', 1, e.target.value));
+
         // PRODUTOS CRUD EVENTS
         document.getElementById('form-add-produto').addEventListener('submit', e => { 
             e.preventDefault(); 
@@ -1264,6 +1934,10 @@
             }
         });
 
+        document.getElementById('search-produtos').addEventListener('input', (e) => goToPage('produtos', 1, e.target.value, document.getElementById('filter-estoque-qtd').value));
+        document.getElementById('filter-estoque-qtd').addEventListener('change', (e) => goToPage('produtos', 1, document.getElementById('search-produtos').value, e.target.value));
+
+
         // UPDATE STOCK EVENTS
         document.getElementById('form-update-stock').addEventListener('submit', e => {
             e.preventDefault();
@@ -1296,9 +1970,8 @@
 
             saveData('produtos', produtos);
             renderProdutos();
-            populateUpdateStockProductSelect(); // Re-populate to show updated quantities
-            e.target.reset();
-            document.getElementById('update-stock-quantity').value = 1;
+            popularFormulariosVenda(); // Re-populate to show updated quantities in sales
+            populateUpdateStockProductSelect(); // Re-populate to show updated quantities in stock update
         });
 
         // FLUXO DE CAIXA CRUD EVENTS
@@ -1342,10 +2015,13 @@
             }
         });
 
+        document.getElementById('search-caixa').addEventListener('input', (e) => goToPage('caixa', 1, e.target.value, document.getElementById('filter-caixa-tipo').value));
+        document.getElementById('filter-caixa-tipo').addEventListener('change', (e) => goToPage('caixa', 1, document.getElementById('search-caixa').value, e.target.value));
+
         // VENDAS EVENTS
         document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
         document.getElementById('venda-itens-container').addEventListener('click', e => { 
-            if(e.target.classList.contains('btn-delete')) { 
+            if(e.target.classList.contains('btn-delete') && e.target.getAttribute('data-type') === 'carrinho') { 
                 const id = parseInt(e.target.getAttribute('data-id')); 
                 carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== id); 
                 renderCarrinho(); 
@@ -1359,14 +2035,17 @@
         
         // CONTAS A RECEBER EVENTS
         document.getElementById('tabela-contas-container').addEventListener('click', e => {
-            if(e.target.classList.contains('btn-paid')) {
-                const id = parseInt(e.target.getAttribute('data-id'));
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+
+            if(target.classList.contains('btn-paid')) {
                 const conta = contasAReceber.find(c => c.id === id);
                 if(conta && conta.status === 'Pendente') {
                     if (!confirm(`Confirmar o recebimento de ${formatCurrency(conta.valor)} da conta nº ${id}?`)) return;
                     conta.status = 'Pago';
                     const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
-                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Conta #${conta.vendaId})`, valor: conta.valor });
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Entrada', descricao: `Recebimento de ${clienteNome} (Venda #${conta.vendaId})`, valor: conta.valor });
                     saveData('contasAReceber', contasAReceber);
                     saveData('fluxoCaixa', fluxoCaixa);
                     renderContasAReceber();
@@ -1375,8 +2054,72 @@
                 } else {
                     showNotification('Esta conta já foi paga.', true);
                 }
+            } else if (target.classList.contains('btn-info') && type === 'venda-detalhes') {
+                showVendaDetalhesModal(id);
             }
         });
+        document.getElementById('search-contas-receber').addEventListener('input', (e) => goToPage('contas-receber', 1, e.target.value, document.getElementById('filter-contas-receber-status').value));
+        document.getElementById('filter-contas-receber-status').addEventListener('change', (e) => goToPage('contas-receber', 1, document.getElementById('search-contas-receber').value, e.target.value));
+
+
+        // CONTAS A PAGAR CRUD EVENTS
+        document.getElementById('form-add-conta-pagar').addEventListener('submit', e => {
+            e.preventDefault();
+            const id = document.getElementById('conta-pagar-id').value;
+            const descricao = document.getElementById('desc-conta-pagar').value;
+            const valor = parseFloat(document.getElementById('valor-conta-pagar').value);
+            const dataVencimento = document.getElementById('vencimento-conta-pagar').value;
+
+            if (!descricao || isNaN(valor) || valor <= 0 || !dataVencimento) {
+                showNotification('Preencha todos os campos corretamente (valor deve ser positivo)!', true);
+                return;
+            }
+
+            if (id) {
+                const index = contasAPagar.findIndex(c => c.id == id);
+                if (index !== -1) {
+                    contasAPagar[index] = { ...contasAPagar[index], descricao, valor, dataVencimento };
+                    showNotification('Conta a Pagar atualizada!');
+                }
+            } else {
+                contasAPagar.push({ id: Date.now(), descricao, valor, dataVencimento, status: 'Pendente' });
+                showNotification('Conta a Pagar registrada!');
+            }
+            saveData('contasAPagar', contasAPagar);
+            renderContasAPagar();
+            renderDashboardSummaries();
+        });
+
+        document.getElementById('btn-cancelar-conta-pagar').addEventListener('click', () => resetForm('form-add-conta-pagar', 'conta-pagar'));
+
+        document.getElementById('tabela-contas-pagar-container').addEventListener('click', e => {
+            const target = e.target;
+            const id = parseInt(target.getAttribute('data-id'));
+            const type = target.getAttribute('data-type');
+
+            if (target.classList.contains('btn-paid') && type === 'conta-pagar') {
+                const conta = contasAPagar.find(c => c.id === id);
+                if (conta && conta.status === 'Pendente') {
+                    if (!confirm(`Confirmar o pagamento de ${formatCurrency(conta.valor)} da conta: ${conta.descricao}?`)) return;
+                    conta.status = 'Pago';
+                    fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString().split('T')[0], tipo: 'Saída', descricao: `Pagamento: ${conta.descricao} (Conta Pagar #${conta.id})`, valor: conta.valor });
+                    saveData('contasAPagar', contasAPagar);
+                    saveData('fluxoCaixa', fluxoCaixa);
+                    renderContasAPagar();
+                    renderDashboardSummaries();
+                    showNotification('Pagamento realizado e valor lançado no caixa!');
+                } else {
+                    showNotification('Esta conta já foi paga.', true);
+                }
+            } else if (target.classList.contains('btn-edit') && type === 'conta-pagar') {
+                editItem(id, type);
+            } else if (target.classList.contains('btn-delete') && type === 'conta-pagar') {
+                deleteItem(id, type);
+            }
+        });
+        document.getElementById('search-contas-pagar').addEventListener('input', (e) => goToPage('contas-pagar', 1, e.target.value, document.getElementById('filter-contas-pagar-status').value));
+        document.getElementById('filter-contas-pagar-status').addEventListener('change', (e) => goToPage('contas-pagar', 1, document.getElementById('search-contas-pagar').value, e.target.value));
+
 
         // BACKUP/RESTORE BUTTONS
         document.getElementById('btn-backup-data').addEventListener('click', backupData);
@@ -1385,6 +2128,16 @@
         });
         document.getElementById('backup-file-input').addEventListener('change', restoreData);
         
+        // THEME TOGGLE EVENT
+        document.getElementById('theme-toggle-switch').addEventListener('change', (e) => {
+            const theme = e.target.checked ? 'dark' : 'light';
+            applyTheme(theme);
+            localStorage.setItem('theme', theme);
+            // Re-render charts or other elements that might be affected by theme for consistency
+            renderDashboardSummaries();
+        });
+
+
         // Initial load check
         if (localStorage.getItem('isLoggedIn') === 'true') {
             dashboardScreen.classList.remove('hidden');
