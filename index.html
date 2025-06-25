@@ -15,26 +15,26 @@
     <style>
         /* --- TEMA NOVO: VERDE SERENO --- */
         :root {
-            --primary-color: #0D9488;      /* Teal 600 */
+            --primary-color: #0D9488;       /* Teal 600 */
             --primary-dark-color: #0F766E; /* Teal 700 */
             --primary-light-color: #F0FDFA;/* Teal 50 */
 
-            --text-primary: #334155;      /* Slate 700 */
-            --text-secondary: #64748B;    /* Slate 500 */
-            --text-light: #f8fafc;        /* Slate 50 */
+            --text-primary: #334155;       /* Slate 700 */
+            --text-secondary: #64748B;     /* Slate 500 */
+            --text-light: #f8fafc;         /* Slate 50 */
 
-            --bg-color: #F8FAFC;          /* Slate 50 */
+            --bg-color: #F8FAFC;           /* Slate 50 */
             --surface-color: #FFFFFF;
-            --border-color: #E2E8F0;      /* Slate 200 */
+            --border-color: #E2E8F0;       /* Slate 200 */
 
-            --success-color: #22C55E;      /* Green 500 */
-            --danger-color: #EF4444;       /* Red 500 */
-            --warning-color: #F59E0B;      /* Amber 500 */
-            --info-color: #3B82F6;         /* Blue 500 */
+            --success-color: #22C55E;       /* Green 500 */
+            --danger-color: #EF4444;        /* Red 500 */
+            --warning-color: #F59E0B;       /* Amber 500 */
+            --info-color: #3B82F6;          /* Blue 500 */
             --whatsapp-color: #25D366;
 
             --border-radius-sm: 0.375rem; /* 6px */
-            --border-radius-md: 0.5rem;   /* 8px */
+            --border-radius-md: 0.5rem;    /* 8px */
             --border-radius-lg: 0.75rem;  /* 12px */
         }
 
@@ -288,7 +288,7 @@
                 </div>
                 <div class="input-group">
                     <input type="password" id="password" placeholder="Senha" required>
-                     <i class="fas fa-lock input-icon"></i>
+                    <i class="fas fa-lock input-icon"></i>
                 </div>
                 <button type="submit" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i> Entrar
@@ -388,7 +388,7 @@
                 </div>
             </section>
 
-             <section id="estoque-view" class="content-section">
+            <section id="estoque-view" class="content-section">
                 <div id="edit-produto-container" class="edit-form-container shadow-md hidden">
                     <h3><i class="fas fa-edit mr-2"></i> Editar Produto</h3>
                     <form id="form-edit-produto">
@@ -831,7 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('isLoggedIn', 'true');
             loginScreen.classList.add('hidden');
             dashboardScreen.classList.remove('hidden');
-            init();
+            init(); // Inicializa o dashboard e carrega os dados
         } else {
             document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!';
         }
@@ -840,6 +840,7 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', () => {
         if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
         localStorage.removeItem('isLoggedIn');
+        // Ao deslogar, certifique-se de que a tela de login esteja visível e a dashboard oculta
         loginScreen.classList.remove('hidden');
         dashboardScreen.classList.add('hidden');
     });
@@ -911,11 +912,14 @@ document.addEventListener('DOMContentLoaded', () => {
     formEditProduto.addEventListener('submit', saveEditedProduct);
     editProdutoContainer.querySelector('.btn-cancel').addEventListener('click', cancelEditProduct);
 
+    // Lógica para decidir qual tela mostrar ao carregar a página
     if (localStorage.getItem('isLoggedIn') === 'true') {
+        loginScreen.classList.add('hidden');
         dashboardScreen.classList.remove('hidden');
-        init();
+        init(); // Se já estiver logado, inicializa o dashboard
     } else {
         loginScreen.classList.remove('hidden');
+        dashboardScreen.classList.add('hidden');
     }
 });
 </script>
