@@ -216,7 +216,7 @@
         }
         .btn-close-receipt:hover { color: var(--text-primary); }
 
-        /* --- NOVO: ESTILOS PARA ABAS DE RELATÓRIOS --- */
+        /* --- ESTILOS PARA ABAS DE RELATÓRIOS --- */
         .report-tabs {
             display: flex;
             gap: 0.5rem;
@@ -370,6 +370,10 @@
         }
 
         @media print {
+            body, html {
+                background: #fff;
+                color: #000;
+            }
             body > *:not(#printable-area),
             .receipt-actions,
             .btn-close-receipt,
@@ -399,6 +403,11 @@
             .valor-entrada, .valor-saida, .status-pendente, .status-pago {
                 color: inherit !important;
                 font-weight: normal !important;
+            }
+            .valor-entrada { color: #000 !important; }
+            .valor-saida { color: #000 !important; }
+            h1, h2, h3, h4, p, span, div {
+                color: #000 !important;
             }
             @page {
                 margin: 20mm;
@@ -462,7 +471,7 @@
             </header>
 
             <section id="dashboard-view" class="content-section">
-                <div class="dashboard-grid">
+                 <div class="dashboard-grid">
                     <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
                     <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
                 </div>
@@ -472,7 +481,7 @@
                 </div>
             </section>
 
-             <section id="caixa-view" class="content-section">
+            <section id="caixa-view" class="content-section">
                 <div class="card shadow-md"><h2>Saldo Atual: <span id="saldo-caixa-detalhe" style="color: var(--primary-color);">R$ 0,00</span></h2></div>
                 <div id="edit-lancamento-container" class="edit-form-container shadow-md hidden">
                     <h3><i class="fas fa-edit mr-2"></i> Editar Lançamento</h3>
@@ -596,7 +605,7 @@
             </section>
 
             <section id="relatorios-view" class="content-section">
-                <div class="report-tabs">
+                <div class="report-tabs no-print">
                     <button class="report-tab-btn active" data-tab="vendas-report-tab"><i class="fas fa-shopping-cart mr-2"></i>Vendas</button>
                     <button class="report-tab-btn" data-tab="contas-report-tab"><i class="fas fa-file-invoice-dollar mr-2"></i>Contas a Receber</button>
                     <button class="report-tab-btn" data-tab="produtos-report-tab"><i class="fas fa-star mr-2"></i>Produtos Mais Vendidos</button>
@@ -606,90 +615,100 @@
 
                 <div id="vendas-report-tab" class="report-tab-content active">
                     <div class="card shadow-md">
-                        <h2><i class="fas fa-file-alt mr-2"></i> Gerar Relatório de Vendas</h2>
-                        <form id="form-relatorio-vendas" class="report-form">
-                            <div class="form-group"><label for="relatorio-inicio-vendas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-vendas"></div>
-                            <div class="form-group"><label for="relatorio-fim-vendas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-vendas"></div>
-                            <button type="submit" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
-                        </form>
-                        <div class="no-print" style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <button id="btn-imprimir-relatorio-vendas" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
-                            <button id="btn-limpar-vendas" class="btn" style="background-color: var(--danger-color);"><i class="fas fa-trash-alt mr-2"></i> Excluir Todas as Vendas</button>
+                        <div class="no-print">
+                            <h2><i class="fas fa-file-alt mr-2"></i> Gerar Relatório de Vendas</h2>
+                            <form id="form-relatorio-vendas" class="report-form">
+                                <div class="form-group"><label for="relatorio-inicio-vendas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-vendas"></div>
+                                <div class="form-group"><label for="relatorio-fim-vendas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-vendas"></div>
+                                <button type="submit" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
+                            </form>
+                            <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <button id="btn-imprimir-relatorio-vendas" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                                <button id="btn-limpar-vendas" class="btn" style="background-color: var(--danger-color);"><i class="fas fa-trash-alt mr-2"></i> Excluir Todas as Vendas</button>
+                            </div>
                         </div>
+                        <div id="relatorio-vendas-container" class="mt-3"></div>
                     </div>
-                    <div id="relatorio-vendas-container" class="mt-3"></div>
                 </div>
 
                 <div id="contas-report-tab" class="report-tab-content">
                     <div class="card shadow-md">
-                        <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Gerar Relatório de Contas a Receber</h2>
-                        <form id="form-relatorio-contas" class="report-form">
-                            <div class="form-group"><label for="relatorio-status-contas"><i class="fas fa-info-circle mr-2"></i> Status</label>
-                                <select id="relatorio-status-contas">
-                                    <option value="Todos">Todos</option>
-                                    <option value="Pendente">Pendente</option>
-                                    <option value="Pago">Pago</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label for="relatorio-inicio-contas"><i class="fas fa-calendar-alt mr-2"></i> Vencimento De</label><input type="date" id="relatorio-inicio-contas"></div>
-                            <div class="form-group"><label for="relatorio-fim-contas"><i class="fas fa-calendar-alt mr-2"></i> Vencimento Até</label><input type="date" id="relatorio-fim-contas"></div>
-                            <button type="submit" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
-                        </form>
-                        <button id="btn-imprimir-relatorio-contas" class="btn mt-3 hidden no-print"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        <div class="no-print">
+                            <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Gerar Relatório de Contas a Receber</h2>
+                            <form id="form-relatorio-contas" class="report-form">
+                                <div class="form-group"><label for="relatorio-status-contas"><i class="fas fa-info-circle mr-2"></i> Status</label>
+                                    <select id="relatorio-status-contas">
+                                        <option value="Todos">Todos</option>
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Pago">Pago</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label for="relatorio-inicio-contas"><i class="fas fa-calendar-alt mr-2"></i> Vencimento De</label><input type="date" id="relatorio-inicio-contas"></div>
+                                <div class="form-group"><label for="relatorio-fim-contas"><i class="fas fa-calendar-alt mr-2"></i> Vencimento Até</label><input type="date" id="relatorio-fim-contas"></div>
+                                <button type="submit" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-contas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        </div>
+                        <div id="relatorio-contas-container" class="mt-3"></div>
                     </div>
-                    <div id="relatorio-contas-container" class="mt-3"></div>
                 </div>
                 
                 <div id="produtos-report-tab" class="report-tab-content">
                     <div class="card shadow-md">
-                         <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
-                         <form id="form-relatorio-produtos" class="report-form">
-                            <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
-                            <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
-                             <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
-                         </form>
-                         <button id="btn-imprimir-relatorio-produtos" class="btn mt-3 hidden no-print"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
-                     </div>
-                     <div id="relatorio-produtos-container" class="mt-3"></div>
+                         <div class="no-print">
+                            <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
+                            <form id="form-relatorio-produtos" class="report-form">
+                                <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
+                                <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
+                                <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-produtos" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                         </div>
+                         <div id="relatorio-produtos-container" class="mt-3"></div>
+                    </div>
                 </div>
                 
                  <div id="estoque-report-tab" class="report-tab-content">
                      <div class="card shadow-md">
-                         <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
-                         <form id="form-relatorio-estoque" class="report-form">
-                             <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                 <select id="relatorio_status_estoque">
-                                     <option value="todos">Todos</option>
-                                     <option value="disponivel">Disponível</option>
-                                     <option value="baixo">Estoque Baixo (<= 5)</option>
-                                     <option value="esgotado">Esgotado</option>
-                                 </select>
-                             </div>
-                             <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
-                         </form>
-                         <button id="btn-imprimir-relatorio-estoque" class="btn mt-3 hidden no-print"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        <div class="no-print">
+                            <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                            <form id="form-relatorio-estoque" class="report-form">
+                                <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                    <select id="relatorio_status_estoque">
+                                        <option value="todos">Todos</option>
+                                        <option value="disponivel">Disponível</option>
+                                        <option value="baixo">Estoque Baixo (<= 5)</option>
+                                        <option value="esgotado">Esgotado</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-estoque" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        </div>
+                        <div id="relatorio-estoque-container" class="mt-3"></div>
                      </div>
-                     <div id="relatorio-estoque-container" class="mt-3"></div>
                 </div>
 
                 <div id="caixa-report-tab" class="report-tab-content">
                     <div class="card shadow-md">
-                         <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
-                         <form id="form-relatorio-caixa" class="report-form">
-                             <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
-                             <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
-                             <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
-                                 <select id="relatorio_tipo_caixa">
-                                     <option value="todos">Todos</option>
-                                     <option value="Entrada">Entradas</option>
-                                     <option value="Saída">Saídas</option>
-                                 </select>
-                             </div>
-                             <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
-                         </form>
-                         <button id="btn-imprimir-relatorio-caixa" class="btn mt-3 hidden no-print"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
-                     </div>
-                     <div id="relatorio-caixa-container" class="mt-3"></div>
+                        <div class="no-print">
+                            <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
+                            <form id="form-relatorio-caixa" class="report-form">
+                                <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
+                                <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
+                                <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
+                                    <select id="relatorio_tipo_caixa">
+                                        <option value="todos">Todos</option>
+                                        <option value="Entrada">Entradas</option>
+                                        <option value="Saída">Saídas</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-caixa" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        </div>
+                        <div id="relatorio-caixa-container" class="mt-3"></div>
+                    </div>
                 </div>
 
             </section>
@@ -716,8 +735,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- SELETORES GERAIS ---
     const loginScreen = document.getElementById('login-screen');
     const dashboardScreen = document.getElementById('dashboard-screen');
-    const mainContent = document.getElementById('main-content');
-    const sidebar = document.querySelector('.sidebar');
     const loginForm = document.getElementById('login-form');
     const logoutBtn = document.getElementById('logout-btn');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -725,41 +742,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menu-toggle');
     const mobilePageTitle = document.getElementById('mobile-page-title');
     const desktopPageTitle = document.getElementById('desktop-page-title');
+    const sidebar = document.querySelector('.sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
-
-    // --- SELETORES DE CLIENTES ---
-    const clientesContainer = document.getElementById('tabela-clientes-container');
+    
+    // --- SELETORES DE FORMULÁRIOS E TABELAS ---
     const formAddCliente = document.getElementById('form-add-cliente');
     const editClienteContainer = document.getElementById('edit-cliente-container');
     const formEditCliente = document.getElementById('form-edit-cliente');
-
-    // --- SELETORES DE PRODUTOS ---
-    const produtosContainer = document.getElementById('tabela-produtos-container');
     const formAddProduto = document.getElementById('form-add-produto');
     const editProdutoContainer = document.getElementById('edit-produto-container');
     const formEditProduto = document.getElementById('form-edit-produto');
-
-    // --- SELETORES DE CAIXA ---
-    const caixaContainer = document.getElementById('tabela-caixa-container');
     const formAddLancamento = document.getElementById('form-add-lancamento');
     const editLancamentoContainer = document.getElementById('edit-lancamento-container');
     const formEditLancamento = document.getElementById('form-edit-lancamento');
-
-    // --- SELETORES DE CONTAS A RECEBER ---
-    const contasContainer = document.getElementById('tabela-contas-container');
     const editContaContainer = document.getElementById('edit-conta-container');
     const formEditConta = document.getElementById('form-edit-conta');
-
+    
     // --- SELETORES DE RELATÓRIOS ---
     const reportTabButtons = document.querySelectorAll('.report-tab-btn');
     const reportTabContents = document.querySelectorAll('.report-tab-content');
     const formRelatorioVendas = document.getElementById('form-relatorio-vendas');
     const formRelatorioContas = document.getElementById('form-relatorio-contas');
-    // NOVOS FORMULÁRIOS DE RELATÓRIO
     const formRelatorioProdutos = document.getElementById('form-relatorio-produtos');
     const formRelatorioEstoque = document.getElementById('form-relatorio-estoque');
     const formRelatorioCaixa = document.getElementById('form-relatorio-caixa');
-
 
     // --- ESTADO DA APLICAÇÃO ---
     let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
@@ -772,22 +778,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
     const loadData = (key) => JSON.parse(localStorage.getItem(key)) || [];
     const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    
+    // Função de data CORRIGIDA e ROBUSTA
     const formatDate = (dateString, includeTime = false) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        // Corrige o problema do fuso horário ao exibir apenas a data
-        const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-        const correctedDate = new Date(date.getTime() + userTimezoneOffset);
-
+        
         const options = {
-            year: 'numeric', month: '2-digit', day: '2-digit',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'UTC' // Força a exibição da data como ela foi salva (sem conversões de fuso)
         };
+
         if (includeTime) {
             options.hour = '2-digit';
             options.minute = '2-digit';
-            return new Intl.DateTimeFormat('pt-BR', options).format(date);
+            // Para exibição com hora, usamos o fuso horário local para fazer sentido para o usuário
+            delete options.timeZone; 
         }
-        return new Intl.DateTimeFormat('pt-BR', options).format(correctedDate);
+
+        return new Intl.DateTimeFormat('pt-BR', options).format(date);
     };
 
     const showNotification = (message, isError = false) => {
@@ -804,13 +815,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { notification.style.opacity = '0'; notification.style.transform = 'translateY(10px)'; setTimeout(() => notification.remove(), 500); }, 3500);
     };
 
-    // --- FUNÇÕES DE RENDERIZAÇÃO RESPONSIVAS ---
+    // --- FUNÇÕES DE RENDERIZAÇÃO ---
     const renderTable = (containerId, headers, data, renderRow) => {
         const container = document.getElementById(containerId);
         if (!container) return;
-
         container.classList.toggle('responsive-table', isMobile);
-
         if (data.length === 0) {
             container.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhum registro encontrado.</p>';
             return;
@@ -831,25 +840,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const renderRowRelatorioVendas = (v, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
-        return `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join(', '), v.metodoPagamento, formatCurrency(v.total)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+        return `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), v.metodoPagamento, formatCurrency(v.total)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
     const renderRowRelatorioContas = (conta, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
         return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
-    // NOVAS FUNÇÕES DE RENDERIZAÇÃO PARA RELATÓRIOS
     const renderRowRelatorioProdutos = (p, headers) => `<tr>${[p.rank, p.nome, p.quantidadeVendida, formatCurrency(p.totalVendido)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowRelatorioEstoque = (p, headers) => `<tr>${[p.nome, p.quantidade, formatCurrency(p.preco), `<span style="font-weight: 600; color: ${p.quantidade === 0 ? 'var(--danger-color)' : p.quantidade <= 5 ? 'var(--warning-color)' : 'var(--success-color)'};">${p.quantidade === 0 ? 'Esgotado' : p.quantidade <= 5 ? 'Estoque Baixo' : 'Disponível'}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
-
-    // --- FUNÇÕES DE NAVEGAÇÃO E ATUALIZAÇÃO ---
+    const renderAllData = () => {
+        renderDashboardSummaries();
+        renderFluxoCaixa();
+        renderClientes();
+        renderProdutos();
+        renderContasAReceber();
+        popularFormulariosVenda();
+    };
+    
+    // --- NAVEGAÇÃO E LÓGICA DE UI ---
     const navigateToPage = (pageId) => {
-        if (!pageId || !document.getElementById(pageId)) {
-            pageId = 'dashboard-view';
-        }
+        if (!pageId || !document.getElementById(pageId)) { pageId = 'dashboard-view'; }
         contentSections.forEach(s => s.classList.remove('active'));
         navLinks.forEach(l => l.classList.remove('active'));
-
         document.getElementById(pageId).classList.add('active');
         const targetLink = document.querySelector(`.nav-link[data-target="${pageId}"]`);
         if (targetLink) {
@@ -859,10 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mobilePageTitle.textContent = pageName;
         }
         localStorage.setItem('lastActivePage', pageId);
-
         cancelAllEdits();
-
-        // Renderiza conteúdo específico da página
         const renderMap = {
             'dashboard-view': renderDashboardSummaries,
             'caixa-view': renderFluxoCaixa,
@@ -870,7 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'clientes-view': renderClientes,
             'estoque-view': renderProdutos,
             'contas-a-receber-view': renderContasAReceber,
-            'relatorios-view': () => { document.querySelector('.report-tab-btn.active').click() } // Simula clique na aba ativa
+            'relatorios-view': () => { document.querySelector('.report-tab-btn.active').click(); }
         };
         renderMap[pageId]?.();
     };
@@ -900,33 +910,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ctx) return;
         if (paymentChartInstance) paymentChartInstance.destroy();
         paymentChartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['À Vista', 'Pix', 'Fiado', 'Parcelado'],
-                datasets: [{
-                    label: 'Total de Vendas',
-                    data: [salesSummary.vista, salesSummary.pix, salesSummary.fiado, salesSummary.parcelado],
-                    backgroundColor: ['#22C55E', '#3B82F6', '#F59E0B', '#EF4444'],
-                    borderRadius: 4,
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } },
-                scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } }
-            }
+            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Fiado', 'Parcelado'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.fiado, salesSummary.parcelado], backgroundColor: ['#22C55E', '#3B82F6', '#F59E0B', '#EF4444'], borderRadius: 4, }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } }, scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } } }
         });
     };
 
-    const renderFluxoCaixa = () => {
-        const saldoEl = document.getElementById('saldo-caixa-detalhe');
-        if (!saldoEl) return;
-        saldoEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
-        renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], [...fluxoCaixa].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
-    };
-
+    const renderFluxoCaixa = () => renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], [...fluxoCaixa].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
     const renderClientes = () => renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], clientes, renderRowClientes);
     const renderProdutos = () => renderTable('tabela-produtos-container', ['Produto', 'Em Estoque', 'Preço', 'Ações'], [...produtos].sort((a, b) => a.nome.localeCompare(b.nome)), renderRowProdutos);
     const renderContasAReceber = () => renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ações'], [...contasAReceber].sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowContas);
@@ -937,45 +926,17 @@ document.addEventListener('DOMContentLoaded', () => {
         totalEl.textContent = formatCurrency(carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0));
     };
 
-    const populateEditForm = (type, item) => {
-        const forms = {
-            cliente: () => {
-                document.getElementById('edit-cliente-id').value = item.id;
-                document.getElementById('edit-nome-cliente').value = item.nome;
-                document.getElementById('edit-contato-cliente').value = item.contato || '';
-            },
-            produto: () => {
-                document.getElementById('edit-produto-id').value = item.id;
-                document.getElementById('edit-nome-produto').value = item.nome;
-                document.getElementById('edit-qtd-produto').value = item.quantidade;
-                document.getElementById('edit-preco-produto').value = item.preco;
-            },
-            lancamento: () => {
-                document.getElementById('edit-lancamento-id').value = item.id;
-                document.getElementById('edit-desc-lancamento').value = item.descricao;
-                document.getElementById('edit-valor-lancamento').value = item.valor;
-                document.getElementById('edit-tipo-lancamento').value = item.tipo;
-            },
-            conta: () => {
-                document.getElementById('edit-conta-id').value = item.id;
-                const select = document.getElementById('edit-conta-cliente');
-                select.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-                select.value = item.clienteId;
-                document.getElementById('edit-conta-valor').value = item.valor;
-                document.getElementById('edit-conta-vencimento').value = new Date(item.dataVencimento).toISOString().split('T')[0];
-                document.getElementById('edit-conta-status').value = item.status;
-            }
-        };
-        forms[type]?.();
-        const container = document.getElementById(`edit-${type}-container`);
-        if (container) {
-            container.classList.remove('hidden');
-            container.scrollIntoView({ behavior: 'smooth' });
-        }
+    const popularFormulariosVenda = () => {
+        const clienteSelect = document.getElementById('venda-cliente');
+        const produtoSelect = document.getElementById('venda-produto');
+        if (!clienteSelect || !produtoSelect) return;
+        clienteSelect.innerHTML = '<option value="">Selecione...</option>' + [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtos].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.nome} (${p.quantidade} disp.)</option>`).join('');
     };
     
-    // ... (funções de finalizarVenda, showReceipt, etc. - sem alterações)
+    const cancelAllEdits = () => document.querySelectorAll('.edit-form-container').forEach(c => c.classList.add('hidden'));
 
+    // --- CRUD E LÓGICAS DE NEGÓCIO ---
     const addItemAoCarrinho = () => {
         const produtoId = document.getElementById('venda-produto').value;
         const quantidade = parseInt(document.getElementById('venda-qtd').value);
@@ -984,9 +945,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!produto) { showNotification('Produto não encontrado.', true); return; }
         const itemExistente = carrinhoVenda.find(item => item.produtoId == produtoId);
         const qtdTotalNoCarrinho = (itemExistente ? itemExistente.quantidade : 0) + quantidade;
-        if (qtdTotalNoCarrinho > produto.quantidade) {
-            showNotification(`Quantidade indisponível! Apenas ${produto.quantidade} em estoque.`, true); return;
-        }
+        if (qtdTotalNoCarrinho > produto.quantidade) { showNotification(`Quantidade indisponível! Apenas ${produto.quantidade} em estoque.`, true); return; }
         if (itemExistente) {
             itemExistente.quantidade += quantidade;
             itemExistente.subtotal = itemExistente.quantidade * produto.preco;
@@ -1011,8 +970,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const produtoEstoque = produtos.find(p => p.id == item.produtoId);
             if(produtoEstoque) produtoEstoque.quantidade -= item.quantidade;
         });
+        const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
         if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
-            const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
             fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${metodoPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
         } else if (metodoPagamento === 'fiado' || metodoPagamento === 'parcelado') {
             const parcelas = metodoPagamento === 'fiado' ? 1 : parseInt(document.getElementById('venda-parcelas').value);
@@ -1025,53 +984,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
         showNotification('Venda finalizada! Gerando recibo...', false);
-        
         showReceipt(novaVenda);
-
         carrinhoVenda = [];
         document.getElementById('venda-form').reset();
         document.getElementById('venda-parcelas-group').classList.add('hidden');
-        popularFormulariosVenda();
-        renderCarrinho();
-        renderDashboardSummaries();
+        renderAllData();
     };
     
     const showReceipt = (venda) => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
         const cliente = clientes.find(c => c.id === venda.clienteId);
-        
-        const metodoPagamentoMap = {
-            'vista': 'À Vista', 'pix': 'Pix', 'fiado': 'Fiado (A Prazo)', 'parcelado': 'Parcelado'
-        };
-
-        const itemsHtml = venda.itens.map(item => `
-            <tr>
-                <td>${item.quantidade}x ${item.nome}</td>
-                <td class="text-right">${formatCurrency(item.precoUnitario)}</td>
-                <td class="text-right">${formatCurrency(item.subtotal)}</td>
-            </tr>`).join('');
-
+        const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'fiado': 'Fiado (A Prazo)', 'parcelado': 'Parcelado' };
         receiptBody.innerHTML = `
-            <div class="receipt-header">
-                <h2><i class="fas fa-store"></i> Flor de Maira</h2>
-                <p>Obrigado pela sua compra!</p>
-            </div>
+            <div class="receipt-header"><h2><i class="fas fa-store"></i> Flor de Maira</h2><p>Obrigado pela sua compra!</p></div>
             <div class="receipt-details">
                 <div><strong>Cliente:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
                 <div><strong>Data:</strong><span>${formatDate(venda.data, true)}</span></div>
                 <div><strong>Venda ID:</strong><span>#${venda.id}</span></div>
                 <div><strong>Pagamento:</strong><span>${metodoPagamentoMap[venda.metodoPagamento]}</span></div>
             </div>
-            <div class="receipt-items">
-                <table>
-                    <thead><tr><th>Item</th><th class="text-right">Preço Un.</th><th class="text-right">Subtotal</th></tr></thead>
-                    <tbody>${itemsHtml}</tbody>
-                </table>
-            </div>
+            <div class="receipt-items"><table><thead><tr><th>Item</th><th class="text-right">Preço Un.</th><th class="text-right">Subtotal</th></tr></thead><tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.precoUnitario)}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody></table></div>
             <div class="receipt-total">Total: ${formatCurrency(venda.total)}</div>
             <div class="receipt-footer">Este não é um documento fiscal.</div>`;
-        
         const whatsappBtn = document.getElementById('btn-whatsapp-receipt');
         if (cliente && cliente.contato) {
             const phone = cliente.contato.replace(/\D/g, '');
@@ -1087,156 +1022,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleEdit = (type, id) => {
         const dataMap = { cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber };
         const itemToEdit = dataMap[type].find(item => item.id === id);
-        if (itemToEdit) populateEditForm(type, itemToEdit);
-    };
-
-    const handleDelete = (type, id) => {
-        if (confirm(`Tem certeza que deseja excluir este ${type}? Esta ação não pode ser desfeita.`)) {
-            let needsFullRender = false;
-            if (type === 'cliente') {
-                const vendasDoCliente = vendas.filter(v => v.clienteId === id);
-                if(vendasDoCliente.length > 0) {
-                     showNotification('Não é possível excluir cliente com vendas associadas. Exclua as vendas primeiro.', true);
-                     return;
+        if (itemToEdit) {
+             const populateMap = {
+                cliente: () => { document.getElementById('edit-cliente-id').value = itemToEdit.id; document.getElementById('edit-nome-cliente').value = itemToEdit.nome; document.getElementById('edit-contato-cliente').value = itemToEdit.contato || ''; },
+                produto: () => { document.getElementById('edit-produto-id').value = itemToEdit.id; document.getElementById('edit-nome-produto').value = itemToEdit.nome; document.getElementById('edit-qtd-produto').value = itemToEdit.quantidade; document.getElementById('edit-preco-produto').value = itemToEdit.preco; },
+                lancamento: () => { document.getElementById('edit-lancamento-id').value = itemToEdit.id; document.getElementById('edit-desc-lancamento').value = itemToEdit.descricao; document.getElementById('edit-valor-lancamento').value = itemToEdit.valor; document.getElementById('edit-tipo-lancamento').value = itemToEdit.tipo; },
+                conta: () => {
+                    const select = document.getElementById('edit-conta-cliente');
+                    select.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+                    document.getElementById('edit-conta-id').value = itemToEdit.id; select.value = itemToEdit.clienteId; document.getElementById('edit-conta-valor').value = itemToEdit.valor; document.getElementById('edit-conta-vencimento').value = new Date(itemToEdit.dataVencimento).toISOString().split('T')[0]; document.getElementById('edit-conta-status').value = itemToEdit.status;
                 }
-                clientes = clientes.filter(c => c.id !== id);
-                saveData('clientes', clientes);
-                renderClientes();
-                popularFormulariosVenda();
-            } else if (type === 'produto') {
-                if(vendas.some(v => v.itens.some(i => i.produtoId === id))) {
-                    showNotification('Não é possível excluir produto com vendas associadas.', true);
-                    return;
-                }
-                produtos = produtos.filter(p => p.id !== id);
-                saveData('produtos', produtos);
-                renderProdutos();
-                popularFormulariosVenda();
-            } else if (type === 'lancamento') {
-                fluxoCaixa = fluxoCaixa.filter(l => l.id !== id);
-                saveData('fluxoCaixa', fluxoCaixa);
-                needsFullRender = true;
-            } else if (type === 'conta') {
-                contasAReceber = contasAReceber.filter(c => c.id !== id);
-                fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== id); // Remove o lançamento de pagamento, se houver
-                saveData('contasAReceber', contasAReceber);
-                saveData('fluxoCaixa', fluxoCaixa);
-                needsFullRender = true;
-            }
-            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`);
-            if (needsFullRender) {
-                renderAllData();
-            }
+            };
+            populateMap[type]();
+            document.getElementById(`edit-${type}-container`).classList.remove('hidden');
         }
     };
     
-    // ... (funções de saveEdited, cancelEdit, etc.)
-     const popularFormulariosVenda = () => {
-        const clienteSelect = document.getElementById('venda-cliente');
-        const produtoSelect = document.getElementById('venda-produto');
-        if (!clienteSelect || !produtoSelect) return;
-        clienteSelect.innerHTML = '<option value="">Selecione...</option>' + [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-        produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtos].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.nome} (${p.quantidade} disp.)</option>`).join('');
-    };
-
-    const cancelAllEdits = () => {
-        document.querySelectorAll('.edit-form-container').forEach(c => c.classList.add('hidden'));
-    };
-
-    const saveEditedClient = (e) => { e.preventDefault(); const id = parseInt(document.getElementById('edit-cliente-id').value); const index = clientes.findIndex(c => c.id === id); if (index !== -1) { clientes[index].nome = document.getElementById('edit-nome-cliente').value; clientes[index].contato = document.getElementById('edit-contato-cliente').value; saveData('clientes', clientes); renderClientes(); showNotification('Cliente atualizado!', false); cancelAllEdits(); popularFormulariosVenda(); } };
-    const saveEditedProduct = (e) => { e.preventDefault(); const id = parseInt(document.getElementById('edit-produto-id').value); const index = produtos.findIndex(p => p.id === id); if (index !== -1) { produtos[index].nome = document.getElementById('edit-nome-produto').value; produtos[index].quantidade = parseInt(document.getElementById('edit-qtd-produto').value); produtos[index].preco = parseFloat(document.getElementById('edit-preco-produto').value); saveData('produtos', produtos); renderProdutos(); showNotification('Produto atualizado!', false); cancelAllEdits(); popularFormulariosVenda(); } };
-    const saveEditedLancamento = (e) => { e.preventDefault(); const id = parseInt(document.getElementById('edit-lancamento-id').value); const index = fluxoCaixa.findIndex(l => l.id === id); if (index !== -1) { fluxoCaixa[index].descricao = document.getElementById('edit-desc-lancamento').value; fluxoCaixa[index].valor = parseFloat(document.getElementById('edit-valor-lancamento').value); fluxoCaixa[index].tipo = document.getElementById('edit-tipo-lancamento').value; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento atualizado!', false); cancelAllEdits(); } };
-    const saveEditedConta = (e) => {
-        e.preventDefault();
-        const id = parseInt(document.getElementById('edit-conta-id').value);
-        const index = contasAReceber.findIndex(c => c.id === id);
-        if (index === -1) return;
-
-        const conta = contasAReceber[index];
-        const oldStatus = conta.status;
-        const newStatus = document.getElementById('edit-conta-status').value;
-
-        conta.clienteId = parseInt(document.getElementById('edit-conta-cliente').value);
-        conta.valor = parseFloat(document.getElementById('edit-conta-valor').value);
-        const dateInput = document.getElementById('edit-conta-vencimento').value;
-        conta.dataVencimento = new Date(dateInput + 'T00:00:00').toISOString(); // Adiciona hora para evitar problemas de fuso
-        conta.status = newStatus;
-        
-        if (oldStatus === 'Pendente' && newStatus === 'Pago') {
-            const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
-            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento de Conta de ${clienteNome}`, valor: conta.valor, contaId: conta.id });
-        } else if (oldStatus === 'Pago' && newStatus === 'Pendente') {
-            fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== conta.id);
-            showNotification('Status revertido para Pendente. Lançamento de caixa removido.', true);
-        } else if (oldStatus === 'Pago' && newStatus === 'Pago') {
-              const lancamentoCaixa = fluxoCaixa.find(l => l.contaId === conta.id);
-              if (lancamentoCaixa) {
-                   lancamentoCaixa.valor = conta.valor;
-                   showNotification('Valor da conta paga atualizado no fluxo de caixa.', false);
-              }
-        }
-        
-        saveData('contasAReceber', contasAReceber);
-        saveData('fluxoCaixa', fluxoCaixa);
-        renderAllData();
-        showNotification('Conta a receber atualizada!', false);
-        cancelAllEdits();
-    };
-
-
-    const limparTodasVendas = () => {
-        if (confirm("ATENÇÃO: Esta ação EXCLUIRÁ TODAS as vendas, contas a receber e entradas de caixa relacionadas. Não é possível desfazer. Deseja continuar?")) {
-            vendas.forEach(venda => {
-                venda.itens.forEach(itemVendido => {
-                    const produtoEstoque = produtos.find(p => p.id === itemVendido.produtoId);
-                    if (produtoEstoque) produtoEstoque.quantidade += itemVendido.quantidade;
-                });
-            });
-            vendas = [];
-            contasAReceber = [];
-            fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId);
-            saveData('vendas', vendas); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); saveData('produtos', produtos);
-            renderAllData();
-            document.getElementById('relatorio-vendas-container').innerHTML = '';
-            document.getElementById('btn-imprimir-relatorio-vendas').classList.add('hidden');
-            showNotification('Todas as vendas e registros relacionados foram excluídos! Estoque restaurado.', false);
-        }
-    };
-
-    // --- FUNÇÕES DE GERAÇÃO DE RELATÓRIO ---
+    // --- GERAÇÃO DE RELATÓRIOS ---
     const gerarRelatorioVendas = (e) => {
         e.preventDefault();
         const dataInicioStr = document.getElementById('relatorio-inicio-vendas').value;
         const dataFimStr = document.getElementById('relatorio-fim-vendas').value;
         const container = document.getElementById('relatorio-vendas-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-vendas');
-
-        if (!dataInicioStr || !dataFimStr) {
-            showNotification('Selecione as datas de início e fim para o relatório.', true);
-            container.innerHTML = ''; btnImprimir.classList.add('hidden'); return;
-        }
-
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione as datas de início e fim.', true); return; }
         const dataInicio = new Date(dataInicioStr + "T00:00:00");
         const dataFim = new Date(dataFimStr + "T23:59:59");
-
-        const vendasFiltradas = vendas.filter(venda => new Date(venda.data) >= dataInicio && new Date(venda.data) <= dataFim);
-
-        if (vendasFiltradas.length === 0) {
-            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma venda no período selecionado.</p></div>';
-            btnImprimir.classList.add('hidden'); return;
-        }
-
-        const totalVendido = vendasFiltradas.reduce((acc, venda) => acc + venda.total, 0);
-        container.innerHTML = `
-            <div class="card" id="printable-report-vendas">
-                <h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
-                <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 1rem;">Total Vendido: ${formatCurrency(totalVendido)}</p>
-                <div id="relatorio-vendas-tabela-container" class="table-responsive-container"></div>
-            </div>`;
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+        if (vendasFiltradas.length === 0) { container.innerHTML = '<div class="card" id="printable-report-vendas"><p style="text-align:center;">Nenhuma venda no período.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
+        container.innerHTML = `<div class="card" id="printable-report-vendas"><h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total Vendido: ${formatCurrency(totalVendido)}</p><div id="relatorio-vendas-tabela-container"></div></div>`;
         renderTable('relatorio-vendas-tabela-container', ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'], [...vendasFiltradas].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
         btnImprimir.classList.remove('hidden');
     };
 
+    // Função CORRIGIDA E ROBUSTA
     const gerarRelatorioContas = (e) => {
         e.preventDefault();
         const status = document.getElementById('relatorio-status-contas').value;
@@ -1244,72 +1064,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataFimStr = document.getElementById('relatorio-fim-contas').value;
         const container = document.getElementById('relatorio-contas-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-contas');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione as datas de vencimento.', true); return; }
 
-        if (!dataInicioStr || !dataFimStr) {
-            showNotification('Selecione as datas de vencimento (início e fim) para o relatório.', true);
-            container.innerHTML = ''; btnImprimir.classList.add('hidden'); return;
-        }
-        const dataInicio = new Date(dataInicioStr + "T00:00:00");
-        const dataFim = new Date(dataFimStr + "T23:59:59");
-
-        const contasFiltradas = contasAReceber.filter(conta => {
-            const vencimento = new Date(conta.dataVencimento);
-            return vencimento >= dataInicio && vencimento <= dataFim && (status === 'Todos' || conta.status === status);
+        const [startYear, startMonth, startDay] = dataInicioStr.split('-').map(Number);
+        const dataInicio = new Date(Date.UTC(startYear, startMonth - 1, startDay, 0, 0, 0));
+        const [endYear, endMonth, endDay] = dataFimStr.split('-').map(Number);
+        const dataFim = new Date(Date.UTC(endYear, endMonth - 1, endDay, 23, 59, 59, 999));
+        
+        const contasFiltradas = contasAReceber.filter(c => {
+            const vencimento = new Date(c.dataVencimento);
+            return vencimento >= dataInicio && vencimento <= dataFim && (status === 'Todos' || c.status === status);
         });
-
-        if (contasFiltradas.length === 0) {
-            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhuma conta encontrada para os critérios.</p></div>';
-            btnImprimir.classList.add('hidden'); return;
-        }
-        const totalContas = contasFiltradas.reduce((acc, conta) => acc + conta.valor, 0);
-        container.innerHTML = `
-            <div class="card" id="printable-report-contas">
-                <h2>Relatório de Contas a Receber (${status}) (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
-                <p style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color); margin-bottom: 1rem;">Total: ${formatCurrency(totalContas)}</p>
-                <div id="relatorio-contas-tabela-container" class="table-responsive-container"></div>
-            </div>`;
+        if (contasFiltradas.length === 0) { container.innerHTML = '<div class="card" id="printable-report-contas"><p style="text-align:center;">Nenhuma conta encontrada.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        const totalContas = contasFiltradas.reduce((acc, c) => acc + c.valor, 0);
+        container.innerHTML = `<div class="card" id="printable-report-contas"><h2>Relatório de Contas (${status}) (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total: ${formatCurrency(totalContas)}</p><div id="relatorio-contas-tabela-container"></div></div>`;
         renderTable('relatorio-contas-tabela-container', ['Cliente', 'Valor', 'Vencimento', 'Status'], [...contasFiltradas].sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowRelatorioContas);
         btnImprimir.classList.remove('hidden');
     };
 
-    // NOVAS FUNÇÕES DE RELATÓRIO
     const gerarRelatorioProdutos = (e) => {
         e.preventDefault();
         const dataInicioStr = document.getElementById('relatorio-inicio-produtos').value;
         const dataFimStr = document.getElementById('relatorio-fim-produtos').value;
         const container = document.getElementById('relatorio-produtos-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-produtos');
-
-        if (!dataInicioStr || !dataFimStr) {
-            showNotification('Selecione as datas de início e fim para o relatório.', true);
-            container.innerHTML = ''; btnImprimir.classList.add('hidden'); return;
-        }
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione o período.', true); return; }
         const dataInicio = new Date(dataInicioStr + "T00:00:00");
         const dataFim = new Date(dataFimStr + "T23:59:59");
-        
         const vendasNoPeriodo = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
-        
         const statsProdutos = vendasNoPeriodo.flatMap(v => v.itens).reduce((acc, item) => {
             acc[item.produtoId] = acc[item.produtoId] || { nome: item.nome, quantidadeVendida: 0, totalVendido: 0 };
             acc[item.produtoId].quantidadeVendida += item.quantidade;
             acc[item.produtoId].totalVendido += item.subtotal;
             return acc;
         }, {});
-
-        const rankingProdutos = Object.values(statsProdutos)
-                                    .sort((a, b) => b.quantidadeVendida - a.quantidadeVendida)
-                                    .map((p, index) => ({ ...p, rank: index + 1 }));
-
-        if (rankingProdutos.length === 0) {
-            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhum produto vendido no período.</p></div>';
-            btnImprimir.classList.add('hidden'); return;
-        }
-
-        container.innerHTML = `
-            <div class="card" id="printable-report-produtos">
-                <h2>Relatório de Produtos Mais Vendidos (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
-                <div id="relatorio-produtos-tabela-container" class="table-responsive-container"></div>
-            </div>`;
+        const rankingProdutos = Object.values(statsProdutos).sort((a, b) => b.quantidadeVendida - a.quantidadeVendida).map((p, i) => ({ ...p, rank: i + 1 }));
+        if (rankingProdutos.length === 0) { container.innerHTML = '<div class="card" id="printable-report-produtos"><p style="text-align:center;">Nenhum produto vendido no período.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        container.innerHTML = `<div class="card" id="printable-report-produtos"><h2>Mais Vendidos (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><div id="relatorio-produtos-tabela-container"></div></div>`;
         renderTable('relatorio-produtos-tabela-container', ['#', 'Produto', 'Qtd. Vendida', 'Total Arrecadado'], rankingProdutos, renderRowRelatorioProdutos);
         btnImprimir.classList.remove('hidden');
     };
@@ -1319,24 +1110,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = document.getElementById('relatorio_status_estoque').value;
         const container = document.getElementById('relatorio-estoque-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-estoque');
-
         let produtosFiltrados = produtos.filter(p => {
             if (status === 'disponivel') return p.quantidade > 0;
             if (status === 'baixo') return p.quantidade > 0 && p.quantidade <= 5;
             if (status === 'esgotado') return p.quantidade === 0;
-            return true; // 'todos'
+            return true;
         });
-
-        if (produtosFiltrados.length === 0) {
-            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhum produto encontrado com este status.</p></div>';
-            btnImprimir.classList.add('hidden'); return;
-        }
-        
-        container.innerHTML = `
-            <div class="card" id="printable-report-estoque">
-                <h2>Relatório de Situação do Estoque (Status: ${status.charAt(0).toUpperCase() + status.slice(1)})</h2>
-                <div id="relatorio-estoque-tabela-container" class="table-responsive-container"></div>
-            </div>`;
+        if (produtosFiltrados.length === 0) { container.innerHTML = '<div class="card" id="printable-report-estoque"><p style="text-align:center;">Nenhum produto com este status.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        container.innerHTML = `<div class="card" id="printable-report-estoque"><h2>Situação do Estoque (Status: ${status.charAt(0).toUpperCase() + status.slice(1)})</h2><div id="relatorio-estoque-tabela-container"></div></div>`;
         renderTable('relatorio-estoque-tabela-container', ['Produto', 'Qtd. em Estoque', 'Preço Unitário', 'Status'], [...produtosFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)), renderRowRelatorioEstoque);
         btnImprimir.classList.remove('hidden');
     };
@@ -1348,111 +1129,57 @@ document.addEventListener('DOMContentLoaded', () => {
         const tipo = document.getElementById('relatorio_tipo_caixa').value;
         const container = document.getElementById('relatorio-caixa-container');
         const btnImprimir = document.getElementById('btn-imprimir-relatorio-caixa');
-
-        if (!dataInicioStr || !dataFimStr) {
-            showNotification('Selecione as datas de início e fim para o relatório.', true);
-            container.innerHTML = ''; btnImprimir.classList.add('hidden'); return;
-        }
-
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione o período.', true); return; }
         const dataInicio = new Date(dataInicioStr + "T00:00:00");
         const dataFim = new Date(dataFimStr + "T23:59:59");
-
         const lancamentosFiltrados = fluxoCaixa.filter(l => {
             const dataLancamento = new Date(l.data);
             return dataLancamento >= dataInicio && dataLancamento <= dataFim && (tipo === 'todos' || l.tipo === tipo);
         });
-
-        if (lancamentosFiltrados.length === 0) {
-            container.innerHTML = '<div class="card"><p style="text-align:center; color: var(--text-secondary);">Nenhum lançamento no período/tipo selecionado.</p></div>';
-            btnImprimir.classList.add('hidden'); return;
-        }
-
+        if (lancamentosFiltrados.length === 0) { container.innerHTML = '<div class="card" id="printable-report-caixa"><p style="text-align:center;">Nenhum lançamento no período.</p></div>'; btnImprimir.classList.add('hidden'); return; }
         const totalEntradas = lancamentosFiltrados.filter(l => l.tipo === 'Entrada').reduce((acc, l) => acc + l.valor, 0);
         const totalSaidas = lancamentosFiltrados.filter(l => l.tipo === 'Saída').reduce((acc, l) => acc + l.valor, 0);
         const saldoPeriodo = totalEntradas - totalSaidas;
-
-        container.innerHTML = `
-            <div class="card" id="printable-report-caixa">
-                <h2>Relatório de Fluxo de Caixa (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
-                <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                    <p><strong>Total Entradas:</strong> <span class="valor-entrada">${formatCurrency(totalEntradas)}</span></p>
-                    <p><strong>Total Saídas:</strong> <span class="valor-saida">${formatCurrency(totalSaidas)}</span></p>
-                    <p><strong>Saldo do Período:</strong> <strong style="color: ${saldoPeriodo >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">${formatCurrency(saldoPeriodo)}</strong></p>
-                </div>
-                <div id="relatorio-caixa-tabela-container" class="table-responsive-container"></div>
-            </div>`;
+        container.innerHTML = `<div class="card" id="printable-report-caixa"><h2>Fluxo de Caixa (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><div style="display: flex; gap: 2rem; flex-wrap: wrap;"><strong>Entradas:</strong> <span class="valor-entrada">${formatCurrency(totalEntradas)}</span><strong>Saídas:</strong> <span class="valor-saida">${formatCurrency(totalSaidas)}</span><strong>Saldo:</strong> <strong style="color: ${saldoPeriodo >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">${formatCurrency(saldoPeriodo)}</strong></div><div id="relatorio-caixa-tabela-container"></div></div>`;
         renderTable('relatorio-caixa-tabela-container', ['Data/Hora', 'Descrição', 'Tipo', 'Valor', ''], [...lancamentosFiltrados].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
         btnImprimir.classList.remove('hidden');
     };
     
-
+    // --- IMPRESSÃO ---
     const printContent = (elementId) => {
-        const modal = document.getElementById('receipt-modal');
-        // Se o modal do recibo estiver aberto, usa a área de impressão dele
-        if (!modal.classList.contains('hidden')) {
-            elementId = 'printable-area';
-        }
+        const printableElement = document.getElementById(elementId);
+        if (!printableElement) return;
+        const clonedElement = printableElement.cloneNode(true);
+        const tempContainer = document.createElement('div');
+        tempContainer.appendChild(clonedElement);
         
-        const printableArea = document.getElementById(elementId);
-        if (!printableArea) {
-            console.error('Área para impressão não encontrada:', elementId);
-            return;
-        }
-
-        const originalContents = document.body.innerHTML;
-        const printContents = printableArea.innerHTML;
-        
-        // Cria um iframe oculto para impressão
         const iframe = document.createElement('iframe');
-        iframe.style.height = '0';
-        iframe.style.width = '0';
-        iframe.style.position = 'absolute';
-        iframe.style.border = '0';
+        iframe.style.height = '0'; iframe.style.width = '0'; iframe.style.position = 'absolute'; iframe.style.border = '0';
         document.body.appendChild(iframe);
-        
         const doc = iframe.contentWindow.document;
         doc.open();
-        // Copia os links de estilo do documento principal para o iframe
         const headLinks = document.head.querySelectorAll('link, style');
         let styles = '';
         headLinks.forEach(node => { styles += node.outerHTML; });
-
-        doc.write(`<html><head><title>Imprimir</title>${styles}</head><body>${printContents}</body></html>`);
+        doc.write(`<html><head><title>Imprimir</title>${styles}</head><body>${tempContainer.innerHTML}</body></html>`);
         doc.close();
-
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
-        
-        // Remove o iframe após a impressão para limpar a memória
         setTimeout(() => { document.body.removeChild(iframe); }, 1000);
     };
-
-    const renderAllData = () => {
-        renderDashboardSummaries();
-        renderFluxoCaixa();
-        renderClientes();
-        renderProdutos();
-        renderContasAReceber();
-        popularFormulariosVenda();
-    }
     
+    // --- INICIALIZAÇÃO E EVENT LISTENERS ---
     const init = () => {
-        clientes = loadData('clientes');
-        produtos = loadData('produtos');
-        vendas = loadData('vendas');
-        contasAReceber = loadData('contasAReceber');
-        fluxoCaixa = loadData('fluxoCaixa');
-        const lastPageId = localStorage.getItem('lastActivePage') || 'dashboard-view';
-        navigateToPage(lastPageId);
+        clientes = loadData('clientes'); produtos = loadData('produtos'); vendas = loadData('vendas');
+        contasAReceber = loadData('contasAReceber'); fluxoCaixa = loadData('fluxoCaixa');
+        navigateToPage(localStorage.getItem('lastActivePage') || 'dashboard-view');
     };
 
-    // --- EVENT LISTENERS ---
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
         if (document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') {
             localStorage.setItem('isLoggedIn', 'true');
-            loginScreen.classList.add('hidden');
-            dashboardScreen.classList.remove('hidden');
+            loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
             init(); 
         } else {
             document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!';
@@ -1462,110 +1189,86 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtn.addEventListener('click', () => {
         if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
         localStorage.removeItem('isLoggedIn');
-        loginScreen.classList.remove('hidden');
-        dashboardScreen.classList.add('hidden');
-        window.location.reload(); // Recarrega para limpar o estado
+        window.location.reload();
     });
 
     const toggleMenu = (forceClose = false) => {
-        if (isMobile) {
-            const isOpen = sidebar.classList.contains('open');
-            if (forceClose || isOpen) {
-                sidebar.classList.remove('open'); backdrop.classList.add('hidden');
-            } else {
-                sidebar.classList.add('open'); backdrop.classList.remove('hidden');
-            }
-        }
+        if (isMobile) sidebar.classList.toggle('open', !forceClose && !sidebar.classList.contains('open'));
+        backdrop.classList.toggle('hidden', !sidebar.classList.contains('open'));
     };
     menuToggle.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
     backdrop.addEventListener('click', () => toggleMenu(true));
-    window.addEventListener('resize', () => { 
-        isMobile = window.innerWidth <= 768; 
-        if (!isMobile) toggleMenu(true); 
-        const activePage = document.querySelector('.content-section.active'); 
-        if (activePage) navigateToPage(activePage.id); 
-    });
+    window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; if (!isMobile) toggleMenu(true); renderAllData(); });
     navLinks.forEach(link => { link.addEventListener('click', e => { e.preventDefault(); navigateToPage(link.getAttribute('data-target')); toggleMenu(true); }); });
 
-    formAddCliente.addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); showNotification('Cliente salvo!'); e.target.reset(); popularFormulariosVenda(); });
-    formAddProduto.addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); showNotification('Produto salvo!'); e.target.reset(); popularFormulariosVenda(); });
-    formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos corretamente!', true); }});
+    // Listeners de Forms
+    formAddCliente.addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); showNotification('Cliente salvo!'); e.target.reset(); });
+    formAddProduto.addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); showNotification('Produto salvo!'); e.target.reset(); });
+    formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos!', true); }});
+    formEditCliente.addEventListener('submit', e => { e.preventDefault(); const id = parseInt(document.getElementById('edit-cliente-id').value); const c = clientes.find(c => c.id === id); if(c){c.nome = document.getElementById('edit-nome-cliente').value; c.contato = document.getElementById('edit-contato-cliente').value; saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); cancelAllEdits(); showNotification('Cliente atualizado!');}});
+    formEditProduto.addEventListener('submit', e => { e.preventDefault(); const id = parseInt(document.getElementById('edit-produto-id').value); const p = produtos.find(p => p.id === id); if(p){p.nome = document.getElementById('edit-nome-produto').value; p.quantidade = parseInt(document.getElementById('edit-qtd-produto').value); p.preco = parseFloat(document.getElementById('edit-preco-produto').value); saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); cancelAllEdits(); showNotification('Produto atualizado!');}});
+    formEditLancamento.addEventListener('submit', e => { e.preventDefault(); const id = parseInt(document.getElementById('edit-lancamento-id').value); const l = fluxoCaixa.find(l => l.id === id); if(l){l.descricao = document.getElementById('edit-desc-lancamento').value; l.valor = parseFloat(document.getElementById('edit-valor-lancamento').value); l.tipo = document.getElementById('edit-tipo-lancamento').value; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); cancelAllEdits(); showNotification('Lançamento atualizado!');}});
+    formEditConta.addEventListener('submit', e => {
+        e.preventDefault(); const id = parseInt(document.getElementById('edit-conta-id').value); const c = contasAReceber.find(c => c.id === id); if(!c) return;
+        const oldStatus = c.status; const newStatus = document.getElementById('edit-conta-status').value;
+        c.clienteId = parseInt(document.getElementById('edit-conta-cliente').value); c.valor = parseFloat(document.getElementById('edit-conta-valor').value); c.dataVencimento = new Date(document.getElementById('edit-conta-vencimento').value + 'T00:00:00').toISOString(); c.status = newStatus;
+        if(oldStatus === 'Pendente' && newStatus === 'Pago'){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento Conta de ${clientes.find(cl=>cl.id===c.clienteId)?.nome||''}`, valor: c.valor, contaId: c.id }); }
+        else if(oldStatus === 'Pago' && newStatus === 'Pendente'){ fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== c.id); }
+        saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderAllData(); cancelAllEdits(); showNotification('Conta atualizada!');
+    });
     
+    // Listeners de Botões e Ações
+    document.querySelectorAll('.btn-cancel').forEach(btn => btn.addEventListener('click', cancelAllEdits));
     document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
     document.getElementById('venda-pagamento').addEventListener('change', e => document.getElementById('venda-parcelas-group').classList.toggle('hidden', e.target.value !== 'parcelado'));
     document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
-
-    // Listeners Relatórios
-    reportTabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            reportTabButtons.forEach(b => b.classList.remove('active'));
-            reportTabContents.forEach(c => c.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(btn.dataset.tab).classList.add('active');
-        });
-    });
-
-    formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
-    document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('printable-report-vendas'));
-    document.getElementById('btn-limpar-vendas').addEventListener('click', limparTodasVendas);
-    
-    formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
-    document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('printable-report-contas'));
-    
-    formRelatorioProdutos.addEventListener('submit', gerarRelatorioProdutos);
-    document.getElementById('btn-imprimir-relatorio-produtos').addEventListener('click', () => printContent('printable-report-produtos'));
-
-    formRelatorioEstoque.addEventListener('submit', gerarRelatorioEstoque);
-    document.getElementById('btn-imprimir-relatorio-estoque').addEventListener('click', () => printContent('printable-report-estoque'));
-
-    formRelatorioCaixa.addEventListener('submit', gerarRelatorioCaixa);
-    document.getElementById('btn-imprimir-relatorio-caixa').addEventListener('click', () => printContent('printable-report-caixa'));
-
-
-    // Listeners do Modal de Recibo
     document.getElementById('btn-close-receipt').addEventListener('click', () => document.getElementById('receipt-modal').classList.add('hidden'));
     document.getElementById('btn-print-receipt').addEventListener('click', () => printContent('printable-area'));
+    reportTabButtons.forEach(btn => btn.addEventListener('click', () => { reportTabButtons.forEach(b => b.classList.remove('active')); reportTabContents.forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); }));
+    
+    // Listeners Relatórios
+    formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
+    document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('relatorio-vendas-container'));
+    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros relacionados. Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderAllData(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
+    formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
+    document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('relatorio-contas-container'));
+    formRelatorioProdutos.addEventListener('submit', gerarRelatorioProdutos);
+    document.getElementById('btn-imprimir-relatorio-produtos').addEventListener('click', () => printContent('relatorio-produtos-container'));
+    formRelatorioEstoque.addEventListener('submit', gerarRelatorioEstoque);
+    document.getElementById('btn-imprimir-relatorio-estoque').addEventListener('click', () => printContent('relatorio-estoque-container'));
+    formRelatorioCaixa.addEventListener('submit', gerarRelatorioCaixa);
+    document.getElementById('btn-imprimir-relatorio-caixa').addEventListener('click', () => printContent('relatorio-caixa-container'));
 
+    // Delegação de Eventos para botões de ação nas tabelas
     document.body.addEventListener('click', e => {
         const target = e.target.closest('[data-action]');
         if (!target) return;
         const { action, type, id } = target.dataset;
         const parsedId = parseInt(id);
         if (action === 'edit') handleEdit(type, parsedId);
-        else if (action === 'delete') handleDelete(type, parsedId);
-        else if (action === 'remove-item') {
-            carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId); renderCarrinho();
-        } else if (action === 'pay') {
-            const conta = contasAReceber.find(c => c.id === parsedId);
-            if (conta && conta.status === 'Pendente') {
-                conta.status = 'Pago';
-                const clienteNome = clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso';
-                fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento Parcela (Venda #${conta.vendaId}) de ${clienteNome}`, valor: conta.valor, contaId: conta.id });
-                saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
-                renderAllData();
-                showNotification('Baixa realizada com sucesso!');
+        else if (action === 'delete') {
+            if(confirm(`Tem certeza que deseja excluir?`)){
+                if(type==='cliente' && vendas.some(v=>v.clienteId===parsedId)){showNotification('Exclua as vendas do cliente primeiro.',true);return;}
+                if(type==='produto' && vendas.some(v=>v.itens.some(i=>i.produtoId===parsedId))){showNotification('Exclua as vendas do produto primeiro.',true);return;}
+                let dataMap = {cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber};
+                const updatedData = dataMap[type].filter(item => item.id !== parsedId);
+                if(type==='cliente') clientes = updatedData; if(type==='produto') produtos = updatedData; if(type==='lancamento') fluxoCaixa = updatedData; if(type==='conta') contasAReceber = updatedData;
+                saveData(type+'s', updatedData); renderAllData(); showNotification(`${type} excluído!`);
             }
+        }
+        else if (action === 'remove-item') { carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId); renderCarrinho(); }
+        else if (action === 'pay') {
+            const conta = contasAReceber.find(c => c.id === parsedId);
+            if(conta && conta.status==='Pendente'){ conta.status = 'Pago'; fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Parcela de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderAllData(); showNotification('Baixa realizada!'); }
         }
     });
 
-    formEditCliente.addEventListener('submit', saveEditedClient);
-    editClienteContainer.querySelector('.btn-cancel').addEventListener('click', cancelAllEdits);
-    formEditProduto.addEventListener('submit', saveEditedProduct);
-    editProdutoContainer.querySelector('.btn-cancel').addEventListener('click', cancelAllEdits);
-    formEditLancamento.addEventListener('submit', saveEditedLancamento);
-    document.getElementById('cancel-edit-lancamento').addEventListener('click', cancelAllEdits);
-    formEditConta.addEventListener('submit', saveEditedConta);
-    document.getElementById('cancel-edit-conta').addEventListener('click', cancelAllEdits);
-
-
-    // Lógica para decidir qual tela mostrar ao carregar a página
+    // Lógica de carregamento inicial
     if (localStorage.getItem('isLoggedIn') === 'true') {
-        loginScreen.classList.add('hidden');
-        dashboardScreen.classList.remove('hidden');
+        loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
         init();
     } else {
-        loginScreen.classList.remove('hidden');
-        dashboardScreen.classList.add('hidden');
+        loginScreen.classList.remove('hidden'); dashboardScreen.classList.add('hidden');
     }
 });
 </script>
