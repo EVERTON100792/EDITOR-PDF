@@ -15,7 +15,7 @@
     <style>
         /* --- TEMA NOVO: BLACK & GOLD (SEM CINZA) --- */
         :root {
-            --primary-color: #E6B800;      /* Gold Vibrante */
+            --primary-color: #E6B800;     /* Gold Vibrante */
             --primary-dark-color: #C89F00; /* Gold mais escuro para hover */
             --primary-light-color: #2b2100;/* Fundo dourado escuro para hover de links */
 
@@ -160,7 +160,7 @@
         #menu-toggle { background: none; border: none; cursor: pointer; padding: 0.25rem; z-index: 1001; }
         #menu-toggle .bar { display: block; width: 22px; height: 3px; background-color: var(--text-primary); margin: 4px 0; transition: 0.4s; border-radius: 3px;}
         .main-content h1 { font-size: 1.75rem; color: var(--text-primary); font-weight: 700; }
-        
+
         #sidebar-backdrop {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.6);
@@ -171,11 +171,11 @@
 
         .content-section { display: none; }
         .content-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        
+
         .card { background: var(--surface-color); padding: 1.5rem; border-radius: var(--border-radius-lg); margin-top: 1.5rem; border: 1px solid var(--border-color); }
         .card h2 { margin-bottom: 1rem; color: var(--text-primary); font-weight: 600; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
         .card h3 { font-weight: 600; color: var(--text-primary); font-size: 1.1rem; }
-        
+
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; }
         .form-group input, .form-group select {
@@ -194,7 +194,7 @@
         }
         .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); }
         .btn-submit { width: 100%; }
-        
+
         .table-responsive-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
         th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap;}
@@ -209,7 +209,7 @@
         .btn-paid:hover { background: #16a34a; }
         .valor-entrada { color: var(--success-color); font-weight: 600; }
         .valor-saida { color: var(--danger-color); font-weight: 600; }
-        
+
         .status-pendente { color: var(--warning-color); font-weight: bold; }
         .status-pago { color: var(--success-color); font-weight: bold; }
 
@@ -230,12 +230,12 @@
         #dashboard-alerts-container .alert-danger { background-color: rgba(239, 68, 68, 0.1); border-color: var(--danger-color); }
 
         .dashboard-main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
-        
+
         .edit-form-container { margin-top: 1.5rem; padding: 1.5rem; background-color: #1a1509; border: 1px solid var(--primary-color); border-radius: var(--border-radius-lg); }
         .edit-form-container h3 { margin-bottom: 1rem; color: var(--primary-color); font-size: 1.1rem; }
         .edit-form-container .btn-cancel { background: none; border: 1px solid var(--text-secondary); color: var(--text-secondary) }
         .edit-form-container .btn-cancel:hover { background-color: var(--danger-color); color: white; border-color: var(--danger-color); }
-        
+
         /* --- ESTILOS DO RECIBO E MODAIS --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -245,7 +245,7 @@
         }
         .modal-content {
             background: #fff; padding: 1.5rem; border-radius: var(--border-radius-lg); width: 100%;
-            max-width: 520px; max-height: 90vh; 
+            max-width: 520px; max-height: 90vh;
             animation: fadeIn 0.3s ease; position: relative;
             display: flex; flex-direction: column; color: #333; /* Mantido para impressão */
         }
@@ -303,7 +303,7 @@
         .report-tab-content { display: none; }
         .report-tab-content.active { display: block; animation: fadeIn 0.4s; }
         .report-form {
-            display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; 
+            display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;
             padding: 1.5rem; background-color: var(--surface-color);
             border-radius: var(--border-radius-md);
             border: 1px solid var(--border-color);
@@ -428,7 +428,7 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#dashboard" class="nav-link active" data-target="dashboard-view"><i class="fas fa-chart-pie icon"></i><span>Dashboard</span></a></li>
-                    
+
                     <li class="nav-heading">Vendas & Clientes</li>
                     <li><a href="#vendas" class="nav-link" data-target="vendas-view"><i class="fas fa-shopping-cart icon"></i><span>Realizar Venda</span></a></li>
                     <li><a href="#clientes" class="nav-link" data-target="clientes-view"><i class="fas fa-users icon"></i><span>Clientes</span></a></li>
@@ -437,7 +437,7 @@
                     <li><a href="#caixa" class="nav-link" data-target="caixa-view"><i class="fas fa-cash-register icon"></i><span>Fluxo de Caixa</span></a></li>
                     <li><a href="#despesas" class="nav-link" data-target="despesas-view"><i class="fas fa-wallet icon"></i><span>Despesas</span></a></li>
                     <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><i class="fas fa-file-invoice-dollar icon"></i><span>Contas a Receber</span></a></li>
-                    
+
                     <li class="nav-heading">Gestão</li>
                     <li><a href="#estoque" class="nav-link" data-target="estoque-view"><i class="fas fa-boxes icon"></i><span>Estoque</span></a></li>
                     <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><i class="fas fa-chart-bar icon"></i><span>Relatórios</span></a></li>
@@ -463,13 +463,13 @@
             <section id="dashboard-view" class="content-section">
                 <div id="dashboard-alerts-container"></div>
                  <div class="dashboard-grid">
-                      <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
-                      <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
-                      <div class="summary-card shadow-md" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-wallet mr-2"></i> Total de Despesas (Mês)</h3><p id="total-despesas-dashboard">R$ 0,00</p></div>
-                 </div>
+                     <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
+                     <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
+                     <div class="summary-card shadow-md" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-wallet mr-2"></i> Total de Despesas (Mês)</h3><p id="total-despesas-dashboard">R$ 0,00</p></div>
+                </div>
                  <div class="dashboard-main-grid">
-                      <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
-                      <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
+                     <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
+                     <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
                  </div>
             </section>
 
@@ -570,35 +570,35 @@
             </section>
 
              <section id="despesas-view" class="content-section">
-                <div id="edit-despesa-container" class="edit-form-container shadow-md hidden">
-                    <h3><i class="fas fa-edit mr-2"></i> Editar Despesa</h3>
-                    <form id="form-edit-despesa">
-                        <input type="hidden" id="edit-despesa-id">
-                        <div class="form-group"><label for="edit-desc-despesa">Descrição</label><input type="text" id="edit-desc-despesa" required></div>
-                        <div class="form-group"><label for="edit-valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-despesa" required></div>
-                        <div class="form-group"><label for="edit-data-despesa">Data</label><input type="date" id="edit-data-despesa" required></div>
-                        <div class="flex gap-2">
-                            <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                            <button type="button" class="btn btn-cancel" id="cancel-edit-despesa"><i class="fas fa-times mr-2"></i> Cancelar</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="card shadow-md">
-                    <h2><i class="fas fa-plus-circle mr-2"></i> Registrar Despesa</h2>
-                    <form id="form-add-despesa">
-                        <div class="flex gap-2">
-                            <div class="form-group flex-1"><label for="desc-despesa">Descrição</label><input type="text" id="desc-despesa" required></div>
-                            <div class="form-group"><label for="valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="valor-despesa" required></div>
-                            <div class="form-group"><label for="data-despesa">Data</label><input type="date" id="data-despesa" required></div>
-                        </div>
-                        <button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar Despesa</button>
-                    </form>
-                </div>
-                <div class="card shadow-md">
-                    <h2><i class="fas fa-history mr-2"></i> Histórico de Despesas</h2>
-                    <div id="tabela-despesas-container" class="table-responsive-container"></div>
-                </div>
-            </section>
+                 <div id="edit-despesa-container" class="edit-form-container shadow-md hidden">
+                     <h3><i class="fas fa-edit mr-2"></i> Editar Despesa</h3>
+                     <form id="form-edit-despesa">
+                         <input type="hidden" id="edit-despesa-id">
+                         <div class="form-group"><label for="edit-desc-despesa">Descrição</label><input type="text" id="edit-desc-despesa" required></div>
+                         <div class="form-group"><label for="edit-valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-despesa" required></div>
+                         <div class="form-group"><label for="edit-data-despesa">Data</label><input type="date" id="edit-data-despesa" required></div>
+                         <div class="flex gap-2">
+                             <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                             <button type="button" class="btn btn-cancel" id="cancel-edit-despesa"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                         </div>
+                     </form>
+                 </div>
+                 <div class="card shadow-md">
+                     <h2><i class="fas fa-plus-circle mr-2"></i> Registrar Despesa</h2>
+                     <form id="form-add-despesa">
+                         <div class="flex gap-2">
+                             <div class="form-group flex-1"><label for="desc-despesa">Descrição</label><input type="text" id="desc-despesa" required></div>
+                             <div class="form-group"><label for="valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="valor-despesa" required></div>
+                             <div class="form-group"><label for="data-despesa">Data</label><input type="date" id="data-despesa" required></div>
+                         </div>
+                         <button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar Despesa</button>
+                     </form>
+                 </div>
+                 <div class="card shadow-md">
+                     <h2><i class="fas fa-history mr-2"></i> Histórico de Despesas</h2>
+                     <div id="tabela-despesas-container" class="table-responsive-container"></div>
+                 </div>
+             </section>
 
             <section id="vendas-view" class="content-section">
                 <div class="card shadow-md" id="venda-form-card">
@@ -611,9 +611,9 @@
                         <div class="card mt-3">
                             <h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;"><i class="fas fa-cart-plus mr-2"></i> Adicionar Item</h3>
                              <div class="form-group" style="margin-bottom:1rem;">
-                                <label for="venda-produto-search">Buscar Produto</label>
-                                <input type="text" id="venda-produto-search" placeholder="Digite para buscar..." autocomplete="off">
-                            </div>
+                                 <label for="venda-produto-search">Buscar Produto</label>
+                                 <input type="text" id="venda-produto-search" placeholder="Digite para buscar..." autocomplete="off">
+                             </div>
                             <div class="flex gap-2 items-center">
                                 <div class="form-group flex-1" style="margin-bottom:0;"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div>
                                 <div class="form-group" style="margin-bottom:0;"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px; text-align: center;"></div>
@@ -662,18 +662,18 @@
 
             <section id="contas-a-receber-view" class="content-section">
                  <div id="edit-conta-container" class="edit-form-container shadow-md hidden">
-                       <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
-                       <form id="form-edit-conta">
-                             <input type="hidden" id="edit-conta-id">
-                             <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
-                             <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
-                             <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
-                             <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
-                             <div class="flex gap-2">
-                                 <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                                 <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
-                             </div>
-                       </form>
+                     <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
+                     <form id="form-edit-conta">
+                         <input type="hidden" id="edit-conta-id">
+                         <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
+                         <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
+                         <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
+                         <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
+                         <div class="flex gap-2">
+                             <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                             <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                         </div>
+                     </form>
                  </div>
                 <div class="card shadow-md">
                     <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Contas a Receber</h2>
@@ -690,7 +690,7 @@
                         <button class="report-tab-btn" data-tab="contas-report-tab"><i class="fas fa-file-invoice-dollar mr-2"></i>Contas a Receber</button>
                         <button class="report-tab-btn" data-tab="lucro-report-tab"><i class="fas fa-dollar-sign mr-2"></i>Lucratividade</button>
                     </div>
-                
+
                     <h3 class="report-group-title">Relatórios de Inventário & Produtos</h3>
                     <div class="report-tabs">
                         <button class="report-tab-btn" data-tab="produtos-report-tab"><i class="fas fa-star mr-2"></i>Produtos Mais Vendidos</button>
@@ -741,98 +741,98 @@
                                 <button type="submit" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
                             </form>
                              <div class="mt-4">
-                                <button id="btn-export-csv-contas" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                <button id="btn-imprimir-relatorio-contas" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                            </div>
+                                 <button id="btn-export-csv-contas" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                 <button id="btn-imprimir-relatorio-contas" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                             </div>
                         </div>
                         <div id="relatorio-contas-container" class="mt-3"></div>
                     </div>
                 </div>
-                
+
                  <div id="lucro-report-tab" class="report-tab-content">
-                    <div class="card shadow-md">
-                        <div class="no-print">
-                            <h2><i class="fas fa-dollar-sign mr-2"></i> Gerar Relatório de Lucratividade</h2>
-                            <form id="form-relatorio-lucro" class="report-form">
-                                <div class="form-group"><label for="relatorio-inicio-lucro"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-lucro"></div>
-                                <div class="form-group"><label for="relatorio-fim-lucro"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-lucro"></div>
-                                <button type="submit" class="btn"><i class="fas fa-chart-pie mr-2"></i> Gerar</button>
-                            </form>
-                             <div class="mt-4">
-                                <button id="btn-export-csv-lucro" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                <button id="btn-imprimir-relatorio-lucro" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                            </div>
-                        </div>
-                        <div id="relatorio-lucro-container" class="mt-3"></div>
-                    </div>
-                </div>
-                
-                <div id="produtos-report-tab" class="report-tab-content">
-                    <div class="card shadow-md">
+                     <div class="card shadow-md">
                          <div class="no-print">
-                                <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
-                                <form id="form-relatorio-produtos" class="report-form">
-                                    <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
-                                    <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
-                                    <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
-                                </form>
-                                 <div class="mt-4">
-                                    <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                    <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                                </div>
+                             <h2><i class="fas fa-dollar-sign mr-2"></i> Gerar Relatório de Lucratividade</h2>
+                             <form id="form-relatorio-lucro" class="report-form">
+                                 <div class="form-group"><label for="relatorio-inicio-lucro"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-lucro"></div>
+                                 <div class="form-group"><label for="relatorio-fim-lucro"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-lucro"></div>
+                                 <button type="submit" class="btn"><i class="fas fa-chart-pie mr-2"></i> Gerar</button>
+                             </form>
+                              <div class="mt-4">
+                                  <button id="btn-export-csv-lucro" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                  <button id="btn-imprimir-relatorio-lucro" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                              </div>
                          </div>
-                        <div id="relatorio-produtos-container" class="mt-3"></div>
-                    </div>
-                </div>
-                
-                 <div id="estoque-report-tab" class="report-tab-content">
-                        <div class="card shadow-md">
-                            <div class="no-print">
-                                 <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
-                                 <form id="form-relatorio-estoque" class="report-form">
-                                     <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                         <select id="relatorio_status_estoque">
-                                                 <option value="todos">Todos</option>
-                                                 <option value="disponivel">Disponível</option>
-                                                 <option value="baixo">Estoque Baixo (<= 5)</option>
-                                                 <option value="esgotado">Esgotado</option>
-                                         </select>
-                                     </div>
-                                     <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
-                                 </form>
-                                  <div class="mt-4">
-                                    <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                    <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                                </div>
-                            </div>
-                            <div id="relatorio-estoque-container" class="mt-3"></div>
-                        </div>
+                         <div id="relatorio-lucro-container" class="mt-3"></div>
+                     </div>
                  </div>
 
-                <div id="caixa-report-tab" class="report-tab-content">
-                    <div class="card shadow-md">
-                        <div class="no-print">
-                            <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
-                            <form id="form-relatorio-caixa" class="report-form">
-                                <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
-                                <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
-                                <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
-                                    <select id="relatorio_tipo_caixa">
-                                        <option value="todos">Todos</option>
-                                        <option value="Entrada">Entradas</option>
-                                        <option value="Saída">Saídas</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
-                            </form>
-                             <div class="mt-4">
-                                <button id="btn-export-csv-caixa" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                <button id="btn-imprimir-relatorio-caixa" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                            </div>
-                        </div>
-                        <div id="relatorio-caixa-container" class="mt-3"></div>
-                    </div>
-                </div>
+                 <div id="produtos-report-tab" class="report-tab-content">
+                     <div class="card shadow-md">
+                          <div class="no-print">
+                              <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
+                              <form id="form-relatorio-produtos" class="report-form">
+                                  <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
+                                  <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
+                                  <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
+                              </form>
+                               <div class="mt-4">
+                                   <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                   <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                               </div>
+                           </div>
+                           <div id="relatorio-produtos-container" class="mt-3"></div>
+                     </div>
+                 </div>
+
+                 <div id="estoque-report-tab" class="report-tab-content">
+                         <div class="card shadow-md">
+                             <div class="no-print">
+                                     <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                                    <form id="form-relatorio-estoque" class="report-form">
+                                         <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                             <select id="relatorio_status_estoque">
+                                                     <option value="todos">Todos</option>
+                                                     <option value="disponivel">Disponível</option>
+                                                     <option value="baixo">Estoque Baixo (<= 5)</option>
+                                                     <option value="esgotado">Esgotado</option>
+                                             </select>
+                                             </div>
+                                             <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                                     </form>
+                                     <div class="mt-4">
+                                         <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                         <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                     </div>
+                                 </div>
+                                 <div id="relatorio-estoque-container" class="mt-3"></div>
+                         </div>
+                 </div>
+
+                 <div id="caixa-report-tab" class="report-tab-content">
+                     <div class="card shadow-md">
+                         <div class="no-print">
+                             <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
+                             <form id="form-relatorio-caixa" class="report-form">
+                                 <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
+                                 <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
+                                 <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
+                                     <select id="relatorio_tipo_caixa">
+                                         <option value="todos">Todos</option>
+                                         <option value="Entrada">Entradas</option>
+                                         <option value="Saída">Saídas</option>
+                                     </select>
+                                 </div>
+                                 <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
+                             </form>
+                              <div class="mt-4">
+                                  <button id="btn-export-csv-caixa" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                  <button id="btn-imprimir-relatorio-caixa" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                              </div>
+                         </div>
+                         <div id="relatorio-caixa-container" class="mt-3"></div>
+                     </div>
+                 </div>
 
             </section>
 
@@ -850,41 +850,41 @@
                     </div>
                 </div>
                  <div class="card shadow-md">
-                    <h2><i class="fas fa-upload mr-2"></i> Restaurar Dados</h2>
+                     <h2><i class="fas fa-upload mr-2"></i> Restaurar Dados</h2>
                      <div class="backup-container mt-3">
-                        <p>
-                           <strong>Atenção:</strong> A restauração de dados irá <strong>sobrescrever todos os dados atuais</strong> no sistema. Use com cuidado e apenas com um arquivo de backup válido gerado por este sistema.
-                        </p>
-                        <div class="mt-4 flex items-center">
-                            <label for="restore-input" id="restore-label" class="btn"><i class="fas fa-upload mr-2"></i> Escolher Arquivo de Backup</label>
-                            <input type="file" id="restore-input" accept=".json">
-                            <span id="restore-file-name"></span>
-                        </div>
-                    </div>
+                         <p>
+                             <strong>Atenção:</strong> A restauração de dados irá <strong>sobrescrever todos os dados atuais</strong> no sistema. Use com cuidado e apenas com um arquivo de backup válido gerado por este sistema.
+                         </p>
+                         <div class="mt-4 flex items-center">
+                             <label for="restore-input" id="restore-label" class="btn"><i class="fas fa-upload mr-2"></i> Escolher Arquivo de Backup</label>
+                             <input type="file" id="restore-input" accept=".json">
+                             <span id="restore-file-name"></span>
+                         </div>
+                     </div>
                  </div>
             </section>
         </main>
     </div>
 
     <div id="receipt-modal" class="modal-overlay hidden no-print">
-         <div id="printable-receipt-area">
-              <div class="modal-content">
-                  <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
-                  <div class="modal-body" id="receipt-body">
-                        </div>
-                  <div class="modal-actions no-print">
-                      <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                      <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
-                  </div>
-              </div>
-         </div>
+          <div id="printable-receipt-area">
+               <div class="modal-content">
+                    <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
+                    <div class="modal-body" id="receipt-body">
+                            </div>
+                    <div class="modal-actions no-print">
+                            <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                            <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                    </div>
+               </div>
+          </div>
     </div>
 
     <div id="client-history-modal" class="modal-overlay hidden no-print">
         <div class="modal-content">
             <button class="btn-close-modal no-print" data-target-modal="client-history-modal">&times;</button>
             <div class="modal-body" id="client-history-body">
-                  </div>
+                    </div>
             <div class="modal-actions no-print">
                 <button class="btn btn-close-modal" data-target-modal="client-history-modal"><i class="fas fa-times mr-2"></i> Fechar</button>
             </div>
@@ -905,7 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const desktopPageTitle = document.getElementById('desktop-page-title');
     const sidebar = document.querySelector('.sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
-    
+
     // --- ESTADO DA APLICAÇÃO ---
     let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [], despesas = [];
     let carrinhoVenda = [];
@@ -916,11 +916,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveData = (key, data) => localStorage.setItem(`florDeMaria_${key}`, JSON.stringify(data));
     const loadData = (key) => JSON.parse(localStorage.getItem(`florDeMaria_${key}`)) || [];
     const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    
+
     const formatDate = (dateString, includeTime = false) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
-        
+
         const options = {
             year: 'numeric',
             month: '2-digit',
@@ -931,7 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (includeTime) {
             options.hour = '2-digit';
             options.minute = '2-digit';
-            delete options.timeZone; 
+            delete options.timeZone;
         }
 
         return new Intl.DateTimeFormat('pt-BR', options).format(date);
@@ -965,7 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         container.appendChild(table);
     };
-    
+
     // --- Renderização de Linhas das Tabelas ---
     const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data, true), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<div class="no-print">${!item.despesaId ? `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`: `<span style="font-size:0.8rem; color:var(--text-secondary)">(Despesa)</span>`}</div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowClientes = (c, headers) => `<tr>${[c.nome, c.contato || 'N/A', `<div class="no-print"><button class="btn-action" title="Histórico" data-action="history" data-type="cliente" data-id="${c.id}"><i class="fas fa-history"></i></button><button class="btn-action" title="Editar" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" title="Excluir" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
@@ -976,7 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, `<div class="flex items-center no-print">${(conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-action="pay" data-id="${conta.id}" title="Marcar como Pago"><i class="fas fa-check"></i></button>` : '')}<button class="btn-action" data-action="edit" data-type="conta" data-id="${conta.id}" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="conta" data-id="${conta.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     };
     const renderRowDespesas = (d, headers) => `<tr>${[formatDate(d.data), d.descricao, formatCurrency(d.valor), `<div class="no-print"><button class="btn-action" data-action="edit" data-type="despesa" data-id="${d.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="despesa" data-id="${d.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
-    
+
     // --- Funções de Navegação e Renderização de Páginas ---
     const rerenderCurrentPageTables = () => {
         const currentPageId = document.querySelector('.content-section.active')?.id;
@@ -993,7 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         tableRenderMap[currentPageId]?.();
     };
-    
+
     const navigateToPage = (pageId) => {
         if (!pageId || !document.getElementById(pageId)) { pageId = 'dashboard-view'; }
         contentSections.forEach(s => s.classList.remove('active'));
@@ -1023,7 +1023,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         renderMap[pageId]?.();
     };
-    
+
+    const cancelAllEdits = () => {
+        const editContainers = document.querySelectorAll('.edit-form-container');
+        editContainers.forEach(container => container.classList.add('hidden'));
+        const cancelButtons = document.querySelectorAll('.edit-form-container .btn-cancel');
+        cancelButtons.forEach(button => {
+            button.onclick = () => button.closest('.edit-form-container').classList.add('hidden');
+        });
+    };
+
     // --- Renderização do Dashboard ---
     const renderDashboard = () => {
         // Cards de Resumo
@@ -1031,7 +1040,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('saldo-caixa-dashboard').textContent = formatCurrency(saldoCaixa);
         document.getElementById('saldo-caixa-detalhe').textContent = formatCurrency(saldoCaixa);
         document.getElementById('total-a-receber-dashboard').textContent = formatCurrency(contasAReceber.filter(c => c.status === 'Pendente').reduce((acc, c) => acc + c.valor, 0));
-        
+
         const hoje = new Date();
         const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
         const totalDespesasMes = despesas.filter(d => new Date(d.data) >= inicioMes).reduce((acc, d) => acc + d.valor, 0);
@@ -1083,53 +1092,59 @@ document.addEventListener('DOMContentLoaded', () => {
         const ctx = document.getElementById('paymentMethodChart')?.getContext('2d');
         if (!ctx) return;
         if (paymentChartInstance) paymentChartInstance.destroy();
-        
+
         const cssVariables = getComputedStyle(document.documentElement);
 
         paymentChartInstance = new Chart(ctx, {
-            type: 'bar', 
-            data: { 
-                labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], 
-                datasets: [{ 
-                    label: 'Total de Vendas', 
-                    data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], 
+            type: 'bar',
+            data: {
+                labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'],
+                datasets: [{
+                    label: 'Total de Vendas',
+                    data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito],
                     backgroundColor: [
-                        cssVariables.getPropertyValue('--success-color'), 
-                        cssVariables.getPropertyValue('--info-color'), 
-                        cssVariables.getPropertyValue('--warning-color'), 
+                        cssVariables.getPropertyValue('--success-color'),
+                        cssVariables.getPropertyValue('--info-color'),
+                        cssVariables.getPropertyValue('--warning-color'),
                         cssVariables.getPropertyValue('--danger-color')
-                    ], 
-                    borderRadius: 4, 
-                }] 
+                    ],
+                    borderRadius: 4,
+                }]
             },
-            options: { 
-                indexAxis: 'y', 
-                responsive: true, 
-                maintainAspectRatio: false, 
-                plugins: { 
-                    legend: { display: false }, 
-                    tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } 
-                }, 
-                scales: { 
-                    x: { 
-                        beginAtZero: true, 
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
                         grid: { color: 'rgba(230, 184, 0, 0.1)' },
                         ticks: { color: cssVariables.getPropertyValue('--text-secondary') }
-                    }, 
-                    y: { 
+                    },
+                    y: {
                         grid: { display: false },
                         ticks: { color: cssVariables.getPropertyValue('--text-secondary') }
-                    } 
-                } 
+                    }
+                }
             }
         });
     };
-    
+
     // --- Renderização de Tabelas de CRUD ---
     const renderFluxoCaixa = () => renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], [...fluxoCaixa].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
     const renderClientes = () => renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)), renderRowClientes);
     const renderProdutos = () => renderTable('tabela-produtos-container', ['Ref.', 'Produto', 'Em Estoque', 'Custo', 'Preço', 'Ações'], [...produtos].sort((a, b) => a.nome.localeCompare(b.nome)), renderRowProdutos);
-    const renderContasAReceber = () => renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ações'], [...contasAReceber].sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowContas);
+    const renderContasAReceber = () => {
+        const contasReceberComNomes = contasAReceber.map(conta => ({
+            ...conta,
+            clienteNome: clientes.find(c => c.id === conta.clienteId)?.nome || 'Avulso'
+        })).sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento));
+        renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ações'], contasReceberComNomes, renderRowContas);
+    };
     const renderDespesas = () => renderTable('tabela-despesas-container', ['Data', 'Descrição', 'Valor', 'Ações'], [...despesas].sort((a, b) => new Date(b.data) - new Date(a.data)), renderRowDespesas);
     const renderCarrinho = () => {
         const totalEl = document.getElementById('venda-total');
@@ -1150,7 +1165,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const produtosFiltrados = produtos.filter(p => p.nome.toLowerCase().includes(filtroProduto.toLowerCase()) || (p.refProduto && p.refProduto.toLowerCase().includes(filtroProduto.toLowerCase())));
         produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtosFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.refProduto ? `[${p.refProduto}] ` : ''}${p.nome} (${p.quantidade} disp.)</option>`).join('');
     };
-    
+
+    document.getElementById('venda-pagamento').addEventListener('change', function() {
+        document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
+        document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
+        if (this.value === 'crediario') {
+            document.getElementById('venda-parcelas-crediario-group').classList.remove('hidden');
+        } else if (this.value === 'cartao_credito') {
+            document.getElementById('venda-parcelas-cartao-group').classList.remove('hidden');
+        }
+    });
+
+    document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
+
     const addItemAoCarrinho = () => {
         const produtoId = document.getElementById('venda-produto').value;
         const quantidade = parseInt(document.getElementById('venda-qtd').value);
@@ -1167,18 +1194,20 @@ document.addEventListener('DOMContentLoaded', () => {
             carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, precoCustoUnitario: produto.precoCusto, subtotal: quantidade * produto.preco });
         }
         showNotification(`${quantidade}x ${produto.nome} adicionado(s) ao carrinho.`, false);
-        document.getElementById('venda-qtd').value = 1; 
+        document.getElementById('venda-qtd').value = 1;
         document.getElementById('venda-produto').value = '';
         document.getElementById('venda-produto-search').value = '';
         popularFormulariosVenda(document.getElementById('venda-cliente-search').value, '');
         renderCarrinho();
     };
 
+    document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
+
     const finalizarVenda = () => {
         const clienteId = parseInt(document.getElementById('venda-cliente').value);
         if (!clienteId) { showNotification('Selecione um cliente para continuar!', true); return; }
         if (carrinhoVenda.length === 0) { showNotification('Adicione pelo menos um item à venda!', true); return; }
-        
+
         const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
         const metodoPagamento = document.getElementById('venda-pagamento').value;
         let parcelas = 1;
@@ -1191,17 +1220,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const novaVenda = { id: Date.now(), clienteId, itens: [...carrinhoVenda], total, metodoPagamento, parcelas, data: new Date().toISOString() };
         vendas.push(novaVenda);
-        
+
         carrinhoVenda.forEach(item => {
             const produtoEstoque = produtos.find(p => p.id == item.produtoId);
             if(produtoEstoque) produtoEstoque.quantidade -= item.quantidade;
         });
-        
+
         const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
-        
+
         const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
         let descPagamento = metodoPagamentoMap[metodoPagamento];
-        
+
         if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
             fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${descPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
         } else if (metodoPagamento === 'crediario' || metodoPagamento === 'cartao_credito') {
@@ -1214,15 +1243,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         saveAllData();
-        
+
         showNotification('Venda finalizada! Gerando recibo...', false);
         showReceipt(novaVenda);
-        
+
         carrinhoVenda = [];
         document.getElementById('venda-form').reset();
         document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
         document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
-        
+
         popularFormulariosVenda();
         renderCarrinho();
         renderDashboard();
@@ -1233,7 +1262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
         const cliente = clientes.find(c => c.id === venda.clienteId);
-        
+
         const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
         let pagamentoDesc = metodoPagamentoMap[venda.metodoPagamento];
         if (venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') {
@@ -1276,7 +1305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div><strong>ID do Cliente:</strong><span>${cliente.id}</span></div>
                 <div><strong>Telefone:</strong><span>${cliente.contato || 'N/A'}</span></div>
             </div>`;
-        
+
         if(vendasCliente.length === 0) {
             historyHtml += '<p style="text-align:center; padding: 20px;">Nenhuma compra registrada para este cliente.</p>';
         } else {
@@ -1288,8 +1317,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </h3>
                     <div class="modal-items">
                         <table>
-                           <thead><tr><th>Item</th><th class="text-right">Subtotal</th></tr></thead>
-                           <tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody>
+                            <thead><tr><th>Item</th><th class="text-right">Subtotal</th></tr></thead>
+                            <tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody>
                         </table>
                     </div>
                     <div class="modal-total" style="font-size: 1.1rem; margin-bottom: 0;">Total: ${formatCurrency(venda.total)}</div>
@@ -1307,36 +1336,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const itemToEdit = dataMap[type].find(item => item.id === id);
         if (itemToEdit) {
             const populateMap = {
-                cliente: () => { 
-                    document.getElementById('edit-cliente-id').value = itemToEdit.id; 
-                    document.getElementById('edit-nome-cliente').value = itemToEdit.nome; 
-                    document.getElementById('edit-contato-cliente').value = itemToEdit.contato || ''; 
+                cliente: () => {
+                    document.getElementById('edit-cliente-id').value = itemToEdit.id;
+                    document.getElementById('edit-nome-cliente').value = itemToEdit.nome;
+                    document.getElementById('edit-contato-cliente').value = itemToEdit.contato || '';
                 },
-                produto: () => { 
-                    document.getElementById('edit-produto-id').value = itemToEdit.id; 
+                produto: () => {
+                    document.getElementById('edit-produto-id').value = itemToEdit.id;
                     document.getElementById('edit-ref-produto').value = itemToEdit.refProduto || '';
-                    document.getElementById('edit-nome-produto').value = itemToEdit.nome; 
-                    document.getElementById('edit-qtd-produto').value = itemToEdit.quantidade; 
+                    document.getElementById('edit-nome-produto').value = itemToEdit.nome;
+                    document.getElementById('edit-qtd-produto').value = itemToEdit.quantidade;
                     document.getElementById('edit-preco-custo-produto').value = itemToEdit.precoCusto;
-                    document.getElementById('edit-preco-venda-produto').value = itemToEdit.preco; 
+                    document.getElementById('edit-preco-venda-produto').value = itemToEdit.preco;
                 },
-                lancamento: () => { 
+                lancamento: () => {
                     if (itemToEdit.despesaId) {
                         showNotification('Lançamentos de despesas devem ser editados na tela de Despesas.', true);
                         return;
                     }
-                    document.getElementById('edit-lancamento-id').value = itemToEdit.id; 
-                    document.getElementById('edit-desc-lancamento').value = itemToEdit.descricao; 
-                    document.getElementById('edit-valor-lancamento').value = itemToEdit.valor; 
-                    document.getElementById('edit-tipo-lancamento').value = itemToEdit.tipo; 
+                    document.getElementById('edit-lancamento-id').value = itemToEdit.id;
+                    document.getElementById('edit-desc-lancamento').value = itemToEdit.descricao;
+                    document.getElementById('edit-valor-lancamento').value = itemToEdit.valor;
+                    document.getElementById('edit-tipo-lancamento').value = itemToEdit.tipo;
                 },
                 conta: () => {
                     const select = document.getElementById('edit-conta-cliente');
                     select.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
-                    document.getElementById('edit-conta-id').value = itemToEdit.id; 
-                    select.value = itemToEdit.clienteId; 
-                    document.getElementById('edit-conta-valor').value = itemToEdit.valor; 
-                    document.getElementById('edit-conta-vencimento').value = new Date(itemToEdit.dataVencimento).toISOString().split('T')[0]; 
+                    document.getElementById('edit-conta-id').value = itemToEdit.id;
+                    select.value = itemToEdit.clienteId;
+                    document.getElementById('edit-conta-valor').value = itemToEdit.valor;
+                    document.getElementById('edit-conta-vencimento').value = new Date(itemToEdit.dataVencimento).toISOString().split('T')[0];
                     document.getElementById('edit-conta-status').value = itemToEdit.status;
                 },
                 despesa: () => {
@@ -1348,9 +1377,18 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             populateMap[type]();
             document.getElementById(`edit-${type}-container`).classList.remove('hidden');
+            const cancelButton = document.getElementById(`cancel-edit-${type}`);
+            if (cancelButton) {
+                cancelButton.onclick = () => document.getElementById(`edit-${type}-container`).classList.add('hidden');
+            } else {
+                const genericCancelButton = document.querySelector(`#edit-${type}-container .btn-cancel`);
+                if (genericCancelButton) {
+                    genericCancelButton.onclick = () => document.getElementById(`edit-${type}-container`).classList.add('hidden');
+                }
+            }
         }
     };
-    
+
     const handleDelete = (type, id) => {
         if (!confirm(`Tem certeza que deseja excluir? Esta ação não pode ser desfeita.`)) return;
 
@@ -1369,8 +1407,8 @@ document.addEventListener('DOMContentLoaded', () => {
             lancamento: () => {
                 const lancamento = fluxoCaixa.find(l => l.id === id);
                 if (lancamento && lancamento.despesaId) {
-                     showNotification('Lançamentos de despesas devem ser excluídos na tela de Despesas.', true);
-                     return;
+                    showNotification('Lançamentos de despesas devem ser excluídos na tela de Despesas.', true);
+                    return;
                 }
                 fluxoCaixa = fluxoCaixa.filter(i => i.id !== id);
             },
@@ -1390,6 +1428,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- GERAÇÃO DE RELATÓRIOS ---
+    const popularFiltroClienteRelatorio = () => {
+        const selectClienteContas = document.getElementById('relatorio-cliente-contas');
+        if (selectClienteContas) {
+            selectClienteContas.innerHTML = '<option value="Todos">Todos os Clientes</option>' + [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        }
+    };
+
     const gerarRelatorioVendas = (e) => {
         e.preventDefault();
         const dataInicioStr = document.getElementById('relatorio-inicio-vendas').value;
@@ -1401,25 +1446,292 @@ document.addEventListener('DOMContentLoaded', () => {
         const dataInicio = new Date(dataInicioStr + "T00:00:00");
         const dataFim = new Date(dataFimStr + "T23:59:59");
         const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
-        
-        if (vendasFiltradas.length === 0) { 
-            container.innerHTML = '<div class="card" id="printable-report-vendas"><p style="text-align:center;">Nenhuma venda no período.</p></div>'; 
+
+        if (vendasFiltradas.length === 0) {
+            container.innerHTML = '<div class="card" id="printable-report-vendas"><p style="text-align:center;">Nenhuma venda no período.</p></div>';
             btnImprimir.classList.add('hidden');
             btnCsv.classList.add('hidden');
-            return; 
+            return;
         }
 
         const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
         const renderRowRelatorioVendas = (v, headers) => `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), v.metodoPagamento, formatCurrency(v.total)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
-        
+
         container.innerHTML = `<div class="card" id="printable-report-vendas"><h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total Vendido: ${formatCurrency(totalVendido)}</p><div id="relatorio-vendas-tabela-container"></div></div>`;
         renderTable('relatorio-vendas-tabela-container', ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'], [...vendasFiltradas].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
+
+        btnImprimir.onclick = () => window.print();
+        btnCsv.onclick = () => {
+            const headersCSV = ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'];
+            const dataCSV = vendasFiltradas.map(v => ({
+                'Data/Hora': formatDate(v.data, true),
+                'Cliente': getNomeCliente(v.clienteId),
+                'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
+                'Pagamento': v.metodoPagamento,
+                'Total': formatCurrency(v.total)
+            }));
+            exportToCSV(headersCSV, dataCSV, `relatorio_vendas_${formatDate(dataInicioStr)}_${formatDate(dataFimStr)}.csv`);
+        };
     };
-    
-    // ... (As demais funções de gerar relatórios como gerarRelatorioContas, etc, seguem um padrão similar)
+    document.getElementById('form-relatorio-vendas').addEventListener('submit', gerarRelatorioVendas);
+    document.getElementById('btn-limpar-vendas').addEventListener('click', () => {
+        if (confirm('Tem certeza que deseja excluir TODAS as vendas? Esta ação é irreversível!')) {
+            vendas = [];
+            saveData('vendas', vendas);
+            showNotification('Histórico de vendas apagado!', 'warning');
+            navigateToPage('relatorios-view');
+        }
+    });
+
+    const gerarRelatorioContas = (e) => {
+        e.preventDefault();
+        const clienteId = document.getElementById('relatorio-cliente-contas').value;
+        const status = document.getElementById('relatorio-status-contas').value;
+        const dataInicioStr = document.getElementById('relatorio-inicio-contas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-contas').value;
+        const container = document.getElementById('relatorio-contas-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-contas');
+        const btnCsv = document.getElementById('btn-export-csv-contas');
+
+        const contasFiltradas = contasAReceber.filter(conta =>
+            (clienteId === 'Todos' || conta.clienteId == clienteId) &&
+            (status === 'Todos' || conta.status === status) &&
+            (!dataInicioStr || new Date(conta.dataVencimento) >= new Date(dataInicioStr + "T00:00:00")) &&
+            (!dataFimStr || new Date(conta.dataVencimento) <= new Date(dataFimStr + "T23:59:59"))
+        );
+
+        if (contasFiltradas.length === 0) {
+            container.innerHTML = '<div class="card" id="printable-report-contas"><p style="text-align:center;">Nenhuma conta a receber encontrada com os filtros.</p></div>';
+            btnImprimir.classList.add('hidden');
+            btnCsv.classList.add('hidden');
+            return;
+        }
+
+        const totalAReceber = contasFiltradas.reduce((acc, c) => acc + c.valor, 0);
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
+        const renderRowRelatorioContas = (c, headers) => `<tr>${[getNomeCliente(c.clienteId), formatCurrency(c.valor), formatDate(c.dataVencimento), c.status].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+
+        const tituloRelatorio = `Relatório de Contas a Receber${clienteId !== 'Todos' ? ' - ' + getNomeCliente(clienteId) : ''}${status !== 'Todos' ? ' - Status: ' + status : ''}${dataInicioStr && dataFimStr ? ` (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})` : ''}`;
+        container.innerHTML = `<div class="card" id="printable-report-contas"><h2>${tituloRelatorio}</h2><p style="font-size: 1.2rem; font-weight: 600;">Total a Receber: ${formatCurrency(totalAReceber)}</p><div id="relatorio-contas-tabela-container"></div></div>`;
+        renderTable('relatorio-contas-tabela-container', ['Cliente', 'Valor', 'Vencimento', 'Status'], contasFiltradas, renderRowRelatorioContas);
+        btnImprimir.classList.remove('hidden');
+        btnCsv.classList.remove('hidden');
+
+        btnImprimir.onclick = () => window.print();
+        btnCsv.onclick = () => {
+            const headersCSV = ['Cliente', 'Valor', 'Vencimento', 'Status'];
+            const dataCSV = contasFiltradas.map(c => ({
+                'Cliente': getNomeCliente(c.clienteId),
+                'Valor': formatCurrency(c.valor),
+                'Vencimento': formatDate(c.dataVencimento),
+                'Status': c.status
+            }));
+            exportToCSV(headersCSV, dataCSV, `relatorio_contas_a_receber_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
+        };
+    };
+    document.getElementById('form-relatorio-contas').addEventListener('submit', gerarRelatorioContas);
+
+    const gerarRelatorioLucro = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-lucro').value;
+        const dataFimStr = document.getElementById('relatorio-fim-lucro').value;
+        const container = document.getElementById('relatorio-lucro-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-lucro');
+        const btnCsv = document.getElementById('btn-export-csv-lucro');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione as datas de início e fim.', true); return; }
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+
+        if (vendasFiltradas.length === 0) {
+            container.innerHTML = '<div class="card" id="printable-report-lucro"><p style="text-align:center;">Nenhuma venda no período.</p></div>';
+            btnImprimir.classList.add('hidden');
+            btnCsv.classList.add('hidden');
+            return;
+        }
+
+        let lucroTotal = 0;
+        const relatorioLucroDetalhado = vendasFiltradas.map(venda => {
+            let custoVenda = 0;
+            venda.itens.forEach(item => {
+                custoVenda += item.quantidade * item.precoCustoUnitario;
+            });
+            const lucroVenda = venda.total - custoVenda;
+            lucroTotal += lucroVenda;
+            return { ...venda, custo: custoVenda, lucro: lucroVenda };
+        });
+
+        const renderRowRelatorioLucro = (v, headers) => `<tr>${[formatDate(v.data, true), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), formatCurrency(v.custo), formatCurrency(v.total), formatCurrency(v.lucro)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+
+        container.innerHTML = `<div class="card" id="printable-report-lucro"><h2>Relatório de Lucratividade (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Lucro Total: ${formatCurrency(lucroTotal)}</p><div id="relatorio-lucro-tabela-container"></div></div>`;
+        renderTable('relatorio-lucro-tabela-container', ['Data/Hora', 'Itens', 'Custo', 'Venda', 'Lucro'], relatorioLucroDetalhado, renderRowRelatorioLucro);
+        btnImprimir.classList.remove('hidden');
+        btnCsv.classList.remove('hidden');
+
+        btnImprimir.onclick = () => window.print();
+        btnCsv.onclick = () => {
+            const headersCSV = ['Data/Hora', 'Itens', 'Custo', 'Venda', 'Lucro'];
+            const dataCSV = relatorioLucroDetalhado.map(v => ({
+                'Data/Hora': formatDate(v.data, true),
+                'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
+                'Custo': formatCurrency(v.custo),
+                'Venda': formatCurrency(v.total),
+                'Lucro': formatCurrency(v.lucro)
+            }));
+            exportToCSV(headersCSV, dataCSV, `relatorio_lucratividade_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
+        };
+    };
+    document.getElementById('form-relatorio-lucro').addEventListener('submit', gerarRelatorioLucro);
+
+    const gerarRelatorioProdutosMaisVendidos = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-produtos').value;
+        const dataFimStr = document.getElementById('relatorio-fim-produtos').value;
+        const container = document.getElementById('relatorio-produtos-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-produtos');
+        const btnCsv = document.getElementById('btn-export-csv-produtos');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione o período do relatório.', true); return; }
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+
+        const vendasPorProduto = {};
+        vendasFiltradas.forEach(venda => {
+            venda.itens.forEach(item => {
+                vendasPorProduto[item.nome] = (vendasPorProduto[item.nome] || 0) + item.quantidade;
+            });
+        });
+
+        const produtosOrdenados = Object.entries(vendasPorProduto)
+            .sort(([, qtdA], [, qtdB]) => qtdB - qtdA)
+            .map(([nome, quantidade]) => ({ nome, quantidade }));
+
+        if (produtosOrdenados.length === 0) {
+            container.innerHTML = '<div class="card" id="printable-report-produtos"><p style="text-align:center;">Nenhum produto vendido no período.</p></div>';
+            btnImprimir.classList.add('hidden');
+            btnCsv.classList.add('hidden');
+            return;
+        }
+
+        const renderRowRelatorioProdutos = (p, headers) => `<tr>${[p.nome, p.quantidade].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+
+        container.innerHTML = `<div class="card" id="printable-report-produtos"><h2>Produtos Mais Vendidos (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><div id="relatorio-produtos-tabela-container"></div></div>`;
+        renderTable('relatorio-produtos-tabela-container', ['Produto', 'Quantidade Vendida'], produtosOrdenados, renderRowRelatorioProdutos);
+        btnImprimir.classList.remove('hidden');
+        btnCsv.classList.remove('hidden');
+
+        btnImprimir.onclick = () => window.print();
+        btnCsv.onclick = () => {
+            const headersCSV = ['Produto', 'Quantidade Vendida'];
+            const dataCSV = produtosOrdenados.map(p => ({
+                'Produto': p.nome,
+                'Quantidade Vendida': p.quantidade
+            }));
+            exportToCSV(headersCSV, dataCSV, `relatorio_produtos_mais_vendidos_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
+        };
+    };
+    document.getElementById('form-relatorio-produtos').addEventListener('submit', gerarRelatorioProdutosMaisVendidos);
+
+    const gerarRelatorioEstoque = (e) => {
+        e.preventDefault();
+        const statusFiltro = document.getElementById('relatorio_status_estoque').value;
+        const container = document.getElementById('relatorio-estoque-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-estoque');
+        const btnCsv = document.getElementById('btn-export-csv-estoque');
+
+        const estoqueFiltrado = produtos.filter(p => {
+            if (statusFiltro === 'todos') return true;
+            if (statusFiltro === 'disponivel') return p.quantidade > 5;
+            if (statusFiltro === 'baixo') return p.quantidade <= 5 && p.quantidade > 0;
+            if (statusFiltro === 'esgotado') return p.quantidade === 0;
+            return true;
+        });
+
+        if (estoqueFiltrado.length === 0) {
+            container.innerHTML = '<div class="card" id="printable-report-estoque"><p style="text-align:center;">Nenhum produto encontrado com o filtro selecionado.</p></div>';
+            btnImprimir.classList.add('hidden');
+            btnCsv.classList.add('hidden');
+            return;
+        }
+
+        const renderRowRelatorioEstoque = (p, headers) => `<tr>${[p.refProduto || '-', p.nome, p.quantidade, formatCurrency(p.precoCusto), formatCurrency(p.preco)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+
+        container.innerHTML = `<div class="card" id="printable-report-estoque"><h2>Situação do Estoque</h2><div id="relatorio-estoque-tabela-container"></div></div>`;
+        renderTable('relatorio-estoque-tabela-container', ['Ref.', 'Produto', 'Qtd', 'Custo', 'Preço'], estoqueFiltrado.sort((a, b) => a.nome.localeCompare(b.nome)), renderRowRelatorioEstoque);
+        btnImprimir.classList.remove('hidden');
+        btnCsv.classList.remove('hidden');
+
+        btnImprimir.onclick = () => window.print();
+        btnCsv.onclick = () => {
+            const headersCSV = ['Ref.', 'Produto', 'Qtd', 'Custo', 'Preço'];
+            const dataCSV = estoqueFiltrado.map(p => ({
+                'Ref.': p.refProduto || '-',
+                'Produto': p.nome,
+                'Qtd': p.quantidade,
+                'Custo': formatCurrency(p.precoCusto),
+                'Preço': formatCurrency(p.preco)
+            }));
+            exportToCSV(headersCSV, dataCSV, `relatorio_estoque_${statusFiltro}.csv`);
+        };
+    };
+    document.getElementById('form-relatorio-estoque').addEventListener('submit', gerarRelatorioEstoque);
+
+    const gerarRelatorioCaixa = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-caixa').value;
+        const dataFimStr = document.getElementById('relatorio-fim-caixa').value;
+        const tipoLancamento = document.getElementById('relatorio_tipo_caixa').value;
+        const container = document.getElementById('relatorio-caixa-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-caixa');
+        const btnCsv = document.getElementById('btn-export-csv-caixa');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione o período do relatório.', true); return; }
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+
+        const fluxoFiltrado = fluxoCaixa.filter(f =>
+            new Date(f.data) >= dataInicio && new Date(f.data) <= dataFim &&
+            (tipoLancamento === 'todos' || f.tipo === tipoLancamento)
+        ).sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        if (fluxoFiltrado.length === 0) {
+            container.innerHTML = '<div class="card" id="printable-report-caixa"><p style="text-align:center;">Nenhum lançamento de caixa encontrado no período.</p></div>';
+            btnImprimir.classList.add('hidden');
+            btnCsv.classList.add('hidden');
+            return;
+        }
+
+        const saldoInicial = fluxoCaixa.filter(f => new Date(f.data) < dataInicio).reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0);
+        let saldoAtual = saldoInicial;
+        const relatorioCaixaComSaldo = fluxoFiltrado.map(item => {
+            saldoAtual += (item.tipo === 'Entrada' ? item.valor : -item.valor);
+            return { ...item, saldo: saldoAtual };
+        });
+        const saldoFinal = relatorioCaixaComSaldo.length > 0 ? relatorioCaixaComSaldo[relatorioCaixaComSaldo.length - 1].saldo : saldoInicial;
+
+        const renderRowRelatorioCaixa = (f, headers) => `<tr>${[formatDate(f.data, true), f.descricao, f.tipo, formatCurrency(f.valor), formatCurrency(f.saldo)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+
+        container.innerHTML = `<div class="card" id="printable-report-caixa"><h2>Relatório de Fluxo de Caixa (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Saldo Inicial: ${formatCurrency(saldoInicial)} | Saldo Final: ${formatCurrency(saldoFinal)}</p><div id="relatorio-caixa-tabela-container"></div></div>`;
+        renderTable('relatorio-caixa-tabela-container', ['Data/Hora', 'Descrição', 'Tipo', 'Valor', 'Saldo'], relatorioCaixaComSaldo, renderRowRelatorioCaixa);
+        btnImprimir.classList.remove('hidden');
+        btnCsv.classList.remove('hidden');
+
+        btnImprimir.onclick = () => window.print();
+        btnCsv.onclick = () => {
+            const headersCSV = ['Data/Hora', 'Descrição', 'Tipo', 'Valor', 'Saldo'];
+            const dataCSV = relatorioCaixaComSaldo.map(f => ({
+                'Data/Hora': formatDate(f.data, true),
+                'Descrição': f.descricao,
+                'Tipo': f.tipo,
+                'Valor': formatCurrency(f.valor),
+                'Saldo': formatCurrency(f.saldo)
+            }));
+            exportToCSV(headersCSV, dataCSV, `relatorio_fluxo_de_caixa_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
+        };
+    };
+    document.getElementById('form-relatorio-caixa').addEventListener('submit', gerarRelatorioCaixa);
 
     // --- CSV & Backup/Restore ---
     const exportToCSV = (headers, data, filename) => {
@@ -1428,9 +1740,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (const row of data) {
             const values = headers.map(header => {
-                // Simplificação: use uma chave simples para o mapeamento
-                const keyMap = { 'Cliente': 'clienteNome', 'Valor': 'valor', 'Vencimento': 'dataVencimento', 'Status': 'status' }; // Exemplo para contas
-                let val = row[keyMap[header]];
+                let val = row[header];
                 if(typeof val === 'string') val = `"${val.replace(/"/g, '""')}"`; // Escapa aspas
                 return val;
             });
@@ -1439,15 +1749,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const csvString = csvRows.join('\n');
         const blob = new Blob([`\uFEFF${csvString}`], { type: 'text/csv;charset=utf-8;' }); // BOM for Excel compatibility
-        
+
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        showNotification(`Relatório exportado para ${filename}`);
     };
-    
+
     const backupData = () => {
         if(!confirm("Deseja baixar o arquivo de backup com todos os dados do sistema?")) return;
         const allData = { clientes, produtos, vendas, contasAReceber, fluxoCaixa, despesas, version: "1.0" };
@@ -1464,7 +1775,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
         showNotification("Backup realizado com sucesso!");
     };
-    
+
     const restoreData = (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -1486,7 +1797,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     contasAReceber = restoredData.contasAReceber || [];
                     fluxoCaixa = restoredData.fluxoCaixa || [];
                     despesas = restoredData.despesas || [];
-                    
+
                     saveAllData();
                     showNotification("Dados restaurados com sucesso! A página será recarregada.", false);
                     setTimeout(() => window.location.reload(), 2000);
@@ -1504,7 +1815,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Inicialização e Event Listeners ---
-    
+
     const saveAllData = () => {
         saveData('clientes', clientes);
         saveData('produtos', produtos);
@@ -1515,10 +1826,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const init = () => {
-        clientes = loadData('clientes'); 
-        produtos = loadData('produtos'); 
+        clientes = loadData('clientes');
+        produtos = loadData('produtos');
         vendas = loadData('vendas');
-        contasAReceber = loadData('contasAReceber'); 
+        contasAReceber = loadData('contasAReceber');
         fluxoCaixa = loadData('fluxoCaixa');
         despesas = loadData('despesas');
         navigateToPage(localStorage.getItem('lastActivePage') || 'dashboard-view');
@@ -1528,9 +1839,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         if (document.getElementById('username').value === 'maria' && document.getElementById('password').value === 'flor123') {
             localStorage.setItem('isLoggedIn', 'true');
-            loginScreen.classList.add('hidden'); 
+            loginScreen.classList.add('hidden');
             dashboardScreen.classList.remove('hidden');
-            init(); 
+            init();
         } else {
             document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!';
         }
@@ -1542,8 +1853,33 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.reload();
     });
 
-    // ... (Restante dos event listeners para forms, botões, etc.) ...
-    
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.dataset.target;
+            navigateToPage(targetId);
+            if (isMobile) {
+                sidebar.classList.remove('open');
+                backdrop.classList.add('hidden');
+            }
+        });
+    });
+
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        backdrop.classList.toggle('hidden');
+    });
+
+    backdrop.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        backdrop.classList.add('hidden');
+    });
+
+    window.addEventListener('resize', () => {
+        isMobile = window.innerWidth <= 768;
+        rerenderCurrentPageTables();
+    });
+
     // NOVO: Busca rápida na Venda
     document.getElementById('venda-cliente-search').addEventListener('input', (e) => popularFormulariosVenda(e.target.value, document.getElementById('venda-produto-search').value));
     document.getElementById('venda-produto-search').addEventListener('input', (e) => popularFormulariosVenda(document.getElementById('venda-cliente-search').value, e.target.value));
@@ -1551,13 +1887,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // NOVO: Backup/Restore
     document.getElementById('btn-backup').addEventListener('click', backupData);
     document.getElementById('restore-input').addEventListener('change', restoreData);
-    
+
     document.body.addEventListener('click', e => {
         // Alertas do Dashboard
         const navLinkAlert = e.target.closest('.nav-link-alert');
         if(navLinkAlert){
-             e.preventDefault();
-             navigateToPage(navLinkAlert.dataset.target);
+            e.preventDefault();
+            navigateToPage(navLinkAlert.dataset.target);
         }
 
         // Modais
@@ -1569,38 +1905,31 @@ document.addEventListener('DOMContentLoaded', () => {
         // Ações de Tabela
         const target = e.target.closest('[data-action]');
         if (!target) return;
-        
+
         const { action, type, id } = target.dataset;
         const parsedId = parseInt(id);
 
         if (action === 'edit') handleEdit(type, parsedId);
         if (action === 'delete') handleDelete(type, parsedId);
         if (action === 'history') showClientHistory(parsedId);
-        if (action === 'remove-item') { 
-            carrinhoVenda = carrinhoVenda.filter(item => item.produtoId != parsedId); 
-            renderCarrinho(); 
+        if (action === 'remove-item') {
+            carrinhoVenda = carrinhoVenda.filter(item => item.produtoId != parsedId);
+            renderCarrinho();
         }
         if (action === 'pay') {
             const conta = contasAReceber.find(c => c.id === parsedId);
-            if(conta && conta.status==='Pendente'){ 
-                conta.status = 'Pago'; 
-                fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Conta de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); 
+            if(conta && conta.status==='Pendente'){
+                conta.status = 'Pago';
+                fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Conta de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id});
                 saveAllData();
-                renderContasAReceber(); 
-                renderDashboard(); 
-                showNotification('Baixa de pagamento realizada!'); 
+                renderContasAReceber();
+                renderDashboard();
+                showNotification('Baixa de pagamento realizada!');
             }
         }
     });
 
-    // ... Restante do código original com as devidas adaptações para as novas funcionalidades ...
-
-    // O código original para manipulação de formulários (add, edit), navegação e responsividade permanece aqui,
-    // adaptado para incluir os novos campos e seções. Por uma questão de brevidade, apenas as partes
-    // mais críticas e novas foram detalhadas. A lógica completa está implicitamente contida nas funções
-    // já descritas acima.
-
-    // A lógica de inicialização final
+    // Inicialização
     if (localStorage.getItem('isLoggedIn') === 'true') {
         loginScreen.classList.add('hidden');
         dashboardScreen.classList.remove('hidden');
@@ -1609,6 +1938,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginScreen.classList.remove('hidden');
         dashboardScreen.classList.add('hidden');
     }
+    cancelAllEdits();
 });
 </script>
 </body>
