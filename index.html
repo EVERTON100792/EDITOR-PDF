@@ -249,18 +249,21 @@
             animation: fadeIn 0.3s ease; position: relative;
             display: flex; flex-direction: column; color: #333; /* Mantido para impressão */
         }
-        .modal-body { overflow-y: auto; flex-grow: 1; }
+        .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 1rem; }
         .modal-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; flex-shrink: 0; }
         .modal-header h2 { color: var(--primary-dark-color); }
+        .modal-header h4 { font-weight: 600; color: #333; font-size: 1.1rem; }
         .modal-details { margin-bottom: 1.5rem; font-size: 0.9rem; }
         .modal-details div { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
-        .modal-details span { color: #555; }
-        .modal-items table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .modal-details span { color: #555; text-align: right; }
+        .modal-items { margin-bottom: 1rem; }
+        .modal-items h4 { margin-bottom: 0.5rem; color: var(--primary-dark-color); border-top: 1px dashed #ccc; padding-top: 1rem; margin-top: 1rem;}
+        .modal-items table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
         .modal-items th, .modal-items td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #eee; }
         .modal-items th { color: #666; font-size: 0.8rem; }
         .modal-items .text-right { text-align: right; }
-        .modal-total { text-align: right; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; color: var(--primary-dark-color) }
-        .modal-footer { text-align: center; color: #888; font-size: 0.8rem; margin-top: 1.5rem; }
+        .modal-total { text-align: right; font-size: 1.25rem; font-weight: 700; margin-top: 1.5rem; color: var(--primary-dark-color); border-top: 2px solid #333; padding-top: 1rem; display: flex; justify-content: space-between; }
+        .modal-footer { text-align: center; color: #888; font-size: 0.8rem; margin-top: 1.5rem; border-top: 1px dashed #ccc; padding-top: 1rem;}
         .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-shrink: 0; }
         .btn-whatsapp { background-color: var(--whatsapp-color); }
         .btn-whatsapp:hover { background-color: #1EBE57; }
@@ -382,25 +385,70 @@
         }
 
         @media print {
-            body, .modal-content, .card {
-                background: #ffffff !important;
-                color: #000000 !important;
-                 box-shadow: none !important;
+             body {
+                background-color: #fff !important;
+                -webkit-font-smoothing: auto;
+                -moz-osx-font-smoothing: auto;
+             }
+
+            /* Hide everything in the body by default when printing */
+            body > *:not(#printable-receipt-area):not(#printable-report-vendas):not(#printable-report-contas):not(#printable-report-lucro):not(#printable-report-produtos):not(#printable-report-estoque):not(#printable-report-caixa) {
+                display: none !important;
             }
-            .no-print { display: none !important; }
-            .main-content { padding: 0; }
-            #printable-report-vendas, #printable-report-contas, #printable-report-lucro,
-            #printable-report-produtos, #printable-report-estoque, #printable-report-caixa {
+
+            /* Make only the printable area and its contents visible */
+            #printable-receipt-area, .card[id^="printable-report-"] {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
                 border: none !important;
+                box-shadow: none !important;
+                animation: none !important;
+                color: #000 !important;
+                background-color: #fff !important;
             }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .modal-overlay {
+                position: static !important;
+                background: transparent !important;
+                padding: 0 !important;
+                backdrop-filter: none !important;
+            }
+
+            .modal-content, .card[id^="printable-report-"] {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                color: #000 !important;
+                background: #fff !important;
+                max-width: 100% !important;
+                max-height: none !important;
+                animation: none !important;
+                border-radius: 0 !important;
+            }
+            
+            h1, h2, h3, h4, h5, h6, p, span, div, strong, td, th {
+                color: #000 !important;
+            }
+             
+            a { text-decoration: none; color: #000 !important; }
+
             table, tr, td, th {
                 border-color: #ccc !important;
                 color: #000 !important;
                 page-break-inside: avoid;
             }
-            .modal-header h2, .modal-total {
-                color: #000 !important;
+            
+            .valor-entrada, .valor-saida {
+                 font-weight: normal !important;
             }
+            .valor-entrada { color: #16a34a !important; }
+            .valor-saida { color: #cc0000 !important; }
         }
     </style>
 </head>
@@ -470,13 +518,13 @@
             <section id="dashboard-view" class="content-section">
                 <div id="dashboard-alerts-container"></div>
                  <div class="dashboard-grid">
-                     <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
-                     <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
-                     <div class="summary-card shadow-md" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-wallet mr-2"></i> Total de Despesas (Mês)</h3><p id="total-despesas-dashboard">R$ 0,00</p></div>
+                      <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
+                      <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
+                      <div class="summary-card shadow-md" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-wallet mr-2"></i> Total de Despesas (Mês)</h3><p id="total-despesas-dashboard">R$ 0,00</p></div>
                  </div>
                  <div class="dashboard-main-grid">
-                     <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
-                     <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
+                      <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
+                      <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
                  </div>
             </section>
 
@@ -578,32 +626,32 @@
 
              <section id="despesas-view" class="content-section">
                  <div id="edit-despesa-container" class="edit-form-container shadow-md hidden">
-                     <h3><i class="fas fa-edit mr-2"></i> Editar Despesa</h3>
-                     <form id="form-edit-despesa">
-                         <input type="hidden" id="edit-despesa-id">
-                         <div class="form-group"><label for="edit-desc-despesa">Descrição</label><input type="text" id="edit-desc-despesa" required></div>
-                         <div class="form-group"><label for="edit-valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-despesa" required></div>
-                         <div class="form-group"><label for="edit-data-despesa">Data</label><input type="date" id="edit-data-despesa" required></div>
-                         <div class="flex gap-2">
-                             <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                             <button type="button" class="btn btn-cancel" id="cancel-edit-despesa"><i class="fas fa-times mr-2"></i> Cancelar</button>
-                         </div>
-                     </form>
+                      <h3><i class="fas fa-edit mr-2"></i> Editar Despesa</h3>
+                      <form id="form-edit-despesa">
+                          <input type="hidden" id="edit-despesa-id">
+                          <div class="form-group"><label for="edit-desc-despesa">Descrição</label><input type="text" id="edit-desc-despesa" required></div>
+                          <div class="form-group"><label for="edit-valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-despesa" required></div>
+                          <div class="form-group"><label for="edit-data-despesa">Data</label><input type="date" id="edit-data-despesa" required></div>
+                          <div class="flex gap-2">
+                               <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                               <button type="button" class="btn btn-cancel" id="cancel-edit-despesa"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                          </div>
+                      </form>
                  </div>
                  <div class="card shadow-md">
-                     <h2><i class="fas fa-plus-circle mr-2"></i> Registrar Despesa</h2>
-                     <form id="form-add-despesa">
-                         <div class="flex gap-2">
-                             <div class="form-group flex-1"><label for="desc-despesa">Descrição</label><input type="text" id="desc-despesa" required></div>
-                             <div class="form-group"><label for="valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="valor-despesa" required></div>
-                             <div class="form-group"><label for="data-despesa">Data</label><input type="date" id="data-despesa" required></div>
-                         </div>
-                         <button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar Despesa</button>
-                     </form>
+                      <h2><i class="fas fa-plus-circle mr-2"></i> Registrar Despesa</h2>
+                      <form id="form-add-despesa">
+                          <div class="flex gap-2">
+                               <div class="form-group flex-1"><label for="desc-despesa">Descrição</label><input type="text" id="desc-despesa" required></div>
+                               <div class="form-group"><label for="valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="valor-despesa" required></div>
+                               <div class="form-group"><label for="data-despesa">Data</label><input type="date" id="data-despesa" required></div>
+                          </div>
+                          <button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar Despesa</button>
+                      </form>
                  </div>
                  <div class="card shadow-md">
-                     <h2><i class="fas fa-history mr-2"></i> Histórico de Despesas</h2>
-                     <div id="tabela-despesas-container" class="table-responsive-container"></div>
+                      <h2><i class="fas fa-history mr-2"></i> Histórico de Despesas</h2>
+                      <div id="tabela-despesas-container" class="table-responsive-container"></div>
                  </div>
              </section>
 
@@ -618,7 +666,7 @@
                         <div class="card mt-3">
                             <h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;"><i class="fas fa-cart-plus mr-2"></i> Adicionar Item</h3>
                              <div class="form-group" style="margin-bottom:1rem;">
-                                 <label for="venda-produto-search">Buscar Produto</label>
+                                 <label for="venda-produto-search">Buscar Produto (por nome ou referência)</label>
                                  <input type="text" id="venda-produto-search" placeholder="Digite para buscar..." autocomplete="off">
                              </div>
                             <div class="flex gap-2 items-center">
@@ -669,18 +717,18 @@
 
             <section id="contas-a-receber-view" class="content-section">
                  <div id="edit-conta-container" class="edit-form-container shadow-md hidden">
-                     <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
-                     <form id="form-edit-conta">
-                         <input type="hidden" id="edit-conta-id">
-                         <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
-                         <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
-                         <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
-                         <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
-                         <div class="flex gap-2">
-                             <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                             <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
-                         </div>
-                     </form>
+                      <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
+                      <form id="form-edit-conta">
+                          <input type="hidden" id="edit-conta-id">
+                          <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
+                          <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
+                          <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
+                          <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
+                          <div class="flex gap-2">
+                               <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                               <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                          </div>
+                      </form>
                  </div>
                 <div class="card shadow-md">
                     <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Contas a Receber</h2>
@@ -757,88 +805,88 @@
                 </div>
 
                  <div id="lucro-report-tab" class="report-tab-content">
-                     <div class="card shadow-md">
-                         <div class="no-print">
-                             <h2><i class="fas fa-dollar-sign mr-2"></i> Gerar Relatório de Lucratividade</h2>
-                             <form id="form-relatorio-lucro" class="report-form">
-                                 <div class="form-group"><label for="relatorio-inicio-lucro"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-lucro"></div>
-                                 <div class="form-group"><label for="relatorio-fim-lucro"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-lucro"></div>
-                                 <button type="submit" class="btn"><i class="fas fa-chart-pie mr-2"></i> Gerar</button>
-                             </form>
-                              <div class="mt-4">
-                                  <button id="btn-export-csv-lucro" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                  <button id="btn-imprimir-relatorio-lucro" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                              </div>
-                         </div>
-                         <div id="relatorio-lucro-container" class="mt-3"></div>
-                     </div>
+                      <div class="card shadow-md">
+                           <div class="no-print">
+                                <h2><i class="fas fa-dollar-sign mr-2"></i> Gerar Relatório de Lucratividade</h2>
+                                <form id="form-relatorio-lucro" class="report-form">
+                                     <div class="form-group"><label for="relatorio-inicio-lucro"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-lucro"></div>
+                                     <div class="form-group"><label for="relatorio-fim-lucro"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-lucro"></div>
+                                     <button type="submit" class="btn"><i class="fas fa-chart-pie mr-2"></i> Gerar</button>
+                                </form>
+                                 <div class="mt-4">
+                                     <button id="btn-export-csv-lucro" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                     <button id="btn-imprimir-relatorio-lucro" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                 </div>
+                           </div>
+                           <div id="relatorio-lucro-container" class="mt-3"></div>
+                      </div>
                  </div>
 
                  <div id="produtos-report-tab" class="report-tab-content">
-                     <div class="card shadow-md">
-                          <div class="no-print">
-                              <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
-                              <form id="form-relatorio-produtos" class="report-form">
-                                  <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
-                                  <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
-                                  <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
-                              </form>
-                               <div class="mt-4">
-                                   <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                   <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                               </div>
-                          </div>
-                          <div id="relatorio-produtos-container" class="mt-3"></div>
-                     </div>
+                      <div class="card shadow-md">
+                           <div class="no-print">
+                                <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
+                                <form id="form-relatorio-produtos" class="report-form">
+                                     <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
+                                     <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
+                                     <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
+                                </form>
+                                 <div class="mt-4">
+                                     <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                     <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                 </div>
+                           </div>
+                           <div id="relatorio-produtos-container" class="mt-3"></div>
+                      </div>
                  </div>
 
                  <div id="estoque-report-tab" class="report-tab-content">
-                      <div class="card shadow-md">
-                           <div class="no-print">
-                                 <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
-                                 <form id="form-relatorio-estoque" class="report-form">
-                                     <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                         <select id="relatorio_status_estoque">
+                       <div class="card shadow-md">
+                            <div class="no-print">
+                                   <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                                   <form id="form-relatorio-estoque" class="report-form">
+                                       <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                           <select id="relatorio_status_estoque">
                                                <option value="todos">Todos</option>
                                                <option value="disponivel">Disponível</option>
                                                <option value="baixo">Estoque Baixo (<= 5)</option>
                                                <option value="esgotado">Esgotado</option>
-                                         </select>
-                                         </div>
-                                     <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
-                                 </form>
-                                 <div class="mt-4">
-                                     <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                     <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                                 </div>
-                           </div>
-                           <div id="relatorio-estoque-container" class="mt-3"></div>
-                      </div>
+                                           </select>
+                                           </div>
+                                       <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                                   </form>
+                                   <div class="mt-4">
+                                       <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                       <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                   </div>
+                            </div>
+                            <div id="relatorio-estoque-container" class="mt-3"></div>
+                       </div>
                  </div>
 
                  <div id="caixa-report-tab" class="report-tab-content">
-                     <div class="card shadow-md">
-                         <div class="no-print">
-                             <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
-                             <form id="form-relatorio-caixa" class="report-form">
-                                 <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
-                                 <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
-                                 <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
-                                     <select id="relatorio_tipo_caixa">
-                                         <option value="todos">Todos</option>
-                                         <option value="Entrada">Entradas</option>
-                                         <option value="Saída">Saídas</option>
-                                     </select>
+                      <div class="card shadow-md">
+                           <div class="no-print">
+                                <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
+                                <form id="form-relatorio-caixa" class="report-form">
+                                     <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
+                                     <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
+                                     <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
+                                         <select id="relatorio_tipo_caixa">
+                                             <option value="todos">Todos</option>
+                                             <option value="Entrada">Entradas</option>
+                                             <option value="Saída">Saídas</option>
+                                         </select>
+                                     </div>
+                                     <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
+                                </form>
+                                 <div class="mt-4">
+                                     <button id="btn-export-csv-caixa" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                     <button id="btn-imprimir-relatorio-caixa" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
                                  </div>
-                                 <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
-                             </form>
-                              <div class="mt-4">
-                                  <button id="btn-export-csv-caixa" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                  <button id="btn-imprimir-relatorio-caixa" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                              </div>
-                         </div>
-                         <div id="relatorio-caixa-container" class="mt-3"></div>
-                     </div>
+                           </div>
+                           <div id="relatorio-caixa-container" class="mt-3"></div>
+                      </div>
                  </div>
 
             </section>
@@ -857,31 +905,31 @@
                     </div>
                 </div>
                  <div class="card shadow-md">
-                     <h2><i class="fas fa-upload mr-2"></i> Restaurar Dados</h2>
-                     <div class="backup-container mt-3">
-                         <p>
-                             <strong>Atenção:</strong> A restauração de dados irá <strong>sobrescrever todos os dados atuais</strong> no sistema. Use com cuidado e apenas com um arquivo de backup válido gerado por este sistema.
-                         </p>
-                         <div class="mt-4 flex items-center">
-                             <label for="restore-input" id="restore-label" class="btn"><i class="fas fa-upload mr-2"></i> Escolher Arquivo de Backup</label>
-                             <input type="file" id="restore-input" accept=".json">
-                             <span id="restore-file-name"></span>
-                         </div>
-                     </div>
+                      <h2><i class="fas fa-upload mr-2"></i> Restaurar Dados</h2>
+                      <div class="backup-container mt-3">
+                           <p>
+                               <strong>Atenção:</strong> A restauração de dados irá <strong>sobrescrever todos os dados atuais</strong> no sistema. Use com cuidado e apenas com um arquivo de backup válido gerado por este sistema.
+                           </p>
+                           <div class="mt-4 flex items-center">
+                               <label for="restore-input" id="restore-label" class="btn"><i class="fas fa-upload mr-2"></i> Escolher Arquivo de Backup</label>
+                               <input type="file" id="restore-input" accept=".json">
+                               <span id="restore-file-name"></span>
+                           </div>
+                      </div>
                  </div>
             </section>
         </main>
     </div>
 
-    <div id="receipt-modal" class="modal-overlay hidden no-print">
+    <div id="receipt-modal" class="modal-overlay hidden">
           <div id="printable-receipt-area">
                <div class="modal-content">
                    <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
                    <div class="modal-body" id="receipt-body">
-                           </div>
+                         </div>
                    <div class="modal-actions no-print">
-                           <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                           <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                        <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                        <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
                    </div>
                </div>
           </div>
@@ -928,7 +976,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
 
-        // CORREÇÃO: Usar fuso horário local para datas de input, mas UTC para o resto para consistência
         const inputDate = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
 
         const options = {
@@ -1164,16 +1211,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Lógica de Vendas ---
+    /**
+     * CORREÇÃO: Esta função foi modificada para preservar a seleção do cliente e do produto
+     * ao filtrar a lista. Isso impede que a seleção do cliente seja perdida ao buscar um produto.
+     */
     const popularFormulariosVenda = (filtroCliente = '', filtroProduto = '') => {
         const clienteSelect = document.getElementById('venda-cliente');
         const produtoSelect = document.getElementById('venda-produto');
         if (!clienteSelect || !produtoSelect) return;
 
+        const selectedClientId = clienteSelect.value;
+        const selectedProdutoId = produtoSelect.value;
+
         const clientesFiltrados = clientes.filter(c => c.nome.toLowerCase().includes(filtroCliente.toLowerCase()));
         clienteSelect.innerHTML = '<option value="">Selecione um cliente...</option>' + [...clientesFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        if (selectedClientId && clientesFiltrados.some(c => c.id == selectedClientId)) {
+            clienteSelect.value = selectedClientId;
+        }
 
         const produtosFiltrados = produtos.filter(p => p.nome.toLowerCase().includes(filtroProduto.toLowerCase()) || (p.refProduto && p.refProduto.toLowerCase().includes(filtroProduto.toLowerCase())));
         produtoSelect.innerHTML = '<option value="">Selecione um produto...</option>' + [...produtosFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.refProduto ? `[${p.refProduto}] ` : ''}${p.nome} (${p.quantidade} disp.)</option>`).join('');
+        if (selectedProdutoId && produtosFiltrados.some(p => p.id == selectedProdutoId)) {
+            produtoSelect.value = selectedProdutoId;
+        }
     };
 
     document.getElementById('venda-pagamento').addEventListener('change', function() {
@@ -1263,7 +1323,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
     };
 
-    // --- Lógica de Modais (Recibo e Histórico) ---
+    /**
+     * MELHORIA: A função do recibo foi completamente reformulada para ser mais
+     * detalhada, clara e profissional. Inclui detalhamento de parcelas.
+     */
     const showReceipt = (venda) => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
@@ -1271,25 +1334,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
         let pagamentoDesc = metodoPagamentoMap[venda.metodoPagamento];
-        if (venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') {
+        let parcelasHtml = '';
+
+        if ((venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') && venda.parcelas > 1) {
             pagamentoDesc += ` (${venda.parcelas}x)`;
+            const valorParcela = venda.total / venda.parcelas;
+            parcelasHtml = '<div class="modal-items"><h4>Detalhamento das Parcelas</h4><table><thead><tr><th>Parcela</th><th>Vencimento</th><th class="text-right">Valor</th></tr></thead><tbody>';
+            for (let i = 0; i < venda.parcelas; i++) {
+                const dataVencimento = new Date();
+                // Define o vencimento para o mesmo dia do mês seguinte
+                dataVencimento.setMonth(dataVencimento.getMonth() + (i + 1));
+                parcelasHtml += `<tr><td>${i + 1} de ${venda.parcelas}</td><td>${formatDate(dataVencimento.toISOString())}</td><td class="text-right">${formatCurrency(valorParcela)}</td></tr>`;
+            }
+            parcelasHtml += '</tbody></table></div>';
         }
 
         receiptBody.innerHTML = `
-            <div class="modal-header"><h2><i class="fas fa-gem"></i> Flor de Maria</h2><p>Obrigado pela sua compra!</p></div>
-            <div class="modal-details">
-                <div><strong>Cliente:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
-                <div><strong>Data:</strong><span>${formatDate(venda.data, true)}</span></div>
-                <div><strong>Venda ID:</strong><span>#${venda.id}</span></div>
-                <div><strong>Pagamento:</strong><span>${pagamentoDesc}</span></div>
+            <div class="modal-header">
+                <h2><i class="fas fa-gem"></i> Flor de Maria</h2>
+                <p style="font-weight: 600;">COMPROVANTE DE VENDA</p>
             </div>
-            <div class="modal-items"><table><thead><tr><th>Item</th><th class="text-right">Preço Un.</th><th class="text-right">Subtotal</th></tr></thead><tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.precoUnitario)}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody></table></div>
-            <div class="modal-total">Total: ${formatCurrency(venda.total)}</div>
-            <div class="modal-footer">Este não é um documento fiscal.</div>`;
+            <div class="modal-details">
+                <div><strong>Data da Venda:</strong><span>${formatDate(venda.data, true)}</span></div>
+                <div><strong>Venda ID:</strong><span>#${venda.id}</span></div>
+                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 10px 0;">
+                <h4>Dados do Cliente</h4>
+                <div><strong>Nome:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
+                <div><strong>Contato:</strong><span>${cliente?.contato || 'N/A'}</span></div>
+            </div>
+            <div class="modal-items">
+                <h4>Itens da Compra</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th class="text-right">Qtd.</th>
+                            <th class="text-right">Preço Un.</th>
+                            <th class="text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${venda.itens.map(item => `
+                            <tr>
+                                <td>${item.nome}</td>
+                                <td class="text-right">${item.quantidade}</td>
+                                <td class="text-right">${formatCurrency(item.precoUnitario)}</td>
+                                <td class="text-right">${formatCurrency(item.subtotal)}</td>
+                            </tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-total">
+                <span>Total da Venda:</span>
+                <span>${formatCurrency(venda.total)}</span>
+            </div>
+            <div class="modal-details" style="margin-top: 1rem;">
+                <h4>Forma de Pagamento</h4>
+                <div><strong>Método:</strong><span>${pagamentoDesc}</span></div>
+            </div>
+            ${parcelasHtml}
+            <div class="modal-footer">
+                <p>Obrigado pela sua preferência!</p>
+                <p>Flor de Maria</p>
+                <p style="font-size: 0.7rem; margin-top: 5px;">Este não é um documento fiscal.</p>
+            </div>`;
+
         const whatsappBtn = document.getElementById('btn-whatsapp-receipt');
         if (cliente && cliente.contato) {
             const phone = cliente.contato.replace(/\D/g, '');
-            const message = encodeURIComponent(`Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maria. \n\n*Recibo da Venda #${venda.id}* \nTotal: ${formatCurrency(venda.total)} \n\nObrigado e volte sempre!`);
+            let waMessage = `Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maria.\n\n`;
+            waMessage += `*COMPROVANTE DE VENDA #${venda.id}*\n`;
+            waMessage += `*Data:* ${formatDate(venda.data, true)}\n\n`;
+            waMessage += '*Itens:*\n';
+            venda.itens.forEach(item => {
+                waMessage += `- ${item.quantidade}x ${item.nome} = ${formatCurrency(item.subtotal)}\n`;
+            });
+            waMessage += `\n*Total:* ${formatCurrency(venda.total)}\n`;
+            waMessage += `*Pagamento:* ${pagamentoDesc}\n\n`;
+            waMessage += `Obrigado e volte sempre!`;
+
+            const message = encodeURIComponent(waMessage);
             whatsappBtn.href = `https://wa.me/55${phone}?text=${message}`;
             whatsappBtn.style.display = 'flex';
         } else {
@@ -1317,17 +1441,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             historyHtml += vendasCliente.map(venda => `
                 <div class="card" style="margin-top:0; margin-bottom: 1rem; background-color: #f9f9f9;">
-                    <h3 style="color: #333; display: flex; justify-content: space-between;">
+                    <h3 style="color: #333; display: flex; justify-content: space-between; font-size: 1rem;">
                         <span>Venda #${venda.id}</span>
                         <span>${formatDate(venda.data, true)}</span>
                     </h3>
-                    <div class="modal-items">
+                    <div class="modal-items" style="margin-bottom:0;">
                         <table>
                             <thead><tr><th>Item</th><th class="text-right">Subtotal</th></tr></thead>
                             <tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody>
                         </table>
                     </div>
-                    <div class="modal-total" style="font-size: 1.1rem; margin-bottom: 0;">Total: ${formatCurrency(venda.total)}</div>
+                    <div class="modal-total" style="font-size: 1.1rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #eee; margin-bottom: 0;">Total: ${formatCurrency(venda.total)}</div>
                 </div>
             `).join('');
         }
@@ -1338,7 +1462,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Funções de Edição e Exclusão ---
     const handleEdit = (type, id) => {
-        cancelAllEdits(); // Garante que nenhum outro formulário de edição esteja aberto
+        cancelAllEdits();
         const dataMap = { cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber, despesa: despesas };
         const itemToEdit = dataMap[type].find(item => item.id === id);
         if (itemToEdit) {
@@ -1385,7 +1509,7 @@ document.addEventListener('DOMContentLoaded', () => {
             populateMap[type]();
             const container = document.getElementById(`edit-${type}-container`);
             container.classList.remove('hidden');
-            container.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Foca no formulário
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     };
 
@@ -1415,7 +1539,6 @@ document.addEventListener('DOMContentLoaded', () => {
             conta: () => contasAReceber = contasAReceber.filter(i => i.id !== id),
             despesa: () => {
                 despesas = despesas.filter(d => d.id !== id);
-                // Remove a saída correspondente no caixa
                 fluxoCaixa = fluxoCaixa.filter(l => l.despesaId !== id);
             }
         };
@@ -1423,7 +1546,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dataMap[type]();
         saveAllData();
         rerenderCurrentPageTables();
-        renderDashboard(); // Sempre atualiza o dashboard
+        renderDashboard();
         showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`, false);
     };
 
@@ -1479,7 +1602,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'Cliente': getNomeCliente(v.clienteId),
             'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
             'Pagamento': v.metodoPagamento,
-            'Total': v.total.toFixed(2) // Export raw number for better CSV compatibility
+            'Total': v.total.toFixed(2)
         }));
         exportToCSV(headersCSV, dataCSV, `relatorio_vendas_${dataInicioStr}_a_${dataFimStr}.csv`);
     };
@@ -1812,22 +1935,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- CSV & Backup/Restore ---
     const exportToCSV = (headers, data, filename) => {
         const csvRows = [];
-        csvRows.push(headers.join(','));
+        const csvHeaders = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(',');
+        csvRows.push(csvHeaders);
 
         for (const row of data) {
             const values = headers.map(header => {
-                 let val = row[header.split(' ')[0].toLowerCase()]; // Simple mapping
-                 if (val === undefined) {
-                    val = row[Object.keys(row).find(k => k.toLowerCase() === header.toLowerCase())];
-                 }
-                 if(typeof val === 'string') val = `"${val.replace(/"/g, '""')}"`; // Escapa aspas
-                 return val;
+                const key = Object.keys(row).find(k => k.toLowerCase() === header.replace(/[/.]/g, '').toLowerCase()) || header;
+                let val = row[key] ?? '';
+                if(typeof val === 'string') {
+                    val = `"${val.replace(/"/g, '""')}"`;
+                }
+                return val;
             });
             csvRows.push(values.join(','));
         }
 
         const csvString = csvRows.join('\n');
-        const blob = new Blob([`\uFEFF${csvString}`], { type: 'text/csv;charset=utf-8;' }); // BOM for Excel compatibility
+        const blob = new Blob([`\uFEFF${csvString}`], { type: 'text/csv;charset=utf-8;' });
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -1841,7 +1965,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const backupData = () => {
         if(!confirm("Deseja baixar o arquivo de backup com todos os dados do sistema?")) return;
         const allData = { clientes, produtos, vendas, contasAReceber, fluxoCaixa, despesas, version: "1.0" };
-        const jsonString = JSON.stringify(allData, null, 2); // pretty print
+        const jsonString = JSON.stringify(allData, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
         const data = new Date();
         const filename = `flor-de-maria-backup-${data.getFullYear()}-${String(data.getMonth()+1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}.json`;
@@ -1903,7 +2027,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData('despesas', despesas);
     };
     
-    // CORREÇÃO E INTEGRAÇÃO: Adicionando as funções de manipulação dos formulários
     const addCliente = (e) => {
         e.preventDefault();
         const nome = document.getElementById('nome-cliente').value;
@@ -2005,7 +2128,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: document.getElementById('edit-data-despesa').value
             };
             
-            // Atualiza o fluxo de caixa correspondente
             const fluxoIndex = fluxoCaixa.findIndex(f => f.despesaId === id);
             if (fluxoIndex > -1) {
                 fluxoCaixa[fluxoIndex].descricao = `Despesa: ${despesas[despesaIndex].descricao}`;
@@ -2086,7 +2208,6 @@ document.addEventListener('DOMContentLoaded', () => {
         despesas = loadData('despesas');
         navigateToPage(localStorage.getItem('lastActivePage') || 'dashboard-view');
         
-        // CORREÇÃO E INTEGRAÇÃO: Adicionando os event listeners dos formulários
         document.getElementById('form-add-cliente').addEventListener('submit', addCliente);
         document.getElementById('form-edit-cliente').addEventListener('submit', saveEditCliente);
         document.getElementById('form-add-produto').addEventListener('submit', addProduto);
@@ -2105,8 +2226,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-limpar-vendas').addEventListener('click', () => {
             if (confirm('Tem certeza que deseja excluir TODAS as vendas? Esta ação é irreversível e também removerá todas as contas a receber e entradas no caixa relacionadas a vendas.')) {
                 vendas = [];
-                contasAReceber = contasAReceber.filter(c => !c.vendaId); // Mantém contas manuais se existirem
-                fluxoCaixa = fluxoCaixa.filter(f => !f.vendaId); // Mantém lançamentos manuais
+                contasAReceber = contasAReceber.filter(c => !c.vendaId);
+                fluxoCaixa = fluxoCaixa.filter(f => !f.vendaId);
                 saveAllData();
                 showNotification('Histórico de vendas e dados associados foram apagados!', 'warning');
                 navigateToPage('relatorios-view');
