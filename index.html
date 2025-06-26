@@ -384,73 +384,60 @@
             .responsive-table td:last-child { border-bottom: 0; }
         }
 
-        /* --- ESTILOS DE IMPRESSÃO CORRIGIDOS --- */
+        /* --- CORREÇÃO DEFINITIVA PARA IMPRESSÃO --- */
         @media print {
             body {
-                background-color: #fff !important;
+                background: #fff !important;
                 color: #000 !important;
             }
 
-            /* Esconde tudo que não está marcado para impressão */
-            body.is-printing > *:not(.printable-content) {
-                display: none !important;
+            /* Ao imprimir, esconde tudo por padrão */
+            body.is-printing * {
+                visibility: hidden;
             }
-            
-            /* Garante que a área de impressão e seu conteúdo sejam exibidos */
+
+            /* Exibe APENAS o elemento marcado para impressão e seus filhos */
             body.is-printing .printable-content,
             body.is-printing .printable-content * {
-                display: block !important;
-                visibility: visible !important;
+                visibility: visible;
             }
-
-            /* Configura a área de impressão para ocupar a página */
+            
+            /* Posiciona o conteúdo de impressão no topo da página */
             body.is-printing .printable-content {
                 position: absolute;
-                top: 0;
                 left: 0;
+                top: 0;
                 width: 100%;
-                height: auto;
-                background-color: #fff !important;
-                color: #000 !important;
-                padding: 1rem;
                 border: none !important;
                 box-shadow: none !important;
-                animation: none !important;
-                border-radius: 0 !important;
+                background: #fff !important;
+                padding: 0;
+                color: #000 !important;
             }
 
+            /* Garante que os botões e outros elementos não imprimíveis sejam ocultados */
             .no-print {
                 display: none !important;
             }
-            
-            /* Reseta estilos de componentes para uma boa aparência na impressão */
-            .printable-content .modal-overlay,
-            .printable-content .modal-content {
-                position: static !important;
-                background: transparent !important;
-                padding: 0 !important;
-                backdrop-filter: none !important;
+
+            .printable-content .modal-content, 
+            .printable-content.card {
                 box-shadow: none !important;
-                border: none !important;
-                max-width: 100% !important;
-                max-height: none !important;
+                border: 1px solid #ddd !important;
+                border-radius: 0 !important;
+                padding: 1rem !important;
             }
-            
-            .printable-content h1, .printable-content h2, .printable-content h3, .printable-content h4,
-            .printable-content p, .printable-content span, .printable-content div, .printable-content strong,
-            .printable-content td, .printable-content th {
+
+            .printable-content h1, .printable-content h2, .printable-content h3, .printable-content p, 
+            .printable-content span, .printable-content div, .printable-content strong,
+            .printable-content td, .printable-content th, .printable-content a {
                 color: #000 !important;
             }
-             
-            .printable-content a { text-decoration: none; color: #000 !important; }
-
+            
             .printable-content table, .printable-content tr, .printable-content td, .printable-content th {
                 border-color: #ccc !important;
                 page-break-inside: avoid;
             }
-
-            .printable-content .valor-entrada { color: #16a34a !important; font-weight: normal !important; }
-            .printable-content .valor-saida { color: #cc0000 !important; font-weight: normal !important; }
         }
     </style>
 </head>
@@ -1544,9 +1531,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`, false);
     };
 
-    /**
-     * NOVO: Função integrada para excluir uma venda e todas as suas consequências.
-     */
     const handleDeleteSale = (saleId) => {
         if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação é irreversível e irá restaurar o estoque e remover todos os registros financeiros associados a ela.')) {
             return;
@@ -1585,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 6. Atualizar a visualização do relatório
         const formRelatorioVendas = document.getElementById('form-relatorio-vendas');
         formRelatorioVendas.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-        renderDashboard(); // Atualiza também os cards do dashboard
+        renderDashboard();
     };
 
 
@@ -1618,7 +1602,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
-        // NOVO: Adicionado botão de exclusão
         const renderRowRelatorioVendas = (v, headers) => `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), v.metodoPagamento, formatCurrency(v.total), `<div class="no-print"><button class="btn-action" data-action="delete-sale" data-id="${v.id}" title="Excluir Venda"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
         container.innerHTML = `<div class="card" id="printable-report-vendas"><h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total Vendido: ${formatCurrency(totalVendido)}</p><div id="relatorio-vendas-tabela-container"></div></div>`;
@@ -2049,9 +2032,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     };
 
-    /**
-     * NOVO: Função de impressão robusta que isola o conteúdo
-     */
     const printContent = (elementId) => {
         const printableElement = document.getElementById(elementId);
         if (!printableElement) {
@@ -2062,7 +2042,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('is-printing');
         printableElement.classList.add('printable-content');
 
-        // Um pequeno atraso para garantir que as classes CSS sejam aplicadas antes da janela de impressão abrir
         setTimeout(() => {
             window.print();
             document.body.classList.remove('is-printing');
