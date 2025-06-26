@@ -1,1625 +1,1393 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materiais Pedagógicos Prof. Vane</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Sistema Integrado | Flor de Maira</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* Importa a fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-        
+        /* --- TEMA NOVO: VERDE SERENO --- */
         :root {
-            --primary-color: #b19cd9;
-            --secondary-color: #6c5b7b;
-            --accent-color: #ffb6c1;
-            --background-color: #fdfcff;
-            --card-background: #ffffff;
-            --text-color: #333d49;
-            --text-color-light: #6b7280;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.07), 0 4px 6px rgba(0, 0, 0, 0.08);
-            --sidebar-width: 280px;
+            --primary-color: #0D9488;      /* Teal 600 */
+            --primary-dark-color: #0F766E; /* Teal 700 */
+            --primary-light-color: #F0FDFA;/* Teal 50 */
+
+            --text-primary: #334155;      /* Slate 700 */
+            --text-secondary: #64748B;      /* Slate 500 */
+            --text-light: #f8fafc;        /* Slate 50 */
+
+            --bg-color: #F8FAFC;          /* Slate 50 */
+            --surface-color: #FFFFFF;
+            --border-color: #E2E8F0;      /* Slate 200 */
+
+            --success-color: #22C55E;      /* Green 500 */
+            --danger-color: #EF4444;       /* Red 500 */
+            --warning-color: #F59E0B;      /* Amber 500 */
+            --info-color: #3B82F6;        /* Blue 500 */
+            --whatsapp-color: #25D366;
+
+            --border-radius-sm: 0.375rem; /* 6px */
+            --border-radius-md: 0.5rem;   /* 8px */
+            --border-radius-lg: 0.75rem;  /* 12px */
         }
 
-        /* ESTILOS GERAIS E ANIMAÇÕES */
-        *, *::before, *::after { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            line-height: 1.7;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            font-family: 'Nunito', sans-serif;
+            color: var(--text-primary);
+            background-color: var(--bg-color);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            font-size: 16px;
         }
+
         .hidden { display: none !important; }
+        .flex { display: flex; }
+        .gap-2 { gap: 0.75rem; }
+        .items-center { align-items: center; }
+        .flex-1 { flex: 1; }
+        .mr-2 { margin-right: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popEffect { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes contentFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* TELA DE LOGIN INTERATIVA */
+        /* --- LOGIN SCREEN --- */
         #login-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 100vh;
-            height: auto;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 3rem 1rem;
-        }
-        .login-container {
-            width: 100%;
-            max-width: 950px;
-            margin: auto;
+            background: linear-gradient(135deg, var(--primary-light-color), #f1f5f9);
+            display: flex; justify-content: center; align-items: center;
+            height: 100%; padding: 1.5rem;
         }
         .login-box {
-            background: var(--card-background);
-            padding: 2.5rem 3rem;
-            border-radius: 24px;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto 4rem auto;
-            animation: fadeIn 0.7s ease-out forwards;
-            border-top: 5px solid var(--accent-color);
+            background-color: var(--surface-color); padding: 2.5rem; border-radius: var(--border-radius-lg);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -4px rgba(0,0,0,0.07);
+            text-align: center; width: 100%; max-width: 400px;
         }
-        .login-footer {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--text-color-light);
+        .login-box h1 { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;}
+        .login-box .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .input-group input {
+            width: 100%; padding: 0.8rem 1rem 0.8rem 2.5rem; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md); background-color: var(--surface-color); font-size: 1rem;
+            transition: all 0.3s ease;
         }
-        .login-footer a {
-            color: var(--primary-color);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
+        .input-group .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); transition: color 0.3s; }
+        .input-group input:focus + .input-icon { color: var(--primary-color); }
+        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem var(--primary-light-color); }
+        .btn-login {
+            width: 100%; padding: 0.8rem; border: none; border-radius: var(--border-radius-md);
+            background: var(--primary-color); color: white; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: background 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
-        .login-footer a:hover {
-            text-decoration: underline;
-            filter: brightness(1.1);
+        .btn-login:hover { background: var(--primary-dark-color); }
+        .error-message { color: var(--danger-color); margin-top: 1rem; height: 20px; font-size: 0.9rem; font-weight: 500; }
+
+        /* --- DASHBOARD SCREEN --- */
+        #dashboard-screen { display: flex; height: 100vh; background-color: var(--bg-color); position: relative; overflow-x: hidden;}
+
+        .sidebar {
+            width: 260px; background: var(--surface-color); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; padding: 1rem;
+            flex-shrink: 0; transition: transform 0.3s ease-in-out; z-index: 1000;
         }
-        .preview-section {
-            animation: fadeIn 1s ease-out 0.3s forwards;
-            opacity: 0;
+        .sidebar-header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; }
+        .sidebar-header h2 { color: var(--primary-color); font-weight: 700; font-size: 1.5rem; }
+        .sidebar-header p { color: var(--text-secondary); font-size: 0.8rem; }
+        .sidebar-nav ul { list-style: none; padding: 0; }
+        .sidebar-nav li a {
+            display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem;
+            color: var(--text-secondary); text-decoration: none; border-radius: var(--border-radius-md);
+            margin-bottom: 0.375rem; transition: all 0.2s ease; font-weight: 500; font-size: 0.95rem;
         }
-        .preview-section h2 {
-            text-align: center;
-            color: white;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        .sidebar-nav li a .icon { width: 20px; height: 20px; }
+        .sidebar-nav li a:hover { background-color: var(--primary-light-color); color: var(--primary-color); }
+        .sidebar-nav li a.active { background: var(--primary-color); color: var(--text-light); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
+        .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+        .logout-btn {
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+            width: 100%; padding: 0.75rem; border: none;
+            background: #f1f5f9; color: var(--text-secondary); border-radius: var(--border-radius-md);
+            cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s ease;
         }
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .preview-card {
-            position: relative;
-            background: var(--card-background);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
-            border: 2px solid transparent;
-        }
-        .preview-card:hover {
-            transform: translateY(-5px);
-        }
-        .preview-card-content {
-            padding: 1.5rem;
-            background-color: #fff;
-            transition: filter 0.3s ease;
-        }
+        .logout-btn:hover { background-color: var(--danger-color); color: white; }
+
+        .main-content { flex-grow: 1; padding: 1.5rem; overflow-y: auto; }
+        .main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+        .mobile-header { display: none; align-items: center; gap: 1rem; }
+        #menu-toggle { background: none; border: none; cursor: pointer; padding: 0.25rem; z-index: 1001; }
+        #menu-toggle .bar { display: block; width: 22px; height: 3px; background-color: var(--text-primary); margin: 4px 0; transition: 0.4s; border-radius: 3px;}
+        .main-content h1 { font-size: 1.75rem; color: var(--text-primary); font-weight: 700; }
         
-        .preview-card:not(.free) .preview-card-content {
-            filter: blur(2px);
-            user-select: none;
-        }
-        .preview-card:not(.free):hover .preview-card-content {
-            filter: blur(1px);
-        }
-        .free-badge {
-            position: absolute;
-            top: 15px;
-            right: -30px;
-            background: var(--accent-color);
-            color: white;
-            padding: 5px 30px;
-            transform: rotate(45deg);
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 2;
-        }
-        .preview-card.free {
-            border: 2px solid var(--accent-color);
-            cursor: pointer;
-        }
-        .preview-card.free:hover {
-             box-shadow: 0 0 15px rgba(255, 182, 193, 0.8);
-        }
-        .preview-card:not(.free) .preview-card-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(1px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: var(--secondary-color);
-            font-weight: 700;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .preview-card:not(.free):hover .preview-card-overlay {
-            opacity: 1;
-        }
-        .preview-card-overlay span {
-            font-size: 3rem;
-            line-height: 1;
-        }
-        .preview-card-overlay p {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            padding: 0 1rem;
+        #sidebar-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            transition: opacity 0.3s ease-in-out;
         }
 
-        .preview-card-category {
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-            border-radius: 999px;
-            margin-bottom: 1rem;
-        }
-        .preview-card h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.2rem;
-        }
-        .preview-card p {
-            font-size: 0.9rem;
-            color: var(--text-color-light);
-            margin: 0;
-        }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .login-box h1 { font-size: 2.25rem; margin-top: 0; }
-        .login-box > p { margin-bottom: 2rem; color: var(--text-color-light); }
-        #login-form { display: flex; flex-direction: column; gap: 1.25rem; }
-        #login-form input { width: 100%; padding: 1rem 1.25rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #f8fafc; }
-        #login-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3); background-color: white; }
-        #login-form button { width: 100%; padding: 1rem; border: none; border-radius: 12px; background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: transform 0.2s, box-shadow 0.3s; box-shadow: var(--shadow); }
-        #login-form button:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        #login-error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-top: 1rem; font-weight: 600; }
+        .card { background: var(--surface-color); padding: 1.5rem; border-radius: var(--border-radius-lg); margin-top: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        .card h2 { margin-bottom: 1rem; color: var(--text-primary); font-weight: 600; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+        .card h3 { font-weight: 600; color: var(--text-primary); font-size: 1.1rem; }
         
-        /* ESTRUTURA PRINCIPAL (PÓS-LOGIN) */
-        .app-header { background: var(--card-background); padding: 0 1rem; height: 70px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; gap: 1rem; }
-        .user-area { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-        .logout-button { background: #eef2f7; border: none; color: var(--text-color-light); padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 600; transition: all 0.3s; }
-        .logout-button:hover { background: var(--accent-color); color: white; }
-        .menu-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; display: none; }
-        .menu-toggle svg { width: 28px; height: 28px; stroke: var(--text-color); }
-        .app-header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--secondary-color); display: flex; align-items: center; justify-content: center; gap: 15px; flex-grow: 1; min-width: 0; }
-        .logo-icon { position: relative; width: 30px; height: 30px; transform: rotate(-45deg); transition: transform 0.3s ease; flex-shrink: 0; }
-        .app-header:hover .logo-icon { transform: rotate(-45deg) scale(1.1); }
-        .logo-icon::before, .logo-icon::after { content: ''; position: absolute; box-sizing: border-box; }
-        .logo-icon::before { width: 100%; height: 70%; background: var(--primary-color); border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
-        .logo-icon::after { top: 70%; width: 100%; height: 30%; background: #f3d7b6; border-bottom-right-radius: 50% 100%; border-top-right-radius: 5px; }
-        #app-body { display: flex; }
-        .sidebar { flex-shrink: 0; width: var(--sidebar-width); background-color: var(--card-background); border-right: 1px solid var(--border-color); padding: 2rem; height: calc(100vh - 70px); position: sticky; top: 70px; overflow-y: auto; }
-        .sidebar h2 { font-size: 1.25rem; margin: 0 0 1.5rem 0; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
-        .search-container { position: relative; margin-bottom: 1.5rem; }
-        #search-input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.75rem; border-radius: 12px; border: 1px solid var(--border-color); font-size: 1rem; }
-        .search-container .icon-search { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; stroke: #9ca3af; }
-        #filters-container { list-style: none; padding: 0; margin: 0; }
-        .filter-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; background: none; border: none; text-align: left; padding: 0.9rem 1rem; border-radius: 10px; font-size: 1rem; font-family: 'Poppins'; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--text-color-light); }
-        .filter-btn svg { width: 20px; height: 20px; stroke: var(--text-color-light); transition: all 0.2s; flex-shrink: 0; }
-        .filter-btn.active { background-color: rgba(177, 156, 217, 0.15); color: var(--primary-color); font-weight: 600; }
-        .filter-btn.active svg { stroke: var(--primary-color); }
-        .filter-btn.favorite-btn.active { background-color: rgba(255, 182, 193, 0.15); color: var(--accent-color); }
-        .filter-btn.favorite-btn.active svg { stroke: var(--accent-color); }
-        .filter-btn:hover:not(.active) { background-color: var(--background-color); }
-        .content-wrapper { flex-grow: 1; padding: 2.5rem; }
-        .results-info { text-align: center; margin-bottom: 2rem; color: var(--text-color-light); font-weight: 500; }
-        .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .activity-card { background-color: var(--card-background); border: 1px solid var(--border-color); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.4s ease, box-shadow 0.4s ease; animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
-        .activity-card:hover { transform: translateY(-10px) rotate(1deg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 0 15px rgba(255, 182, 193, 0.5); }
-        .open-modal-btn { position: relative; overflow: hidden; transition: all 0.4s ease; }
-        .open-modal-btn::after { content: '→'; position: absolute; right: -20px; top: 50%; transform: translateY(-50%); opacity: 0; transition: right 0.4s ease, opacity 0.4s ease; }
-        .activity-card:hover .open-modal-btn { background-color: var(--primary-color); border-color: var(--primary-color); color: white; padding-right: 2.5rem; }
-        .activity-card:hover .open-modal-btn::after { right: 1rem; opacity: 1; }
-        .favorite-icon.favorited { animation: popEffect 0.4s ease; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem 0; }
-        .card-category { padding: 0.3rem 1.2rem; color: white; font-weight: 600; font-size: 0.8rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .favorite-icon { background: none; border: none; padding: 0.5rem; cursor: pointer; transition: transform 0.2s ease; }
-        .favorite-icon svg { width: 24px; height: 24px; stroke: var(--text-color-light); stroke-width: 2; fill: none; transition: all 0.2s ease; }
-        .favorite-icon.favorited svg { stroke: var(--accent-color); fill: var(--accent-color); }
-        .favorite-icon:hover { transform: scale(1.15); }
-        .card-content { padding: 0 1.5rem; flex-grow: 1; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; background-color: #fcfcfd; margin-top: auto; }
-        .card-footer span { font-weight: 600; color: var(--text-color-light); }
-        .open-modal-btn { background-color: transparent; color: var(--primary-color); padding: 0.5rem 1.25rem; border: 2px solid var(--primary-color); border-radius: 999px; font-weight: 600; cursor: pointer; }
-        #pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap; }
-        .pagination-btn { background-color: #fff; border: 1px solid var(--border-color); min-width: 40px; height: 40px; padding: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .pagination-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-        .pagination-btn.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md); font-size: 0.9rem; font-family: 'Nunito', sans-serif;
+            background-color: var(--surface-color); transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem var(--primary-light-color); }
+
+        .btn, .btn-submit {
+            padding: 0.75rem 1.25rem; border: none; border-radius: var(--border-radius-md); background: var(--primary-color);
+            color: white; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; font-weight: 600;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn:hover, .btn-submit:hover { background: var(--primary-dark-color); }
+        .btn-submit { width: 100%; }
         
-        /* --- ESTILOS DO MODAL SIMPLIFICADO --- */
-        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(10, 20, 30, 0.7); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.4s ease; backdrop-filter: blur(8px); }
-        .modal-container.show { display: flex; opacity: 1; }
-        .modal-content { background-color: white; padding: 0; border-radius: 20px; box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1); width: 90%; max-width: 750px; position: relative; overflow: hidden; transform: translateY(-30px); opacity: 0; display: flex; flex-direction: column; max-height: 90vh; }
-        .modal-container.show .modal-content { animation: modalSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
-        .modal-header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); position: relative; flex-shrink: 0; }
-        .modal-header h2 { margin: 0; color: var(--text-color); font-size: 1.5rem; line-height: 1.3; }
-        .close-button { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); background: none; border: none; font-size: 2.5rem; font-weight: 300; color: var(--text-color-light); cursor: pointer; transition: color 0.2s, transform 0.2s; line-height: 1; padding: 0; }
-        .close-button:hover { color: #333; transform: translateY(-50%) rotate(90deg); }
-        .modal-body { flex-grow: 1; overflow-y: auto; padding: 2rem 2.5rem; animation: contentFadeIn 0.4s ease-out;}
-        .modal-body h3 { font-size: 1.1rem; color: var(--secondary-color); text-transform: uppercase; letter-spacing: 1px; margin-top: 1.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .modal-body h3:first-child { margin-top: 0; }
-        .modal-body p, .modal-body li { color: var(--text-color); line-height: 1.8; }
-        .modal-body ul { list-style-position: inside; padding-left: 0; }
-        .dica-da-vane { background-color: #fdf3f6; border-left: 4px solid var(--accent-color); padding: 1rem 1.5rem; margin: 1.5rem 0; border-radius: 0 8px 8px 0; }
-        .dica-da-vane p { margin: 0; font-weight: 500; }
-        .dica-da-vane strong { color: var(--accent-color); font-weight: 700; }
-        .roteiro-passos { counter-reset: step; list-style: none; padding-left: 0; }
-        .roteiro-passos li { counter-increment: step; margin-bottom: 1rem; position: relative; padding-left: 35px; }
-        .roteiro-passos li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 24px; height: 24px; background-color: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
-        .modal-footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--border-color); background-color: #fcfcfd; flex-shrink: 0; text-align: right; }
-        .download-btn { display: inline-block; background: var(--primary-color); color: white; text-align: center; padding: 0.8rem 1.5rem; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s, transform 0.2s; border: none; cursor: pointer; }
-        .download-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .table-responsive-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap;}
+        th { background-color: var(--bg-color); font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05rem;}
+        td { color: var(--text-primary); font-size: 0.9rem; }
+        tbody tr:last-child td { border-bottom: none; }
 
-        /* AULA MAKER SECTION */
-        #aula-maker-section {
-            background-color: var(--card-background);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            padding: 2.5rem;
-            animation: fadeIn 0.7s ease-out forwards;
-        }
-
-        #aula-maker-section h2 {
-            color: var(--secondary-color);
-            font-size: 1.8rem;
-            margin-top: 0;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #aula-maker-section .description {
-            color: var(--text-color-light);
-            margin-bottom: 2rem;
-            font-size: 1rem;
-            max-width: 80ch;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        #aula-maker-section input[type="text"],
-        #aula-maker-section textarea {
-            width: 100%;
-            padding: 0.8rem 1.2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background-color: #f8fafc;
-        }
-
-        #aula-maker-section input[type="text"]:focus,
-        #aula-maker-section textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(177, 156, 217, 0.3);
-            background-color: white;
-        }
+        .btn-action { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.4rem 0.6rem; border-radius: var(--border-radius-sm); cursor: pointer; font-size: 0.8rem; margin-right: 0.5rem; transition: all 0.2s; }
+        .btn-action:hover { background: var(--border-color); color: var(--text-primary); }
+        .btn-paid { background-color: var(--success-color); color: white; border: none; }
+        .btn-paid:hover { background: #16a34a; }
+        .valor-entrada { color: var(--success-color); font-weight: 600; }
+        .valor-saida { color: var(--danger-color); font-weight: 600; }
         
-        #aula-maker-section h3 {
-            font-size: 1.2rem;
-            color: var(--secondary-color);
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
+        .status-pendente { color: var(--warning-color); font-weight: bold; }
+        .status-pago { color: var(--success-color); font-weight: bold; }
 
-        #no-activities-selected {
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            padding: 2rem 1rem;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px dashed var(--border-color);
-        }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+        .summary-card { padding: 1.5rem; background-color: var(--surface-color); border-radius: var(--border-radius-lg); border: 1px solid var(--border-color); box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); border-left: 5px solid; }
+        .summary-card h3 { font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem; }
+        .summary-card p { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); }
 
-        #selected-activities-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 2rem;
+        .dashboard-main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+        
+        .edit-form-container { margin-top: 1.5rem; padding: 1.5rem; background-color: var(--primary-light-color); border: 1px solid var(--primary-color); border-radius: var(--border-radius-lg); }
+        .edit-form-container h3 { margin-bottom: 1rem; color: var(--primary-color); font-size: 1.1rem; }
+        .edit-form-container .btn-cancel { background-color: var(--text-secondary); color: white; border: none; }
+        .edit-form-container .btn-cancel:hover { background-color: var(--text-primary); }
+        
+        /* --- ESTILOS DO RECIBO --- */
+        .receipt-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+            z-index: 2000; padding: 1rem;
         }
+        /* CORREÇÃO DO MODAL */
+        .receipt-content {
+            background: #fff; padding: 1.5rem; border-radius: var(--border-radius-lg); width: 100%;
+            max-width: 480px; max-height: 90vh; 
+            animation: fadeIn 0.3s ease; position: relative;
+            display: flex; flex-direction: column; /* Adicionado */
+        }
+        #receipt-body {
+            overflow-y: auto; /* Adicionado para rolagem interna */
+            flex-grow: 1; /* Adicionado para ocupar espaço */
+        }
+        .receipt-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; flex-shrink: 0; }
+        .receipt-header h2 { color: var(--primary-color); }
+        .receipt-details { margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .receipt-details div { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .receipt-details span { color: var(--text-secondary); }
+        .receipt-items table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .receipt-items th, .receipt-items td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #eee; }
+        .receipt-items th { color: var(--text-secondary); font-size: 0.8rem; }
+        .receipt-items .text-right { text-align: right; }
+        .receipt-total { text-align: right; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; }
+        .receipt-footer { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 1.5rem; }
+        .receipt-actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-shrink: 0; }
+        .btn-whatsapp { background-color: var(--whatsapp-color); }
+        .btn-whatsapp:hover { background-color: #1EBE57; }
+        .btn-close-receipt {
+            position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+            font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;
+        }
+        .btn-close-receipt:hover { color: var(--text-primary); }
 
-        .selected-activity-item {
+        /* --- ESTILOS PARA ABAS DE RELATÓRIOS --- */
+        .report-tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fcfcfd;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 0.75rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .selected-activity-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .selected-activity-item span {
-            font-weight: 500;
-            color: var(--text-color);
-            flex-grow: 1;
-            padding-right: 1rem;
-        }
-
-        .activity-controls {
-            display: flex;
-            align-items: center;
             gap: 0.5rem;
-            margin-left: 1rem;
-            flex-shrink: 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
         }
-
-        .reorder-btn,
-        .remove-activity-btn {
+        .report-tab-btn {
+            padding: 0.75rem 1.25rem;
+            border: none;
             background: none;
-            border: none;
             cursor: pointer;
-            padding: 0 0.5rem;
-            transition: transform 0.2s, color 0.2s;
-            font-size: 1.5rem;
-            line-height: 1;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transform: translateY(2px);
+            transition: all 0.2s ease-in-out;
         }
-
-        .reorder-btn {
-            color: var(--text-color-light);
-        }
-        .reorder-btn:hover {
+        .report-tab-btn.active {
             color: var(--primary-color);
-            transform: scale(1.2);
+            border-bottom-color: var(--primary-color);
         }
-
-        .remove-activity-btn {
-            color: #ef4444;
+        .report-tab-content {
+            display: none;
         }
-
-        .remove-activity-btn:hover {
-            transform: scale(1.2);
+        .report-tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s;
         }
-        
-        .main-action-buttons {
-            margin-top: 2rem;
+        .report-form {
             display: flex;
-            justify-content: flex-end; /* Alinhado à direita para destaque */
-            align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha em telas pequenas */
             gap: 1rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
+            align-items: flex-end; /* Alinha os itens na base */
+            padding: 1.5rem;
+            background-color: var(--bg-color);
+            border-radius: var(--border-radius-md);
+        }
+        .report-form .form-group {
+            margin-bottom: 0; /* Remove margem inferior para alinhar melhor */
+            flex: 1 1 180px; /* Flex-grow, flex-shrink, flex-basis */
+        }
+        .report-form .btn {
+            flex-shrink: 0; /* Evita que o botão encolha */
         }
 
-        .add-activity-btn,
-        .generate-plan-btn,
-        .clear-plan-btn {
-            padding: 0.8rem 1.8rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: var(--shadow);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
 
-        .add-activity-btn {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .add-activity-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            filter: brightness(1.1);
-        }
-
-        .clear-plan-btn {
-            background: #eef2f7;
-            color: var(--text-color-light);
-            border: 1px solid var(--border-color);
-            margin-right: auto; /* Joga este botão para a esquerda */
-        }
-        .clear-plan-btn:hover {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-        
-        .generate-plan-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
-            color: white;
-        }
-
-        .generate-plan-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            filter: brightness(1.1);
-        }
-
-        /* Modal for selecting activities */
-        #select-activities-modal .modal-content {
-            max-width: 900px;
-            width: 95%;
-        }
-
-        #select-activities-modal .modal-body {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem 2.5rem;
-        }
-
-        #select-activities-modal .activity-card {
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        #select-activities-modal .activity-card.selected {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(177, 156, 217, 0.8);
-            transform: translateY(-5px);
-        }
-
-        #select-activities-modal .activity-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        #select-activities-modal .card-footer {
-            display: none; /* Hide footer in selection modal */
-        }
-
-        #select-activities-modal .modal-footer {
-            text-align: center;
-        }
-
-        #confirm-selection-btn {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: var(--shadow);
-        }
-
-        #confirm-selection-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 992px) {
-            .app-header { padding: 0 1rem; }
-            .menu-toggle { display: block; }
-            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; z-index: 200; transform: translateX(-100%); transition: transform 0.3s ease-in-out; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-            #sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out; }
-            body.sidebar-open .sidebar { transform: translateX(0); }
-            body.sidebar-open #sidebar-overlay { opacity: 1; pointer-events: auto; }
-            .content-wrapper { padding: 1.5rem; }
-        }
+        /* --- ESTILOS DE RESPONSIVIDADE PARA CELULAR --- */
         @media (max-width: 768px) {
-            .user-area #welcome-message { display: none; }
-            .app-header h1 { font-size: 1.2rem; gap: 12px; }
-            .logo-icon { width: 25px; height: 25px; }
-            .login-box { padding: 2rem; margin-bottom: 3rem;}
-            .modal-header, .modal-footer, .modal-body { padding-left: 1.5rem; padding-right: 1.5rem; }
-            #login-screen { padding: 2rem 1rem; }
-            
-            #aula-maker-section { padding: 1.5rem; }
-            #aula-maker-section h2 { font-size: 1.5rem; }
-
-            .main-action-buttons {
-                flex-direction: column-reverse;
+            html, body {
+                font-size: 15px;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            .main-header .desktop-title {
+                display: none;
+            }
+            .main-header .mobile-header {
+                display: flex;
+                flex-grow: 1;
+            }
+            .dashboard-main-grid {
+                grid-template-columns: 1fr; /* Coluna única */
+            }
+            .flex.gap-2 {
+                flex-direction: column; /* Empilha os campos do formulário */
+            }
+            .card {
+                padding: 1rem;
+            }
+             .report-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            .report-tab-btn {
+                border-bottom: 1px solid var(--border-color);
+                border-radius: var(--border-radius-sm);
+            }
+             .report-tab-btn.active {
+                background-color: var(--primary-light-color);
+             }
+            .report-form {
+                flex-direction: column;
                 align-items: stretch;
             }
-            .add-activity-btn, .generate-plan-btn, .clear-plan-btn {
-                width: 100%;
-                margin-right: 0;
-            }
-            .clear-plan-btn { margin-bottom: 1rem; }
 
-            #select-activities-modal .modal-body {
-                grid-template-columns: 1fr;
+            /* Estilo da tabela responsiva (formato de cartão) */
+            .responsive-table table,
+            .responsive-table thead,
+            .responsive-table tbody,
+            .responsive-table th,
+            .responsive-table td,
+            .responsive-table tr {
+                display: block;
+            }
+            .responsive-table thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            .responsive-table tr {
+                border: 1px solid var(--border-color);
+                border-radius: var(--border-radius-md);
+                margin-bottom: 1rem;
+                background: var(--surface-color);
+                box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+            }
+            .responsive-table td {
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                position: relative;
+                padding-left: 50%;
+                white-space: normal;
+                text-align: right;
+                min-height: 2.5rem; /* Garante altura mínima para toque */
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+            }
+            .responsive-table td:before {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 1rem;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--text-primary);
+                text-align: left;
+            }
+            .responsive-table tr:last-child {
+                margin-bottom: 0;
+            }
+            .responsive-table td:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        @media print {
+            body, html {
+                background: #fff;
+                color: #000;
+            }
+            body > *:not(#printable-area),
+            .receipt-actions,
+            .btn-close-receipt,
+            .no-print
+            {
+                display: none !important;
             }
             
-            /* MELHORIA DE RESPONSIVIDADE 1: Botões de ação do gerador */
-            #add-to-plan-actions .add-activity-btn {
+            #printable-area {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
                 width: 100%;
             }
-
-            /* MELHORIA DE RESPONSIVIDADE 2: Lista de atividades selecionadas */
-            .selected-activity-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-                padding-bottom: 0.5rem;
+            .receipt-content, .card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                border-radius: 0 !important;
+                max-width: 100% !important;
+                padding: 1rem;
             }
-            .selected-activity-item .activity-controls {
-                width: 100%;
-                justify-content: flex-end;
-                margin-left: 0;
-                padding: 0.25rem;
-                border-top: 1px solid var(--border-color);
+            table, th, td {
+                color: black !important;
+                font-size: 9pt !important;
+            }
+            .valor-entrada, .valor-saida, .status-pendente, .status-pago {
+                color: inherit !important;
+                font-weight: normal !important;
+            }
+            .valor-entrada { color: #000 !important; }
+            .valor-saida { color: #000 !important; }
+            h1, h2, h3, h4, p, span, div {
+                color: #000 !important;
+            }
+            @page {
+                margin: 20mm;
             }
         }
     </style>
 </head>
 <body>
-    <svg width="0" height="0" style="position:absolute;visibility:hidden">
-        <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></symbol>
-        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
-        <symbol id="icon-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></symbol>
-        <symbol id="icon-category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></symbol>
-        <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></symbol>
-        <symbol id="icon-magic-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-            <path d="M19 21l-7-7 1.5-1.5 7 7-1.5 1.5z"></path>
-            <path d="M11 7l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
-            <path d="M15 3l-2 2-1.5-1.5 2-2 1.5 1.5z"></path>
-            <path d="M4 17l-1 1 3 3 1-1-3-3z"></path>
-            <path d="M10.5 10.5l-2.5-2.5"></path>
-            <path d="M13.5 13.5l-2.5-2.5"></path>
-        </symbol>
-    </svg>
-
     <div id="login-screen">
-        <div class="login-container">
-            <div class="login-box">
-                <h1>Materiais Pedagógicos</h1>
-                <p>Acesso exclusivo para assinantes.</p>
-                <form id="login-form">
-                    <input type="text" id="username-input" placeholder="Usuário" required>
-                    <input type="password" id="password-input" placeholder="Senha" required>
-                    <button type="submit">Entrar →</button>
-                    <p id="login-error" class="hidden">Usuário ou senha inválidos.</p>
-                </form>
-                <div class="login-footer">
-                    <p>Primeira vez aqui? <a href="#preview-section">Veja uma prévia abaixo!</a></p>
+        <div class="login-box">
+            <h1><i class="fas fa-store" style="color: var(--primary-color);"></i> Flor de Maira</h1>
+            <p class="subtitle">Acesse seu painel de gestão</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Usuário" required>
+                    <i class="fas fa-user input-icon"></i>
                 </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Senha" required>
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+                <p id="error-message" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="hidden">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-store"></i> Flor de Maira</h2>
+                <p>Painel Administrativo</p>
             </div>
-            <div class="preview-section" id="preview-section">
-                <h2>Um pouco do que você encontrará aqui dentro...</h2>
-                <div class="preview-grid" id="preview-grid-container"></div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-target="dashboard-view"><i class="fas fa-chart-pie icon"></i><span>Dashboard</span></a></li>
+                    <li><a href="#caixa" class="nav-link" data-target="caixa-view"><i class="fas fa-cash-register icon"></i><span>Fluxo de Caixa</span></a></li>
+                    <li><a href="#vendas" class="nav-link" data-target="vendas-view"><i class="fas fa-shopping-cart icon"></i><span>Realizar Venda</span></a></li>
+                    <li><a href="#clientes" class="nav-link" data-target="clientes-view"><i class="fas fa-users icon"></i><span>Clientes</span></a></li>
+                    <li><a href="#estoque" class="nav-link" data-target="estoque-view"><i class="fas fa-boxes icon"></i><span>Estoque</span></a></li>
+                    <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><i class="fas fa-file-invoice-dollar icon"></i><span>Contas a Receber</span></a></li>
+                    <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><i class="fas fa-chart-bar icon"></i><span>Relatórios</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt icon"></i><span>Sair</span></button>
+            </div>
+        </aside>
+
+        <div id="sidebar-backdrop" class="hidden"></div>
+
+        <main class="main-content" id="main-content">
+            <header class="main-header">
+                <div class="mobile-header">
+                    <button id="menu-toggle"><span class="bar"></span><span class="bar"></span><span class="bar"></span></button>
+                    <h1 id="mobile-page-title"></h1>
+                </div>
+                <h1 class="desktop-title" id="desktop-page-title"></h1>
+            </header>
+
+            <section id="dashboard-view" class="content-section">
+                 <div class="dashboard-grid">
+                      <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
+                      <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
+                 </div>
+                 <div class="dashboard-main-grid">
+                      <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
+                      <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
+                 </div>
+            </section>
+
+            <section id="caixa-view" class="content-section">
+                <div class="card shadow-md"><h2>Saldo Atual: <span id="saldo-caixa-detalhe" style="color: var(--primary-color);">R$ 0,00</span></h2></div>
+                <div id="edit-lancamento-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-edit mr-2"></i> Editar Lançamento</h3>
+                    <form id="form-edit-lancamento">
+                        <input type="hidden" id="edit-lancamento-id">
+                        <div class="form-group"><label for="edit-desc-lancamento">Descrição</label><input type="text" id="edit-desc-lancamento" required></div>
+                        <div class="form-group"><label for="edit-valor-lancamento">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-lancamento" required></div>
+                        <div class="form-group"><label for="edit-tipo-lancamento">Tipo</label><select id="edit-tipo-lancamento"><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                            <button type="button" class="btn btn-cancel" id="cancel-edit-lancamento"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-plus-circle mr-2"></i> Lançamento Manual</h2>
+                    <form id="form-add-lancamento">
+                        <div class="flex gap-2">
+                            <div class="form-group flex-1"><label for="desc-lancamento">Descrição</label><input type="text" id="desc-lancamento" required></div>
+                            <div class="form-group"><label for="valor-lancamento">Valor (R$)</label><input type="number" step="0.01" id="valor-lancamento" required></div>
+                            <div class="form-group"><label for="tipo-lancamento">Tipo</label><select id="tipo-lancamento"><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div>
+                        </div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar</button>
+                    </form>
+                </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-history mr-2"></i> Histórico de Movimentações</h2>
+                    <div id="tabela-caixa-container" class="table-responsive-container"></div>
+                </div>
+            </section>
+
+            <section id="clientes-view" class="content-section">
+                <div id="edit-cliente-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-user-edit mr-2"></i> Editar Cliente</h3>
+                    <form id="form-edit-cliente">
+                        <input type="hidden" id="edit-cliente-id">
+                        <div class="form-group"><label for="edit-nome-cliente">Nome</label><input type="text" id="edit-nome-cliente" required></div>
+                        <div class="form-group"><label for="edit-contato-cliente">Telefone</label><input type="text" id="edit-contato-cliente" placeholder="(XX) XXXXX-XXXX"></div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                            <button type="button" class="btn btn-cancel"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-user-plus mr-2"></i> Cadastrar Cliente</h2>
+                    <form id="form-add-cliente">
+                        <div class="form-group"><label for="nome-cliente">Nome</label><input type="text" id="nome-cliente" required></div>
+                        <div class="form-group"><label for="contato-cliente">Telefone</label><input type="text" id="contato-cliente" placeholder="(XX) XXXXX-XXXX"></div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-save mr-2"></i> Salvar Cliente</button>
+                    </form>
+                </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-users mr-2"></i> Clientes Cadastrados</h2>
+                    <div id="tabela-clientes-container" class="table-responsive-container"></div>
+                </div>
+            </section>
+
+            <section id="estoque-view" class="content-section">
+                <div id="edit-produto-container" class="edit-form-container shadow-md hidden">
+                    <h3><i class="fas fa-edit mr-2"></i> Editar Produto</h3>
+                    <form id="form-edit-produto">
+                        <input type="hidden" id="edit-produto-id">
+                        <div class="form-group"><label for="edit-nome-produto">Nome do Produto</label><input type="text" id="edit-nome-produto" required></div>
+                        <div class="form-group"><label for="edit-qtd-produto">Quantidade</label><input type="number" id="edit-qtd-produto" required></div>
+                        <div class="form-group"><label for="edit-preco-produto">Preço (R$)</label><input type="number" step="0.01" id="edit-preco-produto" required></div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar</button>
+                            <button type="button" class="btn btn-cancel"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-plus-square mr-2"></i> Cadastrar Produto</h2>
+                    <form id="form-add-produto">
+                        <div class="flex gap-2">
+                            <div class="form-group flex-1"><label for="nome-produto">Nome</label><input type="text" id="nome-produto" required></div>
+                            <div class="form-group"><label for="qtd-produto">Qtd</label><input type="number" id="qtd-produto" required></div>
+                            <div class="form-group flex-1"><label for="preco-produto">Preço (R$)</label><input type="number" step="0.01" id="preco-produto" required></div>
+                        </div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-plus mr-2"></i> Adicionar</button>
+                    </form>
+                </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-boxes mr-2"></i> Produtos em Estoque</h2>
+                    <div id="tabela-produtos-container" class="table-responsive-container"></div>
+                </div>
+            </section>
+
+            <section id="vendas-view" class="content-section">
+                <div class="card shadow-md" id="venda-form-card">
+                    <form id="venda-form">
+                        <div class="form-group">
+                            <label for="venda-cliente"><i class="fas fa-user-tag mr-2"></i> Selecione o Cliente</label>
+                            <select id="venda-cliente" required></select>
+                        </div>
+                        <div class="card mt-3">
+                            <h3 style="font-weight:600; color:var(--text-primary); margin-bottom: 1rem;"><i class="fas fa-cart-plus mr-2"></i> Adicionar Item</h3>
+                            <div class="flex gap-2 items-center">
+                                <div class="form-group flex-1" style="margin-bottom:0;"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div>
+                                <div class="form-group" style="margin-bottom:0;"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px; text-align: center;"></div>
+                                <button type="button" id="btn-add-item-venda" class="btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <h3><i class="fas fa-list-ol mr-2"></i> Itens da Venda</h3>
+                            <div id="venda-itens-container" class="table-responsive-container"></div>
+                        </div>
+                        <div class="card mt-3">
+                            <h3><i class="fas fa-credit-card mr-2"></i> Pagamento e Finalização</h3>
+                            <div class="form-group">
+                                <label for="venda-pagamento">Método de Pagamento</label>
+                                <select id="venda-pagamento">
+                                    <option value="vista">À Vista</option>
+                                    <option value="pix">Pix</option>
+                                    <option value="crediario">Crediário</option>
+                                    <option value="cartao_credito">Cartão de Crédito</option>
+                                </select>
+                            </div>
+                            <div class="form-group hidden" id="venda-parcelas-crediario-group">
+                                <label for="venda-parcelas-crediario">Parcelas (Crediário)</label>
+                                <select id="venda-parcelas-crediario">
+                                    <option value="1">1x</option>
+                                    <option value="2">2x</option>
+                                    <option value="3">3x</option>
+                                </select>
+                            </div>
+                            <div class="form-group hidden" id="venda-parcelas-cartao-group">
+                                <label for="venda-parcelas-cartao">Parcelas (Cartão)</label>
+                                <select id="venda-parcelas-cartao">
+                                    <option value="2">2x</option>
+                                    <option value="3">3x</option>
+                                    <option value="4">4x</option>
+                                    <option value="5">5x</option>
+                                    <option value="6">6x</option>
+                                </select>
+                            </div>
+                            <h3 style="margin-top:1.5rem; text-align:right; font-weight:700; font-size:1.25rem;">Total: <span id="venda-total">R$ 0,00</span></h3>
+                            <button type="button" id="btn-finalizar-venda" class="btn-submit" style="margin-top:1rem;"><i class="fas fa-check-double mr-2"></i> Finalizar Venda</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="contas-a-receber-view" class="content-section">
+                 <div id="edit-conta-container" class="edit-form-container shadow-md hidden">
+                      <h3><i class="fas fa-edit mr-2"></i> Editar Conta a Receber</h3>
+                      <form id="form-edit-conta">
+                           <input type="hidden" id="edit-conta-id">
+                           <div class="form-group"><label for="edit-conta-cliente">Cliente</label><select id="edit-conta-cliente"></select></div>
+                           <div class="form-group"><label for="edit-conta-valor">Valor (R$)</label><input type="number" step="0.01" id="edit-conta-valor" required></div>
+                           <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
+                           <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
+                           <div class="flex gap-2">
+                                <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                                <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                           </div>
+                      </form>
+                 </div>
+                <div class="card shadow-md">
+                    <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Contas a Receber</h2>
+                    <div id="tabela-contas-container" class="table-responsive-container"></div>
+                </div>
+            </section>
+
+            <section id="relatorios-view" class="content-section">
+                <div class="report-tabs no-print">
+                    <button class="report-tab-btn active" data-tab="vendas-report-tab"><i class="fas fa-shopping-cart mr-2"></i>Vendas</button>
+                    <button class="report-tab-btn" data-tab="contas-report-tab"><i class="fas fa-file-invoice-dollar mr-2"></i>Contas a Receber</button>
+                    <button class="report-tab-btn" data-tab="produtos-report-tab"><i class="fas fa-star mr-2"></i>Produtos Mais Vendidos</button>
+                    <button class="report-tab-btn" data-tab="estoque-report-tab"><i class="fas fa-boxes mr-2"></i>Situação do Estoque</button>
+                    <button class="report-tab-btn" data-tab="caixa-report-tab"><i class="fas fa-cash-register mr-2"></i>Fluxo de Caixa</button>
+                </div>
+
+                <div id="vendas-report-tab" class="report-tab-content active">
+                    <div class="card shadow-md">
+                        <div class="no-print">
+                            <h2><i class="fas fa-file-alt mr-2"></i> Gerar Relatório de Vendas</h2>
+                            <form id="form-relatorio-vendas" class="report-form">
+                                <div class="form-group"><label for="relatorio-inicio-vendas"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-vendas"></div>
+                                <div class="form-group"><label for="relatorio-fim-vendas"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-vendas"></div>
+                                <button type="submit" class="btn"><i class="fas fa-chart-line mr-2"></i> Gerar</button>
+                            </form>
+                            <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <button id="btn-imprimir-relatorio-vendas" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                                <button id="btn-limpar-vendas" class="btn" style="background-color: var(--danger-color);"><i class="fas fa-trash-alt mr-2"></i> Excluir Todas as Vendas</button>
+                            </div>
+                        </div>
+                        <div id="relatorio-vendas-container" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div id="contas-report-tab" class="report-tab-content">
+                    <div class="card shadow-md">
+                        <div class="no-print">
+                            <h2><i class="fas fa-file-invoice-dollar mr-2"></i> Gerar Relatório de Contas a Receber</h2>
+                            <form id="form-relatorio-contas" class="report-form">
+                                <div class="form-group"><label for="relatorio-status-contas"><i class="fas fa-info-circle mr-2"></i> Status</label>
+                                    <select id="relatorio-status-contas">
+                                        <option value="Todos">Todos</option>
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Pago">Pago</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label for="relatorio-inicio-contas"><i class="fas fa-calendar-alt mr-2"></i> Vencimento De</label><input type="date" id="relatorio-inicio-contas"></div>
+                                <div class="form-group"><label for="relatorio-fim-contas"><i class="fas fa-calendar-alt mr-2"></i> Vencimento Até</label><input type="date" id="relatorio-fim-contas"></div>
+                                <button type="submit" class="btn"><i class="fas fa-chart-bar mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-contas" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        </div>
+                        <div id="relatorio-contas-container" class="mt-3"></div>
+                    </div>
+                </div>
+                
+                <div id="produtos-report-tab" class="report-tab-content">
+                    <div class="card shadow-md">
+                         <div class="no-print">
+                            <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
+                            <form id="form-relatorio-produtos" class="report-form">
+                                <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
+                                <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
+                                <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-produtos" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                         </div>
+                         <div id="relatorio-produtos-container" class="mt-3"></div>
+                    </div>
+                </div>
+                
+                 <div id="estoque-report-tab" class="report-tab-content">
+                      <div class="card shadow-md">
+                           <div class="no-print">
+                                <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                                <form id="form-relatorio-estoque" class="report-form">
+                                     <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                          <select id="relatorio_status_estoque">
+                                               <option value="todos">Todos</option>
+                                               <option value="disponivel">Disponível</option>
+                                               <option value="baixo">Estoque Baixo (<= 5)</option>
+                                               <option value="esgotado">Esgotado</option>
+                                          </select>
+                                     </div>
+                                     <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                                </form>
+                                <button id="btn-imprimir-relatorio-estoque" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                           </div>
+                           <div id="relatorio-estoque-container" class="mt-3"></div>
+                      </div>
+                 </div>
+
+                <div id="caixa-report-tab" class="report-tab-content">
+                    <div class="card shadow-md">
+                        <div class="no-print">
+                            <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
+                            <form id="form-relatorio-caixa" class="report-form">
+                                <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
+                                <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
+                                <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
+                                    <select id="relatorio_tipo_caixa">
+                                        <option value="todos">Todos</option>
+                                        <option value="Entrada">Entradas</option>
+                                        <option value="Saída">Saídas</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
+                            </form>
+                            <button id="btn-imprimir-relatorio-caixa" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                        </div>
+                        <div id="relatorio-caixa-container" class="mt-3"></div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <div id="receipt-modal" class="receipt-modal hidden">
+        <div id="printable-area">
+             <div class="receipt-content">
+                <button id="btn-close-receipt" class="btn-close-receipt no-print">&times;</button>
+                <div id="receipt-body">
+                    </div>
+                <div class="receipt-actions no-print">
+                    <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                    <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="main-content" class="hidden">
-        <header class="app-header">
-            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-                <svg><use xlink:href="#icon-menu"></use></svg>
-            </button>
-            <h1><span class="logo-icon"></span><span>Cantinho da Prof. Vane</span></h1>
-            <div class="user-area">
-                <span id="welcome-message"></span>
-                <button id="logout-button" class="logout-button">Sair</button>
-            </div>
-        </header>
-        <div id="app-body">
-            <div id="sidebar-overlay"></div>
-            <aside class="sidebar" id="sidebar">
-                <h2>Navegação</h2>
-                
-                <div style="margin-bottom: 1.5rem;">
-                    <button id="nav-aula-maker-btn" class="filter-btn">
-                        <svg><use xlink:href="#icon-magic-wand"></use></svg>
-                        <span>Gerador de Plano de Aula</span>
-                    </button>
-                </div>
-            
-                <div id="catalog-section">
-                    <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 1rem;">
-                    <h3 style="font-size: 1rem; color: var(--text-color-light); margin: 0 0 1rem 0.5rem; font-weight: 500;">Catálogo de Atividades</h3>
-                    
-                    <div class="search-container">
-                        <svg class="icon-search"><use xlink:href="#icon-search"></use></svg>
-                        <input type="text" id="search-input" placeholder="Pesquisar atividades...">
-                    </div>
-                    <ul id="filters-container"></ul>
-                </div>
-            </aside>
-            <div class="content-wrapper">
-                <main>
-                    <div id="catalog-view">
-                        <div id="results-info"></div>
-                        <section class="activities-grid" id="activities-grid-container"></section>
-                        <div id="pagination-container"></div>
-                    </div>
 
-                    <section id="aula-maker-section" class="hidden">
-                        <h2><svg width="28" height="28" style="stroke: var(--secondary-color)"><use xlink:href="#icon-magic-wand"></use></svg> Gerador de Plano de Aula</h2>
-                        <p class="description">Construa seu planejamento adicionando atividades do nosso catálogo ou criando as suas próprias. Organize a sequência e gere um PDF completo!</p>
-
-                        <div class="form-group">
-                            <label for="maker-title">Título do Plano de Aula:</label>
-                            <input type="text" id="maker-title" placeholder="Ex: Plano Semanal - 1º Ano B">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="maker-grade">Ano/Turma:</label>
-                            <input type="text" id="maker-grade" placeholder="Ex: 3º Ano Fundamental">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="maker-theme">Tema da Aula (Opcional):</label>
-                            <input type="text" id="maker-theme" placeholder="Ex: Sustentabilidade e Meio Ambiente">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="maker-notes">Observações Gerais / Materiais Necessários:</label>
-                            <textarea id="maker-notes" rows="4" placeholder="Ex: Levar tesoura sem ponta, cola bastão e revistas antigas para recorte."></textarea>
-                        </div>
-
-                        <h3>Sequência da Aula</h3>
-                        <p id="no-activities-selected">Seu plano de aula está vazio.</p>
-                        <ul id="selected-activities-list"></ul>
-
-                        <div id="add-to-plan-actions" style="border: 2px dashed var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; background-color: #fdfcff;">
-                            <h4 style="margin-top: 0; color: var(--secondary-color);">Adicionar Etapa ao Plano</h4>
-                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                                <button id="add-catalog-activity-btn" class="add-activity-btn">
-                                    <span style="font-size: 1.2rem; margin-right: 8px;">+</span> Adicionar do Catálogo
-                                </button>
-                                <button id="add-custom-activity-inline-btn" class="add-activity-btn" style="background-color: var(--secondary-color);">
-                                    <span style="font-size: 1.2rem; margin-right: 8px;">✎</span> Criar Atividade Personalizada
-                                </button>
-                            </div>
-
-                            <div id="custom-activity-form" class="hidden" style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-                                <div class="form-group">
-                                    <label for="custom-activity-title">Título da Atividade Personalizada:</label>
-                                    <input type="text" id="custom-activity-title" placeholder="Ex: Roda de conversa inicial">
-                                </div>
-                                <div class="form-group" style="margin-bottom: 1rem;">
-                                    <label for="custom-activity-desc">Descrição / Roteiro (Opcional):</label>
-                                    <textarea id="custom-activity-desc" rows="3" placeholder="Detalhes sobre como a atividade será conduzida."></textarea>
-                                </div>
-                                <button id="confirm-add-custom-btn" class="add-activity-btn" style="padding: 0.6rem 1.5rem; font-size: 1rem;">Adicionar ao Plano</button>
-                            </div>
-                        </div>
-                        
-                        <div class="main-action-buttons">
-                            <button id="clear-plan-btn" class="clear-plan-btn">Limpar Plano</button>
-                            <button id="generate-plan-btn" class="generate-plan-btn">Gerar Plano de Aula (PDF)</button>
-                        </div>
-                    </section>
-                </main>
-                <footer><p style="text-align: center; color: var(--text-color-light); margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">Criado com ❤️ por Prof. Vane</p></footer>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-container" id="modal-container"></div>
-
-    <script>
-    const usuariosAutorizados = [
-        { usuario: "prof.teste", senha: "222" }, { usuario: "vane", senha: "123" },
-        { usuario: "joana.silva", senha: "aluna2025" }, { usuario: "marcia.lopes", senha: "proativa" }
-    ];
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- SELETORES GERAIS ---
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardScreen = document.getElementById('dashboard-screen');
+    const loginForm = document.getElementById('login-form');
+    const logoutBtn = document.getElementById('logout-btn');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const contentSections = document.querySelectorAll('.content-section');
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobilePageTitle = document.getElementById('mobile-page-title');
+    const desktopPageTitle = document.getElementById('desktop-page-title');
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
     
-    const todasAsAtividades = [
-        { 
-            id: 1, 
-            categoria: "Interpessoal", 
-            cor: "#3b82f6", 
-            titulo: "Duas Verdades, Uma Mentira", 
-            desc: "Uma atividade clássica para quebrar o gelo e promover a interação entre os alunos.", 
-            duracao: "10 min", 
-            bncc: ["EI03EO04", "EI03EF01"],
-            objetivos: [
-                "Demonstrar empatia pelos outros, percebendo que as pessoas têm diferentes sentimentos, necessidades e maneiras de pensar e agir.",
-                "Expressar ideias, desejos e sentimentos sobre suas vivências, por meio da linguagem oral.",
-                "Desenvolver a escuta atenta e o respeito pela vez de falar do colega."
-            ],
-            roteiro: {
-                acolhida: "Organize a turma em um círculo e explique a brincadeira: cada um irá contar três coisas sobre si, mas uma delas será mentira. Dê um exemplo divertido sobre você para que entendam a dinâmica.",
-                desenvolvimento: "Dê 2 minutos para cada criança pensar em suas frases. Em seguida, um de cada vez compartilha suas três frases com o grupo. Após cada um falar, a turma tenta adivinhar qual é a mentira.",
-                expansao: "Quando a turma acerta a mentira, peça para a criança contar um pouco mais sobre uma das verdades que compartilhou.",
-                encerramento: "Finalize a roda de conversa reforçando como é legal conhecer mais sobre os amigos e descobrir coisas novas uns dos outros."
-            },
-            dica_vane: "Para crianças mais tímidas, comece a atividade em duplas. Elas contam suas verdades e mentiras apenas para um colega, e só depois se sentem mais à vontade para compartilhar com o grupo todo."
-        },
-        { 
-            id: 2, 
-            categoria: "Português", 
-            cor: "#ef4444", 
-            titulo: "Criador de Histórias", 
-            desc: "Estimula a criatividade, o vocabulário e a capacidade de estruturar narrativas curtas.", 
-            duracao: "20 min", 
-            bncc: ["EF15LP05", "EF02LP26"],
-            objetivos: [
-                "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, contos e outros textos narrativos.",
-                "Desenvolver a criatividade e a imaginação.",
-                "Ampliar o vocabulário e a organização do pensamento lógico."
-            ],
-            roteiro: {
-                acolhida: "Inicie uma roda de conversa perguntando 'Se vocês pudessem criar qualquer história, qual seria?'. Deixe a imaginação deles fluir e anote algumas ideias no quadro.",
-                desenvolvimento: "Entregue a folha de atividade com os três elementos (personagem, lugar, objeto). Explique que eles são os 'ingredientes' da história. Dê tempo para que eles escrevam ou desenhem a narrativa.",
-                expansao: "Convide alguns voluntários para lerem seus microcontos para a turma. Celebre cada história, destacando os pontos positivos.",
-                encerramento: "Finalize parabenizando a todos pela criatividade. Exponha as folhas de atividades no mural da sala."
-            },
-            dica_vane: "Para alunos em fase de pré-alfabetização, a atividade pode ser feita oralmente ou através de desenhos sequenciais. O importante é estimular a capacidade de criar e contar histórias!"
-        },
-        { 
-            id: 3, 
-            categoria: "Matemática", 
-            cor: "#f59e0b", 
-            titulo: "O Problema do Dia", 
-            desc: "Comece a aula de forma engajadora, aquecendo o raciocínio lógico e a resolução de problemas.", 
-            duracao: "10 min", 
-            bncc: ["EF01MA01", "EF01MA08"],
-            objetivos: [
-                "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas.",
-                "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até 2 algarismos.",
-                "Desenvolver o raciocínio lógico e estratégias de resolução de problemas."
-            ],
-            roteiro: {
-                acolhida: "Apresente o problema do dia no quadro enquanto os alunos se organizam. Leia o problema em voz alta e certifique-se de que todos entenderam o enunciado.",
-                desenvolvimento: "Dê um tempo para que pensem individualmente ou em duplas. Incentive o uso de materiais concretos (tampinhas, palitos) ou desenhos para encontrar a solução.",
-                expansao: "Convide alguns alunos para explicarem na lousa como pensaram para resolver o problema. Valorize as diferentes estratégias, mesmo que não cheguem à resposta correta.",
-                encerramento: "Apresente a solução e parabenize a todos pelo esforço e pela participação."
-            },
-            dica_vane: "Mantenha um 'banco de problemas' e, uma vez por semana, deixe que os próprios alunos criem um 'problema do dia' para a turma resolver. Eles adoram o desafio!"
-        },
-        { 
-            id: 4, 
-            categoria: "Ciências", 
-            cor: "#10b981", 
-            titulo: "Mini-Debate Científico", 
-            desc: "Desenvolve a argumentação, o pensamento crítico e a capacidade de defender um ponto de vista.", 
-            duracao: "25 min", 
-            bncc: ["EF08CI01", "EF69LP13"],
-            objetivos: [
-                "Desenvolver a capacidade de argumentação com base em evidências e informações confiáveis.",
-                "Exercitar a escuta ativa e o respeito a opiniões divergentes.",
-                "Diferenciar fatos de opiniões em um texto ou discussão."
-            ],
-            roteiro: {
-                acolhida: "Introduza o tema do debate (ex: 'Alimentos transgênicos: risco ou solução?'). Explique brevemente os dois lados da questão e as regras do debate (tempo de fala, respeito, etc.).",
-                desenvolvimento: "Divida a turma em dois grupos ('a favor' e 'contra'). Forneça pequenos textos de apoio para cada grupo. Dê 10 minutos para eles lerem, discutirem e listarem seus principais argumentos.",
-                expansao: "Inicie o debate, mediando as falas e garantindo que todos participem. Cada grupo apresenta seus argumentos e tem a chance de contestar o outro lado.",
-                encerramento: "Finalize com uma conclusão geral, sem necessariamente declarar um 'vencedor'. O objetivo é o exercício da argumentação e do pensamento crítico."
-            },
-            dica_vane: "Para turmas mais novas, use temas mais simples e concretos, como 'Qual animal de estimação é melhor: cachorro ou gato?'. O importante é a estrutura do debate."
-        },
-        { 
-            id: 5, 
-            free: true, 
-            categoria: "Alfabetização", 
-            cor: "#8b5cf6", 
-            titulo: "Detetive de Sílabas", 
-            desc: "Atividade lúdica para ajudar as crianças a formar palavras e entender a estrutura silábrica.", 
-            duracao: "15 min", 
-            bncc: ["EF01LP08", "EF01LP02"],
-            objetivos: [
-                "Relacionar elementos sonoros (sílabas, fonemas, partes de palavras) com sua representação escrita.",
-                "Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas.",
-                "Desenvolver a consciência fonológica através da segmentação de palavras em sílabas."
-            ],
-            roteiro: {
-                acolhida: "Cante uma música sobre o alfabeto ou sílabas. Depois, bata palmas para separar os nomes de algumas crianças em sílabas (Ex: MA-RI-A, 3 palmas).",
-                desenvolvimento: "Entregue a folha da atividade, tesoura e cola. Oriente as crianças a observar as figuras, falar o nome delas em voz alta e, em seguida, procurar as sílabas correspondentes para montar a palavra.",
-                expansao: "Após colarem, peça para que tentem ler a palavra que formaram. Depois, podem colorir os desenhos.",
-                encerramento: "Faça uma pequena 'exposição' dos trabalhos, elogiando o esforço de cada 'detetive de sílabas'."
-            },
-            dica_vane: "Plastificar as figuras e as sílabas torna este material um recurso durável que pode ser usado várias vezes em cantinhos de atividades ou para crianças que terminam as tarefas antes."
-        },
-        { 
-            id: 6, 
-            categoria: "Artes", 
-            cor: "#db2777", 
-            titulo: "Escultura com Massinha", 
-            desc: "Desenvolve a coordenação motora fina e a expressão artística tridimensional.", 
-            duracao: "25 min", 
-            bncc: ["EF15AR04", "EF15AR05"],
-            objetivos: [
-                "Experimentar a criação em artes visuais (modelagem), explorando diferentes materiais e ferramentas.",
-                "Desenvolver a imaginação e a criatividade na criação de formas tridimensionais.",
-                "Aprimorar a coordenação motora fina e a percepção tátil."
-            ],
-            roteiro: {
-                acolhida: "Mostre imagens ou vídeos curtos de animais fantásticos de filmes e livros (dragões, unicórnios, etc.) para inspirar a turma. Converse sobre as formas e cores.",
-                desenvolvimento: "Distribua a massinha de modelar e incentive a exploração livre do material. Lance o desafio: 'Vamos criar o nosso próprio animal fantástico? Como ele se chama? Onde ele vive?'.",
-                expansao: "Organize uma 'Exposição de Criaturas Mágicas'. Cada criança apresenta sua escultura para a turma, contando o nome e uma característica do seu animal.",
-                encerramento: "Fotografe as obras de arte antes de desmontá-las. Ajude na limpeza e organização dos materiais."
-            },
-            dica_vane: "Ofereça materiais complementares para enriquecer as esculturas, como palitos de dente para fazer texturas, botões para os olhos ou pedaços de lã para o cabelo."
-        },
-        { 
-            id: 7, 
-            categoria: "Geografia", 
-            cor: "#475569", 
-            titulo: "Mapa da Sala de Aula", 
-            desc: "Introduz conceitos de cartografia, visão vertical e representação do espaço.", 
-            duracao: "30 min", 
-            bncc: ["EF01GE09", "EF01GE08"],
-            objetivos: [
-                "Criar mapas mentais e desenhos com base em itinerários e pontos de referência.",
-                "Desenvolver noções de lateralidade, localização e representação espacial.",
-                "Compreender a função de um mapa como forma de representação de um lugar."
-            ],
-            roteiro: {
-                acolhida: "Brinque de 'O mestre mandou' usando comandos de localização: 'O mestre mandou tocar em algo na frente da sua mesa', '...algo atrás da sua cadeira', etc.",
-                desenvolvimento: "Reúna os alunos em volta de uma cartolina grande. Pergunte: 'Se fôssemos um passarinho voando bem alto sobre nossa sala, o que veríamos?'. Desenhe o contorno da sala e, com a ajuda deles, posicione os principais móveis (mesas, armário, lousa).",
-                expansao: "Crie uma legenda simples para o mapa, com símbolos representando cada tipo de objeto. Em seguida, peça para cada criança desenhar a si mesma no mapa, no lugar onde senta.",
-                encerramento: "Exponha o mapa na parede da sala e use-o para brincar de 'caça ao tesouro', dando pistas baseadas no mapa para encontrar um objeto escondido."
-            },
-            dica_vane: "Antes de iniciar o desenho, faça uma caminhada exploratória pela sala. Peça para as crianças observarem e nomearem os objetos e suas posições. Isso ajuda a construir o mapa mentalmente."
-        },
-        { 
-            id: 8, 
-            categoria: "História", 
-            cor: "#d97706", 
-            titulo: "Linha do Tempo Pessoal", 
-            desc: "Ajuda a criança a desenvolver a noção de temporalidade e a organizar fatos cronologicamente.", 
-            duracao: "20 min", 
-            bncc: ["EF01HI01", "EF01HI04"],
-            objetivos: [
-                "Identificar aspectos do seu crescimento por meio do registro e da evocação de situações do cotidiano.",
-                "Identificar a sucessão de acontecimentos (antes, durante, depois) e a noção de permanência e mudança.",
-                "Valorizar sua própria história e a de seus familiares."
-            ],
-            roteiro: {
-                acolhida: "Converse com a turma sobre como eles cresceram. Mostre uma foto sua de quando era bebê e uma atual para ilustrar a passagem do tempo.",
-                desenvolvimento: "Peça para cada criança listar (com sua ajuda na escrita, se necessário) 4 ou 5 momentos importantes de sua vida: nascimento, primeiro aniversário, primeiro dia na escola, uma viagem, etc.",
-                expansao: "Entregue uma folha ou um pedaço de cartolina para que desenhem uma linha e posicionem esses eventos em ordem. Eles podem ilustrar cada momento com um desenho ou colar uma foto (se tiverem trazido de casa).",
-                encerramento: "Abra espaço para quem quiser compartilhar sua linha do tempo com os colegas. Reúna todas as linhas do tempo em um grande mural chamado 'As Nossas Histórias'."
-            },
-            dica_vane: "Envie um bilhete para casa com antecedência, explicando a atividade e pedindo aos pais que conversem com os filhos sobre esses momentos marcantes. Essa parceria enriquece muito a atividade."
-        }
-    ];
+    // --- SELETORES DE FORMULÁRIOS E TABELAS ---
+    const formAddCliente = document.getElementById('form-add-cliente');
+    const editClienteContainer = document.getElementById('edit-cliente-container');
+    const formEditCliente = document.getElementById('form-edit-cliente');
+    const formAddProduto = document.getElementById('form-add-produto');
+    const editProdutoContainer = document.getElementById('edit-produto-container');
+    const formEditProduto = document.getElementById('form-edit-produto');
+    const formAddLancamento = document.getElementById('form-add-lancamento');
+    const editLancamentoContainer = document.getElementById('edit-lancamento-container');
+    const formEditLancamento = document.getElementById('form-edit-lancamento');
+    const editContaContainer = document.getElementById('edit-conta-container');
+    const formEditConta = document.getElementById('form-edit-conta');
     
-    document.addEventListener('DOMContentLoaded', function() {
-        const appState = {
-            currentView: 'aulaMaker', // 'aulaMaker' ou 'catalog'
-            searchQuery: '', 
-            activeFilter: 'Todos', 
-            currentPage: 1, 
-            itemsPerPage: 6,
-            favorites: JSON.parse(localStorage.getItem('profVaneFavoritesV1')) || [],
-            // Aula Maker State
-            selectedActivitiesForMaker: [],
-            makerPlanTitle: '',
-            makerPlanGrade: '',
-            makerPlanTheme: '',
-            makerPlanNotes: ''
+    // --- SELETORES DE RELATÓRIOS ---
+    const reportTabButtons = document.querySelectorAll('.report-tab-btn');
+    const reportTabContents = document.querySelectorAll('.report-tab-content');
+    const formRelatorioVendas = document.getElementById('form-relatorio-vendas');
+    const formRelatorioContas = document.getElementById('form-relatorio-contas');
+    const formRelatorioProdutos = document.getElementById('form-relatorio-produtos');
+    const formRelatorioEstoque = document.getElementById('form-relatorio-estoque');
+    const formRelatorioCaixa = document.getElementById('form-relatorio-caixa');
+
+    // --- ESTADO DA APLICAÇÃO ---
+    let clientes = [], produtos = [], vendas = [], contasAReceber = [], fluxoCaixa = [];
+    let carrinhoVenda = [];
+    let paymentChartInstance = null;
+    let isMobile = window.innerWidth <= 768;
+
+
+    // --- FUNÇÕES DE DADOS E UTILITÁRIAS ---
+    const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+    const loadData = (key) => JSON.parse(localStorage.getItem(key)) || [];
+    const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    
+    // Função de data CORRIGIDA e ROBUSTA
+    const formatDate = (dateString, includeTime = false) => {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'UTC' // Força a exibição da data como ela foi salva (sem conversões de fuso)
         };
 
-        const dom = {
-            loginScreen: document.getElementById('login-screen'),
-            mainContent: document.getElementById('main-content'),
-            loginForm: document.getElementById('login-form'),
-            logoutButton: document.getElementById('logout-button'),
-            welcomeMsg: document.getElementById('welcome-message'),
-            modal: document.getElementById('modal-container'),
-            menuToggle: document.getElementById('menu-toggle'),
-            sidebar: document.getElementById('sidebar'),
-            sidebarOverlay: document.getElementById('sidebar-overlay'),
-            
-            // Views
-            catalogView: document.getElementById('catalog-view'),
-            aulaMakerSection: document.getElementById('aula-maker-section'),
+        if (includeTime) {
+            options.hour = '2-digit';
+            options.minute = '2-digit';
+            // Para exibição com hora, usamos o fuso horário local para fazer sentido para o usuário
+            delete options.timeZone; 
+        }
 
-            // Catalog elements
-            searchInput: document.getElementById('search-input'),
-            filters: document.getElementById('filters-container'),
-            grid: document.getElementById('activities-grid-container'),
-            pagination: document.getElementById('pagination-container'),
-            resultsInfo: document.getElementById('results-info'),
-            
-            // Navigation Buttons
-            navAulaMakerBtn: document.getElementById('nav-aula-maker-btn'),
+        return new Intl.DateTimeFormat('pt-BR', options).format(date);
+    };
 
-            // Aula Maker elements
-            makerTitleInput: document.getElementById('maker-title'),
-            makerGradeInput: document.getElementById('maker-grade'),
-            makerThemeInput: document.getElementById('maker-theme'),
-            makerNotesInput: document.getElementById('maker-notes'),
-            generatePlanBtn: document.getElementById('generate-plan-btn'),
-            selectedActivitiesList: document.getElementById('selected-activities-list'),
-            noActivitiesSelectedMsg: document.getElementById('no-activities-selected'),
-            clearPlanBtn: document.getElementById('clear-plan-btn'),
-            
-            // New Aula Maker action buttons
-            addCatalogActivityBtn: document.getElementById('add-catalog-activity-btn'),
-            addCustomActivityInlineBtn: document.getElementById('add-custom-activity-inline-btn'),
-            customActivityForm: document.getElementById('custom-activity-form'),
-            confirmAddCustomBtn: document.getElementById('confirm-add-custom-btn')
+    const showNotification = (message, isError = false) => {
+        const notification = document.createElement('div');
+        Object.assign(notification.style, {
+            position: 'fixed', bottom: '20px', right: '20px', padding: '15px 25px', borderRadius: '0.5rem',
+            color: 'white', zIndex: '2000', opacity: '0', transition: 'all 0.4s ease',
+            transform: 'translateY(10px)', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+            backgroundColor: isError ? 'var(--danger-color)' : 'var(--success-color)', fontWeight: '500'
+        });
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        setTimeout(() => { notification.style.opacity = '1'; notification.style.transform = 'translateY(0)'; }, 10);
+        setTimeout(() => { notification.style.opacity = '0'; notification.style.transform = 'translateY(10px)'; setTimeout(() => notification.remove(), 500); }, 3500);
+    };
+
+    // --- FUNÇÕES DE RENDERIZAÇÃO ---
+    const renderTable = (containerId, headers, data, renderRow) => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.classList.toggle('responsive-table', isMobile);
+        if (data.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhum registro encontrado.</p>';
+            return;
+        }
+        const table = document.createElement('table');
+        table.innerHTML = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${data.map(item => renderRow(item, headers)).join('')}</tbody>`;
+        container.innerHTML = '';
+        container.appendChild(table);
+    };
+
+    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data, true), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<div class="no-print"><button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowClientes = (c, headers) => `<tr>${[c.nome, c.contato || 'N/A', `<div class="no-print"><button class="btn-action" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.nome + (p.quantidade === 0 ? ' (Esgotado)' : ''), p.quantidade, formatCurrency(p.preco), `<div class="no-print"><button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowCarrinho = (item, headers) => `<tr>${[item.nome, item.quantidade, formatCurrency(item.subtotal), `<button class="btn-action no-print" data-action="remove-item" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowContas = (conta, headers) => {
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
+        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`, `<div class="flex items-center no-print">${(conta.status === 'Pendente' ? `<button class="btn-action btn-paid" data-action="pay" data-id="${conta.id}" title="Marcar como Pago"><i class="fas fa-check"></i></button>` : '')}<button class="btn-action" data-action="edit" data-type="conta" data-id="${conta.id}" title="Editar"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="conta" data-id="${conta.id}" title="Excluir"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    };
+    const renderRowRelatorioVendas = (v, headers) => {
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
+        return `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), v.metodoPagamento, formatCurrency(v.total)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    };
+    const renderRowRelatorioContas = (conta, headers) => {
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
+        return `<tr>${[getNomeCliente(conta.clienteId), formatCurrency(conta.valor), formatDate(conta.dataVencimento), `<span class="status-${conta.status.toLowerCase()}">${conta.status}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    };
+    const renderRowRelatorioProdutos = (p, headers) => `<tr>${[p.rank, p.nome, p.quantidadeVendida, formatCurrency(p.totalVendido)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowRelatorioEstoque = (p, headers) => `<tr>${[p.nome, p.quantidade, formatCurrency(p.preco), `<span style="font-weight: 600; color: ${p.quantidade === 0 ? 'var(--danger-color)' : p.quantidade <= 5 ? 'var(--warning-color)' : 'var(--success-color)'};">${p.quantidade === 0 ? 'Esgotado' : p.quantidade <= 5 ? 'Estoque Baixo' : 'Disponível'}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+
+    // **CORREÇÃO: Esta função agora apenas redesenha as tabelas, sem mexer nos formulários.**
+    const rerenderCurrentPageTables = () => {
+        const currentPageId = document.querySelector('.content-section.active')?.id;
+        if (!currentPageId) return;
+
+        const tableRenderMap = {
+            'dashboard-view': renderDashboardSummaries,
+            'caixa-view': renderFluxoCaixa,
+            'vendas-view': renderCarrinho, // Apenas o carrinho, não o formulário todo
+            'clientes-view': renderClientes,
+            'estoque-view': renderProdutos,
+            'contas-a-receber-view': renderContasAReceber,
         };
-
-        function generatePdf(activityId) {
-            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
-                console.error("A biblioteca jsPDF não foi carregada corretamente.");
-                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
-                return;
-            }
-
-            try {
-                const { jsPDF } = window.jspdf;
-                const activity = todasAsAtividades.find(a => a.id === activityId);
-                if (!activity) return;
-                
-                const doc = new jsPDF();
-                doc.setFontSize(18);
-                doc.setTextColor("#6c5b7b");
-                doc.text(activity.titulo, 14, 22);
-                doc.setFontSize(11);
-                doc.setTextColor("#333d49");
-
-                let detailsText = `Descrição: ${activity.desc}\n\n`;
-                if(activity.roteiro) {
-                    detailsText += `Roteiro Sugerido:\n`;
-                    detailsText += `1. Acolhida: ${activity.roteiro.acolhida}\n\n`;
-                    detailsText += `2. Desenvolvimento: ${activity.roteiro.desenvolvimento}\n\n`;
-                    detailsText += `3. Expansão: ${activity.roteiro.expansao}\n\n`;
-                    detailsText += `4. Encerramento: ${activity.roteiro.encerramento}\n`;
-                }
-
-                const detailsLines = doc.splitTextToSize(detailsText, 180);
-                doc.text(detailsLines, 14, 32);
-                doc.save(`${activity.titulo.replace(/\s+/g, '-')}.pdf`);
-            } catch (error) {
-                console.error("Ocorreu um erro ao gerar o PDF:", error);
-                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF.");
-            }
+        tableRenderMap[currentPageId]?.();
+    };
+    
+    // --- NAVEGAÇÃO E LÓGICA DE UI ---
+    const navigateToPage = (pageId) => {
+        if (!pageId || !document.getElementById(pageId)) { pageId = 'dashboard-view'; }
+        contentSections.forEach(s => s.classList.remove('active'));
+        navLinks.forEach(l => l.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        const targetLink = document.querySelector(`.nav-link[data-target="${pageId}"]`);
+        if (targetLink) {
+            targetLink.classList.add('active');
+            const pageName = targetLink.querySelector('span').textContent;
+            desktopPageTitle.textContent = pageName;
+            mobilePageTitle.textContent = pageName;
         }
+        localStorage.setItem('lastActivePage', pageId);
+        cancelAllEdits();
+        const renderMap = {
+            'dashboard-view': renderDashboardSummaries,
+            'caixa-view': renderFluxoCaixa,
+            'vendas-view': () => { popularFormulariosVenda(); renderCarrinho(); },
+            'clientes-view': renderClientes,
+            'estoque-view': renderProdutos,
+            'contas-a-receber-view': renderContasAReceber,
+            'relatorios-view': () => { document.querySelector('.report-tab-btn.active').click(); }
+        };
+        renderMap[pageId]?.();
+    };
 
-        function closeModal() {
-            dom.modal.classList.remove('show'); 
-            setTimeout(() => { dom.modal.innerHTML = ''; }, 300);
+    const renderDashboardSummaries = () => {
+        const saldoCaixaEl = document.getElementById('saldo-caixa-dashboard');
+        if (!saldoCaixaEl) return;
+        saldoCaixaEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
+        document.getElementById('total-a-receber-dashboard').textContent = formatCurrency(contasAReceber.filter(c => c.status === 'Pendente').reduce((acc, c) => acc + c.valor, 0));
+        const salesSummary = vendas.reduce((acc, venda) => {
+            acc[venda.metodoPagamento] = (acc[venda.metodoPagamento] || 0) + venda.total;
+            return acc;
+        }, { vista: 0, pix: 0, crediario: 0, cartao_credito: 0 });
+        const summaryContainer = document.getElementById('sales-summary-container');
+        if (summaryContainer) {
+            summaryContainer.innerHTML = `
+                <div class="summary-card" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-money-bill-alt mr-2"></i> À Vista</h3><p>${formatCurrency(salesSummary.vista)}</p></div>
+                <div class="summary-card" style="border-left-color: var(--info-color);"><h3 class="items-center"><i class="fas fa-qrcode mr-2"></i> Pix</h3><p>${formatCurrency(salesSummary.pix)}</p></div>
+                <div class="summary-card" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-hand-holding-usd mr-2"></i> Crediário</h3><p>${formatCurrency(salesSummary.crediario)}</p></div>
+                <div class="summary-card" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-credit-card mr-2"></i> Cartão de Crédito</h3><p>${formatCurrency(salesSummary.cartao_credito)}</p></div>`;
         }
+        renderPaymentChart(salesSummary);
+    };
+
+    const renderPaymentChart = (salesSummary) => {
+        const ctx = document.getElementById('paymentMethodChart')?.getContext('2d');
+        if (!ctx) return;
+        if (paymentChartInstance) paymentChartInstance.destroy();
+        paymentChartInstance = new Chart(ctx, {
+            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], backgroundColor: ['#22C55E', '#3B82F6', '#F59E0B', '#EF4444'], borderRadius: 4, }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } }, scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } } }
+        });
+    };
+
+    const renderFluxoCaixa = () => renderTable('tabela-caixa-container', ['Data', 'Descrição', 'Tipo', 'Valor', 'Ações'], [...fluxoCaixa].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
+    const renderClientes = () => renderTable('tabela-clientes-container', ['Nome', 'Contato', 'Ações'], clientes, renderRowClientes);
+    const renderProdutos = () => renderTable('tabela-produtos-container', ['Produto', 'Em Estoque', 'Preço', 'Ações'], [...produtos].sort((a, b) => a.nome.localeCompare(b.nome)), renderRowProdutos);
+    const renderContasAReceber = () => renderTable('tabela-contas-container', ['Cliente', 'Valor', 'Vencimento', 'Status', 'Ações'], [...contasAReceber].sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowContas);
+    const renderCarrinho = () => {
+        const totalEl = document.getElementById('venda-total');
+        if (!totalEl) return;
+        renderTable('venda-itens-container', ['Produto', 'Qtd', 'Subtotal', 'Ação'], carrinhoVenda, renderRowCarrinho);
+        totalEl.textContent = formatCurrency(carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0));
+    };
+
+    const popularFormulariosVenda = () => {
+        const clienteSelect = document.getElementById('venda-cliente');
+        const produtoSelect = document.getElementById('venda-produto');
+        if (!clienteSelect || !produtoSelect) return;
+
+        // Guarda o valor selecionado para restaurá-lo depois
+        const selectedCliente = clienteSelect.value;
+
+        clienteSelect.innerHTML = '<option value="">Selecione...</option>' + [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtos].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.nome} (${p.quantidade} disp.)</option>`).join('');
+
+        // Restaura a seleção anterior se ainda for válida
+        if (selectedCliente) {
+            clienteSelect.value = selectedCliente;
+        }
+    };
+    
+    const cancelAllEdits = () => document.querySelectorAll('.edit-form-container').forEach(c => c.classList.add('hidden'));
+
+    // --- CRUD E LÓGICAS DE NEGÓCIO ---
+    const addItemAoCarrinho = () => {
+        const produtoId = document.getElementById('venda-produto').value;
+        const quantidade = parseInt(document.getElementById('venda-qtd').value);
+        if (!produtoId || !(quantidade > 0)) { showNotification('Selecione um produto e a quantidade.', true); return; }
+        const produto = produtos.find(p => p.id == produtoId);
+        if (!produto) { showNotification('Produto não encontrado.', true); return; }
+        const itemExistente = carrinhoVenda.find(item => item.produtoId == produtoId);
+        const qtdTotalNoCarrinho = (itemExistente ? itemExistente.quantidade : 0) + quantidade;
+        if (qtdTotalNoCarrinho > produto.quantidade) { showNotification(`Quantidade indisponível! Apenas ${produto.quantidade} em estoque.`, true); return; }
+        if (itemExistente) {
+            itemExistente.quantidade += quantidade;
+            itemExistente.subtotal = itemExistente.quantidade * produto.preco;
+        } else {
+            carrinhoVenda.push({ produtoId: produto.id, nome: produto.nome, quantidade, precoUnitario: produto.preco, subtotal: quantidade * produto.preco });
+        }
+        showNotification(`${quantidade}x ${produto.nome} adicionado(s) ao carrinho.`, false);
+        document.getElementById('venda-qtd').value = 1; 
+        document.getElementById('venda-produto').value = '';
+        renderCarrinho();
+    };
+
+    const finalizarVenda = () => {
+        const clienteId = parseInt(document.getElementById('venda-cliente').value);
+        if (!clienteId) { showNotification('Selecione um cliente para continuar!', true); return; }
+        if (carrinhoVenda.length === 0) { showNotification('Adicione pelo menos um item à venda!', true); return; }
         
-        function openModal(id) {
-            const activity = todasAsAtividades.find(a => a.id === id);
-            if (!activity) return;
+        const total = carrinhoVenda.reduce((acc, item) => acc + item.subtotal, 0);
+        const metodoPagamento = document.getElementById('venda-pagamento').value;
+        let parcelas = 1;
 
-            const modalHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>${activity.titulo}</h2>
-                    <button class="close-button" aria-label="Fechar modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <p>${activity.desc}</p>
-                    
-                    <h3>Objetivos de Aprendizagem</h3>
-                    <ul>${activity.objetivos.map(o => `<li>${o}</li>`).join('')}</ul>
-
-                    <h3>Códigos da BNCC</h3>
-                    <ul>${activity.bncc.map(b => `<li>${b}</li>`).join('')}</ul>
-
-                    <h3>Roteiro da Aula</h3>
-                    <ol class="roteiro-passos">
-                        <li><strong>Acolhida:</strong> ${activity.roteiro.acolhida}</li>
-                        <li><strong>Desenvolvimento:</strong> ${activity.roteiro.desenvolvimento}</li>
-                        <li><strong>Expansão:</strong> ${activity.roteiro.expansao}</li>
-                        <li><strong>Encerramento:</strong> ${activity.roteiro.encerramento}</li>
-                    </ol>
-                    
-                    ${activity.dica_vane ? `<div class="dica-da-vane"><p><strong>✨ Dica da Vane:</strong> ${activity.dica_vane}</p></div>` : ''}
-                </div>
-                <div class="modal-footer">
-                    <button class="download-btn" data-activity-id="${activity.id}">Baixar Atividade (PDF)</button>
-                </div>
-            </div>`;
-            
-            dom.modal.innerHTML = modalHTML;
-            dom.modal.classList.add('show');
-            
-            dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
-            dom.modal.querySelector('.download-btn').addEventListener('click', function() {
-                generatePdf(parseInt(this.dataset.activityId));
-            });
+        if (metodoPagamento === 'crediario') {
+            parcelas = parseInt(document.getElementById('venda-parcelas-crediario').value);
+        } else if (metodoPagamento === 'cartao_credito') {
+            parcelas = parseInt(document.getElementById('venda-parcelas-cartao').value);
         }
+
+        const novaVenda = { id: Date.now(), clienteId, itens: [...carrinhoVenda], total, metodoPagamento, parcelas, data: new Date().toISOString() };
+        vendas.push(novaVenda);
         
-        function setupLoginScreenPreview() {
-            const previewContainer = document.getElementById('preview-grid-container');
-            if (!previewContainer) return;
-
-            const freeActivity = todasAsAtividades.find(a => a.free);
-            const otherActivities = todasAsAtividades.filter(a => !a.free);
-            const shuffledOthers = otherActivities.sort(() => 0.5 - Math.random());
-            
-            let previewActivities = [freeActivity, ...shuffledOthers.slice(0, 2)].filter(Boolean);
-            previewActivities.sort(() => 0.5 - Math.random());
-
-            let previewHTML = '';
-            previewActivities.forEach(activity => {
-                if (activity.free) {
-                    previewHTML += `<div class="preview-card free" data-id="${activity.id}">`;
-                } else {
-                    previewHTML += `<div class="preview-card" onclick="document.getElementById('username-input').focus()">`;
-                }
-                previewHTML += `
-                    ${activity.free ? '<div class="free-badge">✨ EXPERIMENTE GRÁTIS</div>' : ''}
-                    <div class="preview-card-content">
-                        <span class="preview-card-category" style="background-color: ${activity.cor};">${activity.categoria}</span>
-                        <h3>${activity.titulo}</h3>
-                        <p>${activity.desc}</p>
-                    </div>
-                    ${!activity.free ? `<div class="preview-card-overlay"><span>🔒</span><p>Conteúdo Exclusivo</p></div>` : ''}
-                </div>`;
-            });
-            previewContainer.innerHTML = previewHTML;
-
-            previewContainer.querySelectorAll('.preview-card.free').forEach(card => {
-                card.addEventListener('click', function() {
-                    openModal(parseInt(this.dataset.id));
-                });
-            });
-        }
-
-        function initializePanel(username) {
-            dom.loginScreen.classList.add('hidden');
-            dom.mainContent.classList.remove('hidden');
-            dom.welcomeMsg.textContent = `Olá, ${username.split('.')[0].charAt(0).toUpperCase() + username.split('.')[0].slice(1)}!`;
-            setupEventListeners();
-            setupMobileMenu();
-            render();
-        }
-
-        function setupEventListeners() {
-            dom.logoutButton.addEventListener('click', () => { localStorage.removeItem('usuarioLogado'); location.reload(); });
-            
-            // Navigation
-            dom.navAulaMakerBtn.addEventListener('click', () => {
-                appState.currentView = 'aulaMaker';
-                render();
-                /* CORREÇÃO 1: Garante que a sidebar feche em dispositivos móveis ao clicar no botão */
-                document.body.classList.remove('sidebar-open');
-            });
-
-            // Catalog Listeners
-            dom.searchInput.addEventListener('input', () => { 
-                appState.searchQuery = dom.searchInput.value.toLowerCase(); 
-                appState.currentPage = 1; 
-                if (appState.currentView === 'catalog') {
-                    render();
-                }
-            });
-
-            // Aula Maker Listeners
-            dom.addCatalogActivityBtn.addEventListener('click', openSelectActivitiesModal);
-            dom.addCustomActivityInlineBtn.addEventListener('click', () => {
-                dom.customActivityForm.classList.toggle('hidden');
-            });
-            dom.confirmAddCustomBtn.addEventListener('click', addCustomActivityToMaker);
-
-            dom.generatePlanBtn.addEventListener('click', generateLessonPlanPdf);
-            dom.clearPlanBtn.addEventListener('click', clearLessonPlan);
-            
-            dom.makerTitleInput.addEventListener('input', (e) => { appState.makerPlanTitle = e.target.value; });
-            dom.makerGradeInput.addEventListener('input', (e) => { appState.makerPlanGrade = e.target.value; });
-            dom.makerThemeInput.addEventListener('input', (e) => { appState.makerPlanTheme = e.target.value; });
-            dom.makerNotesInput.addEventListener('input', (e) => { appState.makerPlanNotes = e.target.value; });
-        }
+        carrinhoVenda.forEach(item => {
+            const produtoEstoque = produtos.find(p => p.id == item.produtoId);
+            if(produtoEstoque) produtoEstoque.quantidade -= item.quantidade;
+        });
         
-        function setupMobileMenu() {
-            dom.menuToggle.addEventListener('click', () => document.body.classList.add('sidebar-open'));
-            dom.sidebarOverlay.addEventListener('click', () => document.body.classList.remove('sidebar-open'));
-        }
-
-        function render() {
-            // View Switching Logic
-            if (appState.currentView === 'aulaMaker') {
-                dom.catalogView.classList.add('hidden');
-                dom.aulaMakerSection.classList.remove('hidden');
-                document.getElementById('catalog-section').style.opacity = '0.6';
-                dom.navAulaMakerBtn.classList.add('active');
-                renderAulaMaker();
-            } else { // 'catalog' view
-                dom.aulaMakerSection.classList.add('hidden');
-                dom.catalogView.classList.remove('hidden');
-                document.getElementById('catalog-section').style.opacity = '1';
-                dom.navAulaMakerBtn.classList.remove('active');
-                
-                let filtered = [...todasAsAtividades];
-                if (appState.activeFilter === 'Favoritos') {
-                    filtered = filtered.filter(a => appState.favorites.includes(a.id));
-                } else if (appState.activeFilter !== 'Todos') {
-                    filtered = filtered.filter(a => a.categoria === appState.activeFilter);
-                }
-                
-                if (appState.searchQuery) {
-                    const query = appState.searchQuery;
-                    filtered = filtered.filter(a => a.titulo.toLowerCase().includes(query) || a.desc.toLowerCase().includes(query) || a.bncc.join(' ').toLowerCase().includes(query));
-                }
-
-                dom.resultsInfo.textContent = `Mostrando ${filtered.length} de ${todasAsAtividades.length} atividades.`;
-                renderGrid(filtered);
-                renderPagination(filtered.length);
+        const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
+        
+        if (metodoPagamento === 'vista' || metodoPagamento === 'pix' || metodoPagamento === 'cartao_credito') {
+            let descPagamento = metodoPagamentoMap[metodoPagamento];
+            if (metodoPagamento === 'cartao_credito') {
+                descPagamento = `Cartão de Crédito (${parcelas}x)`;
             }
-
-            renderFilters();
+            fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${descPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
+        } else if (metodoPagamento === 'crediario') {
+            const valorParcela = total / parcelas;
+            for (let i = 0; i < parcelas; i++) {
+                const dataVencimento = new Date();
+                dataVencimento.setMonth(dataVencimento.getMonth() + i + 1);
+                contasAReceber.push({ id: Date.now() + i, vendaId: novaVenda.id, clienteId, valor: valorParcela, dataVencimento: dataVencimento.toISOString(), status: 'Pendente' });
+            }
         }
 
-        function renderFilters() {
-            const categories = ['Todos', ...new Set(todasAsAtividades.map(a => a.categoria))];
-            dom.filters.innerHTML = '';
-            
-            const createFilterButton = (filterValue, text, iconId, isFavorite = false) => {
-                const li = document.createElement('li');
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                if (isFavorite) btn.classList.add('favorite-btn');
-                
-                if (appState.currentView === 'catalog' && appState.activeFilter === filterValue) {
-                    btn.classList.add('active');
-                }
+        saveData('vendas', vendas); saveData('produtos', produtos); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa);
+        
+        showNotification('Venda finalizada! Gerando recibo...', false);
+        showReceipt(novaVenda);
+        
+        carrinhoVenda = [];
+        document.getElementById('venda-form').reset();
+        document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
+        document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
+        
+        // Redesenha os dados relevantes após a venda, incluindo o formulário de vendas para atualizar o estoque visível
+        popularFormulariosVenda();
+        renderCarrinho();
+        renderDashboardSummaries();
+    };
+    
+    const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
 
-                btn.innerHTML = `<svg><use xlink:href="${iconId}"></use></svg> <span>${text}</span>`;
-                btn.onclick = () => { 
-                    appState.currentView = 'catalog';
-                    appState.activeFilter = filterValue; 
-                    appState.currentPage = 1; 
-                    render(); 
-                    document.body.classList.remove('sidebar-open');
-                };
-                li.appendChild(btn);
-                return li;
+    const showReceipt = (venda) => {
+        const modal = document.getElementById('receipt-modal');
+        const receiptBody = document.getElementById('receipt-body');
+        const cliente = clientes.find(c => c.id === venda.clienteId);
+        
+        let pagamentoDesc = metodoPagamentoMap[venda.metodoPagamento];
+        if (venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') {
+            pagamentoDesc += ` (${venda.parcelas}x)`;
+        }
+
+        receiptBody.innerHTML = `
+            <div class="receipt-header"><h2><i class="fas fa-store"></i> Flor de Maira</h2><p>Obrigado pela sua compra!</p></div>
+            <div class="receipt-details">
+                <div><strong>Cliente:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
+                <div><strong>Data:</strong><span>${formatDate(venda.data, true)}</span></div>
+                <div><strong>Venda ID:</strong><span>#${venda.id}</span></div>
+                <div><strong>Pagamento:</strong><span>${pagamentoDesc}</span></div>
+            </div>
+            <div class="receipt-items"><table><thead><tr><th>Item</th><th class="text-right">Preço Un.</th><th class="text-right">Subtotal</th></tr></thead><tbody>${venda.itens.map(item => `<tr><td>${item.quantidade}x ${item.nome}</td><td class="text-right">${formatCurrency(item.precoUnitario)}</td><td class="text-right">${formatCurrency(item.subtotal)}</td></tr>`).join('')}</tbody></table></div>
+            <div class="receipt-total">Total: ${formatCurrency(venda.total)}</div>
+            <div class="receipt-footer">Este não é um documento fiscal.</div>`;
+        const whatsappBtn = document.getElementById('btn-whatsapp-receipt');
+        if (cliente && cliente.contato) {
+            const phone = cliente.contato.replace(/\D/g, '');
+            const message = encodeURIComponent(`Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maira. \n\n*Recibo da Venda #${venda.id}* \nTotal: ${formatCurrency(venda.total)} \n\nObrigado e volte sempre!`);
+            whatsappBtn.href = `https://wa.me/55${phone}?text=${message}`;
+            whatsappBtn.classList.remove('hidden');
+        } else {
+            whatsappBtn.classList.add('hidden');
+        }
+        modal.classList.remove('hidden');
+    };
+
+    const handleEdit = (type, id) => {
+        const dataMap = { cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber };
+        const itemToEdit = dataMap[type].find(item => item.id === id);
+        if (itemToEdit) {
+             const populateMap = {
+                cliente: () => { document.getElementById('edit-cliente-id').value = itemToEdit.id; document.getElementById('edit-nome-cliente').value = itemToEdit.nome; document.getElementById('edit-contato-cliente').value = itemToEdit.contato || ''; },
+                produto: () => { document.getElementById('edit-produto-id').value = itemToEdit.id; document.getElementById('edit-nome-produto').value = itemToEdit.nome; document.getElementById('edit-qtd-produto').value = itemToEdit.quantidade; document.getElementById('edit-preco-produto').value = itemToEdit.preco; },
+                lancamento: () => { document.getElementById('edit-lancamento-id').value = itemToEdit.id; document.getElementById('edit-desc-lancamento').value = itemToEdit.descricao; document.getElementById('edit-valor-lancamento').value = itemToEdit.valor; document.getElementById('edit-tipo-lancamento').value = itemToEdit.tipo; },
+                conta: () => {
+                    const select = document.getElementById('edit-conta-cliente');
+                    select.innerHTML = '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+                    document.getElementById('edit-conta-id').value = itemToEdit.id; select.value = itemToEdit.clienteId; document.getElementById('edit-conta-valor').value = itemToEdit.valor; document.getElementById('edit-conta-vencimento').value = new Date(itemToEdit.dataVencimento).toISOString().split('T')[0]; document.getElementById('edit-conta-status').value = itemToEdit.status;
+                }
             };
-
-            categories.forEach(cat => {
-                const icon = cat === 'Todos' ? '#icon-all' : '#icon-category';
-                dom.filters.appendChild(createFilterButton(cat, cat, icon));
-            });
-            dom.filters.appendChild(createFilterButton('Favoritos', 'Favoritos', '#icon-heart', true));
+            populateMap[type]();
+            document.getElementById(`edit-${type}-container`).classList.remove('hidden');
         }
+    };
+    
+    // --- GERAÇÃO DE RELATÓRIOS ---
+    const gerarRelatorioVendas = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-vendas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-vendas').value;
+        const container = document.getElementById('relatorio-vendas-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-vendas');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione as datas de início e fim.', true); return; }
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+        if (vendasFiltradas.length === 0) { container.innerHTML = '<div class="card" id="printable-report-vendas"><p style="text-align:center;">Nenhuma venda no período.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
+        container.innerHTML = `<div class="card" id="printable-report-vendas"><h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total Vendido: ${formatCurrency(totalVendido)}</p><div id="relatorio-vendas-tabela-container"></div></div>`;
+        renderTable('relatorio-vendas-tabela-container', ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'], [...vendasFiltradas].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
+        btnImprimir.classList.remove('hidden');
+    };
 
-        function renderGrid(activities) {
-            dom.grid.innerHTML = '';
-            const start = (appState.currentPage - 1) * appState.itemsPerPage;
-            const paginated = activities.slice(start, start + appState.itemsPerPage);
+    // Função CORRIGIDA E ROBUSTA
+    const gerarRelatorioContas = (e) => {
+        e.preventDefault();
+        const status = document.getElementById('relatorio-status-contas').value;
+        const dataInicioStr = document.getElementById('relatorio-inicio-contas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-contas').value;
+        const container = document.getElementById('relatorio-contas-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-contas');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione as datas de vencimento.', true); return; }
 
-            if (paginated.length === 0) {
-                dom.grid.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; font-size: 1.1rem; padding: 2rem;">Nenhuma atividade encontrada.</p>`;
-                return;
-            }
-            paginated.forEach((act, index) => {
-                const cardElement = createActivityCard(act);
-                cardElement.style.animationDelay = `${index * 50}ms`;
-                dom.grid.appendChild(cardElement);
-            });
-            addCardListeners();
-        }
-
-        function createActivityCard(activity) {
-            const isFavorited = appState.favorites.includes(activity.id);
-            const card = document.createElement('article');
-            card.className = 'activity-card';
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-category" style="background-color: ${activity.cor};">${activity.categoria}</div>
-                    <button class="favorite-icon ${isFavorited ? 'favorited' : ''}" data-id="${activity.id}" aria-label="Favoritar">
-                        <svg><use xlink:href="#icon-heart"></use></svg>
-                    </button>
-                </div>
-                <div class="card-content">
-                    <h3>${activity.titulo}</h3>
-                    <p>${activity.desc}</p>
-                </div>
-                <div class="card-footer">
-                    <span>🕓 ${activity.duracao}</span>
-                    <button class="open-modal-btn" data-id="${activity.id}">Ver Detalhes</button>
-                </div>`;
-            return card;
-        }
+        const [startYear, startMonth, startDay] = dataInicioStr.split('-').map(Number);
+        const dataInicio = new Date(Date.UTC(startYear, startMonth - 1, startDay, 0, 0, 0));
+        const [endYear, endMonth, endDay] = dataFimStr.split('-').map(Number);
+        const dataFim = new Date(Date.UTC(endYear, endMonth - 1, endDay, 23, 59, 59, 999));
         
-        function renderPagination(totalItems) {
-            dom.pagination.innerHTML = '';
-            const totalPages = Math.ceil(totalItems / appState.itemsPerPage);
-            if (totalPages <= 1) return;
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('button');
-                btn.className = `pagination-btn ${i === appState.currentPage ? 'active' : ''}`;
-                btn.textContent = i;
-                btn.onclick = () => { appState.currentPage = i; render(); window.scrollTo(0,0); };
-                dom.pagination.appendChild(btn);
-            }
-        }
+        const contasFiltradas = contasAReceber.filter(c => {
+            const vencimento = new Date(c.dataVencimento);
+            return vencimento >= dataInicio && vencimento <= dataFim && (status === 'Todos' || c.status === status);
+        });
+        if (contasFiltradas.length === 0) { container.innerHTML = '<div class="card" id="printable-report-contas"><p style="text-align:center;">Nenhuma conta encontrada.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        const totalContas = contasFiltradas.reduce((acc, c) => acc + c.valor, 0);
+        container.innerHTML = `<div class="card" id="printable-report-contas"><h2>Relatório de Contas (${status}) (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total: ${formatCurrency(totalContas)}</p><div id="relatorio-contas-tabela-container"></div></div>`;
+        renderTable('relatorio-contas-tabela-container', ['Cliente', 'Valor', 'Vencimento', 'Status'], [...contasFiltradas].sort((a,b) => new Date(a.dataVencimento) - new Date(b.dataVencimento)), renderRowRelatorioContas);
+        btnImprimir.classList.remove('hidden');
+    };
+
+    const gerarRelatorioProdutos = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-produtos').value;
+        const dataFimStr = document.getElementById('relatorio-fim-produtos').value;
+        const container = document.getElementById('relatorio-produtos-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-produtos');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione o período.', true); return; }
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasNoPeriodo = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+        const statsProdutos = vendasNoPeriodo.flatMap(v => v.itens).reduce((acc, item) => {
+            acc[item.produtoId] = acc[item.produtoId] || { nome: item.nome, quantidadeVendida: 0, totalVendido: 0 };
+            acc[item.produtoId].quantidadeVendida += item.quantidade;
+            acc[item.produtoId].totalVendido += item.subtotal;
+            return acc;
+        }, {});
+        const rankingProdutos = Object.values(statsProdutos).sort((a, b) => b.quantidadeVendida - a.quantidadeVendida).map((p, i) => ({ ...p, rank: i + 1 }));
+        if (rankingProdutos.length === 0) { container.innerHTML = '<div class="card" id="printable-report-produtos"><p style="text-align:center;">Nenhum produto vendido no período.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        container.innerHTML = `<div class="card" id="printable-report-produtos"><h2>Mais Vendidos (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><div id="relatorio-produtos-tabela-container"></div></div>`;
+        renderTable('relatorio-produtos-tabela-container', ['#', 'Produto', 'Qtd. Vendida', 'Total Arrecadado'], rankingProdutos, renderRowRelatorioProdutos);
+        btnImprimir.classList.remove('hidden');
+    };
+
+    const gerarRelatorioEstoque = (e) => {
+        e.preventDefault();
+        const status = document.getElementById('relatorio_status_estoque').value;
+        const container = document.getElementById('relatorio-estoque-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-estoque');
+        let produtosFiltrados = produtos.filter(p => {
+            if (status === 'disponivel') return p.quantidade > 0;
+            if (status === 'baixo') return p.quantidade > 0 && p.quantidade <= 5;
+            if (status === 'esgotado') return p.quantidade === 0;
+            return true;
+        });
+        if (produtosFiltrados.length === 0) { container.innerHTML = '<div class="card" id="printable-report-estoque"><p style="text-align:center;">Nenhum produto com este status.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        container.innerHTML = `<div class="card" id="printable-report-estoque"><h2>Situação do Estoque (Status: ${status.charAt(0).toUpperCase() + status.slice(1)})</h2><div id="relatorio-estoque-tabela-container"></div></div>`;
+        renderTable('relatorio-estoque-tabela-container', ['Produto', 'Qtd. em Estoque', 'Preço Unitário', 'Status'], [...produtosFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)), renderRowRelatorioEstoque);
+        btnImprimir.classList.remove('hidden');
+    };
+
+    const gerarRelatorioCaixa = (e) => {
+        e.preventDefault();
+        const dataInicioStr = document.getElementById('relatorio-inicio-caixa').value;
+        const dataFimStr = document.getElementById('relatorio-fim-caixa').value;
+        const tipo = document.getElementById('relatorio_tipo_caixa').value;
+        const container = document.getElementById('relatorio-caixa-container');
+        const btnImprimir = document.getElementById('btn-imprimir-relatorio-caixa');
+        if (!dataInicioStr || !dataFimStr) { showNotification('Selecione o período.', true); return; }
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const lancamentosFiltrados = fluxoCaixa.filter(l => {
+            const dataLancamento = new Date(l.data);
+            return dataLancamento >= dataInicio && dataLancamento <= dataFim && (tipo === 'todos' || l.tipo === tipo);
+        });
+        if (lancamentosFiltrados.length === 0) { container.innerHTML = '<div class="card" id="printable-report-caixa"><p style="text-align:center;">Nenhum lançamento no período.</p></div>'; btnImprimir.classList.add('hidden'); return; }
+        const totalEntradas = lancamentosFiltrados.filter(l => l.tipo === 'Entrada').reduce((acc, l) => acc + l.valor, 0);
+        const totalSaidas = lancamentosFiltrados.filter(l => l.tipo === 'Saída').reduce((acc, l) => acc + l.valor, 0);
+        const saldoPeriodo = totalEntradas - totalSaidas;
+        container.innerHTML = `<div class="card" id="printable-report-caixa"><h2>Fluxo de Caixa (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><div style="display: flex; gap: 2rem; flex-wrap: wrap;"><strong>Entradas:</strong> <span class="valor-entrada">${formatCurrency(totalEntradas)}</span><strong>Saídas:</strong> <span class="valor-saida">${formatCurrency(totalSaidas)}</span><strong>Saldo:</strong> <strong style="color: ${saldoPeriodo >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">${formatCurrency(saldoPeriodo)}</strong></div><div id="relatorio-caixa-tabela-container"></div></div>`;
+        renderTable('relatorio-caixa-tabela-container', ['Data/Hora', 'Descrição', 'Tipo', 'Valor', ''], [...lancamentosFiltrados].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowCaixa);
+        btnImprimir.classList.remove('hidden');
+    };
+    
+    // --- IMPRESSÃO ---
+    const printContent = (elementId) => {
+        const printableElement = document.getElementById(elementId);
+        if (!printableElement) return;
+        const clonedElement = printableElement.cloneNode(true);
+        const tempContainer = document.createElement('div');
+        tempContainer.appendChild(clonedElement);
         
-        function addCardListeners() {
-            dom.grid.querySelectorAll('.open-modal-btn').forEach(b => b.onclick = () => openModal(parseInt(b.dataset.id)));
-            dom.grid.querySelectorAll('.favorite-icon').forEach(b => b.onclick = (e) => {
-                e.currentTarget.classList.remove('favorited');
-                void e.currentTarget.offsetWidth;
-                toggleFavorite(parseInt(b.dataset.id));
-            });
+        const iframe = document.createElement('iframe');
+        iframe.style.height = '0'; iframe.style.width = '0'; iframe.style.position = 'absolute'; iframe.style.border = '0';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        const headLinks = document.head.querySelectorAll('link, style');
+        let styles = '';
+        headLinks.forEach(node => { styles += node.outerHTML; });
+        doc.write(`<html><head><title>Imprimir</title>${styles}</head><body>${tempContainer.innerHTML}</body></html>`);
+        doc.close();
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+        setTimeout(() => { document.body.removeChild(iframe); }, 1000);
+    };
+    
+    // --- INICIALIZAÇÃO E EVENT LISTENERS ---
+    const init = () => {
+        clientes = loadData('clientes'); produtos = loadData('produtos'); vendas = loadData('vendas');
+        contasAReceber = loadData('contasAReceber'); fluxoCaixa = loadData('fluxoCaixa');
+        navigateToPage(localStorage.getItem('lastActivePage') || 'dashboard-view');
+    };
+
+    loginForm.addEventListener('submit', e => {
+        e.preventDefault();
+        if (document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') {
+            localStorage.setItem('isLoggedIn', 'true');
+            loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
+            init(); 
+        } else {
+            document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!';
         }
-        
-        function toggleFavorite(id) {
-            const index = appState.favorites.indexOf(id);
-            if (index > -1) {
-                appState.favorites.splice(index, 1);
-            } else {
-                appState.favorites.push(id);
-            }
-            localStorage.setItem('profVaneFavoritesV1', JSON.stringify(appState.favorites));
-            
-            if (appState.activeFilter === 'Favoritos' && appState.currentView === 'catalog') {
-                appState.currentPage = 1;
-                render();
-            } else {
-                const icon = document.querySelector(`.favorite-icon[data-id='${id}']`);
-                if(icon) {
-                    icon.classList.toggle('favorited', index === -1);
-                }
-            }
-        }
-
-        // --- AULA MAKER FUNCTIONS ---
-
-        function clearLessonPlan() {
-            if (confirm('Tem certeza que deseja limpar todo o plano de aula atual?')) {
-                appState.makerPlanTitle = '';
-                appState.makerPlanGrade = '';
-                appState.makerPlanTheme = '';
-                appState.makerPlanNotes = '';
-                appState.selectedActivitiesForMaker = [];
-                renderAulaMaker();
-            }
-        }
-
-        function addCustomActivityToMaker() {
-            const titleInput = document.getElementById('custom-activity-title');
-            const descInput = document.getElementById('custom-activity-desc');
-            const title = titleInput.value.trim();
-
-            if (!title) {
-                alert('Por favor, insira um título para a atividade personalizada.');
-                titleInput.focus();
-                return;
-            }
-
-            const newActivity = {
-                type: 'custom',
-                id: `custom_${Date.now()}`,
-                titulo: title,
-                desc: descInput.value.trim(),
-                categoria: 'Personalizada'
-            };
-
-            appState.selectedActivitiesForMaker.push(newActivity);
-            renderAulaMaker();
-
-            titleInput.value = '';
-            descInput.value = '';
-            dom.customActivityForm.classList.add('hidden');
-        }
-
-        function reorderActivity(index, direction) {
-            const list = appState.selectedActivitiesForMaker;
-            if (direction === 'up' && index > 0) {
-                [list[index], list[index - 1]] = [list[index - 1], list[index]];
-            } else if (direction === 'down' && index < list.length - 1) {
-                [list[index], list[index + 1]] = [list[index + 1], list[index]];
-            }
-            renderAulaMaker();
-        }
-
-        function renderAulaMaker() {
-            dom.selectedActivitiesList.innerHTML = '';
-            if (appState.selectedActivitiesForMaker.length === 0) {
-                dom.noActivitiesSelectedMsg.classList.remove('hidden');
-            } else {
-                dom.noActivitiesSelectedMsg.classList.add('hidden');
-                appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                    const activityData = activity.type === 'custom' 
-                        ? activity 
-                        : todasAsAtividades.find(a => a.id === activity.id);
-
-                    if (activityData) {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'selected-activity-item';
-                        listItem.innerHTML = `
-                            <span>${activityData.titulo} <em style="color: var(--text-color-light); font-size: 0.9em;">(${activityData.categoria})</em></span>
-                            <div class="activity-controls">
-                                <button class="reorder-btn" data-index="${index}" data-direction="up" title="Mover para cima">↑</button>
-                                <button class="reorder-btn" data-index="${index}" data-direction="down" title="Mover para baixo">↓</button>
-                                <button class="remove-activity-btn" data-id="${activity.id}" aria-label="Remover atividade">×</button>
-                            </div>
-                        `;
-                        dom.selectedActivitiesList.appendChild(listItem);
-                    }
-                });
-                
-                dom.selectedActivitiesList.querySelectorAll('.remove-activity-btn').forEach(btn => {
-                    btn.onclick = (e) => removeActivityFromMaker(e.currentTarget.dataset.id);
-                });
-                dom.selectedActivitiesList.querySelectorAll('.reorder-btn').forEach(btn => {
-                    btn.onclick = (e) => {
-                        const target = e.currentTarget;
-                        reorderActivity(parseInt(target.dataset.index), target.dataset.direction);
-                    }
-                });
-            }
-            
-            dom.makerTitleInput.value = appState.makerPlanTitle;
-            dom.makerGradeInput.value = appState.makerPlanGrade;
-            dom.makerThemeInput.value = appState.makerPlanTheme;
-            dom.makerNotesInput.value = appState.makerPlanNotes;
-        }
-
-        function removeActivityFromMaker(id) {
-            appState.selectedActivitiesForMaker = appState.selectedActivitiesForMaker.filter(activity => String(activity.id) !== String(id));
-            renderAulaMaker();
-        }
-
-        function openSelectActivitiesModal() {
-            const existingCatalogIds = appState.selectedActivitiesForMaker
-                .filter(a => a.type === 'catalog')
-                .map(a => a.id);
-            let tempSelected = [...existingCatalogIds];
-
-            const selectModalHTML = `
-                <div class="modal-content" id="select-activities-modal">
-                    <div class="modal-header">
-                        <h2>Selecionar Atividades para o Plano</h2>
-                        <button class="close-button" aria-label="Fechar modal">×</button>
-                    </div>
-                    <div class="modal-body activities-grid">
-                        ${todasAsAtividades.map(act => {
-                            const isSelected = tempSelected.includes(act.id) ? 'selected' : '';
-                            return `
-                                <article class="activity-card ${isSelected}" data-id="${act.id}">
-                                    <div class="card-header">
-                                        <div class="card-category" style="background-color: ${act.cor};">${act.categoria}</div>
-                                    </div>
-                                    <div class="card-content">
-                                        <h3>${act.titulo}</h3>
-                                        <p>${act.desc}</p>
-                                    </div>
-                                </article>
-                            `;
-                        }).join('')}
-                    </div>
-                    <div class="modal-footer">
-                        <button id="confirm-selection-btn">Confirmar Seleção</button>
-                    </div>
-                </div>
-            `;
-
-            dom.modal.innerHTML = selectModalHTML;
-            dom.modal.classList.add('show');
-
-            dom.modal.querySelector('.close-button').onclick = closeModal;
-            dom.modal.addEventListener('click', e => { if (e.target.classList.contains('modal-container')) closeModal(); });
-
-            dom.modal.querySelectorAll('.activity-card').forEach(card => {
-                card.onclick = function() {
-                    const id = parseInt(this.dataset.id);
-                    const index = tempSelected.indexOf(id);
-                    if (index > -1) {
-                        tempSelected.splice(index, 1);
-                        this.classList.remove('selected');
-                    } else {
-                        tempSelected.push(id);
-                        this.classList.add('selected');
-                    }
-                };
-            });
-
-            dom.modal.querySelector('#confirm-selection-btn').onclick = () => {
-                const customActivities = appState.selectedActivitiesForMaker.filter(a => a.type === 'custom');
-                const newCatalogActivities = tempSelected.map(id => ({ type: 'catalog', id: id }));
-                
-                appState.selectedActivitiesForMaker = [...customActivities, ...newCatalogActivities];
-                renderAulaMaker();
-                closeModal();
-            };
-        }
-
-        function generateLessonPlanPdf() {
-            if (appState.selectedActivitiesForMaker.length === 0 && !appState.makerPlanTitle) {
-                alert("Seu plano de aula está vazio. Adicione um título ou algumas atividades antes de gerar o PDF.");
-                return;
-            }
-            if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
-                console.error("A biblioteca jsPDF não foi carregada corretamente.");
-                alert("Erro ao gerar o PDF. A biblioteca de exportação não foi encontrada.");
-                return;
-            }
-
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({unit: 'pt', format: 'a4'});
-                let yOffset = 60;
-                const margin = 40;
-                const lineHeight = 18;
-                const maxWidth = doc.internal.pageSize.width - (margin * 2);
-                
-                doc.setFont('Helvetica', 'bold');
-                doc.setFontSize(22);
-                doc.setTextColor(40, 40, 40);
-                doc.text("Plano de Aula", doc.internal.pageSize.width / 2, yOffset, { align: 'center' });
-                yOffset += 40;
-                
-                doc.setFont('Helvetica', 'bold');
-                doc.setFontSize(12);
-                doc.text(`Título:`, margin, yOffset);
-                doc.setFont('Helvetica', 'normal');
-                doc.text(doc.splitTextToSize(appState.makerPlanTitle || 'Sem Título', maxWidth - 50), margin + 50, yOffset);
-                yOffset += lineHeight * 1.5;
-
-                doc.setFont('Helvetica', 'bold');
-                doc.text(`Ano/Turma:`, margin, yOffset);
-                doc.setFont('Helvetica', 'normal');
-                doc.text(doc.splitTextToSize(appState.makerPlanGrade || 'Não Informado', maxWidth - 75), margin + 75, yOffset);
-                
-                if (appState.makerPlanTheme) {
-                    yOffset += lineHeight;
-                    doc.setFont('Helvetica', 'bold');
-                    doc.text(`Tema:`, margin, yOffset);
-                    doc.setFont('Helvetica', 'normal');
-                    doc.text(doc.splitTextToSize(appState.makerPlanTheme, maxWidth - 45), margin + 45, yOffset);
-                }
-                yOffset += lineHeight * 2;
-                
-                if (appState.makerPlanNotes) {
-                    doc.setFont('Helvetica', 'bold');
-                    doc.setFontSize(14);
-                    doc.text("Observações Gerais / Materiais:", margin, yOffset);
-                    yOffset += lineHeight * 1.5;
-                    
-                    doc.setFont('Helvetica', 'normal');
-                    doc.setFontSize(11);
-                    const notesLines = doc.splitTextToSize(appState.makerPlanNotes, maxWidth);
-                    doc.text(notesLines, margin, yOffset);
-                    yOffset += notesLines.length * (lineHeight - 4) + 20;
-                }
-                
-                doc.setLineWidth(1);
-                doc.setDrawColor(177, 156, 217);
-                doc.line(margin, yOffset, maxWidth + margin, yOffset);
-                yOffset += 30;
-
-                doc.setFont('Helvetica', 'bold');
-                doc.setFontSize(16);
-                doc.text("Sequência de Atividades", margin, yOffset);
-                yOffset += 25;
-
-                if (appState.selectedActivitiesForMaker.length === 0) {
-                    doc.setFont('Helvetica', 'italic');
-                    doc.setFontSize(11);
-                    doc.setTextColor("#6b7280");
-                    doc.text("Nenhuma atividade selecionada para este plano.", margin, yOffset);
-                } else {
-                    appState.selectedActivitiesForMaker.forEach((activity, index) => {
-                        const isCustom = activity.type === 'custom';
-                        const activityData = isCustom ? activity : todasAsAtividades.find(a => a.id === activity.id);
-                        
-                        if (activityData) {
-                            if (yOffset > doc.internal.pageSize.height - 150) {
-                                doc.addPage();
-                                yOffset = 60;
-                            }
-
-                            doc.setFont('Helvetica', 'bold');
-                            doc.setFontSize(14);
-                            doc.setTextColor(108, 91, 123);
-                            doc.text(`${index + 1}. ${activityData.titulo} (${activityData.categoria})`, margin, yOffset);
-                            yOffset += lineHeight * 1.2;
-
-                            doc.setFont('Helvetica', 'normal');
-                            doc.setFontSize(11);
-                            doc.setTextColor(51, 61, 73);
-
-                            if (isCustom) {
-                                const descLines = doc.splitTextToSize(`Descrição: ${activityData.desc || 'Nenhuma descrição fornecida.'}`, maxWidth);
-                                doc.text(descLines, margin, yOffset);
-                                yOffset += descLines.length * (lineHeight - 4);
-                            } else {
-                                const descLines = doc.splitTextToSize(activityData.desc, maxWidth);
-                                doc.text(descLines, margin, yOffset);
-                                yOffset += descLines.length * (lineHeight - 4) + 10;
-                                
-                                doc.setFont('Helvetica', 'bold');
-                                doc.text('Objetivos:', margin, yOffset);
-                                yOffset += lineHeight;
-                                doc.setFont('Helvetica', 'normal');
-                                activityData.objetivos.forEach(obj => {
-                                    const objLines = doc.splitTextToSize(`• ${obj}`, maxWidth - 10);
-                                    if(yOffset + objLines.length * (lineHeight - 4) > doc.internal.pageSize.height - 40) {
-                                        doc.addPage();
-                                        yOffset = 60;
-                                    }
-                                    doc.text(objLines, margin + 10, yOffset);
-                                    yOffset += objLines.length * (lineHeight - 4);
-                                });
-                            }
-                            yOffset += 25;
-                        }
-                    });
-                }
-
-                const fileName = (appState.makerPlanTitle || "Plano-de-Aula").replace(/[^a-zA-Z0-9-]/g, '_') + '.pdf';
-                doc.save(fileName);
-
-            } catch (error) {
-                console.error("Ocorreu um erro ao gerar o PDF do plano de aula:", error);
-                alert("Desculpe, um erro inesperado ocorreu ao tentar gerar o PDF do plano de aula.");
-            }
-        }
-
-        // --- INICIALIZAÇÃO ---
-        (function main() {
-            setupLoginScreenPreview();
-
-            const savedUser = localStorage.getItem('usuarioLogado');
-            if (savedUser) {
-                initializePanel(savedUser);
-            }
-            dom.loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const user = e.target.elements['username-input'].value.trim();
-                const pass = e.target.elements['password-input'].value.trim();
-                const found = usuariosAutorizados.find(u => u.usuario === user && u.senha === pass);
-                if (found) {
-                    localStorage.setItem('usuarioLogado', found.usuario);
-                    initializePanel(found.usuario);
-                } else {
-                    document.getElementById('login-error').classList.remove('hidden');
-                }
-            });
-        })();
     });
-    </script>
+
+    logoutBtn.addEventListener('click', () => {
+        if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
+        localStorage.removeItem('isLoggedIn');
+        window.location.reload();
+    });
+
+    const toggleMenu = (forceClose = false) => {
+        if (isMobile) sidebar.classList.toggle('open', !forceClose && !sidebar.classList.contains('open'));
+        backdrop.classList.toggle('hidden', !sidebar.classList.contains('open'));
+    };
+    menuToggle.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+    backdrop.addEventListener('click', () => toggleMenu(true));
+    
+    // **CORREÇÃO: O event listener foi alterado para não recarregar os formulários.**
+    window.addEventListener('resize', () => {
+        const wasMobile = isMobile;
+        isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+            toggleMenu(true);
+        }
+
+        // Apenas redesenha as tabelas se houver mudança no breakpoint (mobile/desktop)
+        if (wasMobile !== isMobile) {
+            rerenderCurrentPageTables();
+        }
+    });
+
+    navLinks.forEach(link => { link.addEventListener('click', e => { e.preventDefault(); navigateToPage(link.getAttribute('data-target')); toggleMenu(true); }); });
+
+    // Listeners de Forms
+    formAddCliente.addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); showNotification('Cliente salvo!'); e.target.reset(); });
+    formAddProduto.addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); showNotification('Produto salvo!'); e.target.reset(); });
+    formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos!', true); }});
+    formEditCliente.addEventListener('submit', e => { e.preventDefault(); const id = parseInt(document.getElementById('edit-cliente-id').value); const c = clientes.find(c => c.id === id); if(c){c.nome = document.getElementById('edit-nome-cliente').value; c.contato = document.getElementById('edit-contato-cliente').value; saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); cancelAllEdits(); showNotification('Cliente atualizado!');}});
+    formEditProduto.addEventListener('submit', e => { e.preventDefault(); const id = parseInt(document.getElementById('edit-produto-id').value); const p = produtos.find(p => p.id === id); if(p){p.nome = document.getElementById('edit-nome-produto').value; p.quantidade = parseInt(document.getElementById('edit-qtd-produto').value); p.preco = parseFloat(document.getElementById('edit-preco-produto').value); saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); cancelAllEdits(); showNotification('Produto atualizado!');}});
+    formEditLancamento.addEventListener('submit', e => { e.preventDefault(); const id = parseInt(document.getElementById('edit-lancamento-id').value); const l = fluxoCaixa.find(l => l.id === id); if(l){l.descricao = document.getElementById('edit-desc-lancamento').value; l.valor = parseFloat(document.getElementById('valor-lancamento').value); l.tipo = document.getElementById('edit-tipo-lancamento').value; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); cancelAllEdits(); showNotification('Lançamento atualizado!');}});
+    formEditConta.addEventListener('submit', e => {
+        e.preventDefault(); const id = parseInt(document.getElementById('edit-conta-id').value); const c = contasAReceber.find(c => c.id === id); if(!c) return;
+        const oldStatus = c.status; const newStatus = document.getElementById('edit-conta-status').value;
+        c.clienteId = parseInt(document.getElementById('edit-conta-cliente').value); c.valor = parseFloat(document.getElementById('edit-conta-valor').value); c.dataVencimento = new Date(document.getElementById('edit-conta-vencimento').value + 'T00:00:00').toISOString(); c.status = newStatus;
+        if(oldStatus === 'Pendente' && newStatus === 'Pago'){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Recebimento Conta de ${clientes.find(cl=>cl.id===c.clienteId)?.nome||''}`, valor: c.valor, contaId: c.id }); }
+        else if(oldStatus === 'Pago' && newStatus === 'Pendente'){ fluxoCaixa = fluxoCaixa.filter(l => l.contaId !== c.id); }
+        saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); cancelAllEdits(); showNotification('Conta atualizada!');
+    });
+    
+    // Listeners de Botões e Ações
+    document.querySelectorAll('.btn-cancel').forEach(btn => btn.addEventListener('click', cancelAllEdits));
+    document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
+    document.getElementById('venda-pagamento').addEventListener('change', e => {
+        const metodo = e.target.value;
+        document.getElementById('venda-parcelas-crediario-group').classList.toggle('hidden', metodo !== 'crediario');
+        document.getElementById('venda-parcelas-cartao-group').classList.toggle('hidden', metodo !== 'cartao_credito');
+    });
+    document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
+    document.getElementById('btn-close-receipt').addEventListener('click', () => document.getElementById('receipt-modal').classList.add('hidden'));
+    document.getElementById('btn-print-receipt').addEventListener('click', () => printContent('printable-area'));
+    reportTabButtons.forEach(btn => btn.addEventListener('click', () => { reportTabButtons.forEach(b => b.classList.remove('active')); reportTabContents.forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); }));
+    
+    // Listeners Relatórios
+    formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
+    document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('relatorio-vendas-container'));
+    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros relacionados. Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
+    formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
+    document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('relatorio-contas-container'));
+    formRelatorioProdutos.addEventListener('submit', gerarRelatorioProdutos);
+    document.getElementById('btn-imprimir-relatorio-produtos').addEventListener('click', () => printContent('relatorio-produtos-container'));
+    formRelatorioEstoque.addEventListener('submit', gerarRelatorioEstoque);
+    document.getElementById('btn-imprimir-relatorio-estoque').addEventListener('click', () => printContent('relatorio-estoque-container'));
+    formRelatorioCaixa.addEventListener('submit', gerarRelatorioCaixa);
+    document.getElementById('btn-imprimir-relatorio-caixa').addEventListener('click', () => printContent('relatorio-caixa-container'));
+
+    // Delegação de Eventos para botões de ação nas tabelas
+    document.body.addEventListener('click', e => {
+        const target = e.target.closest('[data-action]');
+        if (!target) return;
+        const { action, type, id } = target.dataset;
+        const parsedId = parseInt(id);
+        if (action === 'edit') handleEdit(type, parsedId);
+        else if (action === 'delete') {
+            if(confirm(`Tem certeza que deseja excluir?`)){
+                if(type==='cliente' && vendas.some(v=>v.clienteId===parsedId)){showNotification('Exclua as vendas do cliente primeiro.',true);return;}
+                if(type==='produto' && vendas.some(v=>v.itens.some(i=>i.produtoId===parsedId))){showNotification('Exclua as vendas do produto primeiro.',true);return;}
+                let dataMap = {cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber};
+                const updatedData = dataMap[type].filter(item => item.id !== parsedId);
+                if(type==='cliente') { clientes = updatedData; saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); }
+                if(type==='produto') { produtos = updatedData; saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); }
+                if(type==='lancamento') { fluxoCaixa = updatedData; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); }
+                if(type==='conta') { contasAReceber = updatedData; saveData('contasAReceber', contasAReceber); renderContasAReceber(); renderDashboardSummaries(); }
+                showNotification(`${type} excluído!`);
+            }
+        }
+        else if (action === 'remove-item') { carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId); renderCarrinho(); }
+        else if (action === 'pay') {
+            const conta = contasAReceber.find(c => c.id === parsedId);
+            if(conta && conta.status==='Pendente'){ conta.status = 'Pago'; fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Parcela de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); showNotification('Baixa realizada!'); }
+        }
+    });
+
+    // Lógica de carregamento inicial
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
+        init();
+    } else {
+        loginScreen.classList.remove('hidden'); dashboardScreen.classList.add('hidden');
+    }
+});
+</script>
 </body>
 </html>
