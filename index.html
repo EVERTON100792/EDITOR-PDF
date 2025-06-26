@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Integrado | Flor de Maira</title>
+    <title>Sistema Integrado | Flor de Maria</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,11 +13,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* --- TEMA NOVO: VERDE SERENO --- */
+        /* --- TEMA NOVO: ROXO & DOURADO --- */
         :root {
-            --primary-color: #0D9488;      /* Teal 600 */
-            --primary-dark-color: #0F766E; /* Teal 700 */
-            --primary-light-color: #F0FDFA;/* Teal 50 */
+            --primary-color: #8B5CF6;       /* Violet 500 */
+            --primary-dark-color: #7C3AED;  /* Violet 600 */
+            --primary-light-color: #F5F3FF; /* Violet 50 */
+            
+            --accent-color: #FBBF24;         /* Amber 400 */
+            --accent-dark-color: #F59E0B;     /* Amber 500 */
 
             --text-primary: #334155;      /* Slate 700 */
             --text-secondary: #64748B;      /* Slate 500 */
@@ -28,9 +31,9 @@
             --border-color: #E2E8F0;      /* Slate 200 */
 
             --success-color: #22C55E;      /* Green 500 */
-            --danger-color: #EF4444;       /* Red 500 */
-            --warning-color: #F59E0B;      /* Amber 500 */
-            --info-color: #3B82F6;        /* Blue 500 */
+            --danger-color: #EF4444;        /* Red 500 */
+            --warning-color: var(--accent-color); /* Usando dourado para avisos */
+            --info-color: #3B82F6;          /* Blue 500 */
             --whatsapp-color: #25D366;
 
             --border-radius-sm: 0.375rem; /* 6px */
@@ -50,6 +53,16 @@
             font-size: 16px;
         }
 
+        /* --- ANIMAÇÕES --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes backgroundPan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .hidden { display: none !important; }
         .flex { display: flex; }
         .gap-2 { gap: 0.75rem; }
@@ -58,20 +71,29 @@
         .mr-2 { margin-right: 0.5rem; }
         .mt-3 { margin-top: 0.75rem; }
 
-        /* --- LOGIN SCREEN --- */
+        /* --- LOGIN SCREEN ESTILIZADA --- */
         #login-screen {
-            background: linear-gradient(135deg, var(--primary-light-color), #f1f5f9);
+            background: linear-gradient(135deg, var(--primary-color), #a855f7, var(--accent-dark-color));
+            background-size: 400% 400%;
+            animation: backgroundPan 15s ease infinite;
             display: flex; justify-content: center; align-items: center;
             height: 100%; padding: 1.5rem;
         }
         .login-box {
-            background-color: var(--surface-color); padding: 2.5rem; border-radius: var(--border-radius-lg);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -4px rgba(0,0,0,0.07);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem; border-radius: var(--border-radius-lg);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
             text-align: center; width: 100%; max-width: 400px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.7s ease-out;
         }
-        .login-box h1 { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.5rem;}
-        .login-box .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; }
-        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .login-box h1 { 
+            font-size: 2.25rem; font-weight: 700; color: var(--primary-dark-color); margin-bottom: 0.5rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+        .login-box .subtitle { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1rem; animation: fadeInDown 0.7s ease-out; }
+        .input-group { position: relative; margin-bottom: 1.5rem; animation: fadeInUp 0.8s ease-out;}
         .input-group input {
             width: 100%; padding: 0.8rem 1rem 0.8rem 2.5rem; border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md); background-color: var(--surface-color); font-size: 1rem;
@@ -82,10 +104,13 @@
         .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem var(--primary-light-color); }
         .btn-login {
             width: 100%; padding: 0.8rem; border: none; border-radius: var(--border-radius-md);
-            background: var(--primary-color); color: white; font-size: 1rem; font-weight: 600; cursor: pointer;
-            transition: background 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark-color));
+            color: white; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.9s ease-out;
         }
-        .btn-login:hover { background: var(--primary-dark-color); }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .error-message { color: var(--danger-color); margin-top: 1rem; height: 20px; font-size: 0.9rem; font-weight: 500; }
 
         /* --- DASHBOARD SCREEN --- */
@@ -100,6 +125,14 @@
         .sidebar-header h2 { color: var(--primary-color); font-weight: 700; font-size: 1.5rem; }
         .sidebar-header p { color: var(--text-secondary); font-size: 0.8rem; }
         .sidebar-nav ul { list-style: none; padding: 0; }
+        .sidebar-nav .nav-heading {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 1rem 0.85rem 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
         .sidebar-nav li a {
             display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem;
             color: var(--text-secondary); text-decoration: none; border-radius: var(--border-radius-md);
@@ -133,8 +166,7 @@
 
         .content-section { display: none; }
         .content-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        
         .card { background: var(--surface-color); padding: 1.5rem; border-radius: var(--border-radius-lg); margin-top: 1.5rem; border: 1px solid var(--border-color); box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
         .card h2 { margin-bottom: 1rem; color: var(--text-primary); font-weight: 600; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
         .card h3 { font-weight: 600; color: var(--text-primary); font-size: 1.1rem; }
@@ -191,16 +223,15 @@
             background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
             z-index: 2000; padding: 1rem;
         }
-        /* CORREÇÃO DO MODAL */
         .receipt-content {
             background: #fff; padding: 1.5rem; border-radius: var(--border-radius-lg); width: 100%;
             max-width: 480px; max-height: 90vh; 
             animation: fadeIn 0.3s ease; position: relative;
-            display: flex; flex-direction: column; /* Adicionado */
+            display: flex; flex-direction: column;
         }
         #receipt-body {
-            overflow-y: auto; /* Adicionado para rolagem interna */
-            flex-grow: 1; /* Adicionado para ocupar espaço */
+            overflow-y: auto;
+            flex-grow: 1;
         }
         .receipt-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; flex-shrink: 0; }
         .receipt-header h2 { color: var(--primary-color); }
@@ -245,96 +276,46 @@
             color: var(--primary-color);
             border-bottom-color: var(--primary-color);
         }
-        .report-tab-content {
-            display: none;
-        }
-        .report-tab-content.active {
-            display: block;
-            animation: fadeIn 0.4s;
-        }
+        .report-tab-content { display: none; }
+        .report-tab-content.active { display: block; animation: fadeIn 0.4s; }
         .report-form {
             display: flex;
-            flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha em telas pequenas */
+            flex-wrap: wrap; 
             gap: 1rem;
-            align-items: flex-end; /* Alinha os itens na base */
+            align-items: flex-end; 
             padding: 1.5rem;
             background-color: var(--bg-color);
             border-radius: var(--border-radius-md);
         }
         .report-form .form-group {
-            margin-bottom: 0; /* Remove margem inferior para alinhar melhor */
-            flex: 1 1 180px; /* Flex-grow, flex-shrink, flex-basis */
+            margin-bottom: 0;
+            flex: 1 1 180px;
         }
-        .report-form .btn {
-            flex-shrink: 0; /* Evita que o botão encolha */
-        }
-
+        .report-form .btn { flex-shrink: 0; }
 
         /* --- ESTILOS DE RESPONSIVIDADE PARA CELULAR --- */
         @media (max-width: 768px) {
-            html, body {
-                font-size: 15px;
-            }
+            html, body { font-size: 15px; }
             .sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100%;
+                position: fixed; top: 0; left: 0; height: 100%;
                 transform: translateX(-100%);
                 box-shadow: 0 0 20px rgba(0,0,0,0.2);
             }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                padding: 1rem;
-            }
-            .main-header .desktop-title {
-                display: none;
-            }
-            .main-header .mobile-header {
-                display: flex;
-                flex-grow: 1;
-            }
-            .dashboard-main-grid {
-                grid-template-columns: 1fr; /* Coluna única */
-            }
-            .flex.gap-2 {
-                flex-direction: column; /* Empilha os campos do formulário */
-            }
-            .card {
-                padding: 1rem;
-            }
-             .report-tabs {
-                flex-direction: column;
-                border-bottom: none;
-            }
-            .report-tab-btn {
-                border-bottom: 1px solid var(--border-color);
-                border-radius: var(--border-radius-sm);
-            }
-             .report-tab-btn.active {
-                background-color: var(--primary-light-color);
-             }
-            .report-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { padding: 1rem; }
+            .main-header .desktop-title { display: none; }
+            .main-header .mobile-header { display: flex; flex-grow: 1; }
+            .dashboard-main-grid { grid-template-columns: 1fr; }
+            .flex.gap-2 { flex-direction: column; }
+            .card { padding: 1rem; }
+            .report-tabs { flex-direction: column; border-bottom: none; }
+            .report-tab-btn { border-bottom: 1px solid var(--border-color); border-radius: var(--border-radius-sm); }
+            .report-tab-btn.active { background-color: var(--primary-light-color); }
+            .report-form { flex-direction: column; align-items: stretch; }
 
-            /* Estilo da tabela responsiva (formato de cartão) */
-            .responsive-table table,
-            .responsive-table thead,
-            .responsive-table tbody,
-            .responsive-table th,
-            .responsive-table td,
-            .responsive-table tr {
-                display: block;
-            }
-            .responsive-table thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
+            .responsive-table table, .responsive-table thead, .responsive-table tbody,
+            .responsive-table th, .responsive-table td, .responsive-table tr { display: block; }
+            .responsive-table thead tr { position: absolute; top: -9999px; left: -9999px; }
             .responsive-table tr {
                 border: 1px solid var(--border-color);
                 border-radius: var(--border-radius-md);
@@ -343,88 +324,46 @@
                 box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
             }
             .responsive-table td {
-                border: none;
-                border-bottom: 1px solid var(--border-color);
-                position: relative;
-                padding-left: 50%;
-                white-space: normal;
-                text-align: right;
-                min-height: 2.5rem; /* Garante altura mínima para toque */
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
+                border: none; border-bottom: 1px solid var(--border-color);
+                position: relative; padding-left: 50%; white-space: normal;
+                text-align: right; min-height: 2.5rem; display: flex;
+                align-items: center; justify-content: flex-end;
             }
             .responsive-table td:before {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                left: 1rem;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                content: attr(data-label);
-                font-weight: 600;
-                color: var(--text-primary);
+                position: absolute; top: 50%; transform: translateY(-50%);
+                left: 1rem; width: 45%; padding-right: 10px; white-space: nowrap;
+                content: attr(data-label); font-weight: 600; color: var(--text-primary);
                 text-align: left;
             }
-            .responsive-table tr:last-child {
-                margin-bottom: 0;
-            }
-            .responsive-table td:last-child {
-                border-bottom: 0;
-            }
+            .responsive-table tr:last-child { margin-bottom: 0; }
+            .responsive-table td:last-child { border-bottom: 0; }
         }
 
         @media print {
-            body, html {
-                background: #fff;
-                color: #000;
-            }
-            body > *:not(#printable-area),
-            .receipt-actions,
-            .btn-close-receipt,
-            .no-print
-            {
-                display: none !important;
-            }
+            body, html { background: #fff; color: #000; }
+            body > *:not(#printable-area), .receipt-actions, .btn-close-receipt, .no-print { display: none !important; }
             
             #printable-area {
-                display: block !important;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
+                display: block !important; position: absolute;
+                left: 0; top: 0; width: 100%;
             }
             .receipt-content, .card {
-                box-shadow: none !important;
-                border: 1px solid #ccc !important;
-                border-radius: 0 !important;
-                max-width: 100% !important;
-                padding: 1rem;
+                box-shadow: none !important; border: 1px solid #ccc !important;
+                border-radius: 0 !important; max-width: 100% !important; padding: 1rem;
             }
-            table, th, td {
-                color: black !important;
-                font-size: 9pt !important;
-            }
-            .valor-entrada, .valor-saida, .status-pendente, .status-pago {
-                color: inherit !important;
-                font-weight: normal !important;
-            }
+            table, th, td { color: black !important; font-size: 9pt !important; }
+            .valor-entrada, .valor-saida, .status-pendente, .status-pago { color: inherit !important; font-weight: normal !important; }
             .valor-entrada { color: #000 !important; }
             .valor-saida { color: #000 !important; }
-            h1, h2, h3, h4, p, span, div {
-                color: #000 !important;
-            }
-            @page {
-                margin: 20mm;
-            }
+            h1, h2, h3, h4, p, span, div { color: #000 !important; }
+            @page { margin: 20mm; }
         }
     </style>
 </head>
 <body>
     <div id="login-screen">
         <div class="login-box">
-            <h1><i class="fas fa-store" style="color: var(--primary-color);"></i> Flor de Maira</h1>
+            <h1><i class="fas fa-gem" style="color: var(--accent-color);"></i> Flor de Maria</h1>
             <p class="subtitle">Acesse seu painel de gestão</p>
             <form id="login-form">
                 <div class="input-group">
@@ -446,17 +385,23 @@
     <div id="dashboard-screen" class="hidden">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-store"></i> Flor de Maira</h2>
+                <h2><i class="fas fa-gem"></i> Flor de Maria</h2>
                 <p>Painel Administrativo</p>
             </div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#dashboard" class="nav-link active" data-target="dashboard-view"><i class="fas fa-chart-pie icon"></i><span>Dashboard</span></a></li>
-                    <li><a href="#caixa" class="nav-link" data-target="caixa-view"><i class="fas fa-cash-register icon"></i><span>Fluxo de Caixa</span></a></li>
+                    
+                    <li class="nav-heading">Vendas & Clientes</li>
                     <li><a href="#vendas" class="nav-link" data-target="vendas-view"><i class="fas fa-shopping-cart icon"></i><span>Realizar Venda</span></a></li>
                     <li><a href="#clientes" class="nav-link" data-target="clientes-view"><i class="fas fa-users icon"></i><span>Clientes</span></a></li>
-                    <li><a href="#estoque" class="nav-link" data-target="estoque-view"><i class="fas fa-boxes icon"></i><span>Estoque</span></a></li>
+
+                    <li class="nav-heading">Finanças</li>
+                    <li><a href="#caixa" class="nav-link" data-target="caixa-view"><i class="fas fa-cash-register icon"></i><span>Fluxo de Caixa</span></a></li>
                     <li><a href="#contas-a-receber" class="nav-link" data-target="contas-a-receber-view"><i class="fas fa-file-invoice-dollar icon"></i><span>Contas a Receber</span></a></li>
+                    
+                    <li class="nav-heading">Gestão</li>
+                    <li><a href="#estoque" class="nav-link" data-target="estoque-view"><i class="fas fa-boxes icon"></i><span>Estoque</span></a></li>
                     <li><a href="#relatorios" class="nav-link" data-target="relatorios-view"><i class="fas fa-chart-bar icon"></i><span>Relatórios</span></a></li>
                 </ul>
             </nav>
@@ -705,37 +650,37 @@
                 <div id="produtos-report-tab" class="report-tab-content">
                     <div class="card shadow-md">
                          <div class="no-print">
-                            <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
-                            <form id="form-relatorio-produtos" class="report-form">
-                                <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
-                                <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
-                                <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
-                            </form>
-                            <button id="btn-imprimir-relatorio-produtos" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
+                             <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
+                             <form id="form-relatorio-produtos" class="report-form">
+                                 <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
+                                 <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
+                                 <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
+                             </form>
+                             <button id="btn-imprimir-relatorio-produtos" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
                          </div>
                          <div id="relatorio-produtos-container" class="mt-3"></div>
                     </div>
                 </div>
                 
                  <div id="estoque-report-tab" class="report-tab-content">
-                      <div class="card shadow-md">
+                       <div class="card shadow-md">
                            <div class="no-print">
                                 <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
                                 <form id="form-relatorio-estoque" class="report-form">
                                      <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                          <select id="relatorio_status_estoque">
-                                               <option value="todos">Todos</option>
-                                               <option value="disponivel">Disponível</option>
-                                               <option value="baixo">Estoque Baixo (<= 5)</option>
-                                               <option value="esgotado">Esgotado</option>
-                                          </select>
+                                         <select id="relatorio_status_estoque">
+                                             <option value="todos">Todos</option>
+                                             <option value="disponivel">Disponível</option>
+                                             <option value="baixo">Estoque Baixo (<= 5)</option>
+                                             <option value="esgotado">Esgotado</option>
+                                         </select>
                                      </div>
                                      <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
                                 </form>
                                 <button id="btn-imprimir-relatorio-estoque" class="btn mt-3 hidden"><i class="fas fa-print mr-2"></i> Imprimir PDF</button>
                            </div>
                            <div id="relatorio-estoque-container" class="mt-3"></div>
-                      </div>
+                       </div>
                  </div>
 
                 <div id="caixa-report-tab" class="report-tab-content">
@@ -828,7 +773,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadData = (key) => JSON.parse(localStorage.getItem(key)) || [];
     const formatCurrency = (value) => (typeof value === 'number' ? value : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     
-    // Função de data CORRIGIDA e ROBUSTA
     const formatDate = (dateString, includeTime = false) => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
@@ -898,7 +842,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderRowRelatorioProdutos = (p, headers) => `<tr>${[p.rank, p.nome, p.quantidadeVendida, formatCurrency(p.totalVendido)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowRelatorioEstoque = (p, headers) => `<tr>${[p.nome, p.quantidade, formatCurrency(p.preco), `<span style="font-weight: 600; color: ${p.quantidade === 0 ? 'var(--danger-color)' : p.quantidade <= 5 ? 'var(--warning-color)' : 'var(--success-color)'};">${p.quantidade === 0 ? 'Esgotado' : p.quantidade <= 5 ? 'Estoque Baixo' : 'Disponível'}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
-    // **CORREÇÃO: Esta função agora apenas redesenha as tabelas, sem mexer nos formulários.**
     const rerenderCurrentPageTables = () => {
         const currentPageId = document.querySelector('.content-section.active')?.id;
         if (!currentPageId) return;
@@ -945,6 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const saldoCaixaEl = document.getElementById('saldo-caixa-dashboard');
         if (!saldoCaixaEl) return;
         saldoCaixaEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
+        document.getElementById('saldo-caixa-detalhe').textContent = saldoCaixaEl.textContent;
         document.getElementById('total-a-receber-dashboard').textContent = formatCurrency(contasAReceber.filter(c => c.status === 'Pendente').reduce((acc, c) => acc + c.valor, 0));
         const salesSummary = vendas.reduce((acc, venda) => {
             acc[venda.metodoPagamento] = (acc[venda.metodoPagamento] || 0) + venda.total;
@@ -966,7 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ctx) return;
         if (paymentChartInstance) paymentChartInstance.destroy();
         paymentChartInstance = new Chart(ctx, {
-            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], backgroundColor: ['#22C55E', '#3B82F6', '#F59E0B', '#EF4444'], borderRadius: 4, }] },
+            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], backgroundColor: ['#22C55E', '#3B82F6', 'var(--accent-color)', '#EF4444'], borderRadius: 4, }] },
             options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } }, scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } } }
         });
     };
@@ -987,13 +931,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const produtoSelect = document.getElementById('venda-produto');
         if (!clienteSelect || !produtoSelect) return;
 
-        // Guarda o valor selecionado para restaurá-lo depois
         const selectedCliente = clienteSelect.value;
 
         clienteSelect.innerHTML = '<option value="">Selecione...</option>' + [...clientes].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
         produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtos].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.nome} (${p.quantidade} disp.)</option>`).join('');
 
-        // Restaura a seleção anterior se ainda for válida
         if (selectedCliente) {
             clienteSelect.value = selectedCliente;
         }
@@ -1073,7 +1015,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('venda-parcelas-crediario-group').classList.add('hidden');
         document.getElementById('venda-parcelas-cartao-group').classList.add('hidden');
         
-        // Redesenha os dados relevantes após a venda, incluindo o formulário de vendas para atualizar o estoque visível
         popularFormulariosVenda();
         renderCarrinho();
         renderDashboardSummaries();
@@ -1092,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         receiptBody.innerHTML = `
-            <div class="receipt-header"><h2><i class="fas fa-store"></i> Flor de Maira</h2><p>Obrigado pela sua compra!</p></div>
+            <div class="receipt-header"><h2><i class="fas fa-gem"></i> Flor de Maria</h2><p>Obrigado pela sua compra!</p></div>
             <div class="receipt-details">
                 <div><strong>Cliente:</strong><span>${cliente?.nome || 'Não identificado'}</span></div>
                 <div><strong>Data:</strong><span>${formatDate(venda.data, true)}</span></div>
@@ -1105,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const whatsappBtn = document.getElementById('btn-whatsapp-receipt');
         if (cliente && cliente.contato) {
             const phone = cliente.contato.replace(/\D/g, '');
-            const message = encodeURIComponent(`Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maira. \n\n*Recibo da Venda #${venda.id}* \nTotal: ${formatCurrency(venda.total)} \n\nObrigado e volte sempre!`);
+            const message = encodeURIComponent(`Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maria. \n\n*Recibo da Venda #${venda.id}* \nTotal: ${formatCurrency(venda.total)} \n\nObrigado e volte sempre!`);
             whatsappBtn.href = `https://wa.me/55${phone}?text=${message}`;
             whatsappBtn.classList.remove('hidden');
         } else {
@@ -1151,7 +1092,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnImprimir.classList.remove('hidden');
     };
 
-    // Função CORRIGIDA E ROBUSTA
     const gerarRelatorioContas = (e) => {
         e.preventDefault();
         const status = document.getElementById('relatorio-status-contas').value;
@@ -1272,7 +1212,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
-        if (document.getElementById('username').value === 'maira' && document.getElementById('password').value === 'flor123') {
+        // A senha foi alterada para refletir o novo nome do sistema
+        if (document.getElementById('username').value === 'maria' && document.getElementById('password').value === 'flor123') {
             localStorage.setItem('isLoggedIn', 'true');
             loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
             init(); 
@@ -1294,7 +1235,6 @@ document.addEventListener('DOMContentLoaded', () => {
     menuToggle.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
     backdrop.addEventListener('click', () => toggleMenu(true));
     
-    // **CORREÇÃO: O event listener foi alterado para não recarregar os formulários.**
     window.addEventListener('resize', () => {
         const wasMobile = isMobile;
         isMobile = window.innerWidth <= 768;
@@ -1303,7 +1243,6 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleMenu(true);
         }
 
-        // Apenas redesenha as tabelas se houver mudança no breakpoint (mobile/desktop)
         if (wasMobile !== isMobile) {
             rerenderCurrentPageTables();
         }
@@ -1343,7 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listeners Relatórios
     formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
     document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('relatorio-vendas-container'));
-    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros relacionados. Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
+    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros financeiros relacionados (contas a receber e lançamentos de caixa de vendas). Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
     formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
     document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('relatorio-contas-container'));
     formRelatorioProdutos.addEventListener('submit', gerarRelatorioProdutos);
@@ -1361,22 +1300,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const parsedId = parseInt(id);
         if (action === 'edit') handleEdit(type, parsedId);
         else if (action === 'delete') {
-            if(confirm(`Tem certeza que deseja excluir?`)){
-                if(type==='cliente' && vendas.some(v=>v.clienteId===parsedId)){showNotification('Exclua as vendas do cliente primeiro.',true);return;}
-                if(type==='produto' && vendas.some(v=>v.itens.some(i=>i.produtoId===parsedId))){showNotification('Exclua as vendas do produto primeiro.',true);return;}
+            if(confirm(`Tem certeza que deseja excluir? Esta ação não pode ser desfeita.`)){
+                if(type==='cliente' && vendas.some(v=>v.clienteId===parsedId)){showNotification('Não é possível excluir. Exclua as vendas associadas a este cliente primeiro.',true);return;}
+                if(type==='produto' && vendas.some(v=>v.itens.some(i=>i.produtoId===parsedId))){showNotification('Não é possível excluir. Exclua as vendas associadas a este produto primeiro.',true);return;}
                 let dataMap = {cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber};
                 const updatedData = dataMap[type].filter(item => item.id !== parsedId);
                 if(type==='cliente') { clientes = updatedData; saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); }
                 if(type==='produto') { produtos = updatedData; saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); }
                 if(type==='lancamento') { fluxoCaixa = updatedData; saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); }
                 if(type==='conta') { contasAReceber = updatedData; saveData('contasAReceber', contasAReceber); renderContasAReceber(); renderDashboardSummaries(); }
-                showNotification(`${type} excluído!`);
+                showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`);
             }
         }
-        else if (action === 'remove-item') { carrinhoVenda = carrinhoVenda.filter(item => item.produtoId !== parsedId); renderCarrinho(); }
+        else if (action === 'remove-item') { carrinhoVenda = carrinhoVenda.filter(item => item.produtoId != parsedId); renderCarrinho(); }
         else if (action === 'pay') {
             const conta = contasAReceber.find(c => c.id === parsedId);
-            if(conta && conta.status==='Pendente'){ conta.status = 'Pago'; fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Parcela de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); showNotification('Baixa realizada!'); }
+            if(conta && conta.status==='Pendente'){ conta.status = 'Pago'; fluxoCaixa.push({id:Date.now(), data:new Date().toISOString(), tipo:'Entrada', descricao:`Recebimento Parcela de ${clientes.find(c=>c.id===conta.clienteId)?.nome||'Avulso'}`, valor:conta.valor, contaId:conta.id}); saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); showNotification('Baixa de pagamento realizada!'); }
         }
     });
 
