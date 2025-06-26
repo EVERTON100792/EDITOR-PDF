@@ -840,7 +840,6 @@
                                              <select id="relatorio_status_estoque">
                                                  <option value="todos">Todos</option>
                                                  <option value="disponivel">Disponível</option>
-                                                 <option value="baixo">Estoque Baixo (<= 5)</option>
                                                  <option value="esgotado">Esgotado</option>
                                              </select>
                                              </div>
@@ -1017,7 +1016,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Renderização de Linhas das Tabelas ---
     const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data, true), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<div class="no-print">${!item.vendaId && !item.despesaId && !item.contaId ? `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`: `<span style="font-size:0.8rem; color:var(--text-secondary)">(${item.vendaId ? 'Venda' : item.contaId ? 'Conta Paga' : 'Despesa'})</span>`}</div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowClientes = (c, headers) => `<tr>${[c.nome, c.contato || 'N/A', `<div class="no-print"><button class="btn-action" title="Histórico" data-action="history" data-type="cliente" data-id="${c.id}"><i class="fas fa-history"></i></button><button class="btn-action" title="Editar" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" title="Excluir" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
-    const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.refProduto || '-', p.nome + (p.quantidade <= 5 && p.quantidade > 0 ? ' <span style="color:var(--warning-color); font-weight:bold;">(Baixo!)</span>' : p.quantidade === 0 ? ' <span style="color:var(--danger-color); font-weight:bold;">(Esgotado)</span>' : ''), p.quantidade, formatCurrency(p.precoCusto), formatCurrency(p.preco), `<div class="no-print"><button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.refProduto || '-', p.nome + (p.quantidade === 0 ? ' <span style="color:var(--danger-color); font-weight:bold;">(Esgotado)</span>' : ''), p.quantidade, formatCurrency(p.precoCusto), formatCurrency(p.preco), `<div class="no-print"><button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowCarrinho = (item, headers) => `<tr>${[item.nome, item.quantidade, formatCurrency(item.subtotal), `<button class="btn-action no-print" data-action="remove-item" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowContas = (conta, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
@@ -1117,15 +1116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
-
-        // Alertas de estoque baixo
-        const produtosBaixoEstoque = produtos.filter(p => p.quantidade > 0 && p.quantidade <= 5);
-        if (produtosBaixoEstoque.length > 0) {
-            const alertEl = document.createElement('div');
-            alertEl.className = 'alert alert-warning';
-            alertEl.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <div><strong>Estoque Baixo:</strong> ${produtosBaixoEstoque.length} produto(s) precisam de atenção. <a href="#" data-target="estoque-view" class="nav-link-alert">Verificar estoque</a>.</div>`;
-            container.appendChild(alertEl);
-        }
 
         // Alertas de contas vencidas
         const contasVencidas = contasAReceber.filter(c => c.status === 'Pendente' && new Date(c.dataVencimento) < hoje);
@@ -1534,10 +1524,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`, false);
     };
 
-    /**
-     * NOVA FUNÇÃO: Exclui uma venda específica e reverte suas consequências.
-     * @param {number} saleId - O ID da venda a ser excluída.
-     */
     const handleDeleteSale = (saleId) => {
         if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação é irreversível e irá restaurar o estoque e remover todos os registros financeiros associados a ela.')) {
             return;
@@ -1844,8 +1830,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const estoqueFiltrado = produtos.filter(p => {
             if (statusFiltro === 'todos') return true;
-            if (statusFiltro === 'disponivel') return p.quantidade > 5;
-            if (statusFiltro === 'baixo') return p.quantidade <= 5 && p.quantidade > 0;
+            if (statusFiltro === 'disponivel') return p.quantidade > 0;
             if (statusFiltro === 'esgotado') return p.quantidade === 0;
             return true;
         });
@@ -1869,8 +1854,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const statusFiltro = document.getElementById('relatorio_status_estoque').value;
         const estoqueFiltrado = produtos.filter(p => {
             if (statusFiltro === 'todos') return true;
-            if (statusFiltro === 'disponivel') return p.quantidade > 5;
-            if (statusFiltro === 'baixo') return p.quantidade <= 5 && p.quantidade > 0;
+            if (statusFiltro === 'disponivel') return p.quantidade > 0;
             if (statusFiltro === 'esgotado') return p.quantidade === 0;
             return true;
         });
