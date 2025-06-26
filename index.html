@@ -68,6 +68,7 @@
         .gap-2 { gap: 0.75rem; }
         .gap-3 { gap: 1.5rem; }
         .items-center { align-items: center; }
+        .items-end { align-items: flex-end; }
         .flex-1 { flex: 1; }
         .mr-2 { margin-right: 0.5rem; }
         .mt-3 { margin-top: 0.75rem; }
@@ -173,6 +174,7 @@
         .content-section.active { display: block; animation: fadeIn 0.4s ease-in-out; }
 
         .card { background: var(--surface-color); padding: 1.5rem; border-radius: var(--border-radius-lg); margin-top: 1.5rem; border: 1px solid var(--border-color); }
+        .card:first-child { margin-top: 0; }
         .card h2 { margin-bottom: 1rem; color: var(--text-primary); font-weight: 600; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
         .card h3 { font-weight: 600; color: var(--text-primary); font-size: 1.1rem; }
 
@@ -528,7 +530,7 @@
                         <div class="form-group"><label for="edit-tipo-lancamento">Tipo</label><select id="edit-tipo-lancamento"><option value="Entrada">Entrada</option><option value="Saída">Saída</option></select></div>
                         <div class="flex gap-2">
                             <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                            <button type="button" class="btn btn-cancel" id="cancel-edit-lancamento"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                            <button type="button" class="btn btn-cancel"><i class="fas fa-times mr-2"></i> Cancelar</button>
                         </div>
                     </form>
                 </div>
@@ -622,8 +624,8 @@
                           <div class="form-group"><label for="edit-valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="edit-valor-despesa" required></div>
                           <div class="form-group"><label for="edit-data-despesa">Data</label><input type="date" id="edit-data-despesa" required></div>
                           <div class="flex gap-2">
-                               <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                               <button type="button" class="btn btn-cancel" id="cancel-edit-despesa"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                                <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                                <button type="button" class="btn btn-cancel" id="cancel-edit-despesa"><i class="fas fa-times mr-2"></i> Cancelar</button>
                           </div>
                       </form>
                  </div>
@@ -631,9 +633,9 @@
                       <h2><i class="fas fa-plus-circle mr-2"></i> Registrar Despesa</h2>
                       <form id="form-add-despesa">
                           <div class="flex gap-2">
-                               <div class="form-group flex-1"><label for="desc-despesa">Descrição</label><input type="text" id="desc-despesa" required></div>
-                               <div class="form-group"><label for="valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="valor-despesa" required></div>
-                               <div class="form-group"><label for="data-despesa">Data</label><input type="date" id="data-despesa" required></div>
+                                <div class="form-group flex-1"><label for="desc-despesa">Descrição</label><input type="text" id="desc-despesa" required></div>
+                                <div class="form-group"><label for="valor-despesa">Valor (R$)</label><input type="number" step="0.01" id="valor-despesa" required></div>
+                                <div class="form-group"><label for="data-despesa">Data</label><input type="date" id="data-despesa" required></div>
                           </div>
                           <button type="submit" class="btn-submit"><i class="fas fa-check mr-2"></i> Lançar Despesa</button>
                       </form>
@@ -658,7 +660,7 @@
                                  <label for="venda-produto-search">Buscar Produto (por nome ou referência)</label>
                                  <input type="text" id="venda-produto-search" placeholder="Digite para buscar..." autocomplete="off">
                              </div>
-                            <div class="flex gap-2 items-center">
+                            <div class="flex gap-2 items-end">
                                 <div class="form-group flex-1" style="margin-bottom:0;"><label for="venda-produto">Produto</label><select id="venda-produto"></select></div>
                                 <div class="form-group" style="margin-bottom:0;"><label for="venda-qtd">Qtd.</label><input type="number" id="venda-qtd" value="1" min="1" style="width: 80px; text-align: center;"></div>
                                 <button type="button" id="btn-add-item-venda" class="btn"><i class="fas fa-plus"></i></button>
@@ -714,8 +716,8 @@
                           <div class="form-group"><label for="edit-conta-vencimento">Vencimento</label><input type="date" id="edit-conta-vencimento" required></div>
                           <div class="form-group"><label for="edit-conta-status">Status</label><select id="edit-conta-status"><option value="Pendente">Pendente</option><option value="Pago">Pago</option></select></div>
                           <div class="flex gap-2">
-                               <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
-                               <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
+                                <button type="submit" class="btn-submit flex-1"><i class="fas fa-save mr-2"></i> Salvar Alterações</button>
+                                <button type="button" class="btn btn-cancel" id="cancel-edit-conta"><i class="fas fa-times mr-2"></i> Cancelar</button>
                           </div>
                       </form>
                  </div>
@@ -795,86 +797,86 @@
 
                  <div id="lucro-report-tab" class="report-tab-content">
                       <div class="card shadow-md">
-                           <div class="no-print">
+                          <div class="no-print">
                                 <h2><i class="fas fa-dollar-sign mr-2"></i> Gerar Relatório de Lucratividade</h2>
                                 <form id="form-relatorio-lucro" class="report-form">
-                                     <div class="form-group"><label for="relatorio-inicio-lucro"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-lucro"></div>
-                                     <div class="form-group"><label for="relatorio-fim-lucro"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-lucro"></div>
-                                     <button type="submit" class="btn"><i class="fas fa-chart-pie mr-2"></i> Gerar</button>
+                                      <div class="form-group"><label for="relatorio-inicio-lucro"><i class="fas fa-calendar-alt mr-2"></i> Início</label><input type="date" id="relatorio-inicio-lucro"></div>
+                                      <div class="form-group"><label for="relatorio-fim-lucro"><i class="fas fa-calendar-alt mr-2"></i> Fim</label><input type="date" id="relatorio-fim-lucro"></div>
+                                      <button type="submit" class="btn"><i class="fas fa-chart-pie mr-2"></i> Gerar</button>
                                 </form>
                                  <div class="mt-4">
-                                     <button id="btn-export-csv-lucro" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                     <button id="btn-imprimir-relatorio-lucro" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                      <button id="btn-export-csv-lucro" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                      <button id="btn-imprimir-relatorio-lucro" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
                                  </div>
-                           </div>
-                           <div id="relatorio-lucro-container" class="mt-3"></div>
+                          </div>
+                          <div id="relatorio-lucro-container" class="mt-3"></div>
                       </div>
                  </div>
 
                  <div id="produtos-report-tab" class="report-tab-content">
                       <div class="card shadow-md">
-                           <div class="no-print">
+                          <div class="no-print">
                                 <h2><i class="fas fa-star mr-2"></i> Gerar Relatório de Produtos Mais Vendidos</h2>
                                 <form id="form-relatorio-produtos" class="report-form">
-                                     <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
-                                     <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
-                                     <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
+                                      <div class="form-group"><label for="relatorio-inicio-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-produtos"></div>
+                                      <div class="form-group"><label for="relatorio-fim-produtos"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-produtos"></div>
+                                      <button type="submit" class="btn"><i class="fas fa-trophy mr-2"></i> Gerar</button>
                                 </form>
                                  <div class="mt-4">
-                                     <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                     <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                      <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                      <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
                                  </div>
-                           </div>
-                           <div id="relatorio-produtos-container" class="mt-3"></div>
+                          </div>
+                          <div id="relatorio-produtos-container" class="mt-3"></div>
                       </div>
                  </div>
 
                  <div id="estoque-report-tab" class="report-tab-content">
-                       <div class="card shadow-md">
-                            <div class="no-print">
-                                   <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
-                                   <form id="form-relatorio-estoque" class="report-form">
-                                       <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                           <select id="relatorio_status_estoque">
-                                               <option value="todos">Todos</option>
-                                               <option value="disponivel">Disponível</option>
-                                               <option value="baixo">Estoque Baixo (<= 5)</option>
-                                               <option value="esgotado">Esgotado</option>
-                                           </select>
-                                           </div>
-                                       <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
-                                   </form>
-                                   <div class="mt-4">
-                                       <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                       <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                                   </div>
-                            </div>
-                            <div id="relatorio-estoque-container" class="mt-3"></div>
-                       </div>
+                         <div class="card shadow-md">
+                             <div class="no-print">
+                                     <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                                     <form id="form-relatorio-estoque" class="report-form">
+                                         <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                             <select id="relatorio_status_estoque">
+                                                 <option value="todos">Todos</option>
+                                                 <option value="disponivel">Disponível</option>
+                                                 <option value="baixo">Estoque Baixo (<= 5)</option>
+                                                 <option value="esgotado">Esgotado</option>
+                                             </select>
+                                             </div>
+                                         <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                                     </form>
+                                     <div class="mt-4">
+                                         <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                         <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                     </div>
+                             </div>
+                             <div id="relatorio-estoque-container" class="mt-3"></div>
+                         </div>
                  </div>
 
                  <div id="caixa-report-tab" class="report-tab-content">
                       <div class="card shadow-md">
-                           <div class="no-print">
+                          <div class="no-print">
                                 <h2><i class="fas fa-cash-register mr-2"></i> Relatório de Fluxo de Caixa</h2>
                                 <form id="form-relatorio-caixa" class="report-form">
-                                     <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
-                                     <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
-                                     <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
+                                      <div class="form-group"><label for="relatorio-inicio-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período De</label><input type="date" id="relatorio-inicio-caixa"></div>
+                                      <div class="form-group"><label for="relatorio-fim-caixa"><i class="fas fa-calendar-alt mr-2"></i> Período Até</label><input type="date" id="relatorio-fim-caixa"></div>
+                                      <div class="form-group"><label for="relatorio_tipo_caixa">Tipo de Lançamento</label>
                                          <select id="relatorio_tipo_caixa">
                                              <option value="todos">Todos</option>
                                              <option value="Entrada">Entradas</option>
                                              <option value="Saída">Saídas</option>
                                          </select>
-                                     </div>
-                                     <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
+                                      </div>
+                                      <button type="submit" class="btn"><i class="fas fa-file-invoice mr-2"></i> Gerar</button>
                                 </form>
                                  <div class="mt-4">
-                                     <button id="btn-export-csv-caixa" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                     <button id="btn-imprimir-relatorio-caixa" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                                      <button id="btn-export-csv-caixa" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                      <button id="btn-imprimir-relatorio-caixa" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
                                  </div>
-                           </div>
-                           <div id="relatorio-caixa-container" class="mt-3"></div>
+                          </div>
+                          <div id="relatorio-caixa-container" class="mt-3"></div>
                       </div>
                  </div>
 
@@ -894,17 +896,17 @@
                     </div>
                 </div>
                  <div class="card shadow-md">
-                      <h2><i class="fas fa-upload mr-2"></i> Restaurar Dados</h2>
-                      <div class="backup-container mt-3">
-                           <p>
-                               <strong>Atenção:</strong> A restauração de dados irá <strong>sobrescrever todos os dados atuais</strong> no sistema. Use com cuidado e apenas com um arquivo de backup válido gerado por este sistema.
-                           </p>
-                           <div class="mt-4 flex items-center">
-                               <label for="restore-input" id="restore-label" class="btn"><i class="fas fa-upload mr-2"></i> Escolher Arquivo de Backup</label>
-                               <input type="file" id="restore-input" accept=".json">
-                               <span id="restore-file-name"></span>
-                           </div>
-                      </div>
+                    <h2><i class="fas fa-upload mr-2"></i> Restaurar Dados</h2>
+                    <div class="backup-container mt-3">
+                        <p>
+                            <strong>Atenção:</strong> A restauração de dados irá <strong>sobrescrever todos os dados atuais</strong> no sistema. Use com cuidado e apenas com um arquivo de backup válido gerado por este sistema.
+                        </p>
+                        <div class="mt-4 flex items-center">
+                            <label for="restore-input" id="restore-label" class="btn"><i class="fas fa-upload mr-2"></i> Escolher Arquivo de Backup</label>
+                            <input type="file" id="restore-input" accept=".json">
+                            <span id="restore-file-name"></span>
+                        </div>
+                    </div>
                  </div>
             </section>
         </main>
@@ -915,10 +917,10 @@
              <div class="modal-content">
                  <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
                  <div class="modal-body" id="receipt-body">
-                       </div>
+                     </div>
                  <div class="modal-actions no-print">
-                      <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                      <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                     <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                     <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
                  </div>
              </div>
         </div>
@@ -928,7 +930,7 @@
         <div class="modal-content">
             <button class="btn-close-modal no-print" data-target-modal="client-history-modal">&times;</button>
             <div class="modal-body" id="client-history-body">
-            </div>
+                 </div>
             <div class="modal-actions no-print">
                 <button class="btn btn-close-modal-footer no-print" data-target-modal="client-history-modal"><i class="fas fa-times mr-2"></i> Fechar</button>
             </div>
@@ -965,6 +967,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
 
+        // Corrige o problema do fuso horário ao exibir datas (sem hora)
         const inputDate = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
 
         const options = {
@@ -1531,6 +1534,10 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`, false);
     };
 
+    /**
+     * NOVA FUNÇÃO: Exclui uma venda específica e reverte suas consequências.
+     * @param {number} saleId - O ID da venda a ser excluída.
+     */
     const handleDeleteSale = (saleId) => {
         if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação é irreversível e irá restaurar o estoque e remover todos os registros financeiros associados a ela.')) {
             return;
@@ -1566,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showNotification('Venda excluída com sucesso!', false);
 
-        // 6. Atualizar a visualização do relatório
+        // 6. Atualizar a visualização do relatório (re-gerando-o)
         const formRelatorioVendas = document.getElementById('form-relatorio-vendas');
         formRelatorioVendas.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         renderDashboard();
@@ -2200,10 +2207,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const lancamentoIndex = fluxoCaixa.findIndex(f => f.id === id);
         if (lancamentoIndex > -1) {
              fluxoCaixa[lancamentoIndex] = {
-                ...fluxoCaixa[lancamentoIndex],
-                descricao: document.getElementById('edit-desc-lancamento').value,
-                valor: parseFloat(document.getElementById('edit-valor-lancamento').value),
-                tipo: document.getElementById('edit-tipo-lancamento').value,
+                 ...fluxoCaixa[lancamentoIndex],
+                 descricao: document.getElementById('edit-desc-lancamento').value,
+                 valor: parseFloat(document.getElementById('edit-valor-lancamento').value),
+                 tipo: document.getElementById('edit-tipo-lancamento').value,
              };
              saveAllData();
              showNotification('Lançamento atualizado!', false);
