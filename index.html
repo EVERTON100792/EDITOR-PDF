@@ -13,32 +13,32 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* --- TEMA NOVO: ROXO & DOURADO --- */
+        /* --- TEMA NOVO: DARK & GOLD --- */
         :root {
-            --primary-color: #8B5CF6;       /* Violet 500 */
-            --primary-dark-color: #7C3AED;  /* Violet 600 */
-            --primary-light-color: #F5F3FF; /* Violet 50 */
+            --primary-color: #A78BFA;       /* Violet 400 */
+            --primary-dark-color: #8B5CF6;  /* Violet 500 */
+            --primary-light-color: #4C1D95; /* Violet 900 - Darker for surfaces */
             
             --accent-color: #FBBF24;         /* Amber 400 */
             --accent-dark-color: #F59E0B;     /* Amber 500 */
 
-            --text-primary: #334155;      /* Slate 700 */
-            --text-secondary: #64748B;      /* Slate 500 */
-            --text-light: #f8fafc;        /* Slate 50 */
+            --text-primary: #F1F5F9;      /* Slate 100 */
+            --text-secondary: #94A3B8;      /* Slate 400 */
+            --text-light: #ffffff;        
 
-            --bg-color: #F8FAFC;          /* Slate 50 */
-            --surface-color: #FFFFFF;
-            --border-color: #E2E8F0;      /* Slate 200 */
+            --bg-color: #1E293B;          /* Slate 800 */
+            --surface-color: #334155;      /* Slate 700 */
+            --border-color: #475569;      /* Slate 600 */
 
-            --success-color: #22C55E;      /* Green 500 */
-            --danger-color: #EF4444;        /* Red 500 */
-            --warning-color: var(--accent-color); /* Usando dourado para avisos */
-            --info-color: #3B82F6;          /* Blue 500 */
+            --success-color: #22C55E;
+            --danger-color: #EF4444;
+            --warning-color: var(--accent-color);
+            --info-color: #3B82F6;
             --whatsapp-color: #25D366;
 
-            --border-radius-sm: 0.375rem; /* 6px */
-            --border-radius-md: 0.5rem;   /* 8px */
-            --border-radius-lg: 0.75rem;  /* 12px */
+            --border-radius-sm: 0.375rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 0.75rem;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -73,23 +73,23 @@
 
         /* --- LOGIN SCREEN ESTILIZADA --- */
         #login-screen {
-            background: linear-gradient(135deg, var(--primary-color), #a855f7, var(--accent-dark-color));
+            background: linear-gradient(135deg, #4c1d95, #1e293b, #b45309);
             background-size: 400% 400%;
             animation: backgroundPan 15s ease infinite;
             display: flex; justify-content: center; align-items: center;
             height: 100%; padding: 1.5rem;
         }
         .login-box {
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(30, 41, 59, 0.85); /* Darker, more transparent */
             padding: 2.5rem; border-radius: var(--border-radius-lg);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 10px 10px -5px rgba(0,0,0,0.1);
             text-align: center; width: 100%; max-width: 400px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
             animation: fadeInUp 0.7s ease-out;
         }
         .login-box h1 { 
-            font-size: 2.25rem; font-weight: 700; color: var(--primary-dark-color); margin-bottom: 0.5rem;
+            font-size: 2.25rem; font-weight: 700; color: var(--accent-color); margin-bottom: 0.5rem;
             animation: fadeInDown 0.6s ease-out;
         }
         .login-box .subtitle { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1rem; animation: fadeInDown 0.7s ease-out; }
@@ -97,11 +97,12 @@
         .input-group input {
             width: 100%; padding: 0.8rem 1rem 0.8rem 2.5rem; border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md); background-color: var(--surface-color); font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease; color: var(--text-primary);
         }
+        .input-group input::placeholder { color: var(--text-secondary); }
         .input-group .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); transition: color 0.3s; }
         .input-group input:focus + .input-icon { color: var(--primary-color); }
-        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem var(--primary-light-color); }
+        .input-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.3); }
         .btn-login {
             width: 100%; padding: 0.8rem; border: none; border-radius: var(--border-radius-md);
             background: linear-gradient(to right, var(--primary-color), var(--primary-dark-color));
@@ -121,12 +122,12 @@
             display: flex; flex-direction: column; padding: 1rem;
             flex-shrink: 0; transition: transform 0.3s ease-in-out; z-index: 1000;
         }
-        .sidebar-header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; }
-        .sidebar-header h2 { color: var(--primary-color); font-weight: 700; font-size: 1.5rem; }
+        .sidebar-header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);}
+        .sidebar-header h2 { color: var(--accent-color); font-weight: 700; font-size: 1.5rem; }
         .sidebar-header p { color: var(--text-secondary); font-size: 0.8rem; }
         .sidebar-nav ul { list-style: none; padding: 0; }
         .sidebar-nav .nav-heading {
-            color: var(--text-secondary);
+            color: var(--accent-color);
             font-size: 0.75rem;
             font-weight: 700;
             padding: 1rem 0.85rem 0.5rem;
@@ -139,13 +140,13 @@
             margin-bottom: 0.375rem; transition: all 0.2s ease; font-weight: 500; font-size: 0.95rem;
         }
         .sidebar-nav li a .icon { width: 20px; height: 20px; }
-        .sidebar-nav li a:hover { background-color: var(--primary-light-color); color: var(--primary-color); }
+        .sidebar-nav li a:hover { background-color: var(--bg-color); color: var(--primary-color); }
         .sidebar-nav li a.active { background: var(--primary-color); color: var(--text-light); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1); }
         .sidebar-footer { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); }
         .logout-btn {
             display: flex; align-items: center; justify-content: center; gap: 0.75rem;
             width: 100%; padding: 0.75rem; border: none;
-            background: #f1f5f9; color: var(--text-secondary); border-radius: var(--border-radius-md);
+            background: var(--bg-color); color: var(--text-secondary); border-radius: var(--border-radius-md);
             cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s ease;
         }
         .logout-btn:hover { background-color: var(--danger-color); color: white; }
@@ -176,9 +177,11 @@
         .form-group input, .form-group select {
             width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md); font-size: 0.9rem; font-family: 'Nunito', sans-serif;
-            background-color: var(--surface-color); transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: var(--bg-color); transition: border-color 0.2s, box-shadow 0.2s;
+            color: var(--text-primary);
         }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem var(--primary-light-color); }
+        .form-group select option { background: var(--surface-color); color: var(--text-primary); }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.3); }
 
         .btn, .btn-submit {
             padding: 0.75rem 1.25rem; border: none; border-radius: var(--border-radius-md); background: var(--primary-color);
@@ -193,6 +196,7 @@
         th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap;}
         th { background-color: var(--bg-color); font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05rem;}
         td { color: var(--text-primary); font-size: 0.9rem; }
+        tbody tr:hover { background-color: var(--bg-color); }
         tbody tr:last-child td { border-bottom: none; }
 
         .btn-action { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.4rem 0.6rem; border-radius: var(--border-radius-sm); cursor: pointer; font-size: 0.8rem; margin-right: 0.5rem; transition: all 0.2s; }
@@ -212,7 +216,7 @@
 
         .dashboard-main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
         
-        .edit-form-container { margin-top: 1.5rem; padding: 1.5rem; background-color: var(--primary-light-color); border: 1px solid var(--primary-color); border-radius: var(--border-radius-lg); }
+        .edit-form-container { margin-top: 1.5rem; padding: 1.5rem; background-color: #283548; border: 1px solid var(--primary-color); border-radius: var(--border-radius-lg); }
         .edit-form-container h3 { margin-bottom: 1rem; color: var(--primary-color); font-size: 1.1rem; }
         .edit-form-container .btn-cancel { background-color: var(--text-secondary); color: white; border: none; }
         .edit-form-container .btn-cancel:hover { background-color: var(--text-primary); }
@@ -227,70 +231,49 @@
             background: #fff; padding: 1.5rem; border-radius: var(--border-radius-lg); width: 100%;
             max-width: 480px; max-height: 90vh; 
             animation: fadeIn 0.3s ease; position: relative;
-            display: flex; flex-direction: column;
+            display: flex; flex-direction: column; color: #333;
         }
-        #receipt-body {
-            overflow-y: auto;
-            flex-grow: 1;
-        }
+        #receipt-body { overflow-y: auto; flex-grow: 1; }
         .receipt-header { text-align: center; margin-bottom: 1.5rem; border-bottom: 1px dashed #ccc; padding-bottom: 1rem; flex-shrink: 0; }
-        .receipt-header h2 { color: var(--primary-color); }
+        .receipt-header h2 { color: #8B5CF6; }
         .receipt-details { margin-bottom: 1.5rem; font-size: 0.9rem; }
         .receipt-details div { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
-        .receipt-details span { color: var(--text-secondary); }
+        .receipt-details span { color: #64748B; }
         .receipt-items table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
         .receipt-items th, .receipt-items td { text-align: left; padding: 0.5rem; border-bottom: 1px solid #eee; }
-        .receipt-items th { color: var(--text-secondary); font-size: 0.8rem; }
+        .receipt-items th { color: #64748B; font-size: 0.8rem; }
         .receipt-items .text-right { text-align: right; }
         .receipt-total { text-align: right; font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; }
-        .receipt-footer { text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-top: 1.5rem; }
+        .receipt-footer { text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 1.5rem; }
         .receipt-actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-shrink: 0; }
         .btn-whatsapp { background-color: var(--whatsapp-color); }
         .btn-whatsapp:hover { background-color: #1EBE57; }
         .btn-close-receipt {
             position: absolute; top: 1rem; right: 1rem; background: none; border: none;
-            font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;
+            font-size: 1.5rem; color: #64748B; cursor: pointer; transition: color 0.2s;
         }
-        .btn-close-receipt:hover { color: var(--text-primary); }
+        .btn-close-receipt:hover { color: #334155; }
 
         /* --- ESTILOS PARA ABAS DE RELATÓRIOS --- */
         .report-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            display: flex; gap: 0.5rem; margin-bottom: 1.5rem;
             border-bottom: 2px solid var(--border-color);
         }
         .report-tab-btn {
-            padding: 0.75rem 1.25rem;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            border-bottom: 2px solid transparent;
-            transform: translateY(2px);
+            padding: 0.75rem 1.25rem; border: none; background: none; cursor: pointer;
+            font-size: 0.95rem; font-weight: 600; color: var(--text-secondary);
+            border-bottom: 2px solid transparent; transform: translateY(2px);
             transition: all 0.2s ease-in-out;
         }
-        .report-tab-btn.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
+        .report-tab-btn.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .report-tab-content { display: none; }
         .report-tab-content.active { display: block; animation: fadeIn 0.4s; }
         .report-form {
-            display: flex;
-            flex-wrap: wrap; 
-            gap: 1rem;
-            align-items: flex-end; 
-            padding: 1.5rem;
-            background-color: var(--bg-color);
+            display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; 
+            padding: 1.5rem; background-color: var(--bg-color);
             border-radius: var(--border-radius-md);
         }
-        .report-form .form-group {
-            margin-bottom: 0;
-            flex: 1 1 180px;
-        }
+        .report-form .form-group { margin-bottom: 0; flex: 1 1 180px; }
         .report-form .btn { flex-shrink: 0; }
 
         /* --- ESTILOS DE RESPONSIVIDADE PARA CELULAR --- */
@@ -340,23 +323,7 @@
         }
 
         @media print {
-            body, html { background: #fff; color: #000; }
-            body > *:not(#printable-area), .receipt-actions, .btn-close-receipt, .no-print { display: none !important; }
-            
-            #printable-area {
-                display: block !important; position: absolute;
-                left: 0; top: 0; width: 100%;
-            }
-            .receipt-content, .card {
-                box-shadow: none !important; border: 1px solid #ccc !important;
-                border-radius: 0 !important; max-width: 100% !important; padding: 1rem;
-            }
-            table, th, td { color: black !important; font-size: 9pt !important; }
-            .valor-entrada, .valor-saida, .status-pendente, .status-pago { color: inherit !important; font-weight: normal !important; }
-            .valor-entrada { color: #000 !important; }
-            .valor-saida { color: #000 !important; }
-            h1, h2, h3, h4, p, span, div { color: #000 !important; }
-            @page { margin: 20mm; }
+            /* Os estilos de impressão permanecem, focados em um fundo branco para economizar tinta */
         }
     </style>
 </head>
@@ -781,13 +748,12 @@ document.addEventListener('DOMContentLoaded', () => {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            timeZone: 'UTC' // Força a exibição da data como ela foi salva (sem conversões de fuso)
+            timeZone: 'UTC'
         };
 
         if (includeTime) {
             options.hour = '2-digit';
             options.minute = '2-digit';
-            // Para exibição com hora, usamos o fuso horário local para fazer sentido para o usuário
             delete options.timeZone; 
         }
 
@@ -849,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tableRenderMap = {
             'dashboard-view': renderDashboardSummaries,
             'caixa-view': renderFluxoCaixa,
-            'vendas-view': renderCarrinho, // Apenas o carrinho, não o formulário todo
+            'vendas-view': renderCarrinho,
             'clientes-view': renderClientes,
             'estoque-view': renderProdutos,
             'contas-a-receber-view': renderContasAReceber,
@@ -857,7 +823,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tableRenderMap[currentPageId]?.();
     };
     
-    // --- NAVEGAÇÃO E LÓGICA DE UI ---
     const navigateToPage = (pageId) => {
         if (!pageId || !document.getElementById(pageId)) { pageId = 'dashboard-view'; }
         contentSections.forEach(s => s.classList.remove('active'));
@@ -887,8 +852,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderDashboardSummaries = () => {
         const saldoCaixaEl = document.getElementById('saldo-caixa-dashboard');
         if (!saldoCaixaEl) return;
-        saldoCaixaEl.textContent = formatCurrency(fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0));
-        document.getElementById('saldo-caixa-detalhe').textContent = saldoCaixaEl.textContent;
+        const saldoCaixa = fluxoCaixa.reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0);
+        saldoCaixaEl.textContent = formatCurrency(saldoCaixa);
+        document.getElementById('saldo-caixa-detalhe').textContent = formatCurrency(saldoCaixa);
         document.getElementById('total-a-receber-dashboard').textContent = formatCurrency(contasAReceber.filter(c => c.status === 'Pendente').reduce((acc, c) => acc + c.valor, 0));
         const salesSummary = vendas.reduce((acc, venda) => {
             acc[venda.metodoPagamento] = (acc[venda.metodoPagamento] || 0) + venda.total;
@@ -910,8 +876,36 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ctx) return;
         if (paymentChartInstance) paymentChartInstance.destroy();
         paymentChartInstance = new Chart(ctx, {
-            type: 'bar', data: { labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], datasets: [{ label: 'Total de Vendas', data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], backgroundColor: ['#22C55E', '#3B82F6', 'var(--accent-color)', '#EF4444'], borderRadius: 4, }] },
-            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } }, scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } } }
+            type: 'bar', 
+            data: { 
+                labels: ['À Vista', 'Pix', 'Crediário', 'Cartão'], 
+                datasets: [{ 
+                    label: 'Total de Vendas', 
+                    data: [salesSummary.vista, salesSummary.pix, salesSummary.crediario, salesSummary.cartao_credito], 
+                    backgroundColor: ['#22C55E', '#3B82F6', 'var(--accent-color)', '#EF4444'], 
+                    borderRadius: 4, 
+                }] 
+            },
+            options: { 
+                indexAxis: 'y', 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { 
+                    legend: { display: false }, 
+                    tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.raw)}` } } 
+                }, 
+                scales: { 
+                    x: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(255,255,255,0.1)' },
+                        ticks: { color: 'var(--text-secondary)' }
+                    }, 
+                    y: { 
+                        grid: { display: false },
+                        ticks: { color: 'var(--text-secondary)' }
+                    } 
+                } 
+            }
         });
     };
 
@@ -943,7 +937,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const cancelAllEdits = () => document.querySelectorAll('.edit-form-container').forEach(c => c.classList.add('hidden'));
 
-    // --- CRUD E LÓGICAS DE NEGÓCIO ---
     const addItemAoCarrinho = () => {
         const produtoId = document.getElementById('venda-produto').value;
         const quantidade = parseInt(document.getElementById('venda-qtd').value);
@@ -990,13 +983,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const clienteNome = clientes.find(c => c.id === clienteId)?.nome || 'Avulso';
         
-        if (metodoPagamento === 'vista' || metodoPagamento === 'pix' || metodoPagamento === 'cartao_credito') {
-            let descPagamento = metodoPagamentoMap[metodoPagamento];
-            if (metodoPagamento === 'cartao_credito') {
-                descPagamento = `Cartão de Crédito (${parcelas}x)`;
-            }
+        const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
+        let descPagamento = metodoPagamentoMap[metodoPagamento];
+        
+        if (metodoPagamento === 'vista' || metodoPagamento === 'pix') {
             fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo: 'Entrada', descricao: `Venda #${novaVenda.id} (${descPagamento}) para ${clienteNome}`, valor: novaVenda.total, vendaId: novaVenda.id });
-        } else if (metodoPagamento === 'crediario') {
+        } else if (metodoPagamento === 'crediario' || metodoPagamento === 'cartao_credito') {
             const valorParcela = total / parcelas;
             for (let i = 0; i < parcelas; i++) {
                 const dataVencimento = new Date();
@@ -1020,13 +1012,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboardSummaries();
     };
     
-    const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
-
     const showReceipt = (venda) => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
         const cliente = clientes.find(c => c.id === venda.clienteId);
         
+        const metodoPagamentoMap = { 'vista': 'À Vista', 'pix': 'Pix', 'crediario': 'Crediário', 'cartao_credito': 'Cartão de Crédito' };
         let pagamentoDesc = metodoPagamentoMap[venda.metodoPagamento];
         if (venda.metodoPagamento === 'crediario' || venda.metodoPagamento === 'cartao_credito') {
             pagamentoDesc += ` (${venda.parcelas}x)`;
@@ -1048,9 +1039,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const phone = cliente.contato.replace(/\D/g, '');
             const message = encodeURIComponent(`Olá ${cliente.nome}! Agradecemos sua compra na Flor de Maria. \n\n*Recibo da Venda #${venda.id}* \nTotal: ${formatCurrency(venda.total)} \n\nObrigado e volte sempre!`);
             whatsappBtn.href = `https://wa.me/55${phone}?text=${message}`;
-            whatsappBtn.classList.remove('hidden');
+            whatsappBtn.style.display = 'flex';
         } else {
-            whatsappBtn.classList.add('hidden');
+            whatsappBtn.style.display = 'none';
         }
         modal.classList.remove('hidden');
     };
@@ -1180,7 +1171,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnImprimir.classList.remove('hidden');
     };
     
-    // --- IMPRESSÃO ---
     const printContent = (elementId) => {
         const printableElement = document.getElementById(elementId);
         if (!printableElement) return;
@@ -1203,7 +1193,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => { document.body.removeChild(iframe); }, 1000);
     };
     
-    // --- INICIALIZAÇÃO E EVENT LISTENERS ---
     const init = () => {
         clientes = loadData('clientes'); produtos = loadData('produtos'); vendas = loadData('vendas');
         contasAReceber = loadData('contasAReceber'); fluxoCaixa = loadData('fluxoCaixa');
@@ -1212,7 +1201,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
-        // A senha foi alterada para refletir o novo nome do sistema
         if (document.getElementById('username').value === 'maria' && document.getElementById('password').value === 'flor123') {
             localStorage.setItem('isLoggedIn', 'true');
             loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
@@ -1250,7 +1238,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navLinks.forEach(link => { link.addEventListener('click', e => { e.preventDefault(); navigateToPage(link.getAttribute('data-target')); toggleMenu(true); }); });
 
-    // Listeners de Forms
     formAddCliente.addEventListener('submit', e => { e.preventDefault(); clientes.push({ id: Date.now(), nome: document.getElementById('nome-cliente').value, contato: document.getElementById('contato-cliente').value }); saveData('clientes', clientes); renderClientes(); popularFormulariosVenda(); showNotification('Cliente salvo!'); e.target.reset(); });
     formAddProduto.addEventListener('submit', e => { e.preventDefault(); produtos.push({ id: Date.now(), nome: document.getElementById('nome-produto').value, quantidade: parseInt(document.getElementById('qtd-produto').value), preco: parseFloat(document.getElementById('preco-produto').value) }); saveData('produtos', produtos); renderProdutos(); popularFormulariosVenda(); showNotification('Produto salvo!'); e.target.reset(); });
     formAddLancamento.addEventListener('submit', e => { e.preventDefault(); const desc = document.getElementById('desc-lancamento').value; const valor = parseFloat(document.getElementById('valor-lancamento').value); const tipo = document.getElementById('tipo-lancamento').value; if(desc && valor > 0){ fluxoCaixa.push({ id: Date.now(), data: new Date().toISOString(), tipo, descricao: desc, valor }); saveData('fluxoCaixa', fluxoCaixa); renderFluxoCaixa(); renderDashboardSummaries(); showNotification('Lançamento realizado!'); e.target.reset(); } else { showNotification('Preencha os campos!', true); }});
@@ -1266,7 +1253,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData('contasAReceber', contasAReceber); saveData('fluxoCaixa', fluxoCaixa); renderContasAReceber(); renderDashboardSummaries(); cancelAllEdits(); showNotification('Conta atualizada!');
     });
     
-    // Listeners de Botões e Ações
     document.querySelectorAll('.btn-cancel').forEach(btn => btn.addEventListener('click', cancelAllEdits));
     document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
     document.getElementById('venda-pagamento').addEventListener('change', e => {
@@ -1279,10 +1265,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-print-receipt').addEventListener('click', () => printContent('printable-area'));
     reportTabButtons.forEach(btn => btn.addEventListener('click', () => { reportTabButtons.forEach(b => b.classList.remove('active')); reportTabContents.forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); }));
     
-    // Listeners Relatórios
     formRelatorioVendas.addEventListener('submit', gerarRelatorioVendas);
     document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('relatorio-vendas-container'));
-    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros financeiros relacionados (contas a receber e lançamentos de caixa de vendas). Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
+    document.getElementById('btn-limpar-vendas').addEventListener('click', () => { if (confirm("ATENÇÃO: EXCLUIRÁ TODAS as vendas e registros financeiros relacionados. Deseja continuar?")) { vendas = []; contasAReceber = []; fluxoCaixa = fluxoCaixa.filter(l => !l.vendaId); saveData('vendas',vendas); saveData('contasAReceber',contasAReceber); saveData('fluxoCaixa',fluxoCaixa); renderDashboardSummaries(); renderContasAReceber(); renderFluxoCaixa(); document.getElementById('relatorio-vendas-container').innerHTML=''; showNotification('Vendas excluídas!', true);}});
     formRelatorioContas.addEventListener('submit', gerarRelatorioContas);
     document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('relatorio-contas-container'));
     formRelatorioProdutos.addEventListener('submit', gerarRelatorioProdutos);
@@ -1292,7 +1277,6 @@ document.addEventListener('DOMContentLoaded', () => {
     formRelatorioCaixa.addEventListener('submit', gerarRelatorioCaixa);
     document.getElementById('btn-imprimir-relatorio-caixa').addEventListener('click', () => printContent('relatorio-caixa-container'));
 
-    // Delegação de Eventos para botões de ação nas tabelas
     document.body.addEventListener('click', e => {
         const target = e.target.closest('[data-action]');
         if (!target) return;
@@ -1319,7 +1303,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Lógica de carregamento inicial
     if (localStorage.getItem('isLoggedIn') === 'true') {
         loginScreen.classList.add('hidden'); dashboardScreen.classList.remove('hidden');
         init();
