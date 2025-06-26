@@ -384,71 +384,73 @@
             .responsive-table td:last-child { border-bottom: 0; }
         }
 
+        /* --- ESTILOS DE IMPRESSÃO CORRIGIDOS --- */
         @media print {
-             body {
+            body {
                 background-color: #fff !important;
-                -webkit-font-smoothing: auto;
-                -moz-osx-font-smoothing: auto;
-             }
-
-            /* Hide everything in the body by default when printing */
-            body > *:not(#printable-receipt-area):not(#printable-report-vendas):not(#printable-report-contas):not(#printable-report-lucro):not(#printable-report-produtos):not(#printable-report-estoque):not(#printable-report-caixa) {
-                display: none !important;
+                color: #000 !important;
             }
 
-            /* Make only the printable area and its contents visible */
-            #printable-receipt-area, .card[id^="printable-report-"] {
+            /* Esconde tudo que não está marcado para impressão */
+            body.is-printing > *:not(.printable-content) {
+                display: none !important;
+            }
+            
+            /* Garante que a área de impressão e seu conteúdo sejam exibidos */
+            body.is-printing .printable-content,
+            body.is-printing .printable-content * {
                 display: block !important;
+                visibility: visible !important;
+            }
+
+            /* Configura a área de impressão para ocupar a página */
+            body.is-printing .printable-content {
                 position: absolute;
-                left: 0;
                 top: 0;
+                left: 0;
                 width: 100%;
+                height: auto;
+                background-color: #fff !important;
+                color: #000 !important;
+                padding: 1rem;
                 border: none !important;
                 box-shadow: none !important;
                 animation: none !important;
-                color: #000 !important;
-                background-color: #fff !important;
+                border-radius: 0 !important;
             }
 
             .no-print {
                 display: none !important;
             }
-
-            .modal-overlay {
+            
+            /* Reseta estilos de componentes para uma boa aparência na impressão */
+            .printable-content .modal-overlay,
+            .printable-content .modal-content {
                 position: static !important;
                 background: transparent !important;
                 padding: 0 !important;
                 backdrop-filter: none !important;
-            }
-
-            .modal-content, .card[id^="printable-report-"] {
                 box-shadow: none !important;
-                border: 1px solid #ddd !important;
-                color: #000 !important;
-                background: #fff !important;
+                border: none !important;
                 max-width: 100% !important;
                 max-height: none !important;
-                animation: none !important;
-                border-radius: 0 !important;
             }
             
-            h1, h2, h3, h4, h5, h6, p, span, div, strong, td, th {
+            .printable-content h1, .printable-content h2, .printable-content h3, .printable-content h4,
+            .printable-content p, .printable-content span, .printable-content div, .printable-content strong,
+            .printable-content td, .printable-content th {
                 color: #000 !important;
             }
              
-            a { text-decoration: none; color: #000 !important; }
+            .printable-content a { text-decoration: none; color: #000 !important; }
 
-            table, tr, td, th {
+            .printable-content table, .printable-content tr, .printable-content td, .printable-content th {
                 border-color: #ccc !important;
-                color: #000 !important;
                 page-break-inside: avoid;
             }
-            
-            .valor-entrada, .valor-saida {
-                 font-weight: normal !important;
-            }
-            .valor-entrada { color: #16a34a !important; }
-            .valor-saida { color: #cc0000 !important; }
+
+            .printable-content .valor-entrada { color: #16a34a !important; font-weight: normal !important; }
+            .printable-content .valor-saida { color: #cc0000 !important; font-weight: normal !important; }
         }
     </style>
 </head>
@@ -922,24 +924,24 @@
     </div>
 
     <div id="receipt-modal" class="modal-overlay hidden">
-          <div id="printable-receipt-area">
-               <div class="modal-content">
-                   <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
-                   <div class="modal-body" id="receipt-body">
-                         </div>
-                   <div class="modal-actions no-print">
-                        <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                        <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
-                   </div>
-               </div>
-          </div>
+        <div id="printable-receipt-area">
+             <div class="modal-content">
+                 <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
+                 <div class="modal-body" id="receipt-body">
+                       </div>
+                 <div class="modal-actions no-print">
+                      <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                      <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                 </div>
+             </div>
+        </div>
     </div>
 
     <div id="client-history-modal" class="modal-overlay hidden no-print">
         <div class="modal-content">
             <button class="btn-close-modal no-print" data-target-modal="client-history-modal">&times;</button>
             <div class="modal-body" id="client-history-body">
-                    </div>
+            </div>
             <div class="modal-actions no-print">
                 <button class="btn btn-close-modal-footer no-print" data-target-modal="client-history-modal"><i class="fas fa-times mr-2"></i> Fechar</button>
             </div>
@@ -1211,10 +1213,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Lógica de Vendas ---
-    /**
-     * CORREÇÃO: Esta função foi modificada para preservar a seleção do cliente e do produto
-     * ao filtrar a lista. Isso impede que a seleção do cliente seja perdida ao buscar um produto.
-     */
     const popularFormulariosVenda = (filtroCliente = '', filtroProduto = '') => {
         const clienteSelect = document.getElementById('venda-cliente');
         const produtoSelect = document.getElementById('venda-produto');
@@ -1323,10 +1321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
     };
 
-    /**
-     * MELHORIA: A função do recibo foi completamente reformulada para ser mais
-     * detalhada, clara e profissional. Inclui detalhamento de parcelas.
-     */
+    // --- Lógica de Modais (Recibo e Histórico) ---
     const showReceipt = (venda) => {
         const modal = document.getElementById('receipt-modal');
         const receiptBody = document.getElementById('receipt-body');
@@ -1342,7 +1337,6 @@ document.addEventListener('DOMContentLoaded', () => {
             parcelasHtml = '<div class="modal-items"><h4>Detalhamento das Parcelas</h4><table><thead><tr><th>Parcela</th><th>Vencimento</th><th class="text-right">Valor</th></tr></thead><tbody>';
             for (let i = 0; i < venda.parcelas; i++) {
                 const dataVencimento = new Date();
-                // Define o vencimento para o mesmo dia do mês seguinte
                 dataVencimento.setMonth(dataVencimento.getMonth() + (i + 1));
                 parcelasHtml += `<tr><td>${i + 1} de ${venda.parcelas}</td><td>${formatDate(dataVencimento.toISOString())}</td><td class="text-right">${formatCurrency(valorParcela)}</td></tr>`;
             }
@@ -1550,6 +1544,51 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`, false);
     };
 
+    /**
+     * NOVO: Função integrada para excluir uma venda e todas as suas consequências.
+     */
+    const handleDeleteSale = (saleId) => {
+        if (!confirm('Tem certeza que deseja excluir esta venda? Esta ação é irreversível e irá restaurar o estoque e remover todos os registros financeiros associados a ela.')) {
+            return;
+        }
+
+        const saleIndex = vendas.findIndex(v => v.id === saleId);
+        if (saleIndex === -1) {
+            showNotification('Venda não encontrada.', true);
+            return;
+        }
+
+        const saleToDelete = vendas[saleIndex];
+
+        // 1. Devolver itens ao estoque
+        saleToDelete.itens.forEach(itemVendido => {
+            const produtoEstoque = produtos.find(p => p.id === itemVendido.produtoId);
+            if (produtoEstoque) {
+                produtoEstoque.quantidade += itemVendido.quantidade;
+            }
+        });
+
+        // 2. Excluir lançamentos no fluxo de caixa associados
+        fluxoCaixa = fluxoCaixa.filter(f => f.vendaId !== saleId);
+
+        // 3. Excluir contas a receber associadas
+        contasAReceber = contasAReceber.filter(c => c.vendaId !== saleId);
+
+        // 4. Excluir a venda
+        vendas.splice(saleIndex, 1);
+
+        // 5. Salvar todos os dados atualizados
+        saveAllData();
+
+        showNotification('Venda excluída com sucesso!', false);
+
+        // 6. Atualizar a visualização do relatório
+        const formRelatorioVendas = document.getElementById('form-relatorio-vendas');
+        formRelatorioVendas.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        renderDashboard(); // Atualiza também os cards do dashboard
+    };
+
+
     // --- GERAÇÃO DE RELATÓRIOS ---
     const popularFiltroClienteRelatorio = () => {
         const selectClienteContas = document.getElementById('relatorio-cliente-contas');
@@ -1579,15 +1618,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const totalVendido = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
-        const renderRowRelatorioVendas = (v, headers) => `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), v.metodoPagamento, formatCurrency(v.total)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+        // NOVO: Adicionado botão de exclusão
+        const renderRowRelatorioVendas = (v, headers) => `<tr>${[formatDate(v.data, true), getNomeCliente(v.clienteId), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), v.metodoPagamento, formatCurrency(v.total), `<div class="no-print"><button class="btn-action" data-action="delete-sale" data-id="${v.id}" title="Excluir Venda"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
         container.innerHTML = `<div class="card" id="printable-report-vendas"><h2>Relatório de Vendas (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Total Vendido: ${formatCurrency(totalVendido)}</p><div id="relatorio-vendas-tabela-container"></div></div>`;
-        renderTable('relatorio-vendas-tabela-container', ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'], [...vendasFiltradas].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
+        renderTable('relatorio-vendas-tabela-container', ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total', 'Ações'], [...vendasFiltradas].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
     };
     
-    document.getElementById('btn-imprimir-relatorio-vendas').onclick = () => window.print();
     document.getElementById('btn-export-csv-vendas').onclick = () => {
         const dataInicioStr = document.getElementById('relatorio-inicio-vendas').value;
         const dataFimStr = document.getElementById('relatorio-fim-vendas').value;
@@ -1642,7 +1681,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCsv.classList.remove('hidden');
     };
     
-    document.getElementById('btn-imprimir-relatorio-contas').onclick = () => window.print();
     document.getElementById('btn-export-csv-contas').onclick = () => {
         const clienteId = document.getElementById('relatorio-cliente-contas').value;
         const status = document.getElementById('relatorio-status-contas').value;
@@ -1716,7 +1754,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCsv.classList.remove('hidden');
     };
     
-    document.getElementById('btn-imprimir-relatorio-lucro').onclick = () => window.print();
     document.getElementById('btn-export-csv-lucro').onclick = () => {
         const dataInicioStr = document.getElementById('relatorio-inicio-lucro').value;
         const dataFimStr = document.getElementById('relatorio-fim-lucro').value;
@@ -1782,7 +1819,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCsv.classList.remove('hidden');
     };
     
-    document.getElementById('btn-imprimir-relatorio-produtos').onclick = () => window.print();
     document.getElementById('btn-export-csv-produtos').onclick = () => {
         const dataInicioStr = document.getElementById('relatorio-inicio-produtos').value;
         const dataFimStr = document.getElementById('relatorio-fim-produtos').value;
@@ -1839,7 +1875,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCsv.classList.remove('hidden');
     };
     
-    document.getElementById('btn-imprimir-relatorio-estoque').onclick = () => window.print();
     document.getElementById('btn-export-csv-estoque').onclick = () => {
         const statusFiltro = document.getElementById('relatorio_status_estoque').value;
         const estoqueFiltrado = produtos.filter(p => {
@@ -1901,7 +1936,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCsv.classList.remove('hidden');
     };
     
-    document.getElementById('btn-imprimir-relatorio-caixa').onclick = () => window.print();
     document.getElementById('btn-export-csv-caixa').onclick = () => {
         const dataInicioStr = document.getElementById('relatorio-inicio-caixa').value;
         const dataFimStr = document.getElementById('relatorio-fim-caixa').value;
@@ -2013,6 +2047,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         reader.readAsText(file);
+    };
+
+    /**
+     * NOVO: Função de impressão robusta que isola o conteúdo
+     */
+    const printContent = (elementId) => {
+        const printableElement = document.getElementById(elementId);
+        if (!printableElement) {
+            console.error("Elemento para impressão não encontrado:", elementId);
+            return;
+        }
+
+        document.body.classList.add('is-printing');
+        printableElement.classList.add('printable-content');
+
+        // Um pequeno atraso para garantir que as classes CSS sejam aplicadas antes da janela de impressão abrir
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove('is-printing');
+            printableElement.classList.remove('printable-content');
+        }, 100);
     };
 
 
@@ -2249,6 +2304,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById(targetTabId).classList.add('active');
             });
         });
+        
+        // Event listeners dos botões de impressão
+        document.getElementById('btn-print-receipt').addEventListener('click', () => printContent('printable-receipt-area'));
+        document.getElementById('btn-imprimir-relatorio-vendas').addEventListener('click', () => printContent('printable-report-vendas'));
+        document.getElementById('btn-imprimir-relatorio-contas').addEventListener('click', () => printContent('printable-report-contas'));
+        document.getElementById('btn-imprimir-relatorio-lucro').addEventListener('click', () => printContent('printable-report-lucro'));
+        document.getElementById('btn-imprimir-relatorio-produtos').addEventListener('click', () => printContent('printable-report-produtos'));
+        document.getElementById('btn-imprimir-relatorio-estoque').addEventListener('click', () => printContent('printable-report-estoque'));
+        document.getElementById('btn-imprimir-relatorio-caixa').addEventListener('click', () => printContent('printable-report-caixa'));
     };
 
     loginForm.addEventListener('submit', e => {
@@ -2312,6 +2376,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Delegação de eventos para botões de ação e modais
     document.body.addEventListener('click', e => {
+        const target = e.target.closest('[data-action]');
+        
         // Alertas do Dashboard
         const navLinkAlert = e.target.closest('.nav-link-alert');
         if(navLinkAlert){
@@ -2324,14 +2390,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(closeModalBtn) {
             document.getElementById(closeModalBtn.dataset.targetModal).classList.add('hidden');
         }
-        
-        // Imprimir Recibo
-        if (e.target.closest('#btn-print-receipt')) {
-            window.print();
-        }
 
-        // Ações de Tabela
-        const target = e.target.closest('[data-action]');
         if (!target) return;
 
         const { action, type, id } = target.dataset;
@@ -2339,6 +2398,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (action === 'edit') handleEdit(type, parsedId);
         if (action === 'delete') handleDelete(type, parsedId);
+        if (action === 'delete-sale') handleDeleteSale(parsedId);
         if (action === 'history') showClientHistory(parsedId);
         if (action === 'remove-item') {
             carrinhoVenda = carrinhoVenda.filter(item => item.produtoId != parsedId);
