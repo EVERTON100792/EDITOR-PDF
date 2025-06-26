@@ -15,7 +15,7 @@
     <style>
         /* --- TEMA NOVO: BLACK & GOLD (SEM CINZA) --- */
         :root {
-            --primary-color: #E6B800;     /* Gold Vibrante */
+            --primary-color: #E6B800;      /* Gold Vibrante */
             --primary-dark-color: #C89F00; /* Gold mais escuro para hover */
             --primary-light-color: #2b2100;/* Fundo dourado escuro para hover de links */
 
@@ -178,14 +178,14 @@
 
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-secondary); font-size: 0.875rem; }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md); font-size: 0.9rem; font-family: 'Nunito', sans-serif;
             background-color: var(--bg-color); transition: border-color 0.2s, box-shadow 0.2s;
             color: var(--text-primary);
         }
         .form-group select option { background: var(--surface-color); color: var(--text-primary); }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(230, 184, 0, 0.25); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(230, 184, 0, 0.25); }
 
         .btn, .btn-submit {
             padding: 0.75rem 1.25rem; border: none; border-radius: var(--border-radius-md); background: var(--primary-color);
@@ -382,14 +382,21 @@
         }
 
         @media print {
-            body, .modal-content {
+            body, .modal-content, .card {
                 background: #ffffff !important;
                 color: #000000 !important;
+                 box-shadow: none !important;
             }
             .no-print { display: none !important; }
+            .main-content { padding: 0; }
+            #printable-report-vendas, #printable-report-contas, #printable-report-lucro,
+            #printable-report-produtos, #printable-report-estoque, #printable-report-caixa {
+                border: none !important;
+            }
             table, tr, td, th {
                 border-color: #ccc !important;
                 color: #000 !important;
+                page-break-inside: avoid;
             }
             .modal-header h2, .modal-total {
                 color: #000 !important;
@@ -466,7 +473,7 @@
                      <div class="summary-card shadow-md" style="border-left-color: var(--success-color);"><h3 class="items-center"><i class="fas fa-coins mr-2"></i> Saldo em Caixa</h3><p id="saldo-caixa-dashboard">R$ 0,00</p></div>
                      <div class="summary-card shadow-md" style="border-left-color: var(--warning-color);"><h3 class="items-center"><i class="fas fa-money-bill-wave mr-2"></i> Total a Receber</h3><p id="total-a-receber-dashboard">R$ 0,00</p></div>
                      <div class="summary-card shadow-md" style="border-left-color: var(--danger-color);"><h3 class="items-center"><i class="fas fa-wallet mr-2"></i> Total de Despesas (Mês)</h3><p id="total-despesas-dashboard">R$ 0,00</p></div>
-                </div>
+                 </div>
                  <div class="dashboard-main-grid">
                      <div class="card shadow-md"><h2><i class="fas fa-chart-line mr-2"></i> Vendas por Método</h2><div style="height:300px;"><canvas id="paymentMethodChart"></canvas></div></div>
                      <div class="card shadow-md"><h2><i class="fas fa-list-alt mr-2"></i> Resumo de Vendas</h2><div id="sales-summary-container"></div></div>
@@ -780,33 +787,33 @@
                                    <button id="btn-export-csv-produtos" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
                                    <button id="btn-imprimir-relatorio-produtos" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
                                </div>
-                           </div>
-                           <div id="relatorio-produtos-container" class="mt-3"></div>
+                          </div>
+                          <div id="relatorio-produtos-container" class="mt-3"></div>
                      </div>
                  </div>
 
                  <div id="estoque-report-tab" class="report-tab-content">
-                         <div class="card shadow-md">
-                             <div class="no-print">
-                                     <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
-                                    <form id="form-relatorio-estoque" class="report-form">
-                                         <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
-                                             <select id="relatorio_status_estoque">
-                                                     <option value="todos">Todos</option>
-                                                     <option value="disponivel">Disponível</option>
-                                                     <option value="baixo">Estoque Baixo (<= 5)</option>
-                                                     <option value="esgotado">Esgotado</option>
-                                             </select>
-                                             </div>
-                                             <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
-                                     </form>
-                                     <div class="mt-4">
-                                         <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
-                                         <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                                     </div>
+                      <div class="card shadow-md">
+                           <div class="no-print">
+                                 <h2><i class="fas fa-boxes mr-2"></i> Relatório de Situação do Estoque</h2>
+                                 <form id="form-relatorio-estoque" class="report-form">
+                                     <div class="form-group"><label for="relatorio_status_estoque">Filtrar por Status</label>
+                                         <select id="relatorio_status_estoque">
+                                               <option value="todos">Todos</option>
+                                               <option value="disponivel">Disponível</option>
+                                               <option value="baixo">Estoque Baixo (<= 5)</option>
+                                               <option value="esgotado">Esgotado</option>
+                                         </select>
+                                         </div>
+                                     <button type="submit" class="btn"><i class="fas fa-clipboard-list mr-2"></i> Gerar</button>
+                                 </form>
+                                 <div class="mt-4">
+                                     <button id="btn-export-csv-estoque" class="btn hidden"><i class="fas fa-file-csv mr-2"></i> Exportar CSV</button>
+                                     <button id="btn-imprimir-relatorio-estoque" class="btn hidden"><i class="fas fa-print mr-2"></i> Imprimir</button>
                                  </div>
-                                 <div id="relatorio-estoque-container" class="mt-3"></div>
-                         </div>
+                           </div>
+                           <div id="relatorio-estoque-container" class="mt-3"></div>
+                      </div>
                  </div>
 
                  <div id="caixa-report-tab" class="report-tab-content">
@@ -869,13 +876,13 @@
     <div id="receipt-modal" class="modal-overlay hidden no-print">
           <div id="printable-receipt-area">
                <div class="modal-content">
-                    <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
-                    <div class="modal-body" id="receipt-body">
-                            </div>
-                    <div class="modal-actions no-print">
-                            <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
-                            <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
-                    </div>
+                   <button class="btn-close-modal no-print" data-target-modal="receipt-modal">&times;</button>
+                   <div class="modal-body" id="receipt-body">
+                           </div>
+                   <div class="modal-actions no-print">
+                           <button id="btn-print-receipt" class="btn flex-1"><i class="fas fa-print mr-2"></i> Imprimir</button>
+                           <a id="btn-whatsapp-receipt" href="#" target="_blank" class="btn btn-whatsapp flex-1"><i class="fab fa-whatsapp mr-2"></i> Enviar via WhatsApp</a>
+                   </div>
                </div>
           </div>
     </div>
@@ -886,7 +893,7 @@
             <div class="modal-body" id="client-history-body">
                     </div>
             <div class="modal-actions no-print">
-                <button class="btn btn-close-modal" data-target-modal="client-history-modal"><i class="fas fa-times mr-2"></i> Fechar</button>
+                <button class="btn btn-close-modal-footer no-print" data-target-modal="client-history-modal"><i class="fas fa-times mr-2"></i> Fechar</button>
             </div>
         </div>
     </div>
@@ -921,27 +928,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
 
+        // CORREÇÃO: Usar fuso horário local para datas de input, mas UTC para o resto para consistência
+        const inputDate = new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000);
+
         const options = {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
-            timeZone: 'UTC' // Usar UTC para evitar problemas com fuso horário ao pegar datas de inputs type="date"
         };
-
+        
         if (includeTime) {
             options.hour = '2-digit';
             options.minute = '2-digit';
-            delete options.timeZone;
+            return new Intl.DateTimeFormat('pt-BR', options).format(date);
         }
 
-        return new Intl.DateTimeFormat('pt-BR', options).format(date);
+        return new Intl.DateTimeFormat('pt-BR', { ...options, timeZone: 'UTC' }).format(inputDate);
     };
 
     const showNotification = (message, isError = false) => {
         const notification = document.createElement('div');
         Object.assign(notification.style, {
             position: 'fixed', bottom: '20px', right: '20px', padding: '15px 25px', borderRadius: '0.5rem',
-            color: 'white', zIndex: '2000', opacity: '0', transition: 'all 0.4s ease',
+            color: 'white', zIndex: '2001', opacity: '0', transition: 'all 0.4s ease',
             transform: 'translateY(10px)', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
             backgroundColor: isError ? 'var(--danger-color)' : 'var(--success-color)', fontWeight: '500'
         });
@@ -967,9 +976,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Renderização de Linhas das Tabelas ---
-    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data, true), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<div class="no-print">${!item.despesaId ? `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`: `<span style="font-size:0.8rem; color:var(--text-secondary)">(Despesa)</span>`}</div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowCaixa = (item, headers) => `<tr>${[formatDate(item.data, true), item.descricao, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo}</span>`, `<span class="valor-${item.tipo.toLowerCase()}">${item.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(item.valor)}</span>`, `<div class="no-print">${!item.vendaId && !item.despesaId && !item.contaId ? `<button class="btn-action" data-action="edit" data-type="lancamento" data-id="${item.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="lancamento" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>`: `<span style="font-size:0.8rem; color:var(--text-secondary)">(${item.vendaId ? 'Venda' : item.contaId ? 'Conta Paga' : 'Despesa'})</span>`}</div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowClientes = (c, headers) => `<tr>${[c.nome, c.contato || 'N/A', `<div class="no-print"><button class="btn-action" title="Histórico" data-action="history" data-type="cliente" data-id="${c.id}"><i class="fas fa-history"></i></button><button class="btn-action" title="Editar" data-action="edit" data-type="cliente" data-id="${c.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" title="Excluir" data-action="delete" data-type="cliente" data-id="${c.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
-    const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.refProduto || '-', p.nome + (p.quantidade <= 5 && p.quantidade > 0 ? ' (Baixo!)' : p.quantidade === 0 ? ' (Esgotado)' : ''), p.quantidade, formatCurrency(p.precoCusto), formatCurrency(p.preco), `<div class="no-print"><button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+    const renderRowProdutos = (p, headers) => `<tr style="${p.quantidade === 0 ? 'color: var(--text-secondary);' : ''}">${[p.refProduto || '-', p.nome + (p.quantidade <= 5 && p.quantidade > 0 ? ' <span style="color:var(--warning-color); font-weight:bold;">(Baixo!)</span>' : p.quantidade === 0 ? ' <span style="color:var(--danger-color); font-weight:bold;">(Esgotado)</span>' : ''), p.quantidade, formatCurrency(p.precoCusto), formatCurrency(p.preco), `<div class="no-print"><button class="btn-action" data-action="edit" data-type="produto" data-id="${p.id}"><i class="fas fa-pencil-alt"></i></button><button class="btn-action" data-action="delete" data-type="produto" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button></div>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowCarrinho = (item, headers) => `<tr>${[item.nome, item.quantidade, formatCurrency(item.subtotal), `<button class="btn-action no-print" data-action="remove-item" data-id="${item.produtoId}"><i class="fas fa-trash-alt"></i></button>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
     const renderRowContas = (conta, headers) => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'Avulso';
@@ -1025,11 +1034,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const cancelAllEdits = () => {
-        const editContainers = document.querySelectorAll('.edit-form-container');
-        editContainers.forEach(container => container.classList.add('hidden'));
-        const cancelButtons = document.querySelectorAll('.edit-form-container .btn-cancel');
-        cancelButtons.forEach(button => {
-            button.onclick = () => button.closest('.edit-form-container').classList.add('hidden');
+        document.querySelectorAll('.edit-form-container').forEach(container => {
+            container.classList.add('hidden');
+            const form = container.querySelector('form');
+            if(form) form.reset();
         });
     };
 
@@ -1048,9 +1056,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Resumo de Vendas por método
         const salesSummary = vendas.reduce((acc, venda) => {
-            acc[venda.metodoPagamento] = (acc[venda.metodoPagamento] || 0) + venda.total;
+            const metodo = venda.metodoPagamento || 'vista';
+            acc[metodo] = (acc[metodo] || 0) + venda.total;
             return acc;
         }, { vista: 0, pix: 0, crediario: 0, cartao_credito: 0 });
+
         const summaryContainer = document.getElementById('sales-summary-container');
         if (summaryContainer) {
             summaryContainer.innerHTML = `
@@ -1160,10 +1170,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!clienteSelect || !produtoSelect) return;
 
         const clientesFiltrados = clientes.filter(c => c.nome.toLowerCase().includes(filtroCliente.toLowerCase()));
-        clienteSelect.innerHTML = '<option value="">Selecione...</option>' + [...clientesFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
+        clienteSelect.innerHTML = '<option value="">Selecione um cliente...</option>' + [...clientesFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(c => `<option value="${c.id}">${c.nome}</option>`).join('');
 
         const produtosFiltrados = produtos.filter(p => p.nome.toLowerCase().includes(filtroProduto.toLowerCase()) || (p.refProduto && p.refProduto.toLowerCase().includes(filtroProduto.toLowerCase())));
-        produtoSelect.innerHTML = '<option value="">Selecione...</option>' + [...produtosFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.refProduto ? `[${p.refProduto}] ` : ''}${p.nome} (${p.quantidade} disp.)</option>`).join('');
+        produtoSelect.innerHTML = '<option value="">Selecione um produto...</option>' + [...produtosFiltrados].sort((a,b) => a.nome.localeCompare(b.nome)).map(p => `<option value="${p.id}" ${p.quantidade === 0 ? 'disabled' : ''}>${p.refProduto ? `[${p.refProduto}] ` : ''}${p.nome} (${p.quantidade} disp.)</option>`).join('');
     };
 
     document.getElementById('venda-pagamento').addEventListener('change', function() {
@@ -1175,8 +1185,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('venda-parcelas-cartao-group').classList.remove('hidden');
         }
     });
-
-    document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
 
     const addItemAoCarrinho = () => {
         const produtoId = document.getElementById('venda-produto').value;
@@ -1200,8 +1208,6 @@ document.addEventListener('DOMContentLoaded', () => {
         popularFormulariosVenda(document.getElementById('venda-cliente-search').value, '');
         renderCarrinho();
     };
-
-    document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
 
     const finalizarVenda = () => {
         const clienteId = parseInt(document.getElementById('venda-cliente').value);
@@ -1332,6 +1338,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Funções de Edição e Exclusão ---
     const handleEdit = (type, id) => {
+        cancelAllEdits(); // Garante que nenhum outro formulário de edição esteja aberto
         const dataMap = { cliente: clientes, produto: produtos, lancamento: fluxoCaixa, conta: contasAReceber, despesa: despesas };
         const itemToEdit = dataMap[type].find(item => item.id === id);
         if (itemToEdit) {
@@ -1350,8 +1357,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('edit-preco-venda-produto').value = itemToEdit.preco;
                 },
                 lancamento: () => {
-                    if (itemToEdit.despesaId) {
-                        showNotification('Lançamentos de despesas devem ser editados na tela de Despesas.', true);
+                    if (itemToEdit.despesaId || itemToEdit.vendaId || itemToEdit.contaId) {
+                        showNotification('Lançamentos automáticos (de vendas, despesas ou contas) não podem ser editados.', true);
                         return;
                     }
                     document.getElementById('edit-lancamento-id').value = itemToEdit.id;
@@ -1376,24 +1383,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             };
             populateMap[type]();
-            document.getElementById(`edit-${type}-container`).classList.remove('hidden');
-            const cancelButton = document.getElementById(`cancel-edit-${type}`);
-            if (cancelButton) {
-                cancelButton.onclick = () => document.getElementById(`edit-${type}-container`).classList.add('hidden');
-            } else {
-                const genericCancelButton = document.querySelector(`#edit-${type}-container .btn-cancel`);
-                if (genericCancelButton) {
-                    genericCancelButton.onclick = () => document.getElementById(`edit-${type}-container`).classList.add('hidden');
-                }
-            }
+            const container = document.getElementById(`edit-${type}-container`);
+            container.classList.remove('hidden');
+            container.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Foca no formulário
         }
     };
 
     const handleDelete = (type, id) => {
         if (!confirm(`Tem certeza que deseja excluir? Esta ação não pode ser desfeita.`)) return;
 
-        if (type === 'cliente' && vendas.some(v => v.clienteId === id)) {
-            showNotification('Não é possível excluir. Exclua as vendas associadas a este cliente primeiro.', true);
+        if (type === 'cliente' && (vendas.some(v => v.clienteId === id) || contasAReceber.some(c => c.clienteId === id))) {
+            showNotification('Não é possível excluir. Exclua as vendas e contas a receber associadas a este cliente primeiro.', true);
             return;
         }
         if (type === 'produto' && vendas.some(v => v.itens.some(i => i.produtoId === id))) {
@@ -1406,8 +1406,8 @@ document.addEventListener('DOMContentLoaded', () => {
             produto: () => produtos = produtos.filter(i => i.id !== id),
             lancamento: () => {
                 const lancamento = fluxoCaixa.find(l => l.id === id);
-                if (lancamento && lancamento.despesaId) {
-                    showNotification('Lançamentos de despesas devem ser excluídos na tela de Despesas.', true);
+                if (lancamento && (lancamento.despesaId || lancamento.vendaId || lancamento.contaId)) {
+                    showNotification('Lançamentos automáticos não podem ser excluídos diretamente.', true);
                     return;
                 }
                 fluxoCaixa = fluxoCaixa.filter(i => i.id !== id);
@@ -1424,7 +1424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAllData();
         rerenderCurrentPageTables();
         renderDashboard(); // Sempre atualiza o dashboard
-        showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`);
+        showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} excluído(a)!`, false);
     };
 
     // --- GERAÇÃO DE RELATÓRIOS ---
@@ -1462,29 +1462,27 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable('relatorio-vendas-tabela-container', ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'], [...vendasFiltradas].sort((a,b) => new Date(b.data) - new Date(a.data)), renderRowRelatorioVendas);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
-
-        btnImprimir.onclick = () => window.print();
-        btnCsv.onclick = () => {
-            const headersCSV = ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'];
-            const dataCSV = vendasFiltradas.map(v => ({
-                'Data/Hora': formatDate(v.data, true),
-                'Cliente': getNomeCliente(v.clienteId),
-                'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
-                'Pagamento': v.metodoPagamento,
-                'Total': formatCurrency(v.total)
-            }));
-            exportToCSV(headersCSV, dataCSV, `relatorio_vendas_${formatDate(dataInicioStr)}_${formatDate(dataFimStr)}.csv`);
-        };
     };
-    document.getElementById('form-relatorio-vendas').addEventListener('submit', gerarRelatorioVendas);
-    document.getElementById('btn-limpar-vendas').addEventListener('click', () => {
-        if (confirm('Tem certeza que deseja excluir TODAS as vendas? Esta ação é irreversível!')) {
-            vendas = [];
-            saveData('vendas', vendas);
-            showNotification('Histórico de vendas apagado!', 'warning');
-            navigateToPage('relatorios-view');
-        }
-    });
+    
+    document.getElementById('btn-imprimir-relatorio-vendas').onclick = () => window.print();
+    document.getElementById('btn-export-csv-vendas').onclick = () => {
+        const dataInicioStr = document.getElementById('relatorio-inicio-vendas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-vendas').value;
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
+        
+        const headersCSV = ['Data/Hora', 'Cliente', 'Itens', 'Pagamento', 'Total'];
+        const dataCSV = vendasFiltradas.map(v => ({
+            'Data/Hora': formatDate(v.data, true),
+            'Cliente': getNomeCliente(v.clienteId),
+            'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
+            'Pagamento': v.metodoPagamento,
+            'Total': v.total.toFixed(2) // Export raw number for better CSV compatibility
+        }));
+        exportToCSV(headersCSV, dataCSV, `relatorio_vendas_${dataInicioStr}_a_${dataFimStr}.csv`);
+    };
 
     const gerarRelatorioContas = (e) => {
         e.preventDefault();
@@ -1514,25 +1512,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
         const renderRowRelatorioContas = (c, headers) => `<tr>${[getNomeCliente(c.clienteId), formatCurrency(c.valor), formatDate(c.dataVencimento), c.status].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
-        const tituloRelatorio = `Relatório de Contas a Receber${clienteId !== 'Todos' ? ' - ' + getNomeCliente(clienteId) : ''}${status !== 'Todos' ? ' - Status: ' + status : ''}${dataInicioStr && dataFimStr ? ` (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})` : ''}`;
-        container.innerHTML = `<div class="card" id="printable-report-contas"><h2>${tituloRelatorio}</h2><p style="font-size: 1.2rem; font-weight: 600;">Total a Receber: ${formatCurrency(totalAReceber)}</p><div id="relatorio-contas-tabela-container"></div></div>`;
+        const tituloRelatorio = `Relatório de Contas a Receber${clienteId !== 'Todos' ? ' - ' + getNomeCliente(parseInt(clienteId)) : ''}${status !== 'Todos' ? ' - Status: ' + status : ''}${dataInicioStr && dataFimStr ? ` (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})` : ''}`;
+        container.innerHTML = `<div class="card" id="printable-report-contas"><h2>${tituloRelatorio}</h2><p style="font-size: 1.2rem; font-weight: 600;">Total a Receber (filtrado): ${formatCurrency(totalAReceber)}</p><div id="relatorio-contas-tabela-container"></div></div>`;
         renderTable('relatorio-contas-tabela-container', ['Cliente', 'Valor', 'Vencimento', 'Status'], contasFiltradas, renderRowRelatorioContas);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
-
-        btnImprimir.onclick = () => window.print();
-        btnCsv.onclick = () => {
-            const headersCSV = ['Cliente', 'Valor', 'Vencimento', 'Status'];
-            const dataCSV = contasFiltradas.map(c => ({
-                'Cliente': getNomeCliente(c.clienteId),
-                'Valor': formatCurrency(c.valor),
-                'Vencimento': formatDate(c.dataVencimento),
-                'Status': c.status
-            }));
-            exportToCSV(headersCSV, dataCSV, `relatorio_contas_a_receber_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
-        };
     };
-    document.getElementById('form-relatorio-contas').addEventListener('submit', gerarRelatorioContas);
+    
+    document.getElementById('btn-imprimir-relatorio-contas').onclick = () => window.print();
+    document.getElementById('btn-export-csv-contas').onclick = () => {
+        const clienteId = document.getElementById('relatorio-cliente-contas').value;
+        const status = document.getElementById('relatorio-status-contas').value;
+        const dataInicioStr = document.getElementById('relatorio-inicio-contas').value;
+        const dataFimStr = document.getElementById('relatorio-fim-contas').value;
+        const getNomeCliente = id => clientes.find(c => c.id === id)?.nome || 'N/A';
+
+        const contasFiltradas = contasAReceber.filter(conta =>
+            (clienteId === 'Todos' || conta.clienteId == clienteId) &&
+            (status === 'Todos' || conta.status === status) &&
+            (!dataInicioStr || new Date(conta.dataVencimento) >= new Date(dataInicioStr + "T00:00:00")) &&
+            (!dataFimStr || new Date(conta.dataVencimento) <= new Date(dataFimStr + "T23:59:59"))
+        );
+
+        const headersCSV = ['Cliente', 'Valor', 'Vencimento', 'Status'];
+        const dataCSV = contasFiltradas.map(c => ({
+            'Cliente': getNomeCliente(c.clienteId),
+            'Valor': c.valor.toFixed(2),
+            'Vencimento': formatDate(c.dataVencimento),
+            'Status': c.status
+        }));
+        exportToCSV(headersCSV, dataCSV, `relatorio_contas_a_receber.csv`);
+    };
 
     const gerarRelatorioLucro = (e) => {
         e.preventDefault();
@@ -1554,37 +1564,62 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let lucroTotal = 0;
+        let custoTotal = 0;
+        let faturamentoTotal = 0;
+        
         const relatorioLucroDetalhado = vendasFiltradas.map(venda => {
             let custoVenda = 0;
             venda.itens.forEach(item => {
-                custoVenda += item.quantidade * item.precoCustoUnitario;
+                custoVenda += item.quantidade * (item.precoCustoUnitario || 0);
             });
             const lucroVenda = venda.total - custoVenda;
             lucroTotal += lucroVenda;
+            custoTotal += custoVenda;
+            faturamentoTotal += venda.total;
             return { ...venda, custo: custoVenda, lucro: lucroVenda };
         });
 
-        const renderRowRelatorioLucro = (v, headers) => `<tr>${[formatDate(v.data, true), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), formatCurrency(v.custo), formatCurrency(v.total), formatCurrency(v.lucro)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+        const renderRowRelatorioLucro = (v, headers) => `<tr>${[formatDate(v.data, true), v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('<br>'), formatCurrency(v.custo), formatCurrency(v.total), `<span style="color: ${v.lucro >= 0 ? 'var(--success-color)' : 'var(--danger-color)'}">${formatCurrency(v.lucro)}</span>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
-        container.innerHTML = `<div class="card" id="printable-report-lucro"><h2>Relatório de Lucratividade (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Lucro Total: ${formatCurrency(lucroTotal)}</p><div id="relatorio-lucro-tabela-container"></div></div>`;
+        container.innerHTML = `<div class="card" id="printable-report-lucro">
+            <h2>Relatório de Lucratividade (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2>
+            <p style="font-size: 1.1rem; font-weight: 600;">Faturamento Total: ${formatCurrency(faturamentoTotal)}</p>
+            <p style="font-size: 1.1rem; font-weight: 600;">Custo Total: ${formatCurrency(custoTotal)}</p>
+            <p style="font-size: 1.2rem; font-weight: 700;">Lucro Total: ${formatCurrency(lucroTotal)}</p>
+            <div id="relatorio-lucro-tabela-container"></div>
+        </div>`;
         renderTable('relatorio-lucro-tabela-container', ['Data/Hora', 'Itens', 'Custo', 'Venda', 'Lucro'], relatorioLucroDetalhado, renderRowRelatorioLucro);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
-
-        btnImprimir.onclick = () => window.print();
-        btnCsv.onclick = () => {
-            const headersCSV = ['Data/Hora', 'Itens', 'Custo', 'Venda', 'Lucro'];
-            const dataCSV = relatorioLucroDetalhado.map(v => ({
-                'Data/Hora': formatDate(v.data, true),
-                'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
-                'Custo': formatCurrency(v.custo),
-                'Venda': formatCurrency(v.total),
-                'Lucro': formatCurrency(v.lucro)
-            }));
-            exportToCSV(headersCSV, dataCSV, `relatorio_lucratividade_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
-        };
     };
-    document.getElementById('form-relatorio-lucro').addEventListener('submit', gerarRelatorioLucro);
+    
+    document.getElementById('btn-imprimir-relatorio-lucro').onclick = () => window.print();
+    document.getElementById('btn-export-csv-lucro').onclick = () => {
+        const dataInicioStr = document.getElementById('relatorio-inicio-lucro').value;
+        const dataFimStr = document.getElementById('relatorio-fim-lucro').value;
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+        
+        const relatorioLucroDetalhado = vendasFiltradas.map(venda => {
+            let custoVenda = 0;
+            venda.itens.forEach(item => {
+                custoVenda += item.quantidade * (item.precoCustoUnitario || 0);
+            });
+            const lucroVenda = venda.total - custoVenda;
+            return { ...venda, custo: custoVenda, lucro: lucroVenda };
+        });
+
+        const headersCSV = ['Data/Hora', 'Itens', 'Custo', 'Venda', 'Lucro'];
+        const dataCSV = relatorioLucroDetalhado.map(v => ({
+            'Data/Hora': formatDate(v.data, true),
+            'Itens': v.itens.map(item => `${item.quantidade}x ${item.nome}`).join('; '),
+            'Custo': v.custo.toFixed(2),
+            'Venda': v.total.toFixed(2),
+            'Lucro': v.lucro.toFixed(2)
+        }));
+        exportToCSV(headersCSV, dataCSV, `relatorio_lucratividade_${dataInicioStr}_a_${dataFimStr}.csv`);
+    };
 
     const gerarRelatorioProdutosMaisVendidos = (e) => {
         e.preventDefault();
@@ -1622,18 +1657,34 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable('relatorio-produtos-tabela-container', ['Produto', 'Quantidade Vendida'], produtosOrdenados, renderRowRelatorioProdutos);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
-
-        btnImprimir.onclick = () => window.print();
-        btnCsv.onclick = () => {
-            const headersCSV = ['Produto', 'Quantidade Vendida'];
-            const dataCSV = produtosOrdenados.map(p => ({
-                'Produto': p.nome,
-                'Quantidade Vendida': p.quantidade
-            }));
-            exportToCSV(headersCSV, dataCSV, `relatorio_produtos_mais_vendidos_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
-        };
     };
-    document.getElementById('form-relatorio-produtos').addEventListener('submit', gerarRelatorioProdutosMaisVendidos);
+    
+    document.getElementById('btn-imprimir-relatorio-produtos').onclick = () => window.print();
+    document.getElementById('btn-export-csv-produtos').onclick = () => {
+        const dataInicioStr = document.getElementById('relatorio-inicio-produtos').value;
+        const dataFimStr = document.getElementById('relatorio-fim-produtos').value;
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+        const vendasFiltradas = vendas.filter(v => new Date(v.data) >= dataInicio && new Date(v.data) <= dataFim);
+
+        const vendasPorProduto = {};
+        vendasFiltradas.forEach(venda => {
+            venda.itens.forEach(item => {
+                vendasPorProduto[item.nome] = (vendasPorProduto[item.nome] || 0) + item.quantidade;
+            });
+        });
+
+        const produtosOrdenados = Object.entries(vendasPorProduto)
+            .sort(([, qtdA], [, qtdB]) => qtdB - qtdA)
+            .map(([nome, quantidade]) => ({ nome, quantidade }));
+
+        const headersCSV = ['Produto', 'Quantidade Vendida'];
+        const dataCSV = produtosOrdenados.map(p => ({
+            'Produto': p.nome,
+            'Quantidade Vendida': p.quantidade
+        }));
+        exportToCSV(headersCSV, dataCSV, `relatorio_produtos_mais_vendidos_${dataInicioStr}_a_${dataFimStr}.csv`);
+    };
 
     const gerarRelatorioEstoque = (e) => {
         e.preventDefault();
@@ -1663,21 +1714,29 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable('relatorio-estoque-tabela-container', ['Ref.', 'Produto', 'Qtd', 'Custo', 'Preço'], estoqueFiltrado.sort((a, b) => a.nome.localeCompare(b.nome)), renderRowRelatorioEstoque);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
-
-        btnImprimir.onclick = () => window.print();
-        btnCsv.onclick = () => {
-            const headersCSV = ['Ref.', 'Produto', 'Qtd', 'Custo', 'Preço'];
-            const dataCSV = estoqueFiltrado.map(p => ({
-                'Ref.': p.refProduto || '-',
-                'Produto': p.nome,
-                'Qtd': p.quantidade,
-                'Custo': formatCurrency(p.precoCusto),
-                'Preço': formatCurrency(p.preco)
-            }));
-            exportToCSV(headersCSV, dataCSV, `relatorio_estoque_${statusFiltro}.csv`);
-        };
     };
-    document.getElementById('form-relatorio-estoque').addEventListener('submit', gerarRelatorioEstoque);
+    
+    document.getElementById('btn-imprimir-relatorio-estoque').onclick = () => window.print();
+    document.getElementById('btn-export-csv-estoque').onclick = () => {
+        const statusFiltro = document.getElementById('relatorio_status_estoque').value;
+        const estoqueFiltrado = produtos.filter(p => {
+            if (statusFiltro === 'todos') return true;
+            if (statusFiltro === 'disponivel') return p.quantidade > 5;
+            if (statusFiltro === 'baixo') return p.quantidade <= 5 && p.quantidade > 0;
+            if (statusFiltro === 'esgotado') return p.quantidade === 0;
+            return true;
+        });
+
+        const headersCSV = ['Ref.', 'Produto', 'Qtd', 'Custo', 'Preço'];
+        const dataCSV = estoqueFiltrado.map(p => ({
+            'Ref.': p.refProduto || '-',
+            'Produto': p.nome,
+            'Qtd': p.quantidade,
+            'Custo': p.precoCusto.toFixed(2),
+            'Preço': p.preco.toFixed(2)
+        }));
+        exportToCSV(headersCSV, dataCSV, `relatorio_estoque_${statusFiltro}.csv`);
+    };
 
     const gerarRelatorioCaixa = (e) => {
         e.preventDefault();
@@ -1694,7 +1753,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fluxoFiltrado = fluxoCaixa.filter(f =>
             new Date(f.data) >= dataInicio && new Date(f.data) <= dataFim &&
             (tipoLancamento === 'todos' || f.tipo === tipoLancamento)
-        ).sort((a, b) => new Date(b.data) - new Date(a.data));
+        ).sort((a, b) => new Date(a.data) - new Date(b.data));
 
         if (fluxoFiltrado.length === 0) {
             container.innerHTML = '<div class="card" id="printable-report-caixa"><p style="text-align:center;">Nenhum lançamento de caixa encontrado no período.</p></div>';
@@ -1709,29 +1768,46 @@ document.addEventListener('DOMContentLoaded', () => {
             saldoAtual += (item.tipo === 'Entrada' ? item.valor : -item.valor);
             return { ...item, saldo: saldoAtual };
         });
-        const saldoFinal = relatorioCaixaComSaldo.length > 0 ? relatorioCaixaComSaldo[relatorioCaixaComSaldo.length - 1].saldo : saldoInicial;
+        const saldoFinal = saldoAtual;
 
-        const renderRowRelatorioCaixa = (f, headers) => `<tr>${[formatDate(f.data, true), f.descricao, f.tipo, formatCurrency(f.valor), formatCurrency(f.saldo)].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
+        const renderRowRelatorioCaixa = (f, headers) => `<tr>${[formatDate(f.data, true), f.descricao, `<span class="valor-${f.tipo.toLowerCase()}">${f.tipo}</span>`, `<span class="valor-${f.tipo.toLowerCase()}">${f.tipo === 'Entrada' ? '+' : '-'} ${formatCurrency(f.valor)}</span>`, `<strong>${formatCurrency(f.saldo)}</strong>`].map((cell, i) => `<td data-label="${headers[i]}">${cell}</td>`).join('')}</tr>`;
 
         container.innerHTML = `<div class="card" id="printable-report-caixa"><h2>Relatório de Fluxo de Caixa (${formatDate(dataInicioStr)} - ${formatDate(dataFimStr)})</h2><p style="font-size: 1.2rem; font-weight: 600;">Saldo Inicial: ${formatCurrency(saldoInicial)} | Saldo Final: ${formatCurrency(saldoFinal)}</p><div id="relatorio-caixa-tabela-container"></div></div>`;
         renderTable('relatorio-caixa-tabela-container', ['Data/Hora', 'Descrição', 'Tipo', 'Valor', 'Saldo'], relatorioCaixaComSaldo, renderRowRelatorioCaixa);
         btnImprimir.classList.remove('hidden');
         btnCsv.classList.remove('hidden');
-
-        btnImprimir.onclick = () => window.print();
-        btnCsv.onclick = () => {
-            const headersCSV = ['Data/Hora', 'Descrição', 'Tipo', 'Valor', 'Saldo'];
-            const dataCSV = relatorioCaixaComSaldo.map(f => ({
-                'Data/Hora': formatDate(f.data, true),
-                'Descrição': f.descricao,
-                'Tipo': f.tipo,
-                'Valor': formatCurrency(f.valor),
-                'Saldo': formatCurrency(f.saldo)
-            }));
-            exportToCSV(headersCSV, dataCSV, `relatorio_fluxo_de_caixa_${formatDate(dataInicioStr)}_a_${formatDate(dataFimStr)}.csv`);
-        };
     };
-    document.getElementById('form-relatorio-caixa').addEventListener('submit', gerarRelatorioCaixa);
+    
+    document.getElementById('btn-imprimir-relatorio-caixa').onclick = () => window.print();
+    document.getElementById('btn-export-csv-caixa').onclick = () => {
+        const dataInicioStr = document.getElementById('relatorio-inicio-caixa').value;
+        const dataFimStr = document.getElementById('relatorio-fim-caixa').value;
+        const tipoLancamento = document.getElementById('relatorio_tipo_caixa').value;
+        const dataInicio = new Date(dataInicioStr + "T00:00:00");
+        const dataFim = new Date(dataFimStr + "T23:59:59");
+
+        const fluxoFiltrado = fluxoCaixa.filter(f =>
+            new Date(f.data) >= dataInicio && new Date(f.data) <= dataFim &&
+            (tipoLancamento === 'todos' || f.tipo === tipoLancamento)
+        ).sort((a, b) => new Date(a.data) - new Date(b.data));
+
+        const saldoInicial = fluxoCaixa.filter(f => new Date(f.data) < dataInicio).reduce((acc, item) => acc + (item.tipo === 'Entrada' ? item.valor : -item.valor), 0);
+        let saldoAtual = saldoInicial;
+        const relatorioCaixaComSaldo = fluxoFiltrado.map(item => {
+            saldoAtual += (item.tipo === 'Entrada' ? item.valor : -item.valor);
+            return { ...item, saldo: saldoAtual };
+        });
+
+        const headersCSV = ['Data/Hora', 'Descrição', 'Tipo', 'Valor', 'Saldo'];
+        const dataCSV = relatorioCaixaComSaldo.map(f => ({
+            'Data/Hora': formatDate(f.data, true),
+            'Descrição': f.descricao,
+            'Tipo': f.tipo,
+            'Valor': f.valor.toFixed(2),
+            'Saldo': f.saldo.toFixed(2)
+        }));
+        exportToCSV(headersCSV, dataCSV, `relatorio_fluxo_de_caixa_${dataInicioStr}_a_${dataFimStr}.csv`);
+    };
 
     // --- CSV & Backup/Restore ---
     const exportToCSV = (headers, data, filename) => {
@@ -1740,9 +1816,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (const row of data) {
             const values = headers.map(header => {
-                let val = row[header];
-                if(typeof val === 'string') val = `"${val.replace(/"/g, '""')}"`; // Escapa aspas
-                return val;
+                 let val = row[header.split(' ')[0].toLowerCase()]; // Simple mapping
+                 if (val === undefined) {
+                    val = row[Object.keys(row).find(k => k.toLowerCase() === header.toLowerCase())];
+                 }
+                 if(typeof val === 'string') val = `"${val.replace(/"/g, '""')}"`; // Escapa aspas
+                 return val;
             });
             csvRows.push(values.join(','));
         }
@@ -1765,7 +1844,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const jsonString = JSON.stringify(allData, null, 2); // pretty print
         const blob = new Blob([jsonString], { type: 'application/json' });
         const data = new Date();
-        const filename = `flor-de-maria-backup-${data.getFullYear()}-${data.getMonth()+1}-${data.getDate()}.json`;
+        const filename = `flor-de-maria-backup-${data.getFullYear()}-${String(data.getMonth()+1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}.json`;
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -1805,7 +1884,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 showNotification(`Erro ao ler o arquivo: ${err.message}`, true);
             } finally {
-                // Limpa o input para permitir selecionar o mesmo arquivo novamente
                 document.getElementById('restore-input').value = '';
                 document.getElementById('restore-file-name').textContent = '';
             }
@@ -1824,6 +1902,180 @@ document.addEventListener('DOMContentLoaded', () => {
         saveData('fluxoCaixa', fluxoCaixa);
         saveData('despesas', despesas);
     };
+    
+    // CORREÇÃO E INTEGRAÇÃO: Adicionando as funções de manipulação dos formulários
+    const addCliente = (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('nome-cliente').value;
+        const contato = document.getElementById('contato-cliente').value;
+        if (!nome) {
+            showNotification('O nome do cliente é obrigatório!', true);
+            return;
+        }
+        clientes.push({ id: Date.now(), nome, contato });
+        saveAllData();
+        showNotification('Cliente cadastrado com sucesso!', false);
+        renderClientes();
+        e.target.reset();
+    };
+
+    const saveEditCliente = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-cliente-id').value);
+        const nome = document.getElementById('edit-nome-cliente').value;
+        const contato = document.getElementById('edit-contato-cliente').value;
+        const clienteIndex = clientes.findIndex(c => c.id === id);
+        if (clienteIndex > -1) {
+            clientes[clienteIndex] = { ...clientes[clienteIndex], nome, contato };
+            saveAllData();
+            showNotification('Cliente atualizado com sucesso!', false);
+            renderClientes();
+            cancelAllEdits();
+        }
+    };
+    
+    const addProduto = (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('nome-produto').value;
+        if (!nome) { showNotification('O nome do produto é obrigatório!', true); return; }
+        const novoProduto = {
+            id: Date.now(),
+            refProduto: document.getElementById('ref-produto').value,
+            nome: nome,
+            quantidade: parseInt(document.getElementById('qtd-produto').value) || 0,
+            precoCusto: parseFloat(document.getElementById('preco-custo-produto').value) || 0,
+            preco: parseFloat(document.getElementById('preco-venda-produto').value) || 0,
+        };
+        produtos.push(novoProduto);
+        saveAllData();
+        showNotification('Produto adicionado com sucesso!', false);
+        renderProdutos();
+        e.target.reset();
+    };
+
+    const saveEditProduto = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-produto-id').value);
+        const produtoIndex = produtos.findIndex(p => p.id === id);
+        if (produtoIndex > -1) {
+            produtos[produtoIndex] = {
+                ...produtos[produtoIndex],
+                refProduto: document.getElementById('edit-ref-produto').value,
+                nome: document.getElementById('edit-nome-produto').value,
+                quantidade: parseInt(document.getElementById('edit-qtd-produto').value),
+                precoCusto: parseFloat(document.getElementById('edit-preco-custo-produto').value),
+                preco: parseFloat(document.getElementById('edit-preco-venda-produto').value)
+            };
+            saveAllData();
+            showNotification('Produto atualizado com sucesso!', false);
+            renderProdutos();
+            cancelAllEdits();
+        }
+    };
+    
+    const addDespesa = (e) => {
+        e.preventDefault();
+        const descricao = document.getElementById('desc-despesa').value;
+        const valor = parseFloat(document.getElementById('valor-despesa').value);
+        const data = document.getElementById('data-despesa').value;
+        if (!descricao || !valor || !data) { showNotification('Todos os campos são obrigatórios!', true); return; }
+        
+        const novaDespesa = { id: Date.now(), data, descricao, valor };
+        despesas.push(novaDespesa);
+        
+        fluxoCaixa.push({ id: Date.now() + 1, data: new Date(data).toISOString(), tipo: 'Saída', descricao: `Despesa: ${descricao}`, valor: valor, despesaId: novaDespesa.id });
+
+        saveAllData();
+        showNotification('Despesa registrada com sucesso!', false);
+        renderDespesas();
+        renderDashboard();
+        e.target.reset();
+    };
+
+    const saveEditDespesa = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-despesa-id').value);
+        const despesaIndex = despesas.findIndex(d => d.id === id);
+        if (despesaIndex > -1) {
+            const valorAntigo = despesas[despesaIndex].valor;
+            despesas[despesaIndex] = {
+                ...despesas[despesaIndex],
+                descricao: document.getElementById('edit-desc-despesa').value,
+                valor: parseFloat(document.getElementById('edit-valor-despesa').value),
+                data: document.getElementById('edit-data-despesa').value
+            };
+            
+            // Atualiza o fluxo de caixa correspondente
+            const fluxoIndex = fluxoCaixa.findIndex(f => f.despesaId === id);
+            if (fluxoIndex > -1) {
+                fluxoCaixa[fluxoIndex].descricao = `Despesa: ${despesas[despesaIndex].descricao}`;
+                fluxoCaixa[fluxoIndex].valor = despesas[despesaIndex].valor;
+                fluxoCaixa[fluxoIndex].data = new Date(despesas[despesaIndex].data).toISOString();
+            }
+
+            saveAllData();
+            showNotification('Despesa atualizada com sucesso!', false);
+            renderDespesas();
+            renderDashboard();
+            cancelAllEdits();
+        }
+    };
+    
+    const addLancamento = (e) => {
+        e.preventDefault();
+        const novoLancamento = {
+            id: Date.now(),
+            data: new Date().toISOString(),
+            descricao: document.getElementById('desc-lancamento').value,
+            valor: parseFloat(document.getElementById('valor-lancamento').value),
+            tipo: document.getElementById('tipo-lancamento').value,
+        };
+        fluxoCaixa.push(novoLancamento);
+        saveAllData();
+        showNotification('Lançamento manual adicionado!', false);
+        renderFluxoCaixa();
+        renderDashboard();
+        e.target.reset();
+    };
+
+    const saveEditLancamento = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-lancamento-id').value);
+        const lancamentoIndex = fluxoCaixa.findIndex(f => f.id === id);
+        if (lancamentoIndex > -1) {
+             fluxoCaixa[lancamentoIndex] = {
+                ...fluxoCaixa[lancamentoIndex],
+                descricao: document.getElementById('edit-desc-lancamento').value,
+                valor: parseFloat(document.getElementById('edit-valor-lancamento').value),
+                tipo: document.getElementById('edit-tipo-lancamento').value,
+             };
+             saveAllData();
+             showNotification('Lançamento atualizado!', false);
+             renderFluxoCaixa();
+             renderDashboard();
+             cancelAllEdits();
+        }
+    };
+    
+    const saveEditConta = (e) => {
+        e.preventDefault();
+        const id = parseInt(document.getElementById('edit-conta-id').value);
+        const contaIndex = contasAReceber.findIndex(c => c.id === id);
+        if (contaIndex > -1) {
+            contasAReceber[contaIndex] = {
+                ...contasAReceber[contaIndex],
+                clienteId: parseInt(document.getElementById('edit-conta-cliente').value),
+                valor: parseFloat(document.getElementById('edit-conta-valor').value),
+                dataVencimento: new Date(document.getElementById('edit-conta-vencimento').value).toISOString(),
+                status: document.getElementById('edit-conta-status').value
+            };
+            saveAllData();
+            showNotification('Conta atualizada!', false);
+            renderContasAReceber();
+            renderDashboard();
+            cancelAllEdits();
+        }
+    };
 
     const init = () => {
         clientes = loadData('clientes');
@@ -1833,23 +2085,72 @@ document.addEventListener('DOMContentLoaded', () => {
         fluxoCaixa = loadData('fluxoCaixa');
         despesas = loadData('despesas');
         navigateToPage(localStorage.getItem('lastActivePage') || 'dashboard-view');
+        
+        // CORREÇÃO E INTEGRAÇÃO: Adicionando os event listeners dos formulários
+        document.getElementById('form-add-cliente').addEventListener('submit', addCliente);
+        document.getElementById('form-edit-cliente').addEventListener('submit', saveEditCliente);
+        document.getElementById('form-add-produto').addEventListener('submit', addProduto);
+        document.getElementById('form-edit-produto').addEventListener('submit', saveEditProduto);
+        document.getElementById('form-add-despesa').addEventListener('submit', addDespesa);
+        document.getElementById('form-edit-despesa').addEventListener('submit', saveEditDespesa);
+        document.getElementById('form-add-lancamento').addEventListener('submit', addLancamento);
+        document.getElementById('form-edit-lancamento').addEventListener('submit', saveEditLancamento);
+        document.getElementById('form-edit-conta').addEventListener('submit', saveEditConta);
+        
+        document.getElementById('btn-add-item-venda').addEventListener('click', addItemAoCarrinho);
+        document.getElementById('btn-finalizar-venda').addEventListener('click', finalizarVenda);
+        
+        // Relatórios
+        document.getElementById('form-relatorio-vendas').addEventListener('submit', gerarRelatorioVendas);
+        document.getElementById('btn-limpar-vendas').addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja excluir TODAS as vendas? Esta ação é irreversível e também removerá todas as contas a receber e entradas no caixa relacionadas a vendas.')) {
+                vendas = [];
+                contasAReceber = contasAReceber.filter(c => !c.vendaId); // Mantém contas manuais se existirem
+                fluxoCaixa = fluxoCaixa.filter(f => !f.vendaId); // Mantém lançamentos manuais
+                saveAllData();
+                showNotification('Histórico de vendas e dados associados foram apagados!', 'warning');
+                navigateToPage('relatorios-view');
+            }
+        });
+        document.getElementById('form-relatorio-contas').addEventListener('submit', gerarRelatorioContas);
+        document.getElementById('form-relatorio-lucro').addEventListener('submit', gerarRelatorioLucro);
+        document.getElementById('form-relatorio-produtos').addEventListener('submit', gerarRelatorioProdutosMaisVendidos);
+        document.getElementById('form-relatorio-estoque').addEventListener('submit', gerarRelatorioEstoque);
+        document.getElementById('form-relatorio-caixa').addEventListener('submit', gerarRelatorioCaixa);
+        
+        // Abas dos Relatórios
+        document.querySelectorAll('.report-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTabId = btn.dataset.tab;
+                document.querySelectorAll('.report-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.report-tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(targetTabId).classList.add('active');
+            });
+        });
     };
 
     loginForm.addEventListener('submit', e => {
         e.preventDefault();
+        // Credenciais: maria / flor123
         if (document.getElementById('username').value === 'maria' && document.getElementById('password').value === 'flor123') {
             localStorage.setItem('isLoggedIn', 'true');
             loginScreen.classList.add('hidden');
             dashboardScreen.classList.remove('hidden');
             init();
         } else {
-            document.getElementById('error-message').textContent = 'Usuário ou senha inválidos!';
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.textContent = 'Usuário ou senha inválidos!';
+            errorMsg.style.animation = 'none';
+            errorMsg.offsetHeight; // Trigger reflow
+            errorMsg.style.animation = 'fadeInUp 0.5s ease-out forwards';
         }
     });
 
     logoutBtn.addEventListener('click', () => {
         if (paymentChartInstance) { paymentChartInstance.destroy(); paymentChartInstance = null; }
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('lastActivePage');
         window.location.reload();
     });
 
@@ -1880,14 +2181,15 @@ document.addEventListener('DOMContentLoaded', () => {
         rerenderCurrentPageTables();
     });
 
-    // NOVO: Busca rápida na Venda
+    // Busca rápida na Venda
     document.getElementById('venda-cliente-search').addEventListener('input', (e) => popularFormulariosVenda(e.target.value, document.getElementById('venda-produto-search').value));
     document.getElementById('venda-produto-search').addEventListener('input', (e) => popularFormulariosVenda(document.getElementById('venda-cliente-search').value, e.target.value));
 
-    // NOVO: Backup/Restore
+    // Backup/Restore
     document.getElementById('btn-backup').addEventListener('click', backupData);
     document.getElementById('restore-input').addEventListener('change', restoreData);
 
+    // Delegação de eventos para botões de ação e modais
     document.body.addEventListener('click', e => {
         // Alertas do Dashboard
         const navLinkAlert = e.target.closest('.nav-link-alert');
@@ -1897,9 +2199,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Modais
-        const closeModalBtn = e.target.closest('.btn-close-modal');
+        const closeModalBtn = e.target.closest('.btn-close-modal, .btn-close-modal-footer');
         if(closeModalBtn) {
             document.getElementById(closeModalBtn.dataset.targetModal).classList.add('hidden');
+        }
+        
+        // Imprimir Recibo
+        if (e.target.closest('#btn-print-receipt')) {
+            window.print();
         }
 
         // Ações de Tabela
@@ -1924,12 +2231,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveAllData();
                 renderContasAReceber();
                 renderDashboard();
-                showNotification('Baixa de pagamento realizada!');
+                showNotification('Baixa de pagamento realizada!', false);
             }
         }
     });
+    
+    // Delegação de eventos para botões de cancelar edição
+    document.body.addEventListener('click', e => {
+        if(e.target.matches('.btn-cancel')) {
+            cancelAllEdits();
+        }
+    });
 
-    // Inicialização
+    // Inicialização da aplicação
     if (localStorage.getItem('isLoggedIn') === 'true') {
         loginScreen.classList.add('hidden');
         dashboardScreen.classList.remove('hidden');
@@ -1938,7 +2252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginScreen.classList.remove('hidden');
         dashboardScreen.classList.add('hidden');
     }
-    cancelAllEdits();
+    
 });
 </script>
 </body>
